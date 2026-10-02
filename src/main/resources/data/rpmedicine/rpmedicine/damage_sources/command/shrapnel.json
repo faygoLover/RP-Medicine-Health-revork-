@@ -1,0 +1,40 @@
+{
+  "wound": "shrapnel",
+  "location": "hit_point",
+  "complications": {
+    "foreign_body": {
+      "min_severity": 5,
+      "per_severity": 0.03,
+      "max": 0.9,
+      "count_min": 1,
+      "count_max": 3
+    },
+    "fracture": {
+      "min_severity": 15,
+      "per_severity": 0.015,
+      "max": 0.5
+    },
+    "open_fracture_fraction": 0.4,
+    "arterial": {
+      "min_severity": 20,
+      "per_severity": 0.01,
+      "max": 0.25
+    },
+    "internal": {
+      "min_severity": 15,
+      "per_severity": 0.015,
+      "max": 0.5
+    },
+    "pneumothorax": {
+      "min_severity": 15,
+      "per_severity": 0.01,
+      "max": 0.3
+    },
+    "concussion": {
+      "min_severity": 0,
+      "per_severity": 0.05,
+      "max": 1.0,
+      "amount_per_severity": 3.0
+    }
+  }
+}

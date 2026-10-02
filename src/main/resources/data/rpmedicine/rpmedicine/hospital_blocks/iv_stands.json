@@ -1,0 +1,7 @@
+{
+  "function": "iv_stand",
+  "blocks": [
+    "industrialhellscape:iv_dripstand"
+  ],
+  "radius": 3
+}

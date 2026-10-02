@@ -1,0 +1,35 @@
+{
+  "items": [
+    "rpmedicine:ceftriaxone"
+  ],
+  "form": "injection",
+  "min_level": 5,
+  "effects": [
+    {
+      "effect": "antibiotic",
+      "strength": 13,
+      "delay": 300,
+      "duration": 43200
+    }
+  ],
+  "dose": {
+    "limit": 1,
+    "window_hours": 12
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "pressure",
+        "strength": -15,
+        "delay": 300,
+        "duration": 3600
+      },
+      {
+        "effect": "heart_rate",
+        "strength": 15,
+        "delay": 300,
+        "duration": 3600
+      }
+    ]
+  }
+}

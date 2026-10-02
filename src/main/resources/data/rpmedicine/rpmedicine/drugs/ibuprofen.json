@@ -1,0 +1,41 @@
+{
+  "items": [
+    "rpmedicine:ibuprofen"
+  ],
+  "form": "pill",
+  "min_level": 0,
+  "effects": [
+    {
+      "effect": "analgesia",
+      "strength": 18,
+      "delay": 60,
+      "duration": 2400
+    },
+    {
+      "effect": "antipyretic",
+      "strength": 0.6,
+      "delay": 300,
+      "duration": 14400
+    },
+    {
+      "effect": "concussion_relief",
+      "strength": 1.0,
+      "delay": 120,
+      "duration": 7200
+    }
+  ],
+  "dose": {
+    "limit": 3,
+    "window_hours": 24
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "coagulation",
+        "strength": -0.3,
+        "delay": 0,
+        "duration": 7200
+      }
+    ]
+  }
+}

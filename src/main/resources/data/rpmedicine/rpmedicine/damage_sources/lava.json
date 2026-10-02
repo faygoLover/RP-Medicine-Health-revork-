@@ -1,0 +1,8 @@
+{
+  "priority": 21,
+  "damage_types": [
+    "minecraft:lava"
+  ],
+  "wound": "burn",
+  "location": "lava"
+}

@@ -41,6 +41,10 @@ fetch_jar "lrtactical-1.20.1-0.4.3.jar" "https://cdn.modrinth.com/data/AiwNM9O0/
 fetch_jar "legendarysurvivaloverhaul-1.20.1-2.4.2.jar" "https://cursemaven.com/curse/maven/legendary-survival-overhaul-840254/7603852/legendary-survival-overhaul-840254-7603852.jar" ""
 fetch_jar "corpse-forge-1.20.1-1.0.23.jar" "https://cursemaven.com/curse/maven/corpse-316582/7018272/corpse-316582-7018272.jar" ""
 
+# --- ассеты под MIT (scripts/foreign_assets.py, docs/assets_credits.md): прямо с CDN CurseForge ---
+fetch_jar "tacmed-1.1.0.jar" "https://edge.forgecdn.net/files/8657/363/tacmed-1.1.0.jar" "51e1695c11d98dffae37ddcf2fe5c6515ad07714"
+fetch_jar "health_and_disease-1.4.2-forge-1.20.1.jar" "https://edge.forgecdn.net/files/6291/844/health_and_disease-1.4.2-forge-1.20.1.jar" "7cffb8651a8d5ebf3773d3831a9bd68381b636ed"
+
 # --- исходники для чтения (не копировать в мод: GPL) ---
 fetch_src tacz https://github.com/MCModderAnchor/TACZ.git b43eb84c38e9768d8e73c8b14f0b845669704b38
 fetch_src zerocontact https://github.com/TuDouNi92/ZeroContact.git 36c6a8f07e95a3e17b09309aedc379ff0d903525

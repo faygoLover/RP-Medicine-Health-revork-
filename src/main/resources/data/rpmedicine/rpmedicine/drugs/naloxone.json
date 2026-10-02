@@ -1,0 +1,9 @@
+{
+  "items": [
+    "rpmedicine:naloxone"
+  ],
+  "form": "injection",
+  "min_level": 4,
+  "special": "opioid_antidote",
+  "effects": []
+}

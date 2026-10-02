@@ -1,0 +1,16 @@
+{
+  "wound": "bruise",
+  "location": "hit_point",
+  "complications": {
+    "fracture": {
+      "min_severity": 0,
+      "per_severity": 0.03,
+      "max": 0.7
+    },
+    "internal": {
+      "min_severity": 0,
+      "per_severity": 0.04,
+      "max": 0.9
+    }
+  }
+}

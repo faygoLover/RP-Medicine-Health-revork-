@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:airway",
+  "action": "airway",
+  "seconds": 4,
+  "min_level": 2,
+  "consume": true
+}

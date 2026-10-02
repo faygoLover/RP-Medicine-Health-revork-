@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:adrenaline",
+  "action": "adrenaline",
+  "seconds": 2,
+  "min_level": 2,
+  "consume": true
+}

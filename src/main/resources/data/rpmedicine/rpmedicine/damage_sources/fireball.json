@@ -1,0 +1,10 @@
+{
+  "priority": 21,
+  "damage_types": [
+    "minecraft:fireball",
+    "minecraft:unattributed_fireball",
+    "minecraft:wither_skull"
+  ],
+  "wound": "burn",
+  "location": "hit_point"
+}

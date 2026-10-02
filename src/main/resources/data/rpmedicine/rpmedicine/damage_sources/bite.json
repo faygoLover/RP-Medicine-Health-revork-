@@ -1,0 +1,24 @@
+{
+  "priority": 25,
+  "damage_types": [
+    "minecraft:mob_attack",
+    "minecraft:mob_attack_no_aggro"
+  ],
+  "attacker_entities": [
+    "#rpmedicine:biting_mobs"
+  ],
+  "wound": "bite",
+  "location": "hit_point",
+  "complications": {
+    "arterial": {
+      "min_severity": 25,
+      "per_severity": 0.01,
+      "max": 0.2
+    },
+    "fracture": {
+      "min_severity": 30,
+      "per_severity": 0.01,
+      "max": 0.2
+    }
+  }
+}

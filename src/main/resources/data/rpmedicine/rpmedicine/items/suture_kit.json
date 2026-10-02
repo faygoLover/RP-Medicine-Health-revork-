@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:suture_kit",
+  "action": "suture",
+  "seconds": 10,
+  "min_level": 3,
+  "consume": true
+}

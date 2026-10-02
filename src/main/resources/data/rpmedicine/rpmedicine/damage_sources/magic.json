@@ -1,0 +1,12 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:magic",
+    "minecraft:indirect_magic",
+    "minecraft:dragon_breath"
+  ],
+  "wound": "none",
+  "physiology": {
+    "brain_per_damage": 0.5
+  }
+}

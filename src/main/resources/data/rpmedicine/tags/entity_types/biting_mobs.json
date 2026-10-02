@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wolf",
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:zombie",
+    "minecraft:husk",
+    "minecraft:drowned",
+    "minecraft:zombie_villager",
+    "minecraft:silverfish",
+    "minecraft:endermite",
+    "minecraft:polar_bear",
+    "minecraft:fox",
+    "minecraft:cat",
+    "minecraft:ocelot",
+    "minecraft:panda",
+    "minecraft:hoglin",
+    "minecraft:zoglin",
+    "minecraft:piglin",
+    "minecraft:axolotl"
+  ]
+}

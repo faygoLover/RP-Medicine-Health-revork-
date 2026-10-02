@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:defibrillator",
+  "action": "defibrillator",
+  "seconds": 6,
+  "min_level": 1,
+  "consume": true
+}

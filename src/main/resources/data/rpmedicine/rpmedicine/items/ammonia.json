@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:ammonia",
+  "action": "ammonia",
+  "seconds": 1,
+  "min_level": 0,
+  "consume": true
+}

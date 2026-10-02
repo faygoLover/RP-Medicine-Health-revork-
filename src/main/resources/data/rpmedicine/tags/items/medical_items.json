@@ -1,0 +1,197 @@
+{
+  "replace": false,
+  "values": [
+    "rpmedicine:bandage",
+    "rpmedicine:pressure_dressing",
+    "rpmedicine:hemostatic_gauze",
+    "rpmedicine:tourniquet",
+    "rpmedicine:esmarch",
+    "rpmedicine:splint",
+    "rpmedicine:occlusive_dressing",
+    "rpmedicine:decompression_needle",
+    "rpmedicine:painkillers",
+    "rpmedicine:morphine",
+    "rpmedicine:adrenaline",
+    "rpmedicine:txa",
+    "rpmedicine:field_surgery_kit",
+    "rpmedicine:saline",
+    "rpmedicine:ammonia",
+    "rpmedicine:airway",
+    "rpmedicine:ambu_bag",
+    "rpmedicine:defibrillator",
+    "rpmedicine:pulse_oximeter",
+    "rpmedicine:tonometer",
+    "rpmedicine:empty_blood_bag",
+    "rpmedicine:blood_bag",
+    "rpmedicine:stethoscope",
+    "rpmedicine:thermometer",
+    "rpmedicine:portable_scanner",
+    "rpmedicine:hemoanalyzer",
+    "rpmedicine:blood_draw_syringe",
+    "rpmedicine:surgical_tweezers",
+    "rpmedicine:suture_kit",
+    "rpmedicine:scissors",
+    "rpmedicine:paracetamol",
+    "rpmedicine:ibuprofen",
+    "rpmedicine:ketorolac",
+    "rpmedicine:tramadol",
+    "rpmedicine:naloxone",
+    "rpmedicine:amoxicillin",
+    "rpmedicine:ceftriaxone",
+    "rpmedicine:diazepam",
+    "rpmedicine:norepinephrine",
+    "rpmedicine:atropine",
+    "rpmedicine:antiseptic",
+    "rpmedicine:antibiotic_ointment",
+    "rpmedicine:lancet",
+    "rpmedicine:blood_sample",
+    {
+      "id": "medicamod:adrenalin",
+      "required": false
+    },
+    {
+      "id": "medicamod:apirin",
+      "required": false
+    },
+    {
+      "id": "medicamod:azithromycin",
+      "required": false
+    },
+    {
+      "id": "medicamod:codeine",
+      "required": false
+    },
+    {
+      "id": "medicamod:diazepam",
+      "required": false
+    },
+    {
+      "id": "medicamod:ibuprofen",
+      "required": false
+    },
+    {
+      "id": "medicamod:ketonal",
+      "required": false
+    },
+    {
+      "id": "medicamod:metamizol",
+      "required": false
+    },
+    {
+      "id": "medicamod:morphine",
+      "required": false
+    },
+    {
+      "id": "medicamod:paracetamol",
+      "required": false
+    },
+    {
+      "id": "medicamod:penicillin",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:adrenaline_injector",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:adrenaline_syringe",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:analgesic",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:bandage",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:homemade_bandage",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:morphine_injector",
+      "required": false
+    },
+    {
+      "id": "survival_instinct:morphine_syringe",
+      "required": false
+    },
+    {
+      "id": "tacmed:ambu_bag",
+      "required": false
+    },
+    {
+      "id": "tacmed:bandage",
+      "required": false
+    },
+    {
+      "id": "tacmed:chest_seal",
+      "required": false
+    },
+    {
+      "id": "tacmed:defibrillator",
+      "required": false
+    },
+    {
+      "id": "tacmed:esmarch_tourniquet",
+      "required": false
+    },
+    {
+      "id": "tacmed:hemostatic",
+      "required": false
+    },
+    {
+      "id": "tacmed:needle_14g",
+      "required": false
+    },
+    {
+      "id": "tacmed:nefopam",
+      "required": false
+    },
+    {
+      "id": "tacmed:npa",
+      "required": false
+    },
+    {
+      "id": "tacmed:pill_pack",
+      "required": false
+    },
+    {
+      "id": "tacmed:promedol",
+      "required": false
+    },
+    {
+      "id": "tacmed:saline",
+      "required": false
+    },
+    {
+      "id": "tacmed:splint",
+      "required": false
+    },
+    {
+      "id": "tacmed:tourniquet",
+      "required": false
+    },
+    {
+      "id": "tactical_aid:adrenalineinjector",
+      "required": false
+    },
+    {
+      "id": "tactical_aid:adrenalineinjector_ii",
+      "required": false
+    },
+    {
+      "id": "tactical_aid:adrenalineinjector_iii",
+      "required": false
+    },
+    {
+      "id": "tactical_aid:painlessinjector",
+      "required": false
+    },
+    {
+      "id": "tactical_aid:relief_injector",
+      "required": false
+    }
+  ]
+}

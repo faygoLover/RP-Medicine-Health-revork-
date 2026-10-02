@@ -1,0 +1,10 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:in_fire",
+    "minecraft:on_fire",
+    "minecraft:hot_floor"
+  ],
+  "wound": "burn",
+  "location": "fire"
+}

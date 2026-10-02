@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "rpmedicine:brain_death",
+    "rpmedicine:surrender",
+    "rpmedicine:gm_kill",
+    "rpmedicine:finished"
+  ]
+}

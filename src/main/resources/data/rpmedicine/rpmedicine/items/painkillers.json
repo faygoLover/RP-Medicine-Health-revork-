@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:painkillers",
+  "action": "painkiller",
+  "seconds": 2,
+  "min_level": 0,
+  "consume": true
+}

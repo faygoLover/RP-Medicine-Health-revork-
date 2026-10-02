@@ -1,0 +1,141 @@
+package faygolover.rpmedicine.core;
+
+import faygolover.rpmedicine.core.MedicalState.Down;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.random.RandomGenerator;
+
+/**
+ * Применение препаратов (ТЗ второго этапа, п. 6.1): эффекты с задержкой и длительностью, одинаковые
+ * продлеваются по времени; превышение дозы за окно — передозировка со своим эффектом.
+ */
+public final class Drugs {
+    private Drugs() {}
+
+    /** null — можно; иначе ключ отказа {@code rpmedicine.refuse.<key>}. */
+    public static String check(MedicalState m, BodyPart part, Drug d, MedicalSettings s) {
+        if (d.form() == Drug.Form.PILL && m.down != Down.NONE) return "must_be_conscious";
+        if (d.special() == Drug.Special.OPIOID_ANTIDOTE && !opioidsActive(m)) return "no_opioids";
+        if (d.form() == Drug.Form.TOPICAL) {
+            BodyPartState ps = m.part(part);
+            switch (d.special()) {
+                case ANTISEPTIC -> {
+                    for (Wound w : ps.wounds) if (w.type != WoundType.BRUISE && w.infectionStage != Wound.Infection.CLEAN) return null;
+                    return "no_open_wound";
+                }
+                case ANTIBIOTIC_OINTMENT -> {
+                    for (Wound w : ps.wounds) if (w.isInfected()) return superficial(w) ? null : "infection_too_deep";
+                    return "no_infection_here";
+                }
+                default -> {
+                    return ps.wounds.isEmpty() ? "no_open_wound" : null;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Поверхностная рана: ожог или неглубокая (мазь лечит только такие). */
+    public static boolean superficial(Wound w) {
+        return w.type == WoundType.BURN || w.severity < 35;
+    }
+
+    public static boolean opioidsActive(MedicalState m) {
+        return m.morphineSeconds > 0 || m.morphineOverdoseSeconds > 0 || m.opioidSeconds > 0;
+    }
+
+    /** Часть тела для наружного средства, где оно нужнее всего (null — нигде). */
+    public static BodyPart bestPart(MedicalState m, Drug d, MedicalSettings s) {
+        BodyPart best = null;
+        double bestScore = -1;
+        for (BodyPart p : BodyPart.VALUES) {
+            if (check(m, p, d, s) != null) continue;
+            double score = m.part(p).totalSeverity();
+            if (score > bestScore) {
+                best = p;
+                bestScore = score;
+            }
+        }
+        return best;
+    }
+
+    public static Treatments.Result apply(MedicalState m, BodyPart part, Drug d, boolean error, RandomGenerator rnd, MedicalSettings s) {
+        double k = error ? 0.5 : 1.0;
+        switch (d.special()) {
+            case OPIOID_ANTIDOTE -> {
+                m.morphineSeconds = 0;
+                m.morphineDelay = 0;
+                m.morphineOverdoseSeconds = 0;
+                m.opioidSeconds = 0;
+                m.effects.remove(DrugEffect.RESP_DEPRESSION);
+                m.effects.remove(DrugEffect.ANALGESIA);
+                if (m.heart == MedicalState.Heart.NORMAL) m.respiratoryArrest = false;
+            }
+            case ANTISEPTIC -> {
+                for (Wound w : m.part(part).wounds) {
+                    if (w.type == WoundType.BRUISE || w.infectionStage == Wound.Infection.CLEAN || w.isInfected()) continue;
+                    w.infectionRisk *= error ? (1 + s.antisepticInfectionFactor) / 2 : s.antisepticInfectionFactor;
+                }
+                return error ? Treatments.Result.failed("antiseptic_poor") : Treatments.Result.ok("antiseptic_applied");
+            }
+            case ANTIBIOTIC_OINTMENT -> {
+                for (Wound w : m.part(part).wounds) {
+                    if (!w.isInfected() || !superficial(w)) continue;
+                    if (error) {
+                        w.infection = Math.max(1, w.infection * 0.5);
+                    } else {
+                        w.infectionStage = Wound.Infection.CLEAN;
+                        w.infection = 0;
+                        w.immuneProgress = 0;
+                    }
+                }
+                return error ? Treatments.Result.failed("ointment_partial") : Treatments.Result.ok("ointment_applied");
+            }
+            default -> { }
+        }
+        for (Drug.Dose dose : d.effects()) m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * k);
+        if (d.opioid()) {
+            double longest = 0;
+            for (Drug.Dose dose : d.effects()) longest = Math.max(longest, dose.delay() + dose.seconds() * k);
+            m.opioidSeconds = Math.max(m.opioidSeconds, longest);
+        }
+        boolean overdose = recordDose(m, d);
+        if (overdose) {
+            for (Drug.Dose dose : d.overdose()) m.addEffect(dose.effect(), dose.strength(), dose.delay(), dose.seconds());
+            if (rnd.nextDouble() < d.overdoseArrestChance()) m.respiratoryArrest = true;
+            return Treatments.Result.ok("drug_overdose");
+        }
+        if (d.special() == Drug.Special.OPIOID_ANTIDOTE) return Treatments.Result.ok("antidote_given");
+        if (error) return Treatments.Result.failed("dose_partial");
+        return Treatments.Result.ok(switch (d.form()) {
+            case PILL -> "pill_taken";
+            case INJECTION -> "drug_injected";
+            case DRIP -> "drug_drip_started";
+            case TOPICAL -> "drug_applied";
+        });
+    }
+
+    /** Записать дозу; true — превышен предел за окно (передозировка). */
+    static boolean recordDose(MedicalState m, Drug d) {
+        if (d.doseLimit() <= 0 || d.doseWindowSeconds() <= 0) return false;
+        List<Double> list = m.doses.computeIfAbsent(d.id(), k -> new ArrayList<>());
+        list.add(d.doseWindowSeconds());
+        return list.size() > d.doseLimit();
+    }
+
+    /** Окна доз идут по времени в сети. */
+    static void tickDoses(MedicalState m, double dt) {
+        if (m.doses.isEmpty()) return;
+        var it = m.doses.values().iterator();
+        while (it.hasNext()) {
+            List<Double> list = it.next();
+            for (int i = list.size() - 1; i >= 0; i--) {
+                double left = list.get(i) - dt;
+                if (left <= 0) list.remove(i);
+                else list.set(i, left);
+            }
+            if (list.isEmpty()) it.remove();
+        }
+    }
+}

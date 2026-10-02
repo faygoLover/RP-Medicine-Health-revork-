@@ -1,0 +1,168 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            // Русские сообщения в логе консоли без «????».
+            jvmArg '-Dfile.encoding=UTF-8'
+            // Миксины чужих модов (Curios, Zero Contact) в среде разработки.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            workingDirectory project.file('run/client')
+            property 'forge.enabledGameTestNamespaces', mod_id
+            // Автоподключение к серверу: ./gradlew runClient -Pquickplay=localhost
+            if (project.hasProperty('quickplay')) args '--quickPlayMultiplayer', project.property('quickplay')
+            if (project.hasProperty('username')) args '--username', project.property('username')
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+// Консоль сервера принимает команды и при запуске через Gradle.
+tasks.matching { it.name == 'runServer' }.configureEach { standardInput = System.in }
+
+repositories {
+    flatDir { dir 'libs' }
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
+    maven {
+        name = 'Curios'
+        url = 'https://maven.theillusivec4.top/'
+        content { includeGroup 'top.theillusivec4.curios' }
+    }
+    maven {
+        name = 'Henkelmax'
+        url = 'https://maven.maxhenkel.de/repository/public'
+        content { includeGroup 'de.maxhenkel.voicechat' }
+    }
+}
+
+boolean withOptional = (project.findProperty('with_optional') ?: 'false').toString().toBoolean()
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // RP Perks — обязательная зависимость.
+    implementation fg.deobf("blank:rpperks:${rpperks_version}")
+
+    // Необязательные моды: только для компиляции. Код интеграций загружается, лишь когда мод установлен.
+    compileOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
+    compileOnly fg.deobf("maven.modrinth:timeless-and-classics-zero:${tacz_version}")
+    compileOnly fg.deobf("maven.modrinth:zerocontact:${zerocontact_version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
+    compileOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
+    compileOnly fg.deobf("maven.modrinth:legendary-survival-overhaul:${lso_version}")
+
+    if (withOptional) {
+        // Для проверки интеграций при runServer/runClient: -Pwith_optional=true
+        runtimeOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
+        runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+        runtimeOnly fg.deobf("maven.modrinth:timeless-and-classics-zero:${tacz_version}")
+        runtimeOnly fg.deobf("maven.modrinth:zerocontact:${zerocontact_version}")
+        runtimeOnly fg.deobf("maven.modrinth:architectury-api:1MKTLiiG")
+        runtimeOnly fg.deobf("maven.modrinth:geckolib:aC5KMoNg")
+        runtimeOnly fg.deobf("maven.modrinth:simple-voice-chat:lWvbAZ3P")
+        runtimeOnly fg.deobf("maven.modrinth:legendary-survival-overhaul:${lso_version}")
+    }
+
+    testImplementation "org.junit.jupiter:junit-jupiter:${junit_version}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'file.encoding', 'UTF-8'
+    jvmArgs '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
+    testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+    }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version          : forge_version,
+            forge_version_range    : forge_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    // Ассеты Tactical Medicine и Health & Disease под MIT: уведомление об авторах едет вместе с модом.
+    from('docs/assets_credits.md') { into 'META-INF' }
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

@@ -1,0 +1,23 @@
+{
+  "function": "bed",
+  "blocks": [
+    "industrialhellscape:medical_bed",
+    "moa_decor_science:camahamarilla",
+    "moa_decor_science:camahazul",
+    "moa_decor_science:camahazulclara",
+    "moa_decor_science:camahblanca",
+    "moa_decor_science:camahcafe",
+    "moa_decor_science:camahcian",
+    "moa_decor_science:camahgris",
+    "moa_decor_science:camahgrisclara",
+    "moa_decor_science:camahmagenta",
+    "moa_decor_science:camahmorada",
+    "moa_decor_science:camahnaranja",
+    "moa_decor_science:camahnegra",
+    "moa_decor_science:camahroja",
+    "moa_decor_science:camahrosa",
+    "moa_decor_science:camahverde",
+    "moa_decor_science:camahverdelima",
+    "multibeds:cot"
+  ]
+}

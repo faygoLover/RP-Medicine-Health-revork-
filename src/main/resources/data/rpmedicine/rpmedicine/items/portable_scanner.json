@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:portable_scanner",
+  "action": "scanner",
+  "seconds": 6,
+  "min_level": 4,
+  "consume": false
+}

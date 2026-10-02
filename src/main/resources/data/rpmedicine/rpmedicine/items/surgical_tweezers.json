@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:surgical_tweezers",
+  "action": "tweezers",
+  "seconds": 8,
+  "min_level": 4,
+  "consume": false
+}

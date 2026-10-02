@@ -1,0 +1,9 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:thorns"
+  ],
+  "wound": "cut",
+  "location": "random",
+  "severity_multiplier": 0.6
+}

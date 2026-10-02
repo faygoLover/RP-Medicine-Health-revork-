@@ -1,0 +1,401 @@
+#!/usr/bin/env python3
+"""Генерирует ресурсы RP Medicine: датапак по умолчанию (damage_sources, items, item_aliases, mobs),
+типы урона и теги, модели и текстуры-заглушки предметов, sounds.json.
+Запуск из корня репозитория: python3 scripts/gen_data.py. Сгенерированное коммитится."""
+import json, os, struct, sys, zlib
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import foreign_assets  # noqa: E402
+
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
+DATA = os.path.join(ROOT, "data")
+ASSETS = os.path.join(ROOT, "assets", "rpmedicine")
+
+def write(path, obj):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+def ch(min_sev, per, mx):
+    return {"min_severity": min_sev, "per_severity": per, "max": mx}
+
+# ---------------------------------------------------------------- типы урона мода
+DEATH_TYPES = ["brain_death", "surrender", "gm_kill", "finished"]
+for name in DEATH_TYPES:
+    write(f"{DATA}/rpmedicine/damage_type/{name}.json",
+          {"message_id": f"rpmedicine.{name}", "exhaustion": 0.0, "scaling": "never"})
+for tag in ["bypasses_armor", "bypasses_invulnerability", "bypasses_effects", "bypasses_resistance",
+            "bypasses_enchantments", "bypasses_shield", "bypasses_cooldown", "no_knockback"]:
+    write(f"{DATA}/minecraft/tags/damage_type/{tag}.json",
+          {"replace": False, "values": [f"rpmedicine:{n}" for n in DEATH_TYPES]})
+
+# ---------------------------------------------------------------- damage_sources
+DS = f"{DATA}/rpmedicine/rpmedicine/damage_sources"
+rules = {
+    # Правило по умолчанию: всё неизвестное — ушиб по точке удара.
+    "default": {"wound": "bruise", "location": "hit_point",
+                "complications": {"fracture": ch(25, 0.01, 0.4), "open_fracture_fraction": 0.1,
+                                  "internal": ch(40, 0.01, 0.3), "concussion": ch(20, 0.02, 0.6)}},
+    "arrow": {"priority": 20, "damage_types": ["minecraft:arrow"], "wound": "stab", "location": "hit_point",
+              "complications": {"arterial": ch(15, 0.01, 0.25), "internal": ch(5, 0.02, 0.6),
+                                "pneumothorax": ch(5, 0.03, 0.7), "fracture": ch(25, 0.01, 0.2)}},
+    "trident": {"priority": 20, "damage_types": ["minecraft:trident"], "wound": "stab", "location": "hit_point",
+                "complications": {"arterial": ch(15, 0.015, 0.35), "internal": ch(5, 0.02, 0.6),
+                                  "pneumothorax": ch(5, 0.03, 0.7), "fracture": ch(25, 0.01, 0.3)}},
+    "melee_blade": {"priority": 30, "damage_types": ["minecraft:player_attack", "minecraft:mob_attack", "minecraft:mob_attack_no_aggro"],
+                    "attacker_items": ["#minecraft:swords", "#minecraft:axes"], "wound": "cut", "location": "hit_point",
+                    "complications": {"arterial": ch(20, 0.01, 0.3), "internal": ch(30, 0.01, 0.3),
+                                      "fracture": ch(35, 0.01, 0.25), "open_fracture_fraction": 0.5,
+                                      "pneumothorax": ch(30, 0.01, 0.2)}},
+    "melee_pierce": {"priority": 31, "damage_types": ["minecraft:player_attack", "minecraft:mob_attack"],
+                     "attacker_items": ["minecraft:trident"], "wound": "stab", "location": "hit_point",
+                     "complications": {"arterial": ch(15, 0.01, 0.3), "internal": ch(5, 0.02, 0.6), "pneumothorax": ch(5, 0.03, 0.6)}},
+    "bite": {"priority": 25, "damage_types": ["minecraft:mob_attack", "minecraft:mob_attack_no_aggro"],
+             "attacker_entities": ["#rpmedicine:biting_mobs"], "wound": "bite", "location": "hit_point",
+             "complications": {"arterial": ch(25, 0.01, 0.2), "fracture": ch(30, 0.01, 0.2)}},
+    "melee_blunt": {"priority": 10, "damage_types": ["minecraft:player_attack", "minecraft:mob_attack", "minecraft:mob_attack_no_aggro"],
+                    "wound": "bruise", "location": "hit_point",
+                    "complications": {"fracture": ch(15, 0.012, 0.45), "open_fracture_fraction": 0.1,
+                                      "internal": ch(25, 0.012, 0.4), "concussion": ch(10, 0.03, 0.8)}},
+    "sting": {"priority": 20, "damage_types": ["minecraft:sting"], "wound": "stab", "location": "hit_point", "severity_multiplier": 0.5},
+    "thorns": {"priority": 20, "damage_types": ["minecraft:thorns"], "wound": "cut", "location": "random", "severity_multiplier": 0.6},
+    "fall": {"priority": 20, "damage_types": ["minecraft:fall", "minecraft:stalagmite"], "wound": "bruise", "location": "fall",
+             "high_fall_damage": 10,
+             "complications": {"fracture": ch(8, 0.025, 0.85), "open_fracture_fraction": 0.2,
+                               "internal": ch(15, 0.015, 0.5), "concussion": ch(10, 0.03, 0.8)}},
+    "head_blow": {"priority": 20, "damage_types": ["minecraft:falling_anvil", "minecraft:falling_block", "minecraft:falling_stalactite", "minecraft:fly_into_wall"],
+                  "wound": "bruise", "location": "head",
+                  "complications": {"concussion": ch(5, 0.04, 1.0), "arterial": ch(40, 0.005, 0.1)}},
+    "explosion": {"priority": 20, "damage_types": ["#minecraft:is_explosion", "minecraft:fireworks"], "wound": "shrapnel", "location": "explosion",
+                  "complications": {"foreign_body": dict(ch(5, 0.03, 0.9), count_min=1, count_max=3),
+                                    "fracture": ch(15, 0.015, 0.5), "open_fracture_fraction": 0.4,
+                                    "arterial": ch(20, 0.01, 0.25), "internal": ch(15, 0.015, 0.5),
+                                    "pneumothorax": ch(15, 0.01, 0.3), "concussion": dict(ch(0, 0.05, 1.0), amount_per_severity=3.0)}},
+    "thrown": {"priority": 20, "damage_types": ["minecraft:mob_projectile", "minecraft:thrown"], "wound": "bruise", "location": "hit_point",
+               "complications": {"concussion": ch(10, 0.02, 0.5)}},
+    "fire": {"priority": 20, "damage_types": ["minecraft:in_fire", "minecraft:on_fire", "minecraft:hot_floor"], "wound": "burn", "location": "fire"},
+    "lava": {"priority": 21, "damage_types": ["minecraft:lava"], "wound": "burn", "location": "lava"},
+    "lightning": {"priority": 21, "damage_types": ["minecraft:lightning_bolt"], "wound": "burn", "location": "random",
+                  "complications": {"concussion": ch(0, 0.05, 1.0)}},
+    "fireball": {"priority": 21, "damage_types": ["minecraft:fireball", "minecraft:unattributed_fireball", "minecraft:wither_skull"],
+                 "wound": "burn", "location": "hit_point"},
+    "plants": {"priority": 20, "damage_types": ["minecraft:cactus", "minecraft:sweet_berry_bush"], "wound": "stab", "location": "legs",
+               "severity_multiplier": 0.4},
+    "freeze": {"priority": 20, "damage_types": ["minecraft:freeze"], "wound": "bruise", "location": "random", "severity_multiplier": 0.3},
+    "cramming": {"priority": 20, "damage_types": ["minecraft:cramming"], "wound": "bruise", "location": "chest",
+                 "complications": {"fracture": ch(10, 0.02, 0.5), "internal": ch(10, 0.01, 0.3)}},
+    "sonic_boom": {"priority": 20, "damage_types": ["minecraft:sonic_boom"], "wound": "bruise", "location": "chest",
+                   "complications": {"internal": ch(0, 0.03, 1.0), "concussion": ch(0, 0.05, 1.0), "fracture": ch(10, 0.02, 0.6)}},
+    # Без ран: прямо на физиологию.
+    "drown": {"priority": 20, "damage_types": ["minecraft:drown"], "wound": "none", "physiology": {"spo2_per_damage": 2}},
+    "suffocation": {"priority": 20, "damage_types": ["minecraft:in_wall"], "wound": "none", "physiology": {"spo2_per_damage": 4}},
+    "starve": {"priority": 20, "damage_types": ["minecraft:starve"], "wound": "none", "physiology": {"brain_per_damage": 1}},
+    "magic": {"priority": 20, "damage_types": ["minecraft:magic", "minecraft:indirect_magic", "minecraft:dragon_breath"],
+              "wound": "none", "physiology": {"brain_per_damage": 0.5}},
+    "wither": {"priority": 20, "damage_types": ["minecraft:wither"], "wound": "none", "physiology": {"brain_per_damage": 1}},
+    # Пули, которые пришли не через TaCZ или без события (запасной путь).
+    "bullet_fallback": {"priority": 15, "damage_types": ["tacz:bullet", "tacz:bullet_ignore_armor", "tacz:bullet_void",
+                                                          "tacz:bullet_void_ignore_armor", "zerocontact:zc_damage"],
+                        "wound": "gunshot", "location": "hit_point",
+                        "complications": {"arterial": ch(15, 0.012, 0.35), "internal": ch(5, 0.02, 0.7),
+                                          "pneumothorax": ch(5, 0.03, 0.8), "fracture": ch(15, 0.015, 0.6),
+                                          "open_fracture_fraction": 0.6, "foreign_body": dict(ch(0, 0.0, 0.35), count_min=1, count_max=1)}},
+    # Прочие снаряды модов (Superb Warfare и т.п.) — как пуля, по точке попадания.
+    "projectile_fallback": {"priority": 5, "damage_types": ["#minecraft:is_projectile"], "wound": "gunshot", "location": "hit_point",
+                            "complications": {"arterial": ch(15, 0.01, 0.3), "internal": ch(5, 0.02, 0.6),
+                                              "pneumothorax": ch(5, 0.03, 0.6), "fracture": ch(15, 0.015, 0.5),
+                                              "foreign_body": dict(ch(0, 0.0, 0.3), count_min=1, count_max=1)}},
+    # TaCZ + Zero Contact: исход попадания (п. 3.4 ТЗ). Без damage_types — к ним обращаются по id.
+    "gun/penetration": {"wound": "gunshot", "location": "hit_point",
+                        "complications": {"arterial": ch(15, 0.012, 0.35), "internal": ch(5, 0.02, 0.7),
+                                          "pneumothorax": ch(5, 0.03, 0.8), "fracture": ch(15, 0.015, 0.6),
+                                          "open_fracture_fraction": 0.6,
+                                          "foreign_body": dict(ch(0, 0.0, 0.35), count_min=1, count_max=1)}},
+    "gun/plate": {"wound": "bruise", "location": "hit_point",
+                  "complications": {"fracture": ch(5, 0.02, 0.5), "internal": ch(30, 0.01, 0.2)}},
+    "gun/plate_heavy": {"wound": "bruise", "location": "hit_point",
+                        "complications": {"fracture": ch(0, 0.03, 0.7), "internal": ch(0, 0.04, 0.9)}},
+    "gun/ricochet": {"wound": "cut", "location": "hit_point", "severity_multiplier": 0.6},
+    "gun/helmet": {"wound": "bruise", "location": "hit_point",
+                   "complications": {"concussion": dict(ch(0, 0.05, 1.0), amount_per_severity=3.0)}},
+}
+# Осложнения для команды /rpmedicine injure по типу раны.
+cmd = {
+    "bruise": rules["melee_blunt"]["complications"], "cut": rules["melee_blade"]["complications"],
+    "stab": rules["arrow"]["complications"], "gunshot": rules["gun/penetration"]["complications"],
+    "shrapnel": rules["explosion"]["complications"], "burn": {}, "bite": rules["bite"]["complications"],
+}
+for t, c in cmd.items():
+    rules[f"command/{t}"] = {"wound": t, "location": "hit_point", "complications": c}
+for name, r in rules.items():
+    write(f"{DS}/{name}.json", r)
+
+# ---------------------------------------------------------------- items
+ITEMS = [
+    # предмет, действие, секунды, мин. уровень, тратится
+    ("bandage", "bandage", 4, 0, True), ("pressure_dressing", "pressure_dressing", 5, 0, True),
+    ("hemostatic_gauze", "hemostatic", 6, 1, True), ("tourniquet", "tourniquet", 3, 0, True),
+    ("esmarch", "esmarch", 4, 0, True), ("splint", "splint", 8, 1, True),
+    ("occlusive_dressing", "occlusive", 4, 1, True), ("decompression_needle", "needle", 5, 3, True),
+    ("painkillers", "painkiller", 2, 0, True), ("morphine", "morphine", 2, 1, True),
+    ("adrenaline", "adrenaline", 2, 2, True), ("txa", "txa", 2, 2, True),
+    ("field_surgery_kit", "surgical_kit", 15, 4, True), ("saline", "saline", 10, 2, True),
+    ("ammonia", "ammonia", 1, 0, True), ("airway", "airway", 4, 2, True),
+    ("ambu_bag", "ambu", 1, 2, False), ("defibrillator", "defibrillator", 6, 1, True),
+    ("pulse_oximeter", "pulse_oximeter", 2, 0, False), ("tonometer", "tonometer", 6, 1, False),
+    # второй этап
+    ("empty_blood_bag", "blood_collect", 30, 3, True), ("blood_bag", "blood_bag", 10, 3, True),
+    ("stethoscope", "stethoscope", 4, 2, False), ("thermometer", "thermometer", 5, 0, False),
+    ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
+    ("blood_draw_syringe", "blood_sample", 3, 2, True),
+    ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
+]
+for item, action, sec, lvl, consume in ITEMS:
+    write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
+          {"item": f"rpmedicine:{item}", "action": action, "seconds": sec, "min_level": lvl, "consume": consume})
+
+
+# ---------------------------------------------------------------- препараты (второй этап, п. 6)
+def eff(effect, strength, delay, duration):
+    return {"effect": effect, "strength": strength, "delay": delay, "duration": duration}
+H = 3600
+DRUGS = {
+    "paracetamol": {"form": "pill", "min_level": 0, "effects": [eff("analgesia", 12, 60, 30 * 60), eff("antipyretic", 0.7, 300, 4 * H)],
+                    "dose": {"limit": 4, "window_hours": 24},
+                    "overdose": {"effects": [eff("pressure", -15, 600, 2 * H), eff("heart_rate", 15, 600, 2 * H)]}},
+    "ibuprofen": {"form": "pill", "min_level": 0,
+                  "effects": [eff("analgesia", 18, 60, 40 * 60), eff("antipyretic", 0.6, 300, 4 * H), eff("concussion_relief", 1.0, 120, 2 * H)],
+                  "dose": {"limit": 3, "window_hours": 24},
+                  "overdose": {"effects": [eff("coagulation", -0.3, 0, 2 * H)]}},
+    "ketorolac": {"form": "injection", "min_level": 3, "effects": [eff("analgesia", 35, 30, 20 * 60)],
+                  "dose": {"limit": 2, "window_hours": 12},
+                  "overdose": {"effects": [eff("coagulation", -0.4, 0, 2 * H)]}},
+    "tramadol": {"form": "pill", "min_level": 4, "opioid": True,
+                 "effects": [eff("analgesia", 35, 120, 40 * 60), eff("resp_depression", 0.1, 120, 40 * 60)],
+                 "dose": {"limit": 2, "window_hours": 12},
+                 "overdose": {"effects": [eff("resp_depression", 0.4, 0, 30 * 60), eff("sedation", 30, 0, 30 * 60)], "arrest_chance": 0.1}},
+    "naloxone": {"form": "injection", "min_level": 4, "special": "opioid_antidote", "effects": []},
+    "amoxicillin": {"form": "pill", "min_level": 4, "effects": [eff("antibiotic", 10, 600, 8 * H)],
+                    "dose": {"limit": 1, "window_hours": 8},
+                    "overdose": {"effects": [eff("pressure", -10, 300, H), eff("heart_rate", 10, 300, H)]}},
+    "ceftriaxone": {"form": "injection", "min_level": 5, "effects": [eff("antibiotic", 13, 300, 12 * H)],
+                    "dose": {"limit": 1, "window_hours": 12},
+                    "overdose": {"effects": [eff("pressure", -15, 300, H), eff("heart_rate", 15, 300, H)]}},
+    "diazepam": {"form": "injection", "min_level": 5, "effects": [eff("sedation", 40, 60, 30 * 60), eff("heart_rate", -10, 60, 30 * 60)],
+                 "dose": {"limit": 2, "window_hours": 8},
+                 "overdose": {"effects": [eff("sedation", 70, 0, 40 * 60), eff("resp_depression", 0.3, 0, 40 * 60)], "arrest_chance": 0.05}},
+    "norepinephrine": {"form": "drip", "min_level": 6, "effects": [eff("pressure", 30, 30, 20 * 60), eff("heart_rate", 10, 30, 20 * 60)],
+                       "dose": {"limit": 2, "window_hours": 2},
+                       "overdose": {"effects": [eff("pressure", 40, 0, 20 * 60), eff("heart_rate", 40, 0, 20 * 60)]}},
+    "atropine": {"form": "injection", "min_level": 5, "effects": [eff("heart_rate", 25, 30, 15 * 60)],
+                 "dose": {"limit": 3, "window_hours": 1},
+                 "overdose": {"effects": [eff("heart_rate", 50, 0, 30 * 60), eff("sedation", 20, 0, 30 * 60)]}},
+    "antiseptic": {"form": "topical", "min_level": 0, "special": "antiseptic", "effects": []},
+    "antibiotic_ointment": {"form": "topical", "min_level": 2, "special": "antibiotic_ointment", "effects": []},
+}
+for name, d in DRUGS.items():
+    obj = {"items": [f"rpmedicine:{name}"]}
+    obj.update(d)
+    write(f"{DATA}/rpmedicine/rpmedicine/drugs/{name}.json", obj)
+
+ALIASES = {
+    # Survival Instinct (остаётся в сборке)
+    "survival_instinct:bandage": "rpmedicine:bandage", "survival_instinct:homemade_bandage": "rpmedicine:bandage",
+    "survival_instinct:analgesic": "rpmedicine:painkillers",
+    "survival_instinct:morphine_injector": "rpmedicine:morphine", "survival_instinct:morphine_syringe": "rpmedicine:morphine",
+    "survival_instinct:adrenaline_injector": "rpmedicine:adrenaline", "survival_instinct:adrenaline_syringe": "rpmedicine:adrenaline",
+    # Tactical Aid (инъекторы)
+    "tactical_aid:adrenalineinjector": "rpmedicine:adrenaline", "tactical_aid:adrenalineinjector_ii": "rpmedicine:adrenaline",
+    "tactical_aid:adrenalineinjector_iii": "rpmedicine:adrenaline",
+    "tactical_aid:painlessinjector": "rpmedicine:morphine", "tactical_aid:relief_injector": "rpmedicine:painkillers",
+    # Medicamod (только как список препаратов; второй этап — к своим аналогам)
+    "medicamod:morphine": "rpmedicine:morphine", "medicamod:adrenalin": "rpmedicine:adrenaline",
+    "medicamod:ibuprofen": "rpmedicine:ibuprofen", "medicamod:ketonal": "rpmedicine:ibuprofen",
+    "medicamod:metamizol": "rpmedicine:paracetamol", "medicamod:paracetamol": "rpmedicine:paracetamol",
+    "medicamod:apirin": "rpmedicine:ibuprofen", "medicamod:codeine": "rpmedicine:tramadol",
+    "medicamod:diazepam": "rpmedicine:diazepam", "medicamod:penicillin": "rpmedicine:amoxicillin",
+    "medicamod:azithromycin": "rpmedicine:amoxicillin",
+    # Tactical Medicine (удаляется; на время перехода)
+    "tacmed:bandage": "rpmedicine:pressure_dressing", "tacmed:hemostatic": "rpmedicine:hemostatic_gauze",
+    "tacmed:tourniquet": "rpmedicine:tourniquet", "tacmed:esmarch_tourniquet": "rpmedicine:esmarch",
+    "tacmed:splint": "rpmedicine:splint", "tacmed:chest_seal": "rpmedicine:occlusive_dressing",
+    "tacmed:needle_14g": "rpmedicine:decompression_needle", "tacmed:promedol": "rpmedicine:morphine",
+    "tacmed:nefopam": "rpmedicine:painkillers", "tacmed:pill_pack": "rpmedicine:painkillers",
+    "tacmed:saline": "rpmedicine:saline", "tacmed:npa": "rpmedicine:airway", "tacmed:ambu_bag": "rpmedicine:ambu_bag",
+    "tacmed:defibrillator": "rpmedicine:defibrillator",
+}
+write(f"{DATA}/rpmedicine/rpmedicine/item_aliases/default.json", {"aliases": ALIASES})
+
+# Мобы: по умолчанию никому (у всех ванильное здоровье). Пример в docs/datapack.md.
+write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
+      {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
+
+# ---------------------------------------------------------------- теги
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample"]
+write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
+      {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
+write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
+      {"replace": False, "values": [{"id": "tacz:modern_kinetic_gun", "required": False}]})
+write(f"{DATA}/rpmedicine/tags/entity_types/biting_mobs.json",
+      {"replace": False, "values": ["minecraft:wolf", "minecraft:spider", "minecraft:cave_spider", "minecraft:zombie",
+                                    "minecraft:husk", "minecraft:drowned", "minecraft:zombie_villager", "minecraft:silverfish",
+                                    "minecraft:endermite", "minecraft:polar_bear", "minecraft:fox", "minecraft:cat",
+                                    "minecraft:ocelot", "minecraft:panda", "minecraft:hoglin", "minecraft:zoglin",
+                                    "minecraft:piglin", "minecraft:axolotl"]})
+
+# ---------------------------------------------------------------- госпиталь (второй этап): функции чужих блоков
+MOA_COLORS = ["amarilla", "azul", "azulclara", "blanca", "cafe", "cian", "gris", "grisclara", "magenta", "morada",
+              "naranja", "negra", "roja", "rosa", "verde", "verdelima"]
+HOSPITAL = {
+    "beds": {"function": "bed", "blocks": ["industrialhellscape:medical_bed"] + [f"moa_decor_science:camah{c}" for c in MOA_COLORS]
+             + ["multibeds:cot"]},
+    "operating_tables": {"function": "operating_table", "blocks": ["industrialhellscape:operating_table"]},
+    "monitors": {"function": "monitor", "blocks": ["industrialhellscape:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
+    "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand"], "radius": 3},
+    # Холодильник и лаборатория — предложение по справочнику id, ждёт подтверждения автора (07_spec_stage2.md, п. 16.13).
+    "fridges": {"function": "fridge", "blocks": ["refurbished_furniture:light_fridge", "refurbished_furniture:dark_fridge"]},
+    "labs": {"function": "lab", "blocks": ["moa_decor_science:microscopio"]},
+}
+for name, obj in HOSPITAL.items():
+    write(f"{DATA}/rpmedicine/rpmedicine/hospital_blocks/{name}.json", obj)
+
+# ---------------------------------------------------------------- напитки для своей жажды (без LSO; второй этап, п. 12)
+DRINKS = {
+    "water": {"items": ["minecraft:potion"], "potion": "minecraft:water", "amount": 35},
+    "milk": {"items": ["minecraft:milk_bucket"], "amount": 25},
+    "honey": {"items": ["minecraft:honey_bottle"], "amount": 10},
+    "soups": {"items": ["minecraft:mushroom_stew", "minecraft:beetroot_soup", "minecraft:rabbit_stew", "minecraft:suspicious_stew"], "amount": 10},
+    "melon": {"items": ["minecraft:melon_slice"], "amount": 5},
+}
+for name, obj in DRINKS.items():
+    write(f"{DATA}/rpmedicine/rpmedicine/drinks/{name}.json", obj)
+
+# ---------------------------------------------------------------- звуки (заглушки: ссылки на ванильные звуковые события)
+# Ссылка на событие ("type": "event"), а не на файл: пути файлов в ресурсах ванили меняются от версии к версии.
+SOUNDS = {
+    "heartbeat": "minecraft:block.note_block.basedrum", "heavy_breathing": "minecraft:entity.player.hurt_drown",
+    "ear_ringing": "minecraft:block.note_block.bell", "bandage": "minecraft:item.armor.equip_leather",
+    "injection": "minecraft:ui.button.click", "tourniquet": "minecraft:item.armor.equip_chain",
+    "defib_shock": "minecraft:block.fire.extinguish", "bone_break": "minecraft:entity.zombie.break_wooden_door",
+    "pills": "minecraft:entity.generic.eat", "monitor_alarm": "minecraft:block.note_block.bit",
+    "vomit": "minecraft:entity.player.burp",
+}
+def sound_entries(k, v):
+    # Звук из Tactical Medicine или Health & Disease (файл в моде), иначе ссылка на ванильное событие.
+    if k in foreign_assets.SOUNDS:
+        return [{"name": f"rpmedicine:{foreign_assets.sound_file(k, i)}"} for i in range(len(foreign_assets.SOUNDS[k]))]
+    return [{"name": v, "type": "event"}]
+write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": sound_entries(k, v)}
+                                for k, v in SOUNDS.items()})
+
+# ---------------------------------------------------------------- модели и текстуры-заглушки
+def png(path, pixels):
+    """pixels: 16 строк по 16 RGBA."""
+    raw = b"".join(b"\x00" + b"".join(struct.pack("BBBB", *p) for p in row) for row in pixels)
+    def chunk(t, d):
+        return struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
+    data = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 16, 16, 8, 6, 0, 0, 0)) \
+        + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b"")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(data)
+
+def icon(shape, color, accent):
+    T = (0, 0, 0, 0)
+    c = color + (255,)
+    a = accent + (255,)
+    d = tuple(max(0, x - 60) for x in color) + (255,)
+    px = [[T] * 16 for _ in range(16)]
+    def rect(x0, y0, x1, y1, col):
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                px[y][x] = col
+    if shape == "roll":       # бинт, повязка
+        rect(3, 4, 13, 12, c); rect(3, 4, 13, 5, d); rect(3, 11, 13, 12, d); rect(6, 7, 10, 9, a)
+    elif shape == "strap":    # жгут
+        rect(2, 6, 14, 10, c); rect(6, 5, 10, 11, a)
+    elif shape == "board":    # шина
+        rect(4, 1, 7, 15, c); rect(9, 1, 12, 15, c); rect(3, 5, 13, 7, a); rect(3, 10, 13, 12, a)
+    elif shape == "syringe":  # шприц, игла
+        for i in range(10):
+            rect(3 + i, 11 - i, 5 + i, 13 - i, c)
+        rect(12, 2, 14, 4, a)
+    elif shape == "pills":
+        rect(4, 3, 12, 14, c); rect(4, 3, 12, 5, a); rect(6, 7, 10, 11, d)
+    elif shape == "bag":      # физраствор, Амбу
+        rect(4, 2, 12, 12, c); rect(7, 12, 9, 15, a); rect(5, 4, 11, 6, d)
+    elif shape == "box":      # аптечка, подсумок, набор
+        rect(2, 4, 14, 14, c); rect(7, 6, 9, 12, a); rect(5, 8, 11, 10, a)
+    elif shape == "device":   # приборы
+        rect(3, 3, 13, 13, c); rect(5, 5, 11, 9, a); rect(5, 10, 7, 12, d); rect(9, 10, 11, 12, d)
+    elif shape == "patch":
+        rect(3, 3, 13, 13, c); rect(5, 5, 11, 11, a)
+    png_path = None
+    return px
+
+ICONS = {
+    "bandage": ("roll", (235, 235, 225), (200, 60, 60)), "pressure_dressing": ("roll", (120, 140, 90), (230, 230, 220)),
+    "hemostatic_gauze": ("roll", (230, 230, 210), (60, 120, 200)), "tourniquet": ("strap", (40, 40, 40), (200, 60, 40)),
+    "esmarch": ("strap", (200, 120, 80), (150, 80, 50)), "splint": ("board", (180, 150, 90), (90, 90, 90)),
+    "occlusive_dressing": ("patch", (220, 220, 220), (60, 60, 60)), "decompression_needle": ("syringe", (200, 200, 210), (90, 90, 230)),
+    "painkillers": ("pills", (240, 240, 240), (60, 160, 60)), "morphine": ("syringe", (220, 220, 220), (180, 40, 40)),
+    "adrenaline": ("syringe", (230, 230, 200), (230, 160, 30)), "txa": ("syringe", (220, 230, 240), (60, 140, 200)),
+    "field_surgery_kit": ("box", (70, 90, 70), (230, 230, 230)), "saline": ("bag", (200, 225, 240), (120, 120, 140)),
+    "ammonia": ("pills", (200, 230, 240), (40, 90, 160)), "airway": ("strap", (230, 170, 170), (230, 230, 230)),
+    "ambu_bag": ("bag", (60, 80, 160), (230, 230, 230)), "defibrillator": ("device", (230, 200, 40), (60, 60, 60)),
+    "pulse_oximeter": ("device", (60, 60, 70), (80, 220, 120)), "tonometer": ("device", (230, 230, 230), (60, 60, 60)),
+    "medical_pouch": ("box", (90, 100, 60), (200, 50, 50)), "first_aid_kit": ("box", (200, 50, 50), (240, 240, 240)),
+    "gm_scanner": ("device", (120, 40, 160), (240, 200, 60)),
+    "empty_blood_bag": ("bag", (225, 225, 230), (150, 150, 160)), "blood_bag": ("bag", (170, 20, 30), (230, 230, 230)),
+    "paracetamol": ("pills", (240, 240, 240), (60, 120, 220)), "ibuprofen": ("pills", (230, 120, 60), (240, 240, 240)),
+    "ketorolac": ("syringe", (220, 220, 230), (120, 60, 160)), "tramadol": ("pills", (240, 240, 200), (160, 40, 40)),
+    "naloxone": ("syringe", (220, 230, 220), (40, 160, 80)), "amoxicillin": ("pills", (250, 220, 120), (200, 60, 60)),
+    "ceftriaxone": ("syringe", (240, 240, 220), (220, 180, 40)), "diazepam": ("syringe", (220, 220, 240), (60, 90, 200)),
+    "norepinephrine": ("bag", (240, 230, 200), (200, 90, 30)), "atropine": ("syringe", (230, 220, 230), (150, 30, 120)),
+    "antiseptic": ("patch", (200, 170, 120), (140, 60, 30)), "antibiotic_ointment": ("pills", (240, 240, 240), (230, 200, 40)),
+    "stethoscope": ("strap", (60, 60, 70), (200, 200, 210)), "thermometer": ("syringe", (240, 240, 240), (220, 40, 40)),
+    "portable_scanner": ("device", (60, 90, 120), (120, 220, 240)), "hemoanalyzer": ("device", (230, 230, 230), (200, 40, 50)),
+    "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
+    "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)),
+    "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
+    "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
+}
+for name, (shape, color, accent) in ICONS.items():
+    # Текстуры из Tactical Medicine и Health & Disease кладёт scripts/foreign_assets.py — не затираем.
+    if name not in foreign_assets.TEXTURES:
+        png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))
+    write(f"{ASSETS}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"rpmedicine:item/{name}"}})
+
+write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
+print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(DRUGS), "препаратов,", len(ALIASES), "аналогов")
+
+# ---------------------------------------------------------------- площадка для GameTest (7×5×7, пол из камня)
+import gzip
+def nbt_named(tag_type, name, payload):
+    n = name.encode("utf-8")
+    return bytes([tag_type]) + struct.pack(">H", len(n)) + n + payload
+def nbt_int(v): return struct.pack(">i", v)
+def nbt_string(s):
+    b = s.encode("utf-8"); return struct.pack(">H", len(b)) + b
+def nbt_list(elem_type, items): return bytes([elem_type]) + struct.pack(">i", len(items)) + b"".join(items)
+def nbt_compound(entries): return b"".join(entries) + b"\x00"
+
+SX, SY, SZ = 7, 5, 7
+palette = [nbt_compound([nbt_named(8, "Name", nbt_string("minecraft:stone"))])]
+blocks = []
+for x in range(SX):
+    for z in range(SZ):
+        blocks.append(nbt_compound([nbt_named(9, "pos", nbt_list(3, [nbt_int(x), nbt_int(0), nbt_int(z)])),
+                                    nbt_named(3, "state", nbt_int(0))]))
+root = nbt_compound([
+    nbt_named(3, "DataVersion", nbt_int(3465)),
+    nbt_named(9, "size", nbt_list(3, [nbt_int(SX), nbt_int(SY), nbt_int(SZ)])),
+    nbt_named(9, "palette", nbt_list(10, palette)),
+    nbt_named(9, "blocks", nbt_list(10, blocks)),
+    nbt_named(9, "entities", nbt_list(10, [])),
+])
+path = os.path.join(DATA, "rpmedicine", "structures", "platform.nbt")
+os.makedirs(os.path.dirname(path), exist_ok=True)
+with open(path, "wb") as f:
+    f.write(gzip.compress(nbt_named(10, "", root), mtime=0))

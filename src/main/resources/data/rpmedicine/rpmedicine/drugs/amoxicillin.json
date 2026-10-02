@@ -1,0 +1,35 @@
+{
+  "items": [
+    "rpmedicine:amoxicillin"
+  ],
+  "form": "pill",
+  "min_level": 4,
+  "effects": [
+    {
+      "effect": "antibiotic",
+      "strength": 10,
+      "delay": 600,
+      "duration": 28800
+    }
+  ],
+  "dose": {
+    "limit": 1,
+    "window_hours": 8
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "pressure",
+        "strength": -10,
+        "delay": 300,
+        "duration": 3600
+      },
+      {
+        "effect": "heart_rate",
+        "strength": 10,
+        "delay": 300,
+        "duration": 3600
+      }
+    ]
+  }
+}

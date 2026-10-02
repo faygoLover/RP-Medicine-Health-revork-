@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:hemoanalyzer",
+  "action": "hemoanalyzer",
+  "seconds": 10,
+  "min_level": 4,
+  "consume": false
+}

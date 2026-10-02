@@ -1,0 +1,404 @@
+package faygolover.rpmedicine.core;
+
+import java.util.function.Consumer;
+
+/**
+ * Полное медицинское состояние человека: части тела и физиология. Хранится на сервере у игрока
+ * (capability) и у заглушки. Время — секунды в сети.
+ */
+public final class MedicalState {
+    public enum Heart {
+        NORMAL, FIBRILLATION, ARREST;
+
+        public static Heart byOrdinal(int i) {
+            return i >= 0 && i < values().length ? values()[i] : NORMAL;
+        }
+    }
+
+    public enum Pneumo {
+        NONE, OPEN, TENSION;
+
+        public static Pneumo byOrdinal(int i) {
+            return i >= 0 && i < values().length ? values()[i] : NONE;
+        }
+    }
+
+    /** Лежачий: обморок (без таймера), нокдаун (таймер — мозг), клиническая смерть. */
+    public enum Down {
+        NONE, FAINT, KNOCKDOWN, CLINICAL;
+
+        public static Down byOrdinal(int i) {
+            return i >= 0 && i < values().length ? values()[i] : NONE;
+        }
+    }
+
+    public final BodyPartState[] parts = new BodyPartState[BodyPart.VALUES.length];
+
+    // Кровь
+    public double weightKg;
+    public double heightCm;
+    /** Объём в сосудах, мл, включая физраствор. */
+    public double bloodVolume;
+    /** Сколько из объёма — физраствор, мл. */
+    public double saline;
+    /** Осталось влить физраствора, мл, и скорость, мл/с. */
+    public double salineDripRemaining;
+    public double salineDripRate;
+
+    // Сердце и давление
+    public Heart heart = Heart.NORMAL;
+    public double fibrillationSeconds;
+    public double lowPressureSeconds;
+    public double pressure;
+    public double heartRate;
+
+    // Дыхание
+    public double respRate;
+    public double spo2;
+    public boolean respiratoryArrest;
+    /** Воздуховод установлен (держится, пока человек без сознания). */
+    public boolean airway;
+    /** Осталось секунд вентиляции мешком Амбу и СЛР (продлеваются, пока медик удерживает действие). */
+    public double ambuSeconds;
+    public double cprSeconds;
+    /** Накоплено секунд СЛР для броска на запуск сердца. */
+    public double cprAccum;
+    public double hypoxiaSeconds;
+
+    // Боль
+    /** Боль после обезболивания и адреналина, 0–100. */
+    public double pain;
+    /** Боль без учёта обезболивания. */
+    public double rawPain;
+    public double adrenalineSeconds;
+    public double adrenalineInjectionSeconds;
+    public double painkillerSeconds;
+    public double painkillerDelay;
+    public double morphineSeconds;
+    public double morphineDelay;
+    public double morphineOverdoseSeconds;
+    public double txaSeconds;
+    public double shockAccum;
+    public double shockLimit;
+    public boolean painShock;
+
+    // Сознание и мозг
+    public double consciousness;
+    public double brain;
+    public double concussion;
+    public double concussionKoSeconds;
+    public double postClinicalSeconds;
+
+    // Грудь
+    public Pneumo pneumo = Pneumo.NONE;
+    /** Секунд до перехода открытого пневмоторакса в напряжённый. */
+    public double pneumoTimer;
+    /** Развитие напряжённого пневмоторакса 0–1 (1 — остановка сердца). */
+    public double tensionProgress;
+
+    // Лежачий
+    public Down down = Down.NONE;
+    /** Таймер пробуждения, секунды; отрицательный — не запущен. */
+    public double wakeSeconds = -1;
+    /** Нокдаун после клинической смерти идёт без таймера (п. 5.4 ТЗ), пока сердце снова не встанет. */
+    public boolean knockdownNoTimer;
+    /** Чужое лечение (зелья, другие моды): секунды ускоренного заживления. */
+    public double healBoostSeconds;
+
+    // Второй этап: инфекция, температура, лекарства
+    /** Сепсис 0–100. */
+    public double sepsis;
+    /** Температура тела, °C. */
+    public double bodyTemp;
+    /** Испорченная кровь: сколько ещё секунд она питает сепсис. */
+    public double spoiledBloodSeconds;
+    /** Группа крови (null — не задана). Как рост и вес, переживает смерть. */
+    public BloodType bloodType;
+    /** Переливание крови: осталось влить, мл, и скорость, мл/с; группа и годность пакета. */
+    public double bloodDripRemaining;
+    public double bloodDripRate;
+    public BloodType bloodDripType;
+    public boolean bloodDripSpoiled;
+    /** Реакция на несовместимую кровь: осталось секунд. */
+    public double transfusionReactionSeconds;
+    /** Своя жажда без LSO: вода 0–100. */
+    public double thirst = 100;
+    /** Команда food add для офлайн-игроков: сколько сытости и воды снять при входе. */
+    public double pendingFoodLoss;
+    public double pendingThirstLoss;
+    /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
+    public double nauseaSeconds;
+    public double vomitTimer;
+    /** Глухота после взрыва (баротравма), секунд. */
+    public double deafSeconds;
+    /** Острая боль от манипуляций (вправление, пинцет) и сколько ещё секунд. */
+    public double acutePain;
+    public double acutePainSeconds;
+    /** Опиаты из датапака (трамадол и т.п.): сколько ещё действуют — для налоксона и угнетения дыхания с седацией. */
+    public double opioidSeconds;
+    /** Дозы препаратов в окне: id препарата → сколько секунд в сети осталось каждой дозе до выхода из окна. */
+    public final java.util.Map<String, java.util.List<Double>> doses = new java.util.HashMap<>();
+    /** Действующие эффекты лекарств из датапака. */
+    public final java.util.EnumMap<DrugEffect, DrugEffect.Active> effects = new java.util.EnumMap<>(DrugEffect.class);
+
+    public MedicalState() {
+        for (BodyPart p : BodyPart.VALUES) parts[p.ordinal()] = new BodyPartState(p);
+        reset(MedicalSettings.get());
+    }
+
+    public MedicalState(MedicalSettings s) {
+        for (BodyPart p : BodyPart.VALUES) parts[p.ordinal()] = new BodyPartState(p);
+        reset(s);
+    }
+
+    public BodyPartState part(BodyPart p) {
+        return parts[p.ordinal()];
+    }
+
+    public double normalBlood(MedicalSettings s) {
+        return s.normalBlood(weightKg);
+    }
+
+    /** Доля объёма от нормы. */
+    public double bloodFraction(MedicalSettings s) {
+        return bloodVolume / normalBlood(s);
+    }
+
+    /** Доля крови, переносящей кислород (физраствор кислород не несёт). */
+    public double oxygenCapacity(MedicalSettings s) {
+        return Math.max(0, bloodVolume - saline) / normalBlood(s);
+    }
+
+    /** Полный сброс к здоровому состоянию (после смерти и по команде ГМа). Рост и вес сохраняются. */
+    public void reset(MedicalSettings s) {
+        if (weightKg <= 0) weightKg = s.defaultWeightKg;
+        if (heightCm <= 0) heightCm = s.defaultHeightCm;
+        for (BodyPartState ps : parts) ps.clear();
+        bloodVolume = normalBlood(s);
+        saline = 0;
+        salineDripRemaining = 0;
+        salineDripRate = 0;
+        heart = Heart.NORMAL;
+        fibrillationSeconds = 0;
+        lowPressureSeconds = 0;
+        pressure = s.normalPressure;
+        heartRate = s.normalHeartRate;
+        respRate = s.normalRespRate;
+        spo2 = s.spo2Normal;
+        respiratoryArrest = false;
+        airway = false;
+        ambuSeconds = 0;
+        cprSeconds = 0;
+        cprAccum = 0;
+        hypoxiaSeconds = 0;
+        pain = 0;
+        rawPain = 0;
+        adrenalineSeconds = 0;
+        adrenalineInjectionSeconds = 0;
+        painkillerSeconds = 0;
+        painkillerDelay = 0;
+        morphineSeconds = 0;
+        morphineDelay = 0;
+        morphineOverdoseSeconds = 0;
+        txaSeconds = 0;
+        shockAccum = 0;
+        shockLimit = 0;
+        painShock = false;
+        consciousness = 100;
+        brain = 100;
+        concussion = 0;
+        concussionKoSeconds = 0;
+        postClinicalSeconds = 0;
+        pneumo = Pneumo.NONE;
+        pneumoTimer = 0;
+        tensionProgress = 0;
+        down = Down.NONE;
+        wakeSeconds = -1;
+        knockdownNoTimer = false;
+        healBoostSeconds = 0;
+        sepsis = 0;
+        bodyTemp = s.normalBodyTemp;
+        spoiledBloodSeconds = 0;
+        bloodDripRemaining = 0;
+        bloodDripRate = 0;
+        bloodDripType = null;
+        bloodDripSpoiled = false;
+        transfusionReactionSeconds = 0;
+        opioidSeconds = 0;
+        acutePain = 0;
+        acutePainSeconds = 0;
+        thirst = 100;
+        nauseaSeconds = 0;
+        vomitTimer = 0;
+        deafSeconds = 0;
+        doses.clear();
+        effects.clear();
+    }
+
+    /** Лечение части или всего тела командой ГМа: убирает травмы, но не сбрасывает лекарства. */
+    public void healPart(BodyPart p) {
+        BodyPartState ps = part(p);
+        ps.clear();
+        if (p == BodyPart.CHEST) {
+            pneumo = Pneumo.NONE;
+            pneumoTimer = 0;
+            tensionProgress = 0;
+        }
+    }
+
+    public boolean isDown() {
+        return down != Down.NONE;
+    }
+
+    public boolean isUnconscious() {
+        return down != Down.NONE;
+    }
+
+    /**
+     * «Спящий режим»: здоровый человек без ран и отклонений, физиологию считать не нужно.
+     * Проверка дешёвая — вызывается каждый шаг.
+     */
+    public boolean isQuiet(MedicalSettings s) {
+        if (down != Down.NONE || heart != Heart.NORMAL || pneumo != Pneumo.NONE || respiratoryArrest) return false;
+        for (BodyPartState ps : parts) if (!ps.isHealthy()) return false;
+        if (bloodVolume < normalBlood(s) - 0.5 || saline > 0 || salineDripRemaining > 0) return false;
+        if (brain < 100 || concussion > 0 || concussionKoSeconds > 0 || postClinicalSeconds > 0) return false;
+        if (adrenalineSeconds > 0 || adrenalineInjectionSeconds > 0 || painkillerSeconds > 0 || morphineSeconds > 0
+                || morphineOverdoseSeconds > 0 || txaSeconds > 0 || ambuSeconds > 0 || cprSeconds > 0) return false;
+        if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
+        if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
+        if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
+        if (nauseaSeconds > 0 || deafSeconds > 0) return false;
+        if (thirst < s.dehydrationThreshold * 100) return false;
+        if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
+        return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
+                && Math.abs(respRate - s.normalRespRate) < 0.5 && Math.abs(spo2 - s.spo2Normal) < 0.5
+                && consciousness >= 99.5;
+    }
+
+    public double totalExternalBleed(MedicalSettings s) {
+        double sum = 0;
+        for (BodyPartState ps : parts) sum += Physiology.partExternalBleed(this, ps, s);
+        return sum;
+    }
+
+    public double totalInternalBleed() {
+        double sum = 0;
+        for (BodyPartState ps : parts) sum += ps.internalBleed;
+        return sum;
+    }
+
+    public void forEachWound(Consumer<Wound> c) {
+        for (BodyPartState ps : parts) ps.wounds.forEach(c);
+    }
+
+    public MedicalState copy() {
+        MedicalState m = new MedicalState(MedicalSettings.get());
+        m.copyFrom(this);
+        return m;
+    }
+
+    public void copyFrom(MedicalState o) {
+        for (int i = 0; i < parts.length; i++) parts[i].copyFrom(o.parts[i]);
+        weightKg = o.weightKg;
+        heightCm = o.heightCm;
+        bloodVolume = o.bloodVolume;
+        saline = o.saline;
+        salineDripRemaining = o.salineDripRemaining;
+        salineDripRate = o.salineDripRate;
+        heart = o.heart;
+        fibrillationSeconds = o.fibrillationSeconds;
+        lowPressureSeconds = o.lowPressureSeconds;
+        pressure = o.pressure;
+        heartRate = o.heartRate;
+        respRate = o.respRate;
+        spo2 = o.spo2;
+        respiratoryArrest = o.respiratoryArrest;
+        airway = o.airway;
+        ambuSeconds = o.ambuSeconds;
+        cprSeconds = o.cprSeconds;
+        cprAccum = o.cprAccum;
+        hypoxiaSeconds = o.hypoxiaSeconds;
+        pain = o.pain;
+        rawPain = o.rawPain;
+        adrenalineSeconds = o.adrenalineSeconds;
+        adrenalineInjectionSeconds = o.adrenalineInjectionSeconds;
+        painkillerSeconds = o.painkillerSeconds;
+        painkillerDelay = o.painkillerDelay;
+        morphineSeconds = o.morphineSeconds;
+        morphineDelay = o.morphineDelay;
+        morphineOverdoseSeconds = o.morphineOverdoseSeconds;
+        txaSeconds = o.txaSeconds;
+        shockAccum = o.shockAccum;
+        shockLimit = o.shockLimit;
+        painShock = o.painShock;
+        consciousness = o.consciousness;
+        brain = o.brain;
+        concussion = o.concussion;
+        concussionKoSeconds = o.concussionKoSeconds;
+        postClinicalSeconds = o.postClinicalSeconds;
+        pneumo = o.pneumo;
+        pneumoTimer = o.pneumoTimer;
+        tensionProgress = o.tensionProgress;
+        down = o.down;
+        wakeSeconds = o.wakeSeconds;
+        knockdownNoTimer = o.knockdownNoTimer;
+        healBoostSeconds = o.healBoostSeconds;
+        sepsis = o.sepsis;
+        bodyTemp = o.bodyTemp;
+        spoiledBloodSeconds = o.spoiledBloodSeconds;
+        bloodType = o.bloodType;
+        bloodDripRemaining = o.bloodDripRemaining;
+        bloodDripRate = o.bloodDripRate;
+        bloodDripType = o.bloodDripType;
+        bloodDripSpoiled = o.bloodDripSpoiled;
+        transfusionReactionSeconds = o.transfusionReactionSeconds;
+        opioidSeconds = o.opioidSeconds;
+        acutePain = o.acutePain;
+        acutePainSeconds = o.acutePainSeconds;
+        nauseaSeconds = o.nauseaSeconds;
+        vomitTimer = o.vomitTimer;
+        deafSeconds = o.deafSeconds;
+        thirst = o.thirst;
+        pendingFoodLoss = o.pendingFoodLoss;
+        pendingThirstLoss = o.pendingThirstLoss;
+        doses.clear();
+        for (var e : o.doses.entrySet()) doses.put(e.getKey(), new java.util.ArrayList<>(e.getValue()));
+        effects.clear();
+        for (var e : o.effects.entrySet()) effects.put(e.getKey(), e.getValue().copy());
+    }
+
+    /** Острая боль от манипуляции: сильнее предыдущей — заменяет, дольше — продлевает. */
+    public void painSpike(double pain, double seconds) {
+        acutePain = Math.max(acutePainSeconds > 0 ? acutePain : 0, pain);
+        acutePainSeconds = Math.max(acutePainSeconds, seconds);
+    }
+
+    // ------------------------------------------------------------------ лекарства
+
+    /** Действующая сила эффекта (0, если не действует или ещё не начал). */
+    public double effect(DrugEffect e) {
+        DrugEffect.Active a = effects.get(e);
+        return a != null && a.working() ? a.strength : 0;
+    }
+
+    public boolean hasEffect(DrugEffect e) {
+        DrugEffect.Active a = effects.get(e);
+        return a != null && a.seconds > 0;
+    }
+
+    /**
+     * Добавить эффект дозы: одинаковые эффекты не складываются по силе, а продлеваются по времени
+     * (Casualties Unknown); сила — наибольшая из доз.
+     */
+    public void addEffect(DrugEffect e, double strength, double delay, double seconds) {
+        DrugEffect.Active a = effects.get(e);
+        if (a == null || a.seconds <= 0) {
+            effects.put(e, new DrugEffect.Active(strength, delay, seconds));
+            return;
+        }
+        a.seconds += seconds;
+        if (Math.abs(strength) > Math.abs(a.strength)) a.strength = strength;
+        a.delay = Math.min(a.delay, delay);
+    }
+}

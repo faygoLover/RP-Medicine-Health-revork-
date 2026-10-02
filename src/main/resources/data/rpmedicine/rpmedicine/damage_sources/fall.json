@@ -1,0 +1,28 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:fall",
+    "minecraft:stalagmite"
+  ],
+  "wound": "bruise",
+  "location": "fall",
+  "high_fall_damage": 10,
+  "complications": {
+    "fracture": {
+      "min_severity": 8,
+      "per_severity": 0.025,
+      "max": 0.85
+    },
+    "open_fracture_fraction": 0.2,
+    "internal": {
+      "min_severity": 15,
+      "per_severity": 0.015,
+      "max": 0.5
+    },
+    "concussion": {
+      "min_severity": 10,
+      "per_severity": 0.03,
+      "max": 0.8
+    }
+  }
+}

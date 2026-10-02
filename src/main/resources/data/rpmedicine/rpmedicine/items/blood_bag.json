@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:blood_bag",
+  "action": "blood_bag",
+  "seconds": 10,
+  "min_level": 3,
+  "consume": true
+}

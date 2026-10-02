@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:pressure_dressing",
+  "action": "pressure_dressing",
+  "seconds": 5,
+  "min_level": 0,
+  "consume": true
+}
