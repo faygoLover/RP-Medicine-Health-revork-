@@ -167,6 +167,7 @@
   "rpmedicine.exam.chest_pain_breathing": "Chest pain when breathing",
   "rpmedicine.exam.complaint_back_pain": "Aching lower back and chest",
   "rpmedicine.exam.complaint_cold_fingers": "Fingers are getting cold",
+  "rpmedicine.exam.complaint_deaf": "Can't hear a thing, ears ringing",
   "rpmedicine.exam.complaint_dizzy": "Feeling dizzy",
   "rpmedicine.exam.complaint_fever": "Feverish chills",
   "rpmedicine.exam.complaint_freezing": "Shivering with cold",
@@ -372,6 +373,7 @@
   "rpmedicine.msg.something_cracked": "Something cracked…",
   "rpmedicine.msg.sterilized": "Instrument sterilized",
   "rpmedicine.msg.treated_by": "%s: %s",
+  "rpmedicine.msg.vomit": "You threw up",
   "rpmedicine.msg.woke_up": "You came to",
   "rpmedicine.panel.drag_hint": "Drag an item onto a body part",
   "rpmedicine.panel.general": "General",
@@ -593,5 +595,6 @@
   "subtitles.rpmedicine.injection": "Injection",
   "subtitles.rpmedicine.monitor_alarm": "Monitor alarm",
   "subtitles.rpmedicine.pills": "Pills",
-  "subtitles.rpmedicine.tourniquet": "Tourniquet"
+  "subtitles.rpmedicine.tourniquet": "Tourniquet",
+  "subtitles.rpmedicine.vomit": "Vomiting"
 }

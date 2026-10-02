@@ -548,4 +548,74 @@ public final class HospitalGameTests {
         remove(h, p);
         h.succeed();
     }
+
+    /** Ванилла (второй этап, п. 13): отравление, мгновенный урон, золотое яблоко, взрыв. */
+    @GameTest(template = T, timeoutTicks = 100)
+    public static void vanillaPoisonHarmAppleExplosion(GameTestHelper h) {
+        noDeath(false);
+        MedicalSettings s = MedicalSettings.get();
+        ServerPlayer p = player(h, 2.5, 2.5);
+        MedicalState m = state(p);
+        // Отравление: тик яда — без ран, тошнота; через интервал — рвота.
+        p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.POISON, 400));
+        p.hurt(p.damageSources().magic(), 1.0f);
+        h.assertTrue(wounds(m) == 0 && m.nauseaSeconds > 0, "яд: без ран, тошнота");
+        h.assertTrue(faygolover.rpmedicine.core.Examination.complaints(m, s).contains("nausea"), "жалоба «тошнит»");
+        double thirst = m.thirst;
+        faygolover.rpmedicine.server.VanillaEffects.prepareStep(p, m, s.poisonVomitIntervalSeconds);
+        if (!faygolover.rpmedicine.integration.Integrations.lso())
+            h.assertTrue(Math.abs(m.thirst - (thirst - s.vomitThirstLoss)) < 1e-6, "рвота: минус вода, было " + m.thirst);
+        p.removeEffect(net.minecraft.world.effect.MobEffects.POISON);
+        // Мгновенный урон: только острая боль (сбрасываем ванильную неуязвимость после тика яда).
+        p.invulnerableTime = 0;
+        p.hurt(p.damageSources().magic(), 6.0f);
+        h.assertTrue(wounds(m) == 0 && m.acutePain >= 30 && m.acutePainSeconds > 0, "мгновенный урон: боль без ран, было " + m.acutePain);
+        // Золотое яблоко — адреналин.
+        var apple = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GOLDEN_APPLE);
+        faygolover.rpmedicine.server.VanillaEffects.onUseFinish(new net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish(p, apple, 0,
+                net.minecraft.world.item.ItemStack.EMPTY));
+        h.assertTrue(m.adrenalineSeconds == s.goldenAppleAdrenalineSeconds, "золотое яблоко — адреналин");
+        // Взрыв — раны и глухота.
+        p.invulnerableTime = 0;
+        p.hurt(p.damageSources().explosion(null, null), 10.0f);
+        h.assertTrue(m.deafSeconds >= s.explosionDeafMinSeconds && m.deafSeconds <= s.explosionDeafMaxSeconds, "взрыв оглушил, " + m.deafSeconds);
+        h.assertTrue(wounds(m) > 0, "взрыв ранит");
+        remove(h, p);
+        h.succeed();
+    }
+
+    /** Тотем бессмертия в руке поднимает из нокдауна и спасает от смертельного попадания. */
+    @GameTest(template = T, timeoutTicks = 100)
+    public static void totemRescuesFromKnockdown(GameTestHelper h) {
+        noDeath(false);
+        MedicalSettings s = MedicalSettings.get();
+        ServerPlayer p = player(h, 2.5, 2.5);
+        MedicalState m = state(p);
+        m.part(faygolover.rpmedicine.core.BodyPart.RIGHT_LEG).wounds.add(new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.CUT, 60));
+        m.part(faygolover.rpmedicine.core.BodyPart.RIGHT_LEG).arterial = true;
+        m.bloodVolume = m.normalBlood(s) * 0.4;
+        m.down = MedicalState.Down.KNOCKDOWN;
+        var r = new faygolover.rpmedicine.core.StepResult();
+        r.events.add(faygolover.rpmedicine.core.StepResult.Event.WENT_DOWN);
+        // Без тотема — лежит.
+        faygolover.rpmedicine.server.DownedService.onStep(p, m, r);
+        h.assertTrue(m.down == MedicalState.Down.KNOCKDOWN, "без тотема лежит");
+        p.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.TOTEM_OF_UNDYING, 2));
+        faygolover.rpmedicine.server.DownedService.onStep(p, m, r);
+        h.assertTrue(!m.isDown(), "тотем поднял");
+        h.assertTrue(Math.abs(m.bloodFraction(s) - s.totemBloodFraction) < 1e-6, "кровь до 60 %");
+        h.assertTrue(!m.part(faygolover.rpmedicine.core.BodyPart.RIGHT_LEG).arterial, "артерия не кровит");
+        h.assertTrue(p.getOffhandItem().getCount() == 1, "тотем израсходован");
+        // Мгновенно смертельное попадание — тоже спасает, последний тотем уходит.
+        faygolover.rpmedicine.server.DownedService.lethal(p, faygolover.rpmedicine.server.DownedService.FINISHED, null);
+        h.assertTrue(p.isAlive() && !m.isDown() && p.getOffhandItem().isEmpty(), "спас от смерти, тотемов не осталось");
+        remove(h, p);
+        h.succeed();
+    }
+
+    private static double wounds(MedicalState m) {
+        double t = 0;
+        for (var ps : m.parts) t += ps.totalSeverity();
+        return t;
+    }
 }

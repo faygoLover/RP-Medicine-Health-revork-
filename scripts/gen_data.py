@@ -276,6 +276,7 @@ SOUNDS = {
     "injection": "minecraft:ui.button.click", "tourniquet": "minecraft:item.armor.equip_chain",
     "defib_shock": "minecraft:block.fire.extinguish", "bone_break": "minecraft:entity.zombie.break_wooden_door",
     "pills": "minecraft:entity.generic.eat", "monitor_alarm": "minecraft:block.note_block.bit",
+    "vomit": "minecraft:entity.player.burp",
 }
 write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": [{"name": v, "type": "event"}]}
                                 for k, v in SOUNDS.items()})

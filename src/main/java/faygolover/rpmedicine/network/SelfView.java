@@ -35,6 +35,8 @@ public final class SelfView {
     public byte tunnel;
     public byte gray;
     public byte ringing;
+    /** Глухота после взрыва, секунд осталось. */
+    public byte deaf;
     /** Стук сердца: 0 — не слышно, 1–3 — учащённый … очень частый. */
     public short heartbeat;
     public boolean heavyBreathing;
@@ -68,6 +70,7 @@ public final class SelfView {
         buf.writeByte(tunnel);
         buf.writeByte(gray);
         buf.writeByte(ringing);
+        buf.writeByte(deaf);
         buf.writeShort(heartbeat);
         buf.writeByte(sway);
         int flags = 0;
@@ -101,6 +104,7 @@ public final class SelfView {
         v.tunnel = buf.readByte();
         v.gray = buf.readByte();
         v.ringing = buf.readByte();
+        v.deaf = buf.readByte();
         v.heartbeat = buf.readShort();
         v.sway = buf.readByte();
         int flags = buf.readVarInt();
@@ -131,7 +135,7 @@ public final class SelfView {
         return down == v.down && knockdownSeconds == v.knockdownSeconds && Arrays.equals(partColors, v.partColors)
                 && bleed == v.bleed && pain == v.pain && fracture == v.fracture && analgesia == v.analgesia
                 && dyspnea == v.dyspnea && vignette == v.vignette && blur == v.blur && darken == v.darken
-                && tunnel == v.tunnel && gray == v.gray && ringing == v.ringing && heartbeat == v.heartbeat
+                && tunnel == v.tunnel && gray == v.gray && ringing == v.ringing && deaf == v.deaf && heartbeat == v.heartbeat
                 && heavyBreathing == v.heavyBreathing && sway == v.sway && noSprint == v.noSprint && noJump == v.noJump
                 && crawl == v.crawl && armsDisabled == v.armsDisabled && carrying == v.carrying && carried == v.carried
                 && sensations.equals(v.sensations);
@@ -140,7 +144,7 @@ public final class SelfView {
     @Override
     public int hashCode() {
         int h = Objects.hash(down, knockdownSeconds, bleed, pain, fracture, analgesia, dyspnea, vignette, blur, darken,
-                tunnel, gray, ringing, heartbeat, heavyBreathing, sway, noSprint, noJump, crawl, armsDisabled, carrying,
+                tunnel, gray, ringing, deaf, heartbeat, heavyBreathing, sway, noSprint, noJump, crawl, armsDisabled, carrying,
                 carried, sensations);
         h = h * 31 + Arrays.hashCode(partColors);
         for (int[] t : tourniquets) h = h * 31 + Arrays.hashCode(t);

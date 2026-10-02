@@ -60,6 +60,11 @@ public final class DamageHandler {
         float amount = event.getAmount();
         event.setCanceled(true);
         if (amount <= 0) return;
+        // Отравление и мгновенный урон — без травм (второй этап, п. 13).
+        if (VanillaEffects.onMagic(target, m, src, amount)) {
+            Profiler.recordOther(System.nanoTime() - t0);
+            return;
+        }
 
         // Пули TaCZ: часть тела и исход считает интеграция, раны — в конце тика.
         if (Integrations.handleGunDamage(target, src, amount)) {
@@ -81,6 +86,7 @@ public final class DamageHandler {
             amount = armorGeneric(target, src, amount);
         }
         applyInjury(target, m, prof, amount, part, side, src.getEntity());
+        if (src.is(DamageTypeTags.IS_EXPLOSION)) VanillaEffects.onExplosion(target, m, amount);
         Profiler.recordOther(System.nanoTime() - t0);
     }
 

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 /** Сетевой канал мода. Сервер → клиент: только изменения и только то, что клиенту положено видеть. */
 public final class Network {
-    private static final String PROTOCOL = "2";
+    private static final String PROTOCOL = "3";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(RpMedicine.MODID, "main"),

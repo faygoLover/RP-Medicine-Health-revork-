@@ -212,7 +212,7 @@ public final class Examination {
             }
         }
         if (worst != null && m.pain >= 15) c.add("pain_" + worst.id);
-        if (m.concussion > 30 || m.part(BodyPart.ABDOMEN).internalBleed > 0) c.add("nausea");
+        if (m.concussion > 30 || m.part(BodyPart.ABDOMEN).internalBleed > 0 || m.nauseaSeconds > 0) c.add("nausea");
         if (m.concussion > 20) c.add("ringing");
         if (m.heartRate > 115) c.add("heart_pounding");
         if (m.postClinicalSeconds > 0 || loss >= 0.3 || m.sepsis >= 30) c.add("weak");
@@ -221,6 +221,7 @@ public final class Examination {
         // Голод, жажда, среда (второй этап, п. 12). Своя жажда — только без LSO, у LSO своя полоска.
         if (m.thirst < s.dehydrationThreshold * 100 + 10) c.add("thirsty");
         if (m.bodyTemp < 35.5) c.add("freezing");
+        if (m.deafSeconds > 0) c.add("deaf");
         return c;
     }
 }

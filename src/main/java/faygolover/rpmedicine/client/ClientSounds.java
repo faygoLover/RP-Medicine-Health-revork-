@@ -13,6 +13,7 @@ public final class ClientSounds {
     private static int heartCooldown;
     private static int breathCooldown;
     private static int ringCooldown;
+    private static int lastDeaf;
     private static int lastRinging;
 
     public static void tick(Minecraft mc, SelfView v) {
@@ -36,5 +37,9 @@ public final class ClientSounds {
             }
         }
         lastRinging = v.ringing;
+        // Баротравма: резкий звон в момент оглушения взрывом.
+        if (ClientConfig.CONCUSSION_RINGING.get() && v.deaf > lastDeaf + 5)
+            mc.getSoundManager().play(SimpleSoundInstance.forUI(ModSounds.EAR_RINGING.get(), 1.0f, 0.7f));
+        lastDeaf = v.deaf;
     }
 }

@@ -21,6 +21,7 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> BONE_BREAK = reg("bone_break");
     public static final RegistryObject<SoundEvent> PILLS = reg("pills");
     public static final RegistryObject<SoundEvent> MONITOR_ALARM = reg("monitor_alarm");
+    public static final RegistryObject<SoundEvent> VOMIT = reg("vomit");
 
     private static RegistryObject<SoundEvent> reg(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(RpMedicine.MODID, name)));

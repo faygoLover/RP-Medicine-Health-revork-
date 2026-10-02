@@ -55,6 +55,9 @@ public final class Physiology {
         tickDrugTimers(m, dt, in.online);
         m.acutePainSeconds = dec(m.acutePainSeconds, dt);
         if (m.acutePainSeconds <= 0) m.acutePain = 0;
+        m.nauseaSeconds = dec(m.nauseaSeconds, dt);
+        if (m.nauseaSeconds <= 0) m.vomitTimer = 0;
+        m.deafSeconds = dec(m.deafSeconds, dt);
         if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
         if (m.cprSeconds <= 0) m.cprAccum = 0;
         // Воздуховод выпадает, когда человек приходит в себя.
@@ -144,6 +147,37 @@ public final class Physiology {
             if (t.hasTourniquet() && part.isDistalTo(t.part)) return true;
         }
         return false;
+    }
+
+    /**
+     * Устранить угрозу жизни и вернуть сознание: сердце, дыхание, напряжённый пневмоторакс, кровь не ниже
+     * доли {@code bloodFraction}. Общее для «поднять» ГМа и тотема бессмертия (второй этап, п. 13).
+     * Возвращает true, если человек лежал.
+     */
+    public static boolean rescue(MedicalState m, MedicalSettings s, double bloodFraction) {
+        boolean wasDown = m.isDown();
+        m.heart = MedicalState.Heart.NORMAL;
+        m.respiratoryArrest = false;
+        m.morphineOverdoseSeconds = 0;
+        if (m.pneumo == MedicalState.Pneumo.TENSION) {
+            m.pneumo = MedicalState.Pneumo.OPEN;
+            m.tensionProgress = 0;
+            m.pneumoTimer = s.pneumoSealMaxSeconds;
+        }
+        m.bloodVolume = Math.max(m.bloodVolume, m.normalBlood(s) * bloodFraction);
+        m.spo2 = Math.max(m.spo2, 92);
+        m.pressure = Math.max(m.pressure, pressureFromVolume(m.bloodFraction(s), s));
+        m.heartRate = Math.max(m.heartRate, s.normalHeartRate);
+        m.brain = Math.max(m.brain, 30);
+        m.painShock = false;
+        m.shockAccum = 0;
+        m.concussionKoSeconds = 0;
+        m.sepsis = Math.min(m.sepsis, 99);
+        m.consciousness = 100;
+        m.down = MedicalState.Down.NONE;
+        m.wakeSeconds = -1;
+        m.knockdownNoTimer = false;
+        return wasDown;
     }
 
     /** Обезвоживание 0–1: насколько вода ниже порога. */

@@ -351,6 +351,29 @@ public final class MedicalSettings {
     /** Лихорадка поднимает температуру LSO: единиц на 1 °C жара. */
     public double feverToLso = 2.0;
 
+    // ---------------- Ванилла (второй этап, п. 13) ----------------
+    /** Отравление: тошнота держится ещё столько секунд после эффекта; рвота раз в столько секунд. */
+    public double poisonNauseaSeconds = 10.0;
+    public double poisonVomitIntervalSeconds = 20.0;
+    /** Рвота: своей воды минус столько процентов (с LSO — единиц его воды из 20). */
+    public double vomitThirstLoss = 5.0;
+    public double vomitLsoThirstLoss = 1.0;
+    /** Мгновенный урон: острая боль за единицу урона и сколько секунд. */
+    public double instantDamagePainPerDamage = 5.0;
+    public double instantDamagePainSeconds = 10.0;
+    /** Золотое яблоко: адреналин, секунд. */
+    public double goldenAppleAdrenalineSeconds = 60.0;
+    /** Тотем бессмертия: кровь не ниже этой доли нормы. */
+    public double totemBloodFraction = 0.6;
+    /** Взрыв: глухота от столько секунд (слабый) до столько (сильный); слабее этого урона — без глухоты. */
+    public double explosionDeafMinSeconds = 30.0;
+    public double explosionDeafMaxSeconds = 60.0;
+    public double explosionDeafMinDamage = 3.0;
+    public double explosionDeafMaxDamage = 15.0;
+    /** Одышка искажает речь: ЧДД выше или SpO₂ ниже этих значений. */
+    public double breathlessRespRate = 26.0;
+    public double breathlessSpo2 = 90.0;
+
     // ---------------- Температура тела (второй этап, п. 5.4) ----------------
     public double normalBodyTemp = 36.6;
     /** Температура тела меняется не быстрее, °C в минуту. */

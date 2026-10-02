@@ -13,7 +13,7 @@ import faygolover.rpmedicine.RpMedicine;
 
 /**
  * Плагин Simple Voice Chat (п. 8 ТЗ). Загружается самим Simple Voice Chat, только если он установлен.
- * В нокдауне и обмороке отключён микрофон, в клинической смерти — ещё и слух.
+ * В нокдауне и обмороке отключён микрофон, в клинической смерти — ещё и слух; при одышке речь с обрывами.
  */
 @ForgeVoicechatPlugin
 public class MedicalVoicePlugin implements VoicechatPlugin {
@@ -32,7 +32,10 @@ public class MedicalVoicePlugin implements VoicechatPlugin {
 
     private void onMicrophone(MicrophonePacketEvent e) {
         VoicechatConnection sender = e.getSenderConnection();
-        if (sender != null && VoiceState.micMuted(sender.getPlayer().getUuid())) e.cancel();
+        if (sender == null) return;
+        java.util.UUID id = sender.getPlayer().getUuid();
+        // Лежачий молчит; при одышке — обрывы (второй этап).
+        if (VoiceState.micMuted(id) || VoiceState.dropBreathless(id)) e.cancel();
     }
 
     private void onSound(SoundPacketEvent<?> e) {

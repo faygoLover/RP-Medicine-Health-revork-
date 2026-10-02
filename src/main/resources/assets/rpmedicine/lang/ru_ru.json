@@ -167,6 +167,7 @@
   "rpmedicine.exam.chest_pain_breathing": "Боль в груди при дыхании",
   "rpmedicine.exam.complaint_back_pain": "Ломит поясницу и грудь",
   "rpmedicine.exam.complaint_cold_fingers": "Холодеют пальцы",
+  "rpmedicine.exam.complaint_deaf": "Ничего не слышно, звенит в ушах",
   "rpmedicine.exam.complaint_dizzy": "Кружится голова",
   "rpmedicine.exam.complaint_fever": "Знобит, жарко",
   "rpmedicine.exam.complaint_freezing": "Трясёт от холода",
@@ -372,6 +373,7 @@
   "rpmedicine.msg.something_cracked": "Что-то хрустнуло…",
   "rpmedicine.msg.sterilized": "Инструмент стерилизован",
   "rpmedicine.msg.treated_by": "%s: %s",
+  "rpmedicine.msg.vomit": "Тебя вырвало",
   "rpmedicine.msg.woke_up": "Вы пришли в себя",
   "rpmedicine.panel.drag_hint": "Перетащите предмет на часть тела",
   "rpmedicine.panel.general": "Общее",
@@ -593,5 +595,6 @@
   "subtitles.rpmedicine.injection": "Укол",
   "subtitles.rpmedicine.monitor_alarm": "Тревога монитора",
   "subtitles.rpmedicine.pills": "Таблетки",
-  "subtitles.rpmedicine.tourniquet": "Жгут"
+  "subtitles.rpmedicine.tourniquet": "Жгут",
+  "subtitles.rpmedicine.vomit": "Рвота"
 }

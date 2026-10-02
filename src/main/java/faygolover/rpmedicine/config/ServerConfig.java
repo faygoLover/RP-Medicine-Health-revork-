@@ -362,6 +362,23 @@ public final class ServerConfig {
         bind("feverToLso", "Лихорадка поднимает температуру LSO: единиц на 1 °C жара.");
         B.pop();
 
+        B.comment("Ванильные эффекты (второй этап, п. 13).").push("vanilla");
+        bind("poisonNauseaSeconds", "Отравление: тошнота держится ещё столько секунд после эффекта.");
+        bind("poisonVomitIntervalSeconds", "Отравление: рвота раз в столько секунд.");
+        bind("vomitThirstLoss", "Рвота: своей воды минус столько процентов.");
+        bind("vomitLsoThirstLoss", "Рвота с LSO: его воды минус столько единиц из 20.");
+        bind("instantDamagePainPerDamage", "Мгновенный урон (зелье, стрела, облако): острая боль за единицу урона.");
+        bind("instantDamagePainSeconds", "Мгновенный урон: боль держится столько секунд.");
+        bind("goldenAppleAdrenalineSeconds", "Золотое яблоко: адреналин, секунд.");
+        bind("totemBloodFraction", "Тотем бессмертия: кровь не ниже этой доли нормы.");
+        bind("explosionDeafMinSeconds", "Взрыв: глухота от столько секунд (при слабом уроне)…");
+        bind("explosionDeafMaxSeconds", "… до столько (при сильном).");
+        bind("explosionDeafMinDamage", "Взрыв слабее этого урона не оглушает.");
+        bind("explosionDeafMaxDamage", "Взрыв с таким уроном и сильнее — самая долгая глухота.");
+        bind("breathlessRespRate", "Одышка искажает речь при ЧДД выше…");
+        bind("breathlessSpo2", "… или SpO2 ниже.");
+        B.pop();
+
         B.comment("Температура тела (второй этап, п. 5.4).").push("body_temperature");
         bind("normalBodyTemp", "Нормальная температура тела, °C.");
         bind("bodyTempChangePerMinute", "Температура меняется не быстрее, °C в минуту.");

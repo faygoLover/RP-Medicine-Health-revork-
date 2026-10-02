@@ -60,6 +60,8 @@ public final class SelfSync {
         v.carrying = d.carrying;
         v.carried = CarryService.isCarried(sp);
         if (!m.isDown()) v.sensations.addAll(Examination.complaints(m, s));
+        // Глухота после взрыва (второй этап, п. 13): секунды, не больше 127.
+        v.deaf = (byte) Math.min(127, Math.ceil(m.deafSeconds));
         return v;
     }
 
@@ -69,7 +71,9 @@ public final class SelfSync {
 
     public static void sync(ServerPlayer sp, MedicalData d, MedicalState m, GameplayEffects.Mods mods) {
         SelfView v = build(m, mods, d, MedicalSettings.get(), sp);
-        faygolover.rpmedicine.integration.voice.VoiceState.set(sp.getUUID(), faygolover.rpmedicine.core.Speech.of(m));
+        MedicalSettings s = MedicalSettings.get();
+        faygolover.rpmedicine.integration.voice.VoiceState.set(sp.getUUID(), faygolover.rpmedicine.core.Speech.of(m, s),
+                faygolover.rpmedicine.core.Speech.breathlessness(m, s));
         if (v.equals(d.lastSelf)) return;
         d.lastSelf = v;
         Network.send(sp, new SelfStatePacket(v));

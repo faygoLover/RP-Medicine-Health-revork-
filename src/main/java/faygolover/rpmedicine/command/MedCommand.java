@@ -308,28 +308,7 @@ public final class MedCommand {
         MedicalSettings s = MedicalSettings.get();
         MedicalState m = Medical.state(t);
         if (m == null) return;
-        boolean wasDown = m.isDown();
-        m.heart = MedicalState.Heart.NORMAL;
-        m.respiratoryArrest = false;
-        m.morphineOverdoseSeconds = 0;
-        if (m.pneumo == MedicalState.Pneumo.TENSION) {
-            m.pneumo = MedicalState.Pneumo.OPEN;
-            m.tensionProgress = 0;
-            m.pneumoTimer = s.pneumoSealMaxSeconds;
-        }
-        m.bloodVolume = Math.max(m.bloodVolume, m.normalBlood(s) * 0.7);
-        m.spo2 = Math.max(m.spo2, 92);
-        m.pressure = Math.max(m.pressure, Physiology.pressureFromVolume(m.bloodFraction(s), s));
-        m.heartRate = Math.max(m.heartRate, s.normalHeartRate);
-        m.brain = Math.max(m.brain, 30);
-        m.painShock = false;
-        m.shockAccum = 0;
-        m.concussionKoSeconds = 0;
-        m.sepsis = Math.min(m.sepsis, 99);
-        m.consciousness = 100;
-        m.down = MedicalState.Down.NONE;
-        m.wakeSeconds = -1;
-        m.knockdownNoTimer = false;
+        boolean wasDown = Physiology.rescue(m, s, 0.7);
         Medical.changed(t);
         if (wasDown && t instanceof ServerPlayer sp) DownedService.onWokeUp(sp);
     }

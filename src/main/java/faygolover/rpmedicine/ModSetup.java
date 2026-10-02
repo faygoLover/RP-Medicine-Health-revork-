@@ -81,6 +81,7 @@ public final class ModSetup {
         bus.addListener(InteractionHandler::onJump);
         bus.addListener(faygolover.rpmedicine.server.BloodService::onContainerClose);
         bus.addListener(faygolover.rpmedicine.server.SurvivalService::onUseFinish);
+        bus.addListener(faygolover.rpmedicine.server.VanillaEffects::onUseFinish);
         // Чат
         bus.addListener(EventPriority.HIGH, ChatHandler::onChat);
         bus.addListener(EventPriority.HIGH, ChatHandler::onCommand);

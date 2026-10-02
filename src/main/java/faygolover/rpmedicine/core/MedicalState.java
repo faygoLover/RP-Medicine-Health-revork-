@@ -126,6 +126,11 @@ public final class MedicalState {
     /** Команда food add для офлайн-игроков: сколько сытости и воды снять при входе. */
     public double pendingFoodLoss;
     public double pendingThirstLoss;
+    /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
+    public double nauseaSeconds;
+    public double vomitTimer;
+    /** Глухота после взрыва (баротравма), секунд. */
+    public double deafSeconds;
     /** Острая боль от манипуляций (вправление, пинцет) и сколько ещё секунд. */
     public double acutePain;
     public double acutePainSeconds;
@@ -223,6 +228,9 @@ public final class MedicalState {
         acutePain = 0;
         acutePainSeconds = 0;
         thirst = 100;
+        nauseaSeconds = 0;
+        vomitTimer = 0;
+        deafSeconds = 0;
         doses.clear();
         effects.clear();
     }
@@ -260,6 +268,7 @@ public final class MedicalState {
         if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
         if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
+        if (nauseaSeconds > 0 || deafSeconds > 0) return false;
         if (thirst < s.dehydrationThreshold * 100) return false;
         if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
         return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
@@ -347,6 +356,9 @@ public final class MedicalState {
         opioidSeconds = o.opioidSeconds;
         acutePain = o.acutePain;
         acutePainSeconds = o.acutePainSeconds;
+        nauseaSeconds = o.nauseaSeconds;
+        vomitTimer = o.vomitTimer;
+        deafSeconds = o.deafSeconds;
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;

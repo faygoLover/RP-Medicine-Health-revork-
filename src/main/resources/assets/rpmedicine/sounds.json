@@ -88,5 +88,14 @@
         "type": "event"
       }
     ]
+  },
+  "vomit": {
+    "subtitle": "subtitles.rpmedicine.vomit",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.burp",
+        "type": "event"
+      }
+    ]
   }
 }

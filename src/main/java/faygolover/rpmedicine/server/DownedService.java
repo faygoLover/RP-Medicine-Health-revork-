@@ -57,6 +57,9 @@ public final class DownedService {
             kill(sp, BRAIN_DEATH, null);
             return;
         }
+        // Тотем бессмертия в руке поднимает из нокдауна и клинической смерти (второй этап, п. 13).
+        if ((r.has(StepResult.Event.CLINICAL_DEATH) || (r.has(StepResult.Event.WENT_DOWN) && m.down == MedicalState.Down.KNOCKDOWN))
+                && VanillaEffects.tryTotem(sp, m)) return;
         if (r.has(StepResult.Event.WENT_DOWN)) onWentDown(sp, m);
         if (r.has(StepResult.Event.CLINICAL_DEATH)) {
             onWentDown(sp, m);
@@ -153,6 +156,7 @@ public final class DownedService {
         MedicalState m = Medical.state(target);
         if (m == null) return;
         MedicalSettings s = MedicalSettings.get();
+        if (target instanceof ServerPlayer tp && m.down != MedicalState.Down.CLINICAL && VanillaEffects.tryTotem(tp, m)) return;
         if (s.noDeathMode) {
             if (m.down == MedicalState.Down.CLINICAL) return;
             Physiology.enterClinical(m);

@@ -257,6 +257,8 @@ public final class ClientEvents {
         if (s.getLocation().getNamespace().equals(RpMedicine.MODID)) return;
         SelfView v = ClientState.self;
         float muffle = v.down == 3 ? 0.15f : (v.isDown() || v.gray >= 4) ? 0.45f : 1f;
+        // Глухота после взрыва (второй этап, п. 13): почти ничего не слышно, к концу — лучше.
+        if (v.deaf > 0) muffle = Math.min(muffle, 0.12f + 0.5f * Math.max(0, 1 - v.deaf / 15f));
         if (muffle >= 1f || !(s instanceof SimpleSoundInstance)) return;
         s.resolve(Minecraft.getInstance().getSoundManager());
         e.setSound(new SimpleSoundInstance(s.getLocation(), s.getSource(), s.getVolume() * muffle, s.getPitch() * 0.9f,
