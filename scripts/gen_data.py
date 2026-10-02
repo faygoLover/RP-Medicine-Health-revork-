@@ -148,6 +148,50 @@ for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
           {"item": f"rpmedicine:{item}", "action": action, "seconds": sec, "min_level": lvl, "consume": consume})
 
+
+# ---------------------------------------------------------------- препараты (второй этап, п. 6)
+def eff(effect, strength, delay, duration):
+    return {"effect": effect, "strength": strength, "delay": delay, "duration": duration}
+H = 3600
+DRUGS = {
+    "paracetamol": {"form": "pill", "min_level": 0, "effects": [eff("analgesia", 12, 60, 30 * 60), eff("antipyretic", 0.7, 300, 4 * H)],
+                    "dose": {"limit": 4, "window_hours": 24},
+                    "overdose": {"effects": [eff("pressure", -15, 600, 2 * H), eff("heart_rate", 15, 600, 2 * H)]}},
+    "ibuprofen": {"form": "pill", "min_level": 0,
+                  "effects": [eff("analgesia", 18, 60, 40 * 60), eff("antipyretic", 0.6, 300, 4 * H), eff("concussion_relief", 1.0, 120, 2 * H)],
+                  "dose": {"limit": 3, "window_hours": 24},
+                  "overdose": {"effects": [eff("coagulation", -0.3, 0, 2 * H)]}},
+    "ketorolac": {"form": "injection", "min_level": 3, "effects": [eff("analgesia", 35, 30, 20 * 60)],
+                  "dose": {"limit": 2, "window_hours": 12},
+                  "overdose": {"effects": [eff("coagulation", -0.4, 0, 2 * H)]}},
+    "tramadol": {"form": "pill", "min_level": 4, "opioid": True,
+                 "effects": [eff("analgesia", 35, 120, 40 * 60), eff("resp_depression", 0.1, 120, 40 * 60)],
+                 "dose": {"limit": 2, "window_hours": 12},
+                 "overdose": {"effects": [eff("resp_depression", 0.4, 0, 30 * 60), eff("sedation", 30, 0, 30 * 60)], "arrest_chance": 0.1}},
+    "naloxone": {"form": "injection", "min_level": 4, "special": "opioid_antidote", "effects": []},
+    "amoxicillin": {"form": "pill", "min_level": 4, "effects": [eff("antibiotic", 10, 600, 8 * H)],
+                    "dose": {"limit": 1, "window_hours": 8},
+                    "overdose": {"effects": [eff("pressure", -10, 300, H), eff("heart_rate", 10, 300, H)]}},
+    "ceftriaxone": {"form": "injection", "min_level": 5, "effects": [eff("antibiotic", 13, 300, 12 * H)],
+                    "dose": {"limit": 1, "window_hours": 12},
+                    "overdose": {"effects": [eff("pressure", -15, 300, H), eff("heart_rate", 15, 300, H)]}},
+    "diazepam": {"form": "injection", "min_level": 5, "effects": [eff("sedation", 40, 60, 30 * 60), eff("heart_rate", -10, 60, 30 * 60)],
+                 "dose": {"limit": 2, "window_hours": 8},
+                 "overdose": {"effects": [eff("sedation", 70, 0, 40 * 60), eff("resp_depression", 0.3, 0, 40 * 60)], "arrest_chance": 0.05}},
+    "norepinephrine": {"form": "drip", "min_level": 6, "effects": [eff("pressure", 30, 30, 20 * 60), eff("heart_rate", 10, 30, 20 * 60)],
+                       "dose": {"limit": 2, "window_hours": 2},
+                       "overdose": {"effects": [eff("pressure", 40, 0, 20 * 60), eff("heart_rate", 40, 0, 20 * 60)]}},
+    "atropine": {"form": "injection", "min_level": 5, "effects": [eff("heart_rate", 25, 30, 15 * 60)],
+                 "dose": {"limit": 3, "window_hours": 1},
+                 "overdose": {"effects": [eff("heart_rate", 50, 0, 30 * 60), eff("sedation", 20, 0, 30 * 60)]}},
+    "antiseptic": {"form": "topical", "min_level": 0, "special": "antiseptic", "effects": []},
+    "antibiotic_ointment": {"form": "topical", "min_level": 2, "special": "antibiotic_ointment", "effects": []},
+}
+for name, d in DRUGS.items():
+    obj = {"items": [f"rpmedicine:{name}"]}
+    obj.update(d)
+    write(f"{DATA}/rpmedicine/rpmedicine/drugs/{name}.json", obj)
+
 ALIASES = {
     # Survival Instinct (остаётся в сборке)
     "survival_instinct:bandage": "rpmedicine:bandage", "survival_instinct:homemade_bandage": "rpmedicine:bandage",
@@ -158,11 +202,13 @@ ALIASES = {
     "tactical_aid:adrenalineinjector": "rpmedicine:adrenaline", "tactical_aid:adrenalineinjector_ii": "rpmedicine:adrenaline",
     "tactical_aid:adrenalineinjector_iii": "rpmedicine:adrenaline",
     "tactical_aid:painlessinjector": "rpmedicine:morphine", "tactical_aid:relief_injector": "rpmedicine:painkillers",
-    # Medicamod (только как список препаратов)
+    # Medicamod (только как список препаратов; второй этап — к своим аналогам)
     "medicamod:morphine": "rpmedicine:morphine", "medicamod:adrenalin": "rpmedicine:adrenaline",
-    "medicamod:ibuprofen": "rpmedicine:painkillers", "medicamod:ketonal": "rpmedicine:painkillers",
-    "medicamod:metamizol": "rpmedicine:painkillers", "medicamod:paracetamol": "rpmedicine:painkillers",
-    "medicamod:apirin": "rpmedicine:painkillers",
+    "medicamod:ibuprofen": "rpmedicine:ibuprofen", "medicamod:ketonal": "rpmedicine:ibuprofen",
+    "medicamod:metamizol": "rpmedicine:paracetamol", "medicamod:paracetamol": "rpmedicine:paracetamol",
+    "medicamod:apirin": "rpmedicine:ibuprofen", "medicamod:codeine": "rpmedicine:tramadol",
+    "medicamod:diazepam": "rpmedicine:diazepam", "medicamod:penicillin": "rpmedicine:amoxicillin",
+    "medicamod:azithromycin": "rpmedicine:amoxicillin",
     # Tactical Medicine (удаляется; на время перехода)
     "tacmed:bandage": "rpmedicine:pressure_dressing", "tacmed:hemostatic": "rpmedicine:hemostatic_gauze",
     "tacmed:tourniquet": "rpmedicine:tourniquet", "tacmed:esmarch_tourniquet": "rpmedicine:esmarch",
@@ -179,7 +225,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -278,13 +324,19 @@ ICONS = {
     "medical_pouch": ("box", (90, 100, 60), (200, 50, 50)), "first_aid_kit": ("box", (200, 50, 50), (240, 240, 240)),
     "gm_scanner": ("device", (120, 40, 160), (240, 200, 60)),
     "empty_blood_bag": ("bag", (225, 225, 230), (150, 150, 160)), "blood_bag": ("bag", (170, 20, 30), (230, 230, 230)),
+    "paracetamol": ("pills", (240, 240, 240), (60, 120, 220)), "ibuprofen": ("pills", (230, 120, 60), (240, 240, 240)),
+    "ketorolac": ("syringe", (220, 220, 230), (120, 60, 160)), "tramadol": ("pills", (240, 240, 200), (160, 40, 40)),
+    "naloxone": ("syringe", (220, 230, 220), (40, 160, 80)), "amoxicillin": ("pills", (250, 220, 120), (200, 60, 60)),
+    "ceftriaxone": ("syringe", (240, 240, 220), (220, 180, 40)), "diazepam": ("syringe", (220, 220, 240), (60, 90, 200)),
+    "norepinephrine": ("bag", (240, 230, 200), (200, 90, 30)), "atropine": ("syringe", (230, 220, 230), (150, 30, 120)),
+    "antiseptic": ("patch", (200, 170, 120), (140, 60, 30)), "antibiotic_ointment": ("pills", (240, 240, 240), (230, 200, 40)),
 }
 for name, (shape, color, accent) in ICONS.items():
     png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))
     write(f"{ASSETS}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"rpmedicine:item/{name}"}})
 
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
-print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(ALIASES), "аналогов")
+print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(DRUGS), "препаратов,", len(ALIASES), "аналогов")
 
 # ---------------------------------------------------------------- площадка для GameTest (7×5×7, пол из камня)
 import gzip

@@ -23,12 +23,36 @@
     "rpmedicine:tonometer",
     "rpmedicine:empty_blood_bag",
     "rpmedicine:blood_bag",
+    "rpmedicine:paracetamol",
+    "rpmedicine:ibuprofen",
+    "rpmedicine:ketorolac",
+    "rpmedicine:tramadol",
+    "rpmedicine:naloxone",
+    "rpmedicine:amoxicillin",
+    "rpmedicine:ceftriaxone",
+    "rpmedicine:diazepam",
+    "rpmedicine:norepinephrine",
+    "rpmedicine:atropine",
+    "rpmedicine:antiseptic",
+    "rpmedicine:antibiotic_ointment",
     {
       "id": "medicamod:adrenalin",
       "required": false
     },
     {
       "id": "medicamod:apirin",
+      "required": false
+    },
+    {
+      "id": "medicamod:azithromycin",
+      "required": false
+    },
+    {
+      "id": "medicamod:codeine",
+      "required": false
+    },
+    {
+      "id": "medicamod:diazepam",
       "required": false
     },
     {
@@ -49,6 +73,10 @@
     },
     {
       "id": "medicamod:paracetamol",
+      "required": false
+    },
+    {
+      "id": "medicamod:penicillin",
       "required": false
     },
     {

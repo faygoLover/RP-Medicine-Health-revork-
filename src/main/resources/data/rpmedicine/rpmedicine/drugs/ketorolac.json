@@ -1,0 +1,29 @@
+{
+  "items": [
+    "rpmedicine:ketorolac"
+  ],
+  "form": "injection",
+  "min_level": 3,
+  "effects": [
+    {
+      "effect": "analgesia",
+      "strength": 35,
+      "delay": 30,
+      "duration": 1200
+    }
+  ],
+  "dose": {
+    "limit": 2,
+    "window_hours": 12
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "coagulation",
+        "strength": -0.4,
+        "delay": 0,
+        "duration": 7200
+      }
+    ]
+  }
+}

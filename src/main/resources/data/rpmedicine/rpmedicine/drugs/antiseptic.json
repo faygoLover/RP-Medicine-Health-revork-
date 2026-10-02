@@ -1,0 +1,9 @@
+{
+  "items": [
+    "rpmedicine:antiseptic"
+  ],
+  "form": "topical",
+  "min_level": 0,
+  "special": "antiseptic",
+  "effects": []
+}

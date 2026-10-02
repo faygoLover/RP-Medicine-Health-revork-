@@ -236,6 +236,20 @@ items2 = {
  "empty_blood_bag": ("Пустой пакет для крови", "Empty blood bag", "Забор 450 мл крови у донора. Донор стоит на месте 30 с. Медицина 3+.", "Collects 450 ml of blood from a donor. The donor stands still for 30 s. Medicine 3+."),
  "blood_bag": ("Пакет крови", "Blood bag", "Переливание: настоящая кровь, несёт кислород. Проверяйте группу! Вне холодильника портится.", "Transfusion: real blood that carries oxygen. Check the blood type! Spoils outside a fridge."),
 }
+items2.update({
+ "paracetamol": ("Парацетамол", "Paracetamol", "Таблетки: слабое обезболивание, снимает жар. Не больше 4 в сутки.", "Pills: mild pain relief, lowers fever. No more than 4 a day."),
+ "ibuprofen": ("Ибупрофен", "Ibuprofen", "Таблетки: обезболивание, снимает жар, контузия проходит быстрее. Не больше 3 в сутки.", "Pills: pain relief, lowers fever, concussion passes faster. No more than 3 a day."),
+ "ketorolac": ("Кеторолак", "Ketorolac", "Укол: среднее обезболивание на 20 минут. Медицина 3+.", "Injection: moderate pain relief for 20 minutes. Medicine 3+."),
+ "tramadol": ("Трамадол", "Tramadol", "Таблетки: среднее обезболивание на 40 минут, слегка угнетает дыхание. Опиат. Медицина 4+.", "Pills: moderate pain relief for 40 minutes, slightly depresses breathing. Opioid. Medicine 4+."),
+ "naloxone": ("Налоксон", "Naloxone", "Укол: сразу снимает действие опиатов — и обезболивание, и угнетение дыхания. Медицина 4+.", "Injection: instantly reverses opioids — both pain relief and breathing depression. Medicine 4+."),
+ "amoxicillin": ("Амоксициллин", "Amoxicillin", "Таблетки: антибиотик на 8 часов в сети, раз в 8 часов. Медицина 4+.", "Pills: antibiotic for 8 hours online, once every 8 hours. Medicine 4+."),
+ "ceftriaxone": ("Цефтриаксон", "Ceftriaxone", "Укол: сильный антибиотик на 12 часов. Медицина 5+.", "Injection: strong antibiotic for 12 hours. Medicine 5+."),
+ "diazepam": ("Диазепам", "Diazepam", "Укол: снижает болевой шок и пульс, сонливость. С опиатами угнетает дыхание. Медицина 5+.", "Injection: eases pain shock and heart rate, drowsiness. With opioids depresses breathing. Medicine 5+."),
+ "norepinephrine": ("Норадреналин", "Norepinephrine", "Капельница: поднимает давление на 20 минут. Пациент на месте. Медицина 6+.", "Drip: raises blood pressure for 20 minutes. The patient stays still. Medicine 6+."),
+ "atropine": ("Атропин", "Atropine", "Укол: учащает редкий пульс. Медицина 5+.", "Injection: speeds up a slow heart rate. Medicine 5+."),
+ "antiseptic": ("Антисептик", "Antiseptic", "Спрей на рану: шанс заражения ниже на 70 %.", "Spray on a wound: 70% lower chance of infection."),
+ "antibiotic_ointment": ("Мазь с антибиотиком", "Antibiotic ointment", "Лечит заражение неглубокой раны и ожога. Медицина 2+.", "Treats infection of a shallow wound or a burn. Medicine 2+."),
+})
 for k, (ru, en, dru, den) in items2.items():
     t(f"item.rpmedicine.{k}", ru, en)
     t(f"item.rpmedicine.{k}.desc", dru, den)
@@ -260,6 +274,21 @@ for k, ru, en in [
  ("rpmedicine.exam.feels_cold", "На ощупь холодный", "Cold to the touch"),
  ("rpmedicine.exam.complaint_fever", "Знобит, жарко", "Feverish chills"),
  ("rpmedicine.exam.complaint_back_pain", "Ломит поясницу и грудь", "Aching lower back and chest"),
+ ("rpmedicine.refuse.must_be_conscious", "Таблетку можно дать только тому, кто в сознании", "Pills only for a conscious patient"),
+ ("rpmedicine.refuse.no_opioids", "Опиатов в крови нет", "No opioids in the system"),
+ ("rpmedicine.refuse.no_open_wound", "Здесь нет открытой раны", "No open wound here"),
+ ("rpmedicine.refuse.no_infection_here", "Здесь нет заражённой раны", "No infected wound here"),
+ ("rpmedicine.refuse.infection_too_deep", "Рана слишком глубокая для мази", "The wound is too deep for ointment"),
+ ("rpmedicine.treat.pill_taken", "Таблетка принята", "Pill taken"),
+ ("rpmedicine.treat.drug_injected", "Укол сделан", "Injection given"),
+ ("rpmedicine.treat.drug_drip_started", "Капельница с препаратом поставлена", "Drug drip started"),
+ ("rpmedicine.treat.drug_applied", "%s: обработано", "%s: treated"),
+ ("rpmedicine.treat.drug_overdose", "Передозировка!", "Overdose!"),
+ ("rpmedicine.treat.antidote_given", "Действие опиатов снято", "Opioids reversed"),
+ ("rpmedicine.treat.antiseptic_applied", "%s: рана обработана антисептиком", "%s: wound disinfected"),
+ ("rpmedicine.treat.antiseptic_poor", "%s: обработано наспех", "%s: hastily disinfected"),
+ ("rpmedicine.treat.ointment_applied", "%s: мазь наложена", "%s: ointment applied"),
+ ("rpmedicine.treat.ointment_partial", "%s: мазь наложена плохо", "%s: ointment poorly applied"),
 ]: t(k, ru, en)
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

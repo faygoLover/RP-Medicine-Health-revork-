@@ -43,13 +43,23 @@ public final class Treatments {
         }
     }
 
+    /** Что несёт предмет сверх действия: пакет крови, препарат. */
+    public interface Extra {}
+
     /** Содержимое пакета крови для переливания: группа (null — не подписан), объём, испорчен ли. */
-    public record Bag(BloodType type, double volume, boolean spoiled) {}
+    public record Bag(BloodType type, double volume, boolean spoiled) implements Extra {}
 
     // ------------------------------------------------------------------ проверка «лечение нужно»
 
     /** null — лечение нужно; иначе ключ причины ({@code rpmedicine.refuse.<key>}). */
     public static String check(MedicalState m, BodyPart part, TreatmentAction a, MedicalSettings s) {
+        return check(m, part, a, s, null);
+    }
+
+    /** То же с содержимым предмета (препарат). */
+    public static String check(MedicalState m, BodyPart part, TreatmentAction a, MedicalSettings s, Extra extra) {
+        if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
+            return extra instanceof Drug d ? Drugs.check(m, part, d, s) : "no_effect";
         BodyPartState ps = m.part(part);
         switch (a) {
             case BANDAGE, PRESSURE_DRESSING -> {
@@ -146,8 +156,10 @@ public final class Treatments {
                 if (m.bloodFraction(s) < 1 - s.donationMaxLossFraction || m.isDown()) return "donor_low";
                 return null;
             }
+            default -> {
+                return null;
+            }
         }
-        return null;
     }
 
     /** Нужен ли жгут: артерия или сильное кровотечение на этой конечности или дальше по ней. */
@@ -165,7 +177,12 @@ public final class Treatments {
 
     /** Часть, где предмет нужнее всего; null — нигде не нужен. */
     public static BodyPart bestPart(MedicalState m, TreatmentAction a, MedicalSettings s) {
+        return bestPart(m, a, s, null);
+    }
+
+    public static BodyPart bestPart(MedicalState m, TreatmentAction a, MedicalSettings s, Extra extra) {
         if (a.target != TreatmentAction.Target.PART) return BodyPart.CHEST;
+        if (a == TreatmentAction.DRUG_TOPICAL) return extra instanceof Drug d ? Drugs.bestPart(m, d, s) : null;
         BodyPart best = null;
         double bestScore = 0;
         for (BodyPart p : BodyPart.VALUES) {
@@ -210,7 +227,10 @@ public final class Treatments {
     }
 
     /** {@code bag} — содержимое пакета для переливания (для остальных действий null). */
-    public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s, Bag bag) {
+    public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s, Extra extra) {
+        if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
+            return extra instanceof Drug d ? Drugs.apply(m, part, d, error, rnd, s) : Result.failed("no_effect");
+        Bag bag = extra instanceof Bag b ? b : null;
         BodyPartState ps = m.part(part);
         switch (a) {
             case BANDAGE -> {
@@ -356,6 +376,7 @@ public final class Treatments {
                 m.saline = Math.max(0, m.saline - take * frac);
                 return Result.ok("blood_collected");
             }
+            default -> { }
         }
         return Result.failed("no_effect");
     }

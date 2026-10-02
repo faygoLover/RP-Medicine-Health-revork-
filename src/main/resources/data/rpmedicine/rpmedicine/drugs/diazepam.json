@@ -1,0 +1,42 @@
+{
+  "items": [
+    "rpmedicine:diazepam"
+  ],
+  "form": "injection",
+  "min_level": 5,
+  "effects": [
+    {
+      "effect": "sedation",
+      "strength": 40,
+      "delay": 60,
+      "duration": 1800
+    },
+    {
+      "effect": "heart_rate",
+      "strength": -10,
+      "delay": 60,
+      "duration": 1800
+    }
+  ],
+  "dose": {
+    "limit": 2,
+    "window_hours": 8
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "sedation",
+        "strength": 70,
+        "delay": 0,
+        "duration": 2400
+      },
+      {
+        "effect": "resp_depression",
+        "strength": 0.3,
+        "delay": 0,
+        "duration": 2400
+      }
+    ],
+    "arrest_chance": 0.05
+  }
+}

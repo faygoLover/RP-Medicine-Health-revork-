@@ -188,6 +188,31 @@ public final class HospitalGameTests {
         });
     }
 
+    /** Заражённая рана и антибиотик из датапака drugs: таблетка даёт эффект, инфекция спадает (−6 % в час). */
+    @GameTest(template = T, timeoutTicks = 400)
+    public static void infectionTreatedWithAntibiotic(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        ServerPlayer medic = player(h, 3.5, 3.5);
+        ServerPlayer patient = player(h, 2.5, 3.5);
+        MedicalState m = state(patient);
+        var w = new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.BURN, 30);
+        w.infectionStage = faygolover.rpmedicine.core.Wound.Infection.INFECTED;
+        w.infection = 50;
+        m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.add(w);
+        medic.getInventory().selected = 0;
+        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.AMOXICILLIN.get(), 3));
+        h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "дать таблетку");
+        h.runAfterDelay(120, () -> {
+            h.assertTrue(m.hasEffect(faygolover.rpmedicine.core.DrugEffect.ANTIBIOTIC), "антибиотик действует");
+            h.assertTrue(medic.getInventory().getItem(0).getCount() == 2, "одна таблетка потрачена");
+            faygolover.rpmedicine.core.Healing.fastForward(m, 7 * 3600, MedicalSettings.get());
+            h.assertTrue(!w.isInfected() || w.infection < 15, "под антибиотиком инфекция спадает, было " + w.infection);
+            remove(h, medic, patient);
+            h.succeed();
+        });
+    }
+
     /** Капельница идёт на ходу, пока рядом стойка. */
     @GameTest(template = T, timeoutTicks = 200)
     public static void ivStandLetsDripRunWhileMoving(GameTestHelper h) {

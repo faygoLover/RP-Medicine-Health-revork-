@@ -30,7 +30,11 @@ public enum TreatmentAction {
     /** Пакет крови: переливание (капает несколько минут). */
     BLOOD_BAG("blood_bag", Target.BODY),
     /** Пустой пакет: забор крови у донора. */
-    BLOOD_COLLECT("blood_collect", Target.BODY);
+    BLOOD_COLLECT("blood_collect", Target.BODY),
+    /** Препарат из датапака drugs: таблетки, укол, капельница. */
+    DRUG("drug", Target.BODY),
+    /** Наружное средство из датапака drugs: на часть тела. */
+    DRUG_TOPICAL("drug_topical", Target.PART);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

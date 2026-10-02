@@ -50,6 +50,19 @@ public final class ModItems {
     // Второй этап
     public static final RegistryObject<Item> EMPTY_BLOOD_BAG = medical("empty_blood_bag", 16);
     public static final RegistryObject<Item> BLOOD_BAG = tool("blood_bag", () -> new faygolover.rpmedicine.item.BloodBagItem(new Item.Properties().stacksTo(1)));
+    // Препараты (датапак drugs)
+    public static final RegistryObject<Item> PARACETAMOL = medical("paracetamol", 16);
+    public static final RegistryObject<Item> IBUPROFEN = medical("ibuprofen", 16);
+    public static final RegistryObject<Item> KETOROLAC = medical("ketorolac", 8);
+    public static final RegistryObject<Item> TRAMADOL = medical("tramadol", 16);
+    public static final RegistryObject<Item> NALOXONE = medical("naloxone", 8);
+    public static final RegistryObject<Item> AMOXICILLIN = medical("amoxicillin", 16);
+    public static final RegistryObject<Item> CEFTRIAXONE = medical("ceftriaxone", 8);
+    public static final RegistryObject<Item> DIAZEPAM = medical("diazepam", 8);
+    public static final RegistryObject<Item> NOREPINEPHRINE = medical("norepinephrine", 4);
+    public static final RegistryObject<Item> ATROPINE = medical("atropine", 8);
+    public static final RegistryObject<Item> ANTISEPTIC = tool("antiseptic", () -> new MedicalItem(new Item.Properties().durability(20)));
+    public static final RegistryObject<Item> ANTIBIOTIC_OINTMENT = tool("antibiotic_ointment", () -> new MedicalItem(new Item.Properties().durability(10)));
     public static final RegistryObject<Item> GM_SCANNER = tool("gm_scanner", () -> new GmScannerItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
     public static final RegistryObject<CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()

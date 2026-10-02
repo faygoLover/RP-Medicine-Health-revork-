@@ -51,7 +51,18 @@ public final class Physiology {
         m.healBoostSeconds = dec(m.healBoostSeconds, dt);
         m.concussionKoSeconds = dec(m.concussionKoSeconds, dt);
         m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * (1 + m.effect(DrugEffect.CONCUSSION_RELIEF)) * dt);
-        // Эффекты лекарств: сначала задержка, потом действие.
+        tickDrugTimers(m, dt, in.online);
+        if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
+        if (m.cprSeconds <= 0) m.cprAccum = 0;
+        // Воздуховод выпадает, когда человек приходит в себя.
+        if (m.down == Down.NONE) m.airway = false;
+        if (m.morphineOverdoseSeconds <= 0 && m.respiratoryArrest && m.heart == Heart.NORMAL) m.respiratoryArrest = false;
+    }
+
+    /** Таймеры лекарств второго этапа: эффекты (сначала задержка, потом действие), опиаты, окна доз (в сети). */
+    static void tickDrugTimers(MedicalState m, double dt, boolean online) {
+        m.opioidSeconds = dec(m.opioidSeconds, dt);
+        if (online) Drugs.tickDoses(m, dt);
         var it = m.effects.values().iterator();
         while (it.hasNext()) {
             DrugEffect.Active a = it.next();
@@ -59,11 +70,6 @@ public final class Physiology {
             else a.seconds = dec(a.seconds, dt);
             if (a.seconds <= 0 && a.delay <= 0) it.remove();
         }
-        if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
-        if (m.cprSeconds <= 0) m.cprAccum = 0;
-        // Воздуховод выпадает, когда человек приходит в себя.
-        if (m.down == Down.NONE) m.airway = false;
-        if (m.morphineOverdoseSeconds <= 0 && m.respiratoryArrest && m.heart == Heart.NORMAL) m.respiratoryArrest = false;
     }
 
     private static double dec(double v, double dt) {
@@ -155,7 +161,8 @@ public final class Physiology {
             external *= s.txaExternalFactor;
             internal *= s.txaInternalFactor;
         }
-        double coag = clamp(m.effect(DrugEffect.COAGULATION), 0, 0.9);
+        // Свёртывание: положительное — меньше кровит, отрицательное (передозировка НПВС) — больше.
+        double coag = clamp(m.effect(DrugEffect.COAGULATION), -1, 0.9);
         external *= 1 - coag;
         internal *= 1 - coag;
         double perMin = (external + internal) * s.bleedMultiplier * in.traits.bleedFactor(s) * perfusionBleedFactor(m, s);
@@ -486,7 +493,7 @@ public final class Physiology {
     /** Угнетение дыхания лекарствами 0–0,9: эффект и седация вместе с опиатами. */
     public static double respiratoryDepression(MedicalState m) {
         double d = m.effect(DrugEffect.RESP_DEPRESSION);
-        boolean opioid = m.morphineSeconds > 0 && m.morphineDelay <= 0;
+        boolean opioid = (m.morphineSeconds > 0 && m.morphineDelay <= 0) || m.opioidSeconds > 0;
         if (m.effect(DrugEffect.SEDATION) > 0 && opioid) d += 0.3;
         return clamp(d, 0, 0.9);
     }

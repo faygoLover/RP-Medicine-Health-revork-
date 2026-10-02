@@ -1,0 +1,9 @@
+{
+  "items": [
+    "rpmedicine:antibiotic_ointment"
+  ],
+  "form": "topical",
+  "min_level": 2,
+  "special": "antibiotic_ointment",
+  "effects": []
+}

@@ -73,6 +73,16 @@ public final class MedicalNbt {
             if (m.bloodDripSpoiled) t.putBoolean("bDripSpoiled", true);
         }
         putIf(t, "reaction", m.transfusionReactionSeconds);
+        putIf(t, "opioid", m.opioidSeconds);
+        if (!m.doses.isEmpty()) {
+            CompoundTag doses = new CompoundTag();
+            for (var e : m.doses.entrySet()) {
+                ListTag l = new ListTag();
+                for (double v : e.getValue()) l.add(net.minecraft.nbt.FloatTag.valueOf((float) v));
+                doses.put(e.getKey(), l);
+            }
+            t.put("doses", doses);
+        }
         if (!m.effects.isEmpty()) {
             ListTag effects = new ListTag();
             for (var e : m.effects.entrySet()) {
@@ -188,6 +198,14 @@ public final class MedicalNbt {
         m.bloodDripType = t.contains("bDripType") ? BloodType.byOrdinal(t.getByte("bDripType")) : null;
         m.bloodDripSpoiled = t.getBoolean("bDripSpoiled");
         m.transfusionReactionSeconds = t.getFloat("reaction");
+        m.opioidSeconds = t.getFloat("opioid");
+        CompoundTag doses = t.getCompound("doses");
+        for (String k : doses.getAllKeys()) {
+            ListTag l = doses.getList(k, Tag.TAG_FLOAT);
+            java.util.List<Double> list = new java.util.ArrayList<>();
+            for (int i = 0; i < l.size(); i++) list.add((double) l.getFloat(i));
+            if (!list.isEmpty()) m.doses.put(k, list);
+        }
         ListTag effects = t.getList("effects", Tag.TAG_COMPOUND);
         for (int i = 0; i < effects.size(); i++) {
             CompoundTag et = effects.getCompound(i);

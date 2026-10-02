@@ -198,6 +198,7 @@ public final class ModSetup {
         e.addListener(ItemRules.ALIASES);
         e.addListener(MobRules.INSTANCE);
         e.addListener(HospitalBlocks.LOADER);
+        e.addListener(faygolover.rpmedicine.data.DrugRules.LOADER);
     }
 
     /** Клиенты получают списки функций госпиталя при входе и после /reload. */

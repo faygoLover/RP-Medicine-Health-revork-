@@ -85,7 +85,25 @@ public final class ItemRules {
         Spec s = specs.get(id);
         if (s != null) return s;
         ResourceLocation alias = aliases.get(id);
-        return alias != null ? specs.get(alias) : null;
+        if (alias != null && specs.get(alias) != null) return specs.get(alias);
+        // Препараты из датапака drugs (второй этап).
+        DrugRules.Entry d = DrugRules.forItem(id);
+        if (d == null && alias != null) d = DrugRules.forItem(alias);
+        if (d != null) {
+            TreatmentAction a = d.drug().form() == faygolover.rpmedicine.core.Drug.Form.TOPICAL ? TreatmentAction.DRUG_TOPICAL : TreatmentAction.DRUG;
+            return new Spec(id, a, d.seconds(), d.minLevel(), true);
+        }
+        return null;
+    }
+
+    /** Препарат предмета (с учётом аналогов) или null. */
+    @Nullable
+    public static faygolover.rpmedicine.core.Drug drugFor(ItemStack stack) {
+        if (stack.isEmpty()) return null;
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
+        DrugRules.Entry d = DrugRules.forItem(id);
+        if (d == null && id != null && aliases.get(id) != null) d = DrugRules.forItem(aliases.get(id));
+        return d != null ? d.drug() : null;
     }
 
     public static boolean isMedical(ItemStack stack) {

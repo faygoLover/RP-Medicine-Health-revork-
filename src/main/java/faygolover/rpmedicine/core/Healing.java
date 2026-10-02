@@ -64,7 +64,8 @@ public final class Healing {
 
     /**
      * Прокрутка времени командой {@code /rpmedicine time add}: заживление и восстановление крови
-     * (только при отсутствии кровотечения). Идёт шагами по минуте, чтобы раны успевали закрываться.
+     * (только при отсутствии кровотечения), инфекция и сепсис, действие и окна доз лекарств.
+     * Идёт шагами по минуте, чтобы раны успевали закрываться.
      */
     public static void fastForward(MedicalState m, double seconds, MedicalSettings s) {
         double left = seconds;
@@ -82,6 +83,9 @@ public final class Healing {
             if (m.down == MedicalState.Down.NONE && m.brain < 100)
                 m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * dt);
             m.postClinicalSeconds = Math.max(0, m.postClinicalSeconds - dt);
+            Physiology.tickDrugTimers(m, dt, true);
+            StepInput in = new StepInput(dt);
+            Infections.tick(m, in, s, new StepResult());
         }
     }
 }

@@ -57,28 +57,29 @@ public final class TreatmentService {
             return true;
         }
         TreatmentAction action = spec.action();
+        Treatments.Extra extra = extraFor(stack, actor);
         if (action.target == TreatmentAction.Target.HOLD) {
             hold(actor, target, action, spec.minLevel());
             return true;
         }
         BodyPart p = part;
         if (p == null) {
-            p = Treatments.bestPart(m, action, s);
+            p = Treatments.bestPart(m, action, s, extra);
             if (p == null) {
                 // Нигде не нужен: показать причину для самой подходящей части.
-                String why = Treatments.check(m, defaultPart(action), action, s);
+                String why = Treatments.check(m, defaultPart(action), action, s, extra);
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + (why != null ? why : "not_needed")).withStyle(ChatFormatting.YELLOW), true);
                 return true;
             }
         } else if (action.target == TreatmentAction.Target.PART) {
-            String why = Treatments.check(m, p, action, s);
+            String why = Treatments.check(m, p, action, s, extra);
             if (why != null) {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
                 return true;
             }
         }
         if (action.target != TreatmentAction.Target.PART) {
-            String why = Treatments.check(m, p, action, s);
+            String why = Treatments.check(m, p, action, s, extra);
             if (why != null) {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
                 return true;
@@ -91,6 +92,14 @@ public final class TreatmentService {
         boolean fromHand = part == null;
         ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand));
         return true;
+    }
+
+    /** Что несёт предмет: пакет крови (группа, годность) или препарат. */
+    @Nullable
+    static Treatments.Extra extraFor(ItemStack stack, ServerPlayer actor) {
+        if (stack.getItem() instanceof faygolover.rpmedicine.item.BloodBagItem)
+            return faygolover.rpmedicine.item.BloodBagItem.bag(stack, actor.level().getGameTime());
+        return ItemRules.drugFor(stack);
     }
 
     /** Часть, по которой объясняется отказ, если предмет нигде не нужен. */
@@ -135,7 +144,12 @@ public final class TreatmentService {
             this.level = level;
             this.fromHand = fromHand;
             this.startPos = target.position();
+            var drug = ItemRules.drugFor(original);
+            this.still = spec.action().requiresStill() || (drug != null && drug.form() == faygolover.rpmedicine.core.Drug.Form.DRIP);
         }
+
+        /** Пациент должен стоять на месте всё действие. */
+        private final boolean still;
 
         @Override
         public String label() {
@@ -150,7 +164,7 @@ public final class TreatmentService {
             if (!ItemStack.isSameItem(now, original)) return "rpmedicine.action.item_changed";
             // Быстрый способ: предмет в руке, смена слота прерывает.
             if (fromHand && slot < 9 && actor.getInventory().selected != slot) return "rpmedicine.action.item_changed";
-            if (spec.action().requiresStill() && !Medical.isDown(target) && target.position().distanceToSqr(startPos) > 0.35 * 0.35)
+            if (still && !Medical.isDown(target) && target.position().distanceToSqr(startPos) > 0.35 * 0.35)
                 return "rpmedicine.action.target_moved";
             return actorRefusal(actor, target);
         }
@@ -161,15 +175,14 @@ public final class TreatmentService {
             if (m == null) return;
             MedicalSettings s = MedicalSettings.get();
             // Повторная проверка: за время применения состояние могло измениться.
-            String why = Treatments.check(m, part, spec.action(), s);
+            Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor);
+            String why = Treatments.check(m, part, spec.action(), s, extra);
             if (why != null) {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
                 return;
             }
             boolean error = !spec.action().isInstrument() && RANDOM.nextDouble() < Skill.errorChance(level, spec.minLevel(), s);
-            Treatments.Bag bag = spec.action() == TreatmentAction.BLOOD_BAG
-                    ? faygolover.rpmedicine.item.BloodBagItem.bag(actor.getInventory().getItem(slot), actor.level().getGameTime()) : null;
-            Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, bag);
+            Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra);
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             Medical.changed(target);
@@ -193,6 +206,11 @@ public final class TreatmentService {
                 case BANDAGE, PRESSURE_DRESSING, HEMOSTATIC, OCCLUSIVE, SPLINT -> ModSounds.BANDAGE.get();
                 case TOURNIQUET, ESMARCH -> ModSounds.TOURNIQUET.get();
                 case MORPHINE, ADRENALINE, TXA, NEEDLE, SALINE, BLOOD_BAG, BLOOD_COLLECT -> ModSounds.INJECTION.get();
+                case DRUG -> {
+                    var d = ItemRules.drugFor(original);
+                    yield d != null && d.form() == faygolover.rpmedicine.core.Drug.Form.PILL ? ModSounds.PILLS.get() : ModSounds.INJECTION.get();
+                }
+                case DRUG_TOPICAL -> ModSounds.BANDAGE.get();
                 case PAINKILLER, AMMONIA -> ModSounds.PILLS.get();
                 case DEFIBRILLATOR -> ModSounds.DEFIB_SHOCK.get();
                 default -> null;

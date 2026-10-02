@@ -1,0 +1,43 @@
+{
+  "items": [
+    "rpmedicine:tramadol"
+  ],
+  "form": "pill",
+  "min_level": 4,
+  "opioid": true,
+  "effects": [
+    {
+      "effect": "analgesia",
+      "strength": 35,
+      "delay": 120,
+      "duration": 2400
+    },
+    {
+      "effect": "resp_depression",
+      "strength": 0.1,
+      "delay": 120,
+      "duration": 2400
+    }
+  ],
+  "dose": {
+    "limit": 2,
+    "window_hours": 12
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "resp_depression",
+        "strength": 0.4,
+        "delay": 0,
+        "duration": 1800
+      },
+      {
+        "effect": "sedation",
+        "strength": 30,
+        "delay": 0,
+        "duration": 1800
+      }
+    ],
+    "arrest_chance": 0.1
+  }
+}

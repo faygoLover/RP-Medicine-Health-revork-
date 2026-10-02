@@ -1,0 +1,41 @@
+{
+  "items": [
+    "rpmedicine:norepinephrine"
+  ],
+  "form": "drip",
+  "min_level": 6,
+  "effects": [
+    {
+      "effect": "pressure",
+      "strength": 30,
+      "delay": 30,
+      "duration": 1200
+    },
+    {
+      "effect": "heart_rate",
+      "strength": 10,
+      "delay": 30,
+      "duration": 1200
+    }
+  ],
+  "dose": {
+    "limit": 2,
+    "window_hours": 2
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "pressure",
+        "strength": 40,
+        "delay": 0,
+        "duration": 1200
+      },
+      {
+        "effect": "heart_rate",
+        "strength": 40,
+        "delay": 0,
+        "duration": 1200
+      }
+    ]
+  }
+}

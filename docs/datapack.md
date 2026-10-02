@@ -78,6 +78,29 @@
 
 Файлы одной функции складываются, радиус берётся наибольший. Встроенные списки лежат в `data/rpmedicine/rpmedicine/hospital_blocks/` (`beds.json`, `monitors.json` и т.д.); чтобы убрать блок из встроенного списка, положите в свой датапак файл с тем же путём. Списки уходят клиентам при входе и после `/reload`.
 
+## drugs — препараты (второй этап)
+`data/<ns>/rpmedicine/drugs/<имя>.json`. Предметы препарата перечислены в самом файле; аналоги из других модов — через `item_aliases`.
+
+```json
+{
+  "items": ["rpmedicine:paracetamol"],
+  "form": "pill",
+  "seconds": 2, "min_level": 0,
+  "effects": [{"effect": "analgesia", "strength": 12, "delay": 60, "duration": 1800},
+              {"effect": "antipyretic", "strength": 0.7, "delay": 300, "duration": 14400}],
+  "dose": {"limit": 4, "window_hours": 24},
+  "overdose": {"effects": [{"effect": "pressure", "strength": -15, "delay": 600, "duration": 7200}], "arrest_chance": 0},
+  "opioid": false,
+  "special": "none"
+}
+```
+- `form`: `pill` (только в сознании), `injection`, `drip` (пациент на месте всё время установки), `topical` (на часть тела). Время по умолчанию: таблетки и укол 2 с, капельница 10 с, наружно 3 с.
+- `effect`: `analgesia` (минус к боли), `antipyretic` (0–1, доля снятой лихорадки), `antibiotic` (на сколько %/ч замедляет рост инфекции; 10 — рост 4 %/ч становится −6 %/ч; сепсис спадает на 5 %/ч при силе 10), `sedation` (сознание не выше 100 − сила, медленнее болевой шок, реже пульс), `pressure` и `heart_rate` (прибавка, может быть отрицательной), `resp_depression` (0–1, ослабление дыхания), `coagulation` (0–1 меньше кровит; отрицательное — больше), `concussion_relief` (контузия проходит быстрее в 1 + сила раз). `delay` и `duration` — секунды.
+- Одинаковые эффекты не складываются по силе, а продлеваются по времени; сила — наибольшая.
+- `dose`: больше `limit` доз за `window_hours` часов в сети — передозировка: эффекты `overdose.effects` и шанс остановки дыхания `arrest_chance`.
+- `opioid`: вместе с седацией угнетает дыхание; снимается налоксоном.
+- `special`: `opioid_antidote` (налоксон: снимает морфин, опиаты, обезболивание и угнетение дыхания), `antiseptic` (шанс заражения ран части ×0,3), `antibiotic_ointment` (лечит заражение неглубокой раны или ожога).
+
 ## Теги
 - `rpmedicine:medical_items` (предметы) — что кладётся в подсумок и аптечку.
 - `rpmedicine:finishing_weapons` (предметы) — чем ещё можно добивать (оружие TaCZ уже там).

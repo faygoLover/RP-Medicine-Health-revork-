@@ -121,6 +121,10 @@ public final class MedicalState {
     public boolean bloodDripSpoiled;
     /** Реакция на несовместимую кровь: осталось секунд. */
     public double transfusionReactionSeconds;
+    /** Опиаты из датапака (трамадол и т.п.): сколько ещё действуют — для налоксона и угнетения дыхания с седацией. */
+    public double opioidSeconds;
+    /** Дозы препаратов в окне: id препарата → сколько секунд в сети осталось каждой дозе до выхода из окна. */
+    public final java.util.Map<String, java.util.List<Double>> doses = new java.util.HashMap<>();
     /** Действующие эффекты лекарств из датапака. */
     public final java.util.EnumMap<DrugEffect, DrugEffect.Active> effects = new java.util.EnumMap<>(DrugEffect.class);
 
@@ -207,6 +211,8 @@ public final class MedicalState {
         bloodDripType = null;
         bloodDripSpoiled = false;
         transfusionReactionSeconds = 0;
+        opioidSeconds = 0;
+        doses.clear();
         effects.clear();
     }
 
@@ -242,6 +248,7 @@ public final class MedicalState {
                 || morphineOverdoseSeconds > 0 || txaSeconds > 0 || ambuSeconds > 0 || cprSeconds > 0) return false;
         if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
+        if (opioidSeconds > 0 || !doses.isEmpty()) return false;
         if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
         return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
                 && Math.abs(respRate - s.normalRespRate) < 0.5 && Math.abs(spo2 - s.spo2Normal) < 0.5
@@ -325,6 +332,9 @@ public final class MedicalState {
         bloodDripType = o.bloodDripType;
         bloodDripSpoiled = o.bloodDripSpoiled;
         transfusionReactionSeconds = o.transfusionReactionSeconds;
+        opioidSeconds = o.opioidSeconds;
+        doses.clear();
+        for (var e : o.doses.entrySet()) doses.put(e.getKey(), new java.util.ArrayList<>(e.getValue()));
         effects.clear();
         for (var e : o.effects.entrySet()) effects.put(e.getKey(), e.getValue().copy());
     }
