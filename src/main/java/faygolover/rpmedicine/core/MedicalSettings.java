@@ -210,6 +210,7 @@ public final class MedicalSettings {
     public double speedPenaltyPerLeg = 0.4;
     public double minSpeedFactor = 0.15;
     public double crawlSpeedFactor = 0.25;
+    public double painLimpSpeedPenalty = 0.1;
     public double highPainSpeedPenalty = 0.15;
     public double dazedSpeedPenalty = 0.2;
     public double carrySpeedPenalty = 0.35;

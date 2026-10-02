@@ -28,14 +28,14 @@ public final class SelfView {
     public boolean analgesia;
     public boolean dyspnea;
 
-    // Эффекты экрана и звука, 0–100.
+    // Эффекты экрана и звука, 0–20.
     public byte vignette;
     public byte blur;
     public byte darken;
     public byte tunnel;
     public byte gray;
     public byte ringing;
-    /** Пульс для звука сердца (0 — не слышно). */
+    /** Стук сердца: 0 — не слышно, 1–3 — учащённый … очень частый. */
     public short heartbeat;
     public boolean heavyBreathing;
     public byte sway;

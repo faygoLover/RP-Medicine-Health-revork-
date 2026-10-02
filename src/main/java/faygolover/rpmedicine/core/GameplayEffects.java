@@ -79,10 +79,12 @@ public final class GameplayEffects {
         // Боль.
         if (m.pain >= 30) r.aimSway = Math.max(r.aimSway, 0.3);
         if (m.pain >= 60) {
-            speed -= s.highPainSpeedPenalty;
+            speed -= s.painLimpSpeedPenalty + s.highPainSpeedPenalty;
             r.aimSway = Math.max(r.aimSway, 0.6);
             r.staminaRegen *= 0.5;
         } else if (m.pain >= 30) {
+            // От 30 — хромота (п. 4.4 ТЗ).
+            speed -= s.painLimpSpeedPenalty;
             r.staminaRegen *= 0.8;
         }
         // Оглушение.
@@ -92,7 +94,6 @@ public final class GameplayEffects {
             r.aimSway = Math.max(r.aimSway, 0.5);
         }
         r.speed = Math.max(r.crawl ? 0.05 : s.minSpeedFactor, Math.min(1.0, speed));
-        if (badLower == 0 && !r.crawl && r.speed >= 1.0) r.speed = 1.0;
 
         // Руки: рабочая влияет сильнее.
         BodyPart main = traits.workingArm();

@@ -50,7 +50,9 @@ public final class Medical {
         }
     }
 
+    /** Лежит ли человек. Заглушка — тело офлайн-игрока — всегда считается лежачей. */
     public static boolean isDown(@Nullable Entity e) {
+        if (e instanceof BodyStubEntity) return true;
         MedicalState m = state(e);
         return m != null && m.isDown();
     }

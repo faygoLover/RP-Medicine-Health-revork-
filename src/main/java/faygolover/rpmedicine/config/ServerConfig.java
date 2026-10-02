@@ -226,6 +226,7 @@ public final class ServerConfig {
         bind("speedPenaltyPerLeg", "Хромота: минус скорость за каждую плохую ногу или стопу.");
         bind("minSpeedFactor", "Скорость не ниже этой доли.");
         bind("crawlSpeedFactor", "Скорость ползком (обе ноги сломаны).");
+        bind("painLimpSpeedPenalty", "Боль от 30: хромота, минус скорость.");
         bind("highPainSpeedPenalty", "Сильная боль (от 60): минус скорость.");
         bind("dazedSpeedPenalty", "Оглушение: минус скорость.");
         bind("carrySpeedPenalty", "Несущий тело: минус скорость.");

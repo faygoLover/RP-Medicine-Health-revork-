@@ -2,6 +2,7 @@ package faygolover.rpmedicine.server;
 
 import com.mojang.brigadier.ParseResults;
 import faygolover.rpmedicine.core.MedicalState;
+import faygolover.rpmedicine.core.Speech;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,24 +24,22 @@ public final class ChatHandler {
 
     public static void onChat(ServerChatEvent event) {
         MedicalState m = Medical.state(event.getPlayer());
-        if (m == null || !m.isDown()) return;
-        if (m.down == MedicalState.Down.CLINICAL) {
-            event.setCanceled(true);
-            return;
-        }
-        event.setMessage(Component.literal(DOTS));
+        if (m == null) return;
+        Speech sp = Speech.of(m);
+        if (sp == Speech.SILENCED) event.setCanceled(true);
+        else if (!sp.canSpeak()) event.setMessage(Component.literal(DOTS));
     }
 
     public static void onCommand(CommandEvent event) {
         ParseResults<CommandSourceStack> parse = event.getParseResults();
         if (!(parse.getContext().getSource().getEntity() instanceof ServerPlayer sp)) return;
         MedicalState m = Medical.state(sp);
-        if (m == null || !m.isDown()) return;
+        if (m == null || Speech.of(m).canSpeak()) return;
         String input = parse.getReader().getString();
         String cmd = input.startsWith("/") ? input.substring(1) : input;
         String[] parts = cmd.split(" ", 3);
         if (parts.length == 0 || !PRIVATE.contains(parts[0].toLowerCase(Locale.ROOT))) return;
-        if (m.down == MedicalState.Down.CLINICAL) {
+        if (Speech.of(m) == Speech.SILENCED) {
             event.setCanceled(true);
             return;
         }

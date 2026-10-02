@@ -26,6 +26,9 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            // Миксины чужих модов (Curios, Zero Contact) в среде разработки.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 "${mod_id}" {
@@ -89,8 +92,14 @@ dependencies {
     compileOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
 
     if (withOptional) {
+        // Для проверки интеграций при runServer/runClient: -Pwith_optional=true
         runtimeOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
         runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+        runtimeOnly fg.deobf("maven.modrinth:timeless-and-classics-zero:${tacz_version}")
+        runtimeOnly fg.deobf("maven.modrinth:zerocontact:${zerocontact_version}")
+        runtimeOnly fg.deobf("maven.modrinth:architectury-api:1MKTLiiG")
+        runtimeOnly fg.deobf("maven.modrinth:geckolib:aC5KMoNg")
+        runtimeOnly fg.deobf("maven.modrinth:simple-voice-chat:lWvbAZ3P")
     }
 
     testImplementation "org.junit.jupiter:junit-jupiter:${junit_version}"

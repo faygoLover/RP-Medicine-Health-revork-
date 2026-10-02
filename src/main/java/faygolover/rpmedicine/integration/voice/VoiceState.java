@@ -17,8 +17,8 @@ public final class VoiceState {
     /** 0 — норма, 1 — микрофон отключён (нокдаун, обморок), 2 — отключено всё (клиническая смерть). */
     private static final Map<UUID, Byte> STATE = new ConcurrentHashMap<>();
 
-    public static void set(UUID player, int downState) {
-        byte v = (byte) (downState == 3 ? 2 : downState > 0 ? 1 : 0);
+    public static void set(UUID player, faygolover.rpmedicine.core.Speech speech) {
+        byte v = (byte) speech.ordinal();
         if (v == 0) STATE.remove(player);
         else STATE.put(player, v);
     }

@@ -56,7 +56,14 @@ public final class PanelActions {
             sp.displayClientMessage(Component.translatable("rpmedicine.refuse.empty_hand").withStyle(ChatFormatting.YELLOW), true);
             return;
         }
+        boolean cat = what == Treatments.Removal.TOURNIQUET
+                && m.part(p.part()).tourniquet == faygolover.rpmedicine.core.BodyPartState.Tourniquet.CAT;
         if (Treatments.remove(m, p.part(), what)) {
+            // Турникет многоразовый — возвращается в руки; жгут Эсмарха одноразовый (п. 6.2 ТЗ).
+            if (cat) {
+                net.minecraft.world.item.ItemStack back = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.TOURNIQUET.get());
+                if (!sp.getInventory().add(back)) sp.drop(back, false);
+            }
             Medical.changed(target);
             sp.displayClientMessage(Component.translatable("rpmedicine.msg.removed_" + what.name().toLowerCase(java.util.Locale.ROOT),
                     Component.translatable(p.part().translationKey())), true);

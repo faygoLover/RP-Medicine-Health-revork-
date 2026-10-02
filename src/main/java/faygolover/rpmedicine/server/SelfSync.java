@@ -47,7 +47,9 @@ public final class SelfSync {
         v.tunnel = pct((loss - 0.15) / 0.3);
         v.gray = pct((s.dazedConsciousness - m.consciousness) / 30.0);
         v.ringing = pct((m.concussion - 15) / 60.0);
-        v.heartbeat = (short) ((m.heartRate > 110 || (m.pressure < 80 && m.heart == MedicalState.Heart.NORMAL)) ? Math.round(m.heartRate / 5.0) * 5 : 0);
+        // Стук сердца — только ступень (1 — учащённый, 2 — частый, 3 — очень частый), без цифры пульса.
+        boolean audible = m.heart == MedicalState.Heart.NORMAL && (m.heartRate > 110 || m.pressure < 80);
+        v.heartbeat = (short) (!audible ? 0 : m.heartRate > 150 ? 3 : m.heartRate > 125 ? 2 : 1);
         v.heavyBreathing = m.respRate > 24 || m.spo2 < 90;
         v.sway = pct(mods.aimSway);
 
@@ -67,7 +69,7 @@ public final class SelfSync {
 
     public static void sync(ServerPlayer sp, MedicalData d, MedicalState m, GameplayEffects.Mods mods) {
         SelfView v = build(m, mods, d, MedicalSettings.get(), sp);
-        faygolover.rpmedicine.integration.voice.VoiceState.set(sp.getUUID(), v.down);
+        faygolover.rpmedicine.integration.voice.VoiceState.set(sp.getUUID(), faygolover.rpmedicine.core.Speech.of(m));
         if (v.equals(d.lastSelf)) return;
         d.lastSelf = v;
         Network.send(sp, new SelfStatePacket(v));

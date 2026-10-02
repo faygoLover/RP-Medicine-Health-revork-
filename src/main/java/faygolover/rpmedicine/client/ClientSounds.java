@@ -20,7 +20,7 @@ public final class ClientSounds {
         if (ClientConfig.HEARTBEAT.get() && v.heartbeat > 0) {
             if (--heartCooldown <= 0) {
                 mc.getSoundManager().play(SimpleSoundInstance.forUI(ModSounds.HEARTBEAT.get(), 1.0f, 0.5f));
-                heartCooldown = Math.max(6, 1200 / Math.max(40, (int) v.heartbeat));
+                heartCooldown = switch (v.heartbeat) { case 3 -> 7; case 2 -> 9; default -> 12; };
             }
         }
         if (ClientConfig.HEAVY_BREATHING.get() && v.heavyBreathing && !v.isDown()) {

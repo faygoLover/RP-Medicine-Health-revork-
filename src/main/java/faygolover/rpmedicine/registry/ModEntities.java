@@ -17,7 +17,6 @@ public final class ModEntities {
             () -> EntityType.Builder.<BodyStubEntity>of(BodyStubEntity::new, MobCategory.MISC)
                     .sized(0.6f, 0.6f)
                     .clientTrackingRange(10)
-                    .fireImmune()
                     .build("rpmedicine:body_stub"));
 
     public static void onAttributes(EntityAttributeCreationEvent event) {
