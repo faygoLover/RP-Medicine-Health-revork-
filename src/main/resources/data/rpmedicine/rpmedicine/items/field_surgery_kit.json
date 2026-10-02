@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:field_surgery_kit",
+  "action": "surgical_kit",
+  "seconds": 15,
+  "min_level": 4,
+  "consume": true
+}

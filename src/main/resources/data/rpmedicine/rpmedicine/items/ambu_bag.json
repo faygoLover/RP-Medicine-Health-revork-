@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:ambu_bag",
+  "action": "ambu",
+  "seconds": 1,
+  "min_level": 2,
+  "consume": false
+}

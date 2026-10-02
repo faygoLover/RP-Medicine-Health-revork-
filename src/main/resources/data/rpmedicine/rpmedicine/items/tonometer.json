@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:tonometer",
+  "action": "tonometer",
+  "seconds": 6,
+  "min_level": 1,
+  "consume": false
+}

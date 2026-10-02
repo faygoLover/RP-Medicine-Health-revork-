@@ -1,0 +1,23 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:falling_anvil",
+    "minecraft:falling_block",
+    "minecraft:falling_stalactite",
+    "minecraft:fly_into_wall"
+  ],
+  "wound": "bruise",
+  "location": "head",
+  "complications": {
+    "concussion": {
+      "min_severity": 5,
+      "per_severity": 0.04,
+      "max": 1.0
+    },
+    "arterial": {
+      "min_severity": 40,
+      "per_severity": 0.005,
+      "max": 0.1
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:decompression_needle",
+  "action": "needle",
+  "seconds": 5,
+  "min_level": 3,
+  "consume": true
+}

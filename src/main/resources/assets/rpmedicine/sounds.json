@@ -1,0 +1,56 @@
+{
+  "heartbeat": {
+    "subtitle": "subtitles.rpmedicine.heartbeat",
+    "sounds": [
+      "minecraft:block/note_block/basedrum"
+    ]
+  },
+  "heavy_breathing": {
+    "subtitle": "subtitles.rpmedicine.heavy_breathing",
+    "sounds": [
+      "minecraft:mob/player/hurt/drown1"
+    ]
+  },
+  "ear_ringing": {
+    "subtitle": "subtitles.rpmedicine.ear_ringing",
+    "sounds": [
+      "minecraft:block/note_block/bell"
+    ]
+  },
+  "bandage": {
+    "subtitle": "subtitles.rpmedicine.bandage",
+    "sounds": [
+      "minecraft:item/armor/equip_leather1"
+    ]
+  },
+  "injection": {
+    "subtitle": "subtitles.rpmedicine.injection",
+    "sounds": [
+      "minecraft:random/click"
+    ]
+  },
+  "tourniquet": {
+    "subtitle": "subtitles.rpmedicine.tourniquet",
+    "sounds": [
+      "minecraft:item/armor/equip_chain1"
+    ]
+  },
+  "defib_shock": {
+    "subtitle": "subtitles.rpmedicine.defib_shock",
+    "sounds": [
+      "minecraft:random/fizz"
+    ]
+  },
+  "bone_break": {
+    "subtitle": "subtitles.rpmedicine.bone_break",
+    "sounds": [
+      "minecraft:mob/zombie/woodbreak"
+    ]
+  },
+  "pills": {
+    "subtitle": "subtitles.rpmedicine.pills",
+    "sounds": [
+      "minecraft:random/eat1"
+    ]
+  }
+}

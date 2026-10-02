@@ -1,0 +1,16 @@
+{
+  "wound": "bite",
+  "location": "hit_point",
+  "complications": {
+    "arterial": {
+      "min_severity": 25,
+      "per_severity": 0.01,
+      "max": 0.2
+    },
+    "fracture": {
+      "min_severity": 30,
+      "per_severity": 0.01,
+      "max": 0.2
+    }
+  }
+}

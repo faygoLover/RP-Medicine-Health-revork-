@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:saline",
+  "action": "saline",
+  "seconds": 10,
+  "min_level": 2,
+  "consume": true
+}

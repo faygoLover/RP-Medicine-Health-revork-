@@ -1,0 +1,10 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:cactus",
+    "minecraft:sweet_berry_bush"
+  ],
+  "wound": "stab",
+  "location": "legs",
+  "severity_multiplier": 0.4
+}

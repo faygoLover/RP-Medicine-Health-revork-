@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:bandage",
+  "action": "bandage",
+  "seconds": 4,
+  "min_level": 0,
+  "consume": true
+}

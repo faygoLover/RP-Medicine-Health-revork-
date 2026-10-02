@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:splint",
+  "action": "splint",
+  "seconds": 8,
+  "min_level": 1,
+  "consume": true
+}

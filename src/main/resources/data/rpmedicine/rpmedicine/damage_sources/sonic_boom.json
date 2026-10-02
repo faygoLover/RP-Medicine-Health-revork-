@@ -1,0 +1,25 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:sonic_boom"
+  ],
+  "wound": "bruise",
+  "location": "chest",
+  "complications": {
+    "internal": {
+      "min_severity": 0,
+      "per_severity": 0.03,
+      "max": 1.0
+    },
+    "concussion": {
+      "min_severity": 0,
+      "per_severity": 0.05,
+      "max": 1.0
+    },
+    "fracture": {
+      "min_severity": 10,
+      "per_severity": 0.02,
+      "max": 0.6
+    }
+  }
+}

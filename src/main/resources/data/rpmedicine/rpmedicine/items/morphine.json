@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:morphine",
+  "action": "morphine",
+  "seconds": 2,
+  "min_level": 1,
+  "consume": true
+}

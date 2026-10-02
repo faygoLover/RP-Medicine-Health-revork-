@@ -1,0 +1,37 @@
+{
+  "priority": 30,
+  "damage_types": [
+    "minecraft:player_attack",
+    "minecraft:mob_attack",
+    "minecraft:mob_attack_no_aggro"
+  ],
+  "attacker_items": [
+    "#minecraft:swords",
+    "#minecraft:axes"
+  ],
+  "wound": "cut",
+  "location": "hit_point",
+  "complications": {
+    "arterial": {
+      "min_severity": 20,
+      "per_severity": 0.01,
+      "max": 0.3
+    },
+    "internal": {
+      "min_severity": 30,
+      "per_severity": 0.01,
+      "max": 0.3
+    },
+    "fracture": {
+      "min_severity": 35,
+      "per_severity": 0.01,
+      "max": 0.25
+    },
+    "open_fracture_fraction": 0.5,
+    "pneumothorax": {
+      "min_severity": 30,
+      "per_severity": 0.01,
+      "max": 0.2
+    }
+  }
+}

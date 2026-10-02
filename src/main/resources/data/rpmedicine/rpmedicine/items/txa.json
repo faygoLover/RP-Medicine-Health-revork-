@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:txa",
+  "action": "txa",
+  "seconds": 2,
+  "min_level": 2,
+  "consume": true
+}

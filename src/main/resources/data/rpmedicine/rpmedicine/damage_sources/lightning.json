@@ -1,0 +1,15 @@
+{
+  "priority": 21,
+  "damage_types": [
+    "minecraft:lightning_bolt"
+  ],
+  "wound": "burn",
+  "location": "random",
+  "complications": {
+    "concussion": {
+      "min_severity": 0,
+      "per_severity": 0.05,
+      "max": 1.0
+    }
+  }
+}

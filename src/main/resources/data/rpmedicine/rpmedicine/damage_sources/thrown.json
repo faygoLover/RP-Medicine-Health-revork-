@@ -1,0 +1,16 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:mob_projectile",
+    "minecraft:thrown"
+  ],
+  "wound": "bruise",
+  "location": "hit_point",
+  "complications": {
+    "concussion": {
+      "min_severity": 10,
+      "per_severity": 0.02,
+      "max": 0.5
+    }
+  }
+}

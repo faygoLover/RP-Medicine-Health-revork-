@@ -1,0 +1,28 @@
+{
+  "priority": 10,
+  "damage_types": [
+    "minecraft:player_attack",
+    "minecraft:mob_attack",
+    "minecraft:mob_attack_no_aggro"
+  ],
+  "wound": "bruise",
+  "location": "hit_point",
+  "complications": {
+    "fracture": {
+      "min_severity": 15,
+      "per_severity": 0.012,
+      "max": 0.45
+    },
+    "open_fracture_fraction": 0.1,
+    "internal": {
+      "min_severity": 25,
+      "per_severity": 0.012,
+      "max": 0.4
+    },
+    "concussion": {
+      "min_severity": 10,
+      "per_severity": 0.03,
+      "max": 0.8
+    }
+  }
+}

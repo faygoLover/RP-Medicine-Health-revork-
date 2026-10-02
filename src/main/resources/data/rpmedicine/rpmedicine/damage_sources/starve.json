@@ -1,0 +1,10 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:starve"
+  ],
+  "wound": "none",
+  "physiology": {
+    "brain_per_damage": 1
+  }
+}

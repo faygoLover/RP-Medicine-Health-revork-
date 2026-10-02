@@ -1,0 +1,10 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:in_wall"
+  ],
+  "wound": "none",
+  "physiology": {
+    "spo2_per_damage": 4
+  }
+}

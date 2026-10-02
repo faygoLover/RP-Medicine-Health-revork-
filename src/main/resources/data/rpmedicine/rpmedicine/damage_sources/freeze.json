@@ -1,0 +1,9 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:freeze"
+  ],
+  "wound": "bruise",
+  "location": "random",
+  "severity_multiplier": 0.3
+}

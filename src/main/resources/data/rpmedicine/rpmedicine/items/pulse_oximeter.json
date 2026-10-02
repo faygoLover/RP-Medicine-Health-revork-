@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:pulse_oximeter",
+  "action": "pulse_oximeter",
+  "seconds": 2,
+  "min_level": 0,
+  "consume": false
+}

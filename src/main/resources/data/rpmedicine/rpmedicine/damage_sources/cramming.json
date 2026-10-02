@@ -1,0 +1,20 @@
+{
+  "priority": 20,
+  "damage_types": [
+    "minecraft:cramming"
+  ],
+  "wound": "bruise",
+  "location": "chest",
+  "complications": {
+    "fracture": {
+      "min_severity": 10,
+      "per_severity": 0.02,
+      "max": 0.5
+    },
+    "internal": {
+      "min_severity": 10,
+      "per_severity": 0.01,
+      "max": 0.3
+    }
+  }
+}

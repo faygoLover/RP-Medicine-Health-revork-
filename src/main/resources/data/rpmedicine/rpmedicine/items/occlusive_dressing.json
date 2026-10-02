@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:occlusive_dressing",
+  "action": "occlusive",
+  "seconds": 4,
+  "min_level": 1,
+  "consume": true
+}

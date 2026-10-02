@@ -51,6 +51,9 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+// Консоль сервера принимает команды и при запуске через Gradle.
+tasks.matching { it.name == 'runServer' }.configureEach { standardInput = System.in }
+
 repositories {
     flatDir { dir 'libs' }
     maven {
