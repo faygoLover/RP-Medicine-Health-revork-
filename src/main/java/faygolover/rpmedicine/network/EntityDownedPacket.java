@@ -7,15 +7,17 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-/** Сервер → клиенты рядом: игрок лежит или встал (для позы на чужих клиентах). Только факт, без причин. */
-public record EntityDownedPacket(int entityId, boolean down) {
+/** Сервер → клиенты рядом: игрок лежит или встал, лежит ли на койке (для позы на чужих клиентах). Только факт, без причин. */
+public record EntityDownedPacket(int entityId, boolean down, boolean onBed) {
     public static void encode(EntityDownedPacket p, FriendlyByteBuf buf) {
         buf.writeVarInt(p.entityId);
-        buf.writeBoolean(p.down);
+        buf.writeByte((p.down ? 1 : 0) | (p.onBed ? 2 : 0));
     }
 
     public static EntityDownedPacket decode(FriendlyByteBuf buf) {
-        return new EntityDownedPacket(buf.readVarInt(), buf.readBoolean());
+        int id = buf.readVarInt();
+        int flags = buf.readByte();
+        return new EntityDownedPacket(id, (flags & 1) != 0, (flags & 2) != 0);
     }
 
     public static void handle(EntityDownedPacket p, Supplier<NetworkEvent.Context> ctx) {

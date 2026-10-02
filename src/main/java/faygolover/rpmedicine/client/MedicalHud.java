@@ -4,6 +4,7 @@ import faygolover.rpmedicine.config.ClientConfig;
 import faygolover.rpmedicine.config.ClientConfig.HudElement;
 import faygolover.rpmedicine.core.BodyPart;
 import faygolover.rpmedicine.core.Examination;
+import faygolover.rpmedicine.network.MonitorPacket;
 import faygolover.rpmedicine.network.SelfView;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -30,6 +31,7 @@ public final class MedicalHud {
             case PROGRESS -> 100;
             case KNOCKDOWN_TIMER -> 160;
             case HOVER -> 130;
+            case MONITOR -> 110;
         };
     }
 
@@ -40,6 +42,7 @@ public final class MedicalHud {
             case PROGRESS -> 16;
             case KNOCKDOWN_TIMER -> 26;
             case HOVER -> 50;
+            case MONITOR -> 62;
         };
     }
 
@@ -89,6 +92,7 @@ public final class MedicalHud {
             case PROGRESS -> drawProgress(g, font, preview);
             case KNOCKDOWN_TIMER -> drawKnockdown(g, font, v, preview);
             case HOVER -> drawHover(g, font, preview);
+            case MONITOR -> drawMonitor(g, font, preview);
         }
     }
 
@@ -150,6 +154,32 @@ public final class MedicalHud {
         g.drawCenteredString(font, title, 80, 0, 0xFFFFFF);
         g.drawCenteredString(font, Component.translatable("rpmedicine.hud.downed_hint", ClientSetup.PANEL.getTranslatedKeyMessage())
                 .withStyle(ChatFormatting.DARK_GRAY), 80, 12, 0xFFFFFF);
+    }
+
+    /** Цифры монитора, на который смотрит игрок (второй этап, п. 2.3). */
+    private static void drawMonitor(GuiGraphics g, Font font, boolean preview) {
+        MonitorPacket p = preview ? new MonitorPacket(net.minecraft.core.BlockPos.ZERO, (byte) 0, (short) 88, (short) 118, (short) 77,
+                (short) 97, (short) 16, (byte) 0) : ClientState.monitor;
+        if (p == null || (!preview && !ClientState.monitorActive())) return;
+        g.fill(-3, -3, 108, p.state() == 0 ? 60 : 22, 0xB0000000);
+        g.drawString(font, Component.translatable("rpmedicine.monitor.title").withStyle(ChatFormatting.DARK_GREEN), 0, 0, 0xFFFFFF, false);
+        if (p.state() != 0) {
+            String key = p.state() == 1 ? "rpmedicine.monitor.empty" : "rpmedicine.monitor.locked";
+            g.drawString(font, Component.translatable(key).withStyle(ChatFormatting.GRAY), 0, 10, 0xFFFFFF, false);
+            return;
+        }
+        boolean alarm = p.rhythm() != 0;
+        g.drawString(font, Component.translatable("rpmedicine.monitor.hr", dash(p.hr(), alarm)), 0, 10, alarm ? 0xFF5555 : 0x55FF55, false);
+        g.drawString(font, Component.translatable("rpmedicine.monitor.bp", dash(p.sys(), false), dash(p.dia(), false)), 0, 20, 0xFF7777, false);
+        boolean low = p.spo2() >= 0 && p.spo2() < 90;
+        g.drawString(font, Component.translatable("rpmedicine.monitor.spo2", p.spo2() < 0 ? "--" : String.valueOf(p.spo2())), 0, 30,
+                p.spo2() < 0 || low ? 0xFF5555 : 0x55FFFF, false);
+        g.drawString(font, Component.translatable("rpmedicine.monitor.rr", dash(p.rr(), false)), 0, 40, 0xFFFF55, false);
+        g.drawString(font, Component.translatable("rpmedicine.monitor.rhythm_" + p.rhythm()), 0, 50, alarm ? 0xFF5555 : 0xAAAAAA, false);
+    }
+
+    private static String dash(int v, boolean force) {
+        return force || v <= 0 ? "--" : String.valueOf(v);
     }
 
     private static void drawHover(GuiGraphics g, Font font, boolean preview) {

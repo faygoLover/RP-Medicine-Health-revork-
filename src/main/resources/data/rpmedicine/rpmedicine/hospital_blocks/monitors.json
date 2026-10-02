@@ -1,0 +1,8 @@
+{
+  "function": "monitor",
+  "blocks": [
+    "industrialhellscape:vitals_monitor",
+    "moa_decor_science:lectordesignosvitales"
+  ],
+  "radius": 3
+}

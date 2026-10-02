@@ -189,6 +189,22 @@ write(f"{DATA}/rpmedicine/tags/entity_types/biting_mobs.json",
                                     "minecraft:ocelot", "minecraft:panda", "minecraft:hoglin", "minecraft:zoglin",
                                     "minecraft:piglin", "minecraft:axolotl"]})
 
+# ---------------------------------------------------------------- госпиталь (второй этап): функции чужих блоков
+MOA_COLORS = ["amarilla", "azul", "azulclara", "blanca", "cafe", "cian", "gris", "grisclara", "magenta", "morada",
+              "naranja", "negra", "roja", "rosa", "verde", "verdelima"]
+HOSPITAL = {
+    "beds": {"function": "bed", "blocks": ["industrialhellscape:medical_bed"] + [f"moa_decor_science:camah{c}" for c in MOA_COLORS]
+             + ["multibeds:cot"]},
+    "operating_tables": {"function": "operating_table", "blocks": ["industrialhellscape:operating_table"]},
+    "monitors": {"function": "monitor", "blocks": ["industrialhellscape:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
+    "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand"], "radius": 3},
+    # Холодильник и лаборатория — предложение по справочнику id, ждёт подтверждения автора (07_spec_stage2.md, п. 16.13).
+    "fridges": {"function": "fridge", "blocks": ["refurbished_furniture:light_fridge", "refurbished_furniture:dark_fridge"]},
+    "labs": {"function": "lab", "blocks": ["moa_decor_science:microscopio"]},
+}
+for name, obj in HOSPITAL.items():
+    write(f"{DATA}/rpmedicine/rpmedicine/hospital_blocks/{name}.json", obj)
+
 # ---------------------------------------------------------------- звуки (заглушки: ссылки на ванильные звуковые события)
 # Ссылка на событие ("type": "event"), а не на файл: пути файлов в ресурсах ванили меняются от версии к версии.
 SOUNDS = {
@@ -196,7 +212,7 @@ SOUNDS = {
     "ear_ringing": "minecraft:block.note_block.bell", "bandage": "minecraft:item.armor.equip_leather",
     "injection": "minecraft:ui.button.click", "tourniquet": "minecraft:item.armor.equip_chain",
     "defib_shock": "minecraft:block.fire.extinguish", "bone_break": "minecraft:entity.zombie.break_wooden_door",
-    "pills": "minecraft:entity.generic.eat",
+    "pills": "minecraft:entity.generic.eat", "monitor_alarm": "minecraft:block.note_block.bit",
 }
 write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": [{"name": v, "type": "event"}]}
                                 for k, v in SOUNDS.items()})

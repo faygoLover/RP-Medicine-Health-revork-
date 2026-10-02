@@ -43,17 +43,27 @@ import java.util.List;
 public final class MedicalGameTests {
     private MedicalGameTests() {}
 
-    private static final String T = "platform";
+    static final String T = "platform";
 
     private static int counter;
 
     /** Тестовый игрок с настоящим соединением на EmbeddedChannel (пакеты уходят в никуда). */
     /** Режим «без смерти» для теста: пакеты тестов идут по очереди, поэтому задаём явно в начале каждого. */
-    private static void noDeath(boolean on) {
+    static void noDeath(boolean on) {
         MedicalSettings.get().noDeathMode = on;
     }
 
-    private static ServerPlayer player(GameTestHelper h, double x, double z) {
+    /**
+     * Медик без ошибок: у фальшивого игрока уровень «Медицины» 0, шанс ошибки 25 % сделал бы сценарий
+     * лечения случайным. Ошибки медика проверяют юнит-тесты.
+     */
+    static void noErrors() {
+        MedicalSettings s = MedicalSettings.get();
+        s.skillError = new double[s.skillError.length];
+        s.underLevelErrorPerLevel = 0;
+    }
+
+    static ServerPlayer player(GameTestHelper h, double x, double z) {
         var server = h.getLevel().getServer();
         var profile = new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "rpm-test-" + (counter++));
         ServerPlayer p = new ServerPlayer(server, h.getLevel(), profile);
@@ -70,28 +80,28 @@ public final class MedicalGameTests {
         return p;
     }
 
-    private static MedicalState state(ServerPlayer p) {
+    static MedicalState state(ServerPlayer p) {
         return Medical.state(p);
     }
 
     /** Убрать фальшивого игрока: здоровым, чтобы не оставлять заглушку. */
-    private static void remove(GameTestHelper h, ServerPlayer... ps) {
+    static void remove(GameTestHelper h, ServerPlayer... ps) {
         for (ServerPlayer p : ps) {
             if (state(p) != null) state(p).reset(MedicalSettings.get());
             if (!p.isRemoved()) h.getLevel().getServer().getPlayerList().remove(p);
         }
     }
 
-    private static void tickPatients(ServerPlayer... ps) {
+    static void tickPatients(ServerPlayer... ps) {
         for (ServerPlayer p : ps) PatientTicker.tickPlayer(p);
     }
 
-    private static int command(GameTestHelper h, String cmd) {
+    static int command(GameTestHelper h, String cmd) {
         CommandSourceStack src = h.getLevel().getServer().createCommandSourceStack().withPermission(4).withSuppressedOutput();
         return h.getLevel().getServer().getCommands().performPrefixedCommand(src, cmd);
     }
 
-    private static double severity(MedicalState m, BodyPart part) {
+    static double severity(MedicalState m, BodyPart part) {
         return m.part(part).totalSeverity();
     }
 
@@ -182,6 +192,7 @@ public final class MedicalGameTests {
     @GameTest(template = T, timeoutTicks = 480)
     public static void arterialBleedingAndTourniquet(GameTestHelper h) {
         noDeath(false);
+        noErrors();
         ServerPlayer patient = player(h, 2, 3);
         ServerPlayer medic = player(h, 3, 3);
         MedicalState m = state(patient);
@@ -229,6 +240,7 @@ public final class MedicalGameTests {
     @GameTest(template = T, timeoutTicks = 3080, batch = "nodeath")
     public static void clinicalDeathAndResuscitation(GameTestHelper h) {
         noDeath(true);
+        noErrors();
         ServerPlayer p = player(h, 2, 3);
         ServerPlayer medic = player(h, 3, 3);
         MedicalState m = state(p);
@@ -285,7 +297,7 @@ public final class MedicalGameTests {
         });
     }
 
-    private static double total(MedicalState m) {
+    static double total(MedicalState m) {
         double t = 0;
         for (BodyPartState ps : m.parts) t += ps.totalSeverity();
         return t;

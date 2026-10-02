@@ -61,6 +61,9 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
     private int selectedSlot;
     private byte traitFlags;
     private boolean changed;
+    /** Койка, на которой лежит тело (второй этап: выход на койке оставляет тело на ней). */
+    @Nullable
+    private net.minecraft.core.BlockPos bedPos;
 
     public record CurioEntry(String identifier, int index, ItemStack stack) {}
 
@@ -113,6 +116,18 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
         changed = true;
     }
 
+    @Nullable
+    public net.minecraft.core.BlockPos bedPos() {
+        return bedPos;
+    }
+
+    public void setBedPos(@Nullable net.minecraft.core.BlockPos pos) {
+        if (!java.util.Objects.equals(bedPos, pos)) {
+            bedPos = pos;
+            markChanged();
+        }
+    }
+
     /** Заполняет заглушку из игрока: профиль, перки, состояние. Инвентарь переносит {@link StubService}. */
     public void initFrom(Player player, PatientTraits traits) {
         GameProfile profile = player.getGameProfile();
@@ -145,6 +160,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
             // Ванильное здоровье всегда полное.
             if (getHealth() < getMaxHealth() && isAlive()) setHealth(getMaxHealth());
             PatientTicker.tickStub(this);
+            faygolover.rpmedicine.hospital.HospitalService.tickStub(this);
             if (changed) {
                 changed = false;
                 StubService.snapshot(this);
@@ -227,6 +243,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
         if (skinSignature != null) tag.putString("SkinSig", skinSignature);
         tag.putInt("Selected", selectedSlot);
         tag.putByte("Traits", traitFlags);
+        if (bedPos != null) tag.putLong("Bed", bedPos.asLong());
     }
 
     @Override
@@ -241,6 +258,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
         skinSignature = tag.contains("SkinSig") ? tag.getString("SkinSig") : null;
         selectedSlot = tag.getInt("Selected");
         traitFlags = tag.getByte("Traits");
+        bedPos = tag.contains("Bed") ? net.minecraft.core.BlockPos.of(tag.getLong("Bed")) : null;
     }
 
     public ListTag saveInventory() {

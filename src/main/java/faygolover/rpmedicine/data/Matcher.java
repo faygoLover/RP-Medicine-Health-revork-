@@ -41,6 +41,13 @@ public final class Matcher<T> {
         return m;
     }
 
+    /** Из строк вида {@code id} или {@code #tag}. */
+    public static <T> Matcher<T> of(Iterable<String> entries, ResourceKey<? extends Registry<T>> registry) {
+        JsonArray arr = new JsonArray();
+        for (String s : entries) arr.add(s);
+        return parse(arr, registry);
+    }
+
     public boolean isEmpty() {
         return ids.isEmpty() && tags.isEmpty();
     }

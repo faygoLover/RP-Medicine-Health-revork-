@@ -38,7 +38,8 @@ public final class ClientConfig {
         STATUS("status", Anchor.BOTTOM_LEFT, 44, -22, 1.0),
         PROGRESS("progress", Anchor.CENTER, -50, 18, 1.0),
         KNOCKDOWN_TIMER("knockdown_timer", Anchor.TOP_CENTER, 0, 30, 1.0),
-        HOVER("hover", Anchor.CENTER, 12, -4, 1.0);
+        HOVER("hover", Anchor.CENTER, 12, -4, 1.0),
+        MONITOR("monitor", Anchor.CENTER, 12, 14, 1.0);
 
         public final String id;
         public final Anchor defAnchor;

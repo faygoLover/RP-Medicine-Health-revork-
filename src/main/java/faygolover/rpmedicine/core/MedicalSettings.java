@@ -220,6 +220,14 @@ public final class MedicalSettings {
     public double armAttackPenaltyMain = 0.3;
     public double armAttackPenaltyOff = 0.1;
 
+    // ---------------- Госпиталь (второй этап) ----------------
+    /** На больничной койке: заживление, восстановление крови и мозга быстрее во столько раз. */
+    public double bedHealFactor = 1.5;
+    public double bedBloodRegenFactor = 1.5;
+    public double bedBrainRecoveryFactor = 2.0;
+    /** Монитор звучит тревогой при SpO2 ниже. */
+    public double monitorAlarmSpo2 = 85.0;
+
     public MedicalSettings() {
         put(bleedPerSeverity, 0, 2.0, 0.8, 6.0, 3.0, 0, 2.0);
         put(painPerSeverity, 1.0, 1.2, 1.4, 2.0, 1.8, 2.5, 1.2);

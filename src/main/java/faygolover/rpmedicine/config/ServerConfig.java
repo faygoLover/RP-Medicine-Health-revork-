@@ -50,6 +50,9 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue ABDOMEN_TOP;
     public static final ForgeConfigSpec.DoubleValue CHEST_TOP;
     public static final ForgeConfigSpec.DoubleValue ARM_LATERAL;
+    // Госпиталь
+    public static final ForgeConfigSpec.IntValue MONITOR_MIN_LEVEL;
+    public static final ForgeConfigSpec.DoubleValue MONITOR_VIEW_DISTANCE;
 
     static {
         B.comment("RP Medicine — серверный конфиг. Все значения по умолчанию — из ТЗ первого этапа.").push("general");
@@ -255,6 +258,15 @@ public final class ServerConfig {
         MOB_BLEED_DAMAGE_PER_SEVERITY = B.comment("Кровотечение моба: урон в секунду на 1 мл/мин кровотечения ран.").defineInRange("bleed_damage_per_ml", 0.003, 0.0, 10.0);
         MOB_BLEED_SECONDS = B.comment("Кровотечение моба длится, секунды.").defineInRange("bleed_seconds", 20.0, 0.0, 3600.0);
         MOB_STUN_SECONDS = B.comment("Болевой шок моба: оглушение, секунды.").defineInRange("stun_seconds", 2.0, 0.0, 60.0);
+        B.pop();
+
+        B.comment("Госпиталь (второй этап, п. 2). Какие блоки что делают — датапак rpmedicine/hospital_blocks.").push("hospital");
+        bind("bedHealFactor", "На больничной койке заживление быстрее во столько раз.");
+        bind("bedBloodRegenFactor", "На больничной койке кровь восстанавливается быстрее во столько раз.");
+        bind("bedBrainRecoveryFactor", "На больничной койке мозг восстанавливается быстрее во столько раз.");
+        bind("monitorAlarmSpo2", "Монитор звучит тревогой при SpO2 ниже (и при остановке сердца).");
+        MONITOR_MIN_LEVEL = B.comment("Цифры монитора видит тот, у кого уровень «Медицины» не ниже (0 — все).").defineInRange("monitor_min_level", 0, 0, 10);
+        MONITOR_VIEW_DISTANCE = B.comment("Цифры монитора видны с расстояния до, блоки.").defineInRange("monitor_view_distance", 6.0, 1.0, 32.0);
         B.pop();
 
         SPEC = B.build();

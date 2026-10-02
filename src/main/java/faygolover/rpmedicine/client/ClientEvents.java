@@ -8,7 +8,11 @@ import faygolover.rpmedicine.config.ClientConfig;
 import faygolover.rpmedicine.entity.BodyStubEntity;
 import faygolover.rpmedicine.menu.MedicalContainerMenu;
 import faygolover.rpmedicine.network.DownedActionPacket;
+import faygolover.rpmedicine.hospital.BedPose;
+import faygolover.rpmedicine.hospital.HospitalBlocks;
+import faygolover.rpmedicine.hospital.HospitalFunction;
 import faygolover.rpmedicine.network.HoverRequestPacket;
+import faygolover.rpmedicine.network.MonitorRequestPacket;
 import faygolover.rpmedicine.network.Network;
 import faygolover.rpmedicine.network.RequestExamPacket;
 import faygolover.rpmedicine.network.SelfView;
@@ -63,14 +67,15 @@ public final class ClientEvents {
         if (tick % 5 == 0) updateHover(mc, v);
 
         if ((v.noSprint || v.isDown()) && p.isSprinting()) p.setSprinting(false);
-        // Поза: свой лежачий/ползущий и лежачие рядом.
-        Pose want = (v.isDown() || v.crawl) ? Pose.SWIMMING : null;
+        // Поза: свой лежачий/ползущий, на койке и лежачие рядом.
+        Pose want = BedPose.CLIENT_ON_BED.contains(p.getId()) ? Pose.SLEEPING : (v.isDown() || v.crawl) ? Pose.SWIMMING : null;
         if (p.getForcedPose() != want) p.setForcedPose(want);
         for (Player other : mc.level.players()) {
             if (other == p) continue;
-            Pose op = ClientState.DOWNED.contains(other.getId()) ? Pose.SWIMMING : null;
+            Pose op = ClientHandlers.poseFor(other.getId(), false);
             if (other.getForcedPose() != op) other.setForcedPose(op);
         }
+        if (tick % 10 == 0) updateMonitor(mc, v);
         if (mc.screen == null) AimSway.tick(p, v);
         ClientSounds.tick(mc, v);
         PostEffects.tick();
@@ -126,6 +131,16 @@ public final class ClientEvents {
         }
     }
 
+    /** Смотрит на монитор показателей — запрашивать цифры, пока смотрит (п. 2.3 ТЗ второго этапа). */
+    private static void updateMonitor(Minecraft mc, SelfView v) {
+        if (v.isDown() || !(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult bhr)
+                || bhr.getType() != HitResult.Type.BLOCK) return;
+        var pos = bhr.getBlockPos();
+        if (!HospitalBlocks.is(mc.level.getBlockState(pos), HospitalFunction.MONITOR)) return;
+        if (mc.player.getEyePosition().distanceTo(net.minecraft.world.phys.Vec3.atCenterOf(pos)) > 8) return;
+        Network.sendToServer(new MonitorRequestPacket(pos));
+    }
+
     /** Игрок или заглушка под прицелом в пределах дистанции. */
     @Nullable
     public static Entity crosshairPatient(Minecraft mc, double maxDist) {
@@ -157,12 +172,14 @@ public final class ClientEvents {
     public static void onInput(MovementInputUpdateEvent e) {
         SelfView v = ClientState.self;
         var in = e.getInput();
-        if (v.isDown()) {
+        boolean onBed = Minecraft.getInstance().player != null && BedPose.CLIENT_ON_BED.contains(Minecraft.getInstance().player.getId());
+        if (v.isDown() || onBed) {
             in.forwardImpulse = 0;
             in.leftImpulse = 0;
             in.up = in.down = in.left = in.right = false;
             in.jumping = false;
-            in.shiftKeyDown = false;
+            // На койке в сознании встать — присесть.
+            if (v.isDown()) in.shiftKeyDown = false;
         } else if (v.noJump) {
             in.jumping = false;
         }

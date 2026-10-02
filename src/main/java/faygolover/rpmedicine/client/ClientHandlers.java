@@ -3,7 +3,9 @@ package faygolover.rpmedicine.client;
 import faygolover.rpmedicine.client.screen.ClinicalDeathScreen;
 import faygolover.rpmedicine.client.screen.HudEditorScreen;
 import faygolover.rpmedicine.client.screen.MedicalPanelScreen;
+import faygolover.rpmedicine.hospital.BedPose;
 import faygolover.rpmedicine.network.EntityDownedPacket;
+import faygolover.rpmedicine.network.MonitorPacket;
 import faygolover.rpmedicine.network.ExamResultPacket;
 import faygolover.rpmedicine.network.HoverInfoPacket;
 import faygolover.rpmedicine.network.ProgressPacket;
@@ -55,9 +57,25 @@ public final class ClientHandlers {
     public static void onEntityDowned(EntityDownedPacket p) {
         if (p.down()) ClientState.DOWNED.add(p.entityId());
         else ClientState.DOWNED.remove(p.entityId());
+        if (p.onBed()) BedPose.CLIENT_ON_BED.add(p.entityId());
+        else BedPose.CLIENT_ON_BED.remove(p.entityId());
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
         Entity e = mc.level.getEntity(p.entityId());
-        if (e instanceof Player pl) pl.setForcedPose(p.down() ? Pose.SWIMMING : null);
+        if (e instanceof Player pl) {
+            pl.setForcedPose(poseFor(p.entityId(), pl == mc.player && ClientState.self.crawl));
+            pl.refreshDimensions();
+        }
+    }
+
+    /** Поза игрока на этом клиенте: на койке — на спине, лежачий и ползущий — горизонтально. */
+    public static Pose poseFor(int entityId, boolean crawl) {
+        if (BedPose.CLIENT_ON_BED.contains(entityId)) return Pose.SLEEPING;
+        return ClientState.DOWNED.contains(entityId) || crawl ? Pose.SWIMMING : null;
+    }
+
+    public static void onMonitor(MonitorPacket p) {
+        ClientState.monitor = p;
+        ClientState.monitorTime = System.currentTimeMillis();
     }
 }

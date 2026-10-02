@@ -31,6 +31,12 @@ public final class CarryService {
         return CARRIED.containsKey(sp.getUUID());
     }
 
+    /** Кого несёт игрок (или null). */
+    @org.jetbrains.annotations.Nullable
+    public static Entity carried(ServerPlayer sp) {
+        return CARRIED.get(sp.getUUID());
+    }
+
     public static boolean isCarried(Entity e) {
         return e.getVehicle() instanceof ServerPlayer carrier && CARRIED.get(carrier.getUUID()) == e;
     }

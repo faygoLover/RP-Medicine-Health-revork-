@@ -8,6 +8,7 @@ import faygolover.rpmedicine.core.Physiology;
 import faygolover.rpmedicine.core.StepInput;
 import faygolover.rpmedicine.core.StepResult;
 import faygolover.rpmedicine.entity.BodyStubEntity;
+import faygolover.rpmedicine.hospital.HospitalService;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 
@@ -46,6 +47,7 @@ public final class PatientTicker {
         int step = Math.max(1, s.stepTicks);
         if ((++d.ticks + sp.getId()) % step != 0) return;
 
+        // На койке здоровый тоже «спит»: множители койки нужны только тому, кто лечится.
         boolean quiet = m.isQuiet(s) && d.distance < 0.01;
         if (!quiet) {
             long t0 = System.nanoTime();
@@ -58,6 +60,7 @@ public final class PatientTicker {
             in.suffocating = sp.getAirSupply() <= 0 && (sp.isEyeInFluid(FluidTags.WATER) || sp.isInWall());
             in.still = d.distance < 0.05 * step || m.isDown();
             in.random = RANDOM.split();
+            HospitalService.applyConditions(d, in, s);
             StepResult r = Physiology.step(m, in, s);
             DownedService.onStep(sp, m, r);
             d.markDirty();
@@ -88,6 +91,7 @@ public final class PatientTicker {
         in.online = false;
         in.still = true;
         in.random = RANDOM.split();
+        // Заглушка на койке: заживление у неё не идёт и так (online = false), множители не нужны.
         StepResult r = Physiology.step(m, in, s);
         stub.markChanged();
         if (r.has(StepResult.Event.DIED)) StubService.onStubBrainDeath(stub);

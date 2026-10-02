@@ -91,12 +91,22 @@ public final class DownedService {
 
     /** Сообщить всем, кто видит игрока (и ему самому), что он лежит или встал. */
     public static void broadcastDowned(ServerPlayer sp, boolean down) {
-        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp), new EntityDownedPacket(sp.getId(), down));
+        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp), new EntityDownedPacket(sp.getId(), down, onBed(sp)));
     }
 
-    /** Поза: лежачий и ползущий — горизонтально (поза плавания), иначе обычная. */
+    /** Сообщить позу по текущему состоянию (лежит, на койке). */
+    public static void broadcastPose(ServerPlayer sp) {
+        broadcastDowned(sp, Medical.isDown(sp));
+    }
+
+    private static boolean onBed(ServerPlayer sp) {
+        MedicalData d = Medical.data(sp);
+        return d != null && d.bedPos != null;
+    }
+
+    /** Поза: на койке — на спине (поза сна), лежачий и ползущий — горизонтально (поза плавания), иначе обычная. */
     public static void updatePose(ServerPlayer sp, MedicalState m, GameplayEffects.Mods mods) {
-        Pose want = (m.isDown() || mods.crawl) ? Pose.SWIMMING : null;
+        Pose want = onBed(sp) ? Pose.SLEEPING : (m.isDown() || mods.crawl) ? Pose.SWIMMING : null;
         if (sp.getForcedPose() != want) sp.setForcedPose(want);
     }
 

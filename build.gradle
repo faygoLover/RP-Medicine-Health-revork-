@@ -26,6 +26,8 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            // Русские сообщения в логе консоли без «????».
+            jvmArg '-Dfile.encoding=UTF-8'
             // Миксины чужих модов (Curios, Zero Contact) в среде разработки.
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"

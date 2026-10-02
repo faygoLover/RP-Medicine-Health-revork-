@@ -18,6 +18,10 @@ public final class StepInput {
     public boolean suffocating;
     /** Стоит на месте или лежит (капельница идёт только так). */
     public boolean still = true;
+    /** Множители условий (больничная койка и т.п.): заживление, восстановление крови, восстановление мозга. */
+    public double healFactor = 1.0;
+    public double bloodRegenFactor = 1.0;
+    public double brainRecoveryFactor = 1.0;
     public RandomGenerator random = new java.util.SplittableRandom();
 
     public StepInput() {}

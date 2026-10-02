@@ -24,7 +24,7 @@ public final class Physiology {
         tickTimers(m, in, s);
         tickLimbs(m, in, s, r);
         double bleedPerMin = tickBlood(m, in, s);
-        if (in.online) Healing.advance(m, dt, s);
+        if (in.online) Healing.advance(m, dt * in.healFactor, s);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
         tickCirculation(m, in, s, r, bleedPerMin);
@@ -178,7 +178,7 @@ public final class Physiology {
             m.bloodVolume -= out;
         }
         // Восстановление крови: только в сети и без кровотечения.
-        if (in.online && perMin < 0.01) regenerateBlood(m, s.bloodRegenPerHour * dt / 3600.0, s);
+        if (in.online && perMin < 0.01) regenerateBlood(m, s.bloodRegenPerHour * in.bloodRegenFactor * dt / 3600.0, s);
         m.bloodVolume = clamp(m.bloodVolume, 0, normal);
         return perMin;
     }
@@ -553,7 +553,7 @@ public final class Physiology {
             }
         }
         if (m.down == Down.NONE && delivery >= 0.9 && in.online && m.brain < 100)
-            m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * dt);
+            m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * in.brainRecoveryFactor * dt);
 
         if (m.brain <= 0 && m.down != Down.CLINICAL) {
             brainDeath(m, s, r);

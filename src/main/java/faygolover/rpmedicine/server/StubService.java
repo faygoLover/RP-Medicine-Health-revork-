@@ -7,8 +7,11 @@ import faygolover.rpmedicine.core.MedicalSettings;
 import faygolover.rpmedicine.core.MedicalState;
 import faygolover.rpmedicine.core.Physiology;
 import faygolover.rpmedicine.entity.BodyStubEntity;
+import faygolover.rpmedicine.hospital.HospitalBlocks;
+import faygolover.rpmedicine.hospital.HospitalService;
 import faygolover.rpmedicine.integration.CuriosCompat;
 import faygolover.rpmedicine.integration.Integrations;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
@@ -32,6 +35,8 @@ import java.util.List;
  * в обмороке       | заглушка, обморок как обычно  | то же
  * </pre>
  * Игрок при входе оказывается на месте заглушки в том состоянии, в каком она сейчас.
+ * Второй этап: выход на больничной койке в любом состоянии (кроме нокдауна без режима «без смерти»)
+ * тоже оставляет заглушку — на койке; при входе игрок снова лежит на ней.
  */
 public final class StubService {
     private StubService() {}
@@ -42,8 +47,11 @@ public final class StubService {
         MedicalState m = Medical.state(sp);
         if (m == null || sp.isDeadOrDying()) return;
         MedicalSettings s = MedicalSettings.get();
+        BlockPos bed = HospitalService.bedOf(sp);
         switch (m.down) {
-            case NONE -> { }
+            case NONE -> {
+                if (bed != null) leaveStub(sp, m);
+            }
             case KNOCKDOWN -> {
                 if (s.noDeathMode) {
                     Physiology.enterClinical(m);
@@ -68,6 +76,8 @@ public final class StubService {
         }
         inv.clearContent();
         if (Integrations.curios()) CuriosCompat.moveToStub(sp, stub);
+        BlockPos bed = HospitalService.bedOf(sp);
+        if (bed != null) stub.setBedPos(bed);
         level.addFreshEntity(stub);
         StubRegistry.Record r = new StubRegistry.Record();
         r.entityId = stub.getUUID();
@@ -85,6 +95,7 @@ public final class StubService {
         snap.put("Medical", MedicalNbt.write(stub.state()));
         snap.put("Inv", stub.saveInventory());
         snap.put("Curios", stub.saveCurios());
+        if (stub.bedPos() != null) snap.putLong("Bed", stub.bedPos().asLong());
         r.snapshot = snap;
     }
 
@@ -144,7 +155,9 @@ public final class StubService {
         }
         inv.clearContent();
         List<BodyStubEntity.CurioEntry> curios;
+        BlockPos bed;
         if (stub != null) {
+            bed = stub.bedPos();
             m.copyFrom(stub.state());
             for (int i = 0; i < BodyStubEntity.INV_SIZE; i++) inv.setItem(i, stub.inventory().getItem(i).copy());
             curios = List.copyOf(stub.curios);
@@ -153,6 +166,7 @@ public final class StubService {
             stub.discard();
         } else {
             CompoundTag snap = r.snapshot;
+            bed = snap.contains("Bed") ? BlockPos.of(snap.getLong("Bed")) : null;
             MedicalNbt.read(m, snap.getCompound("Medical"), MedicalSettings.get());
             BodyStubEntity tmp = BodyStubEntity.create(level);
             tmp.loadInventory(snap.getList("Inv", Tag.TAG_COMPOUND));
@@ -165,10 +179,17 @@ public final class StubService {
         for (ItemStack s : leftovers) if (!inv.add(s)) sp.drop(s, false);
 
         sp.teleportTo(level, r.pos.x, r.pos.y, r.pos.z, r.yaw, sp.getXRot());
+        var d = Medical.data(sp);
+        if (d != null) d.bedPos = null;
         Medical.changed(sp);
         SelfSync.forceSync(sp);
         if (r.dead) {
             DownedService.kill(sp, DownedService.BRAIN_DEATH, null);
+            return;
+        }
+        // Тело лежало на койке — игрок снова на ней.
+        if (bed != null && level.isLoaded(bed) && HospitalBlocks.isBed(level.getBlockState(bed)) && !HospitalService.occupied(level, bed, sp)) {
+            HospitalService.placeOnBed(sp, bed);
         } else if (m.isDown()) {
             DownedService.broadcastDowned(sp, true);
         }

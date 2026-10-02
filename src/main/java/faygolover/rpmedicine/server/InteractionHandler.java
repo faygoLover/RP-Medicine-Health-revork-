@@ -4,6 +4,8 @@ import faygolover.rpmedicine.capability.MedicalData;
 import faygolover.rpmedicine.config.ServerConfig;
 import faygolover.rpmedicine.core.TreatmentAction;
 import faygolover.rpmedicine.data.ItemRules;
+import faygolover.rpmedicine.hospital.HospitalBlocks;
+import faygolover.rpmedicine.hospital.HospitalService;
 import faygolover.rpmedicine.integration.Integrations;
 import faygolover.rpmedicine.item.GmScannerItem;
 import faygolover.rpmedicine.item.MedicalContainerItem;
@@ -124,9 +126,23 @@ public final class InteractionHandler {
     }
 
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (Medical.isDown(event.getEntity())) {
+        Player p = event.getEntity();
+        if (Medical.isDown(p)) {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.FAIL);
+            return;
+        }
+        // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
+        if (event.getHand() != InteractionHand.MAIN_HAND) return;
+        boolean carrying = !p.getPassengers().isEmpty();
+        if (!carrying && (p.isShiftKeyDown() || !p.getMainHandItem().isEmpty())) return;
+        if (!HospitalBlocks.isBed(event.getLevel().getBlockState(event.getPos()))) return;
+        boolean handled = !event.getLevel().isClientSide
+                ? HospitalService.onUseBlock((ServerPlayer) p, event.getPos())
+                : true;
+        if (handled) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
         }
     }
 

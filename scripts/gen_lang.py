@@ -210,6 +210,27 @@ sounds = {"heartbeat": ("Стук сердца", "Heartbeat"), "heavy_breathing"
  "defib_shock": ("Разряд", "Defibrillator shock"), "bone_break": ("Хруст кости", "Bone cracks"), "pills": ("Таблетки", "Pills")}
 for k, (ru, en) in sounds.items(): t(f"subtitles.rpmedicine.{k}", ru, en)
 
+# ---------------------------------------------------------------- второй этап «Госпиталь»
+# Госпиталь: койка, монитор
+for k, ru, en in [
+ ("rpmedicine.bed.lie_down", "Вы легли на койку. Встать — присесть.", "You lie down on the bed. Sneak to get up."),
+ ("rpmedicine.bed.stood_up", "Вы встали с койки.", "You got up from the bed."),
+ ("rpmedicine.bed.occupied", "Койка занята.", "The bed is occupied."),
+ ("rpmedicine.bed.placed", "Вы положили %s на койку.", "You placed %s on the bed."),
+ ("rpmedicine.hud.element.monitor", "Монитор", "Monitor"),
+ ("rpmedicine.monitor.title", "Монитор", "Monitor"),
+ ("rpmedicine.monitor.empty", "Нет пациента", "No patient"),
+ ("rpmedicine.monitor.locked", "Не разобрать показания", "You can't make sense of the readings"),
+ ("rpmedicine.monitor.hr", "Пульс %s", "HR %s"),
+ ("rpmedicine.monitor.bp", "АД %s/%s", "BP %s/%s"),
+ ("rpmedicine.monitor.spo2", "SpO₂ %s%%", "SpO₂ %s%%"),
+ ("rpmedicine.monitor.rr", "ЧДД %s", "RR %s"),
+ ("rpmedicine.monitor.rhythm_0", "Ритм: синусовый", "Rhythm: sinus"),
+ ("rpmedicine.monitor.rhythm_1", "Ритм: ФИБРИЛЛЯЦИЯ", "Rhythm: FIBRILLATION"),
+ ("rpmedicine.monitor.rhythm_2", "Ритм: АСИСТОЛИЯ", "Rhythm: ASYSTOLE"),
+ ("subtitles.rpmedicine.monitor_alarm", "Тревога монитора", "Monitor alarm"),
+]: t(k, ru, en)
+
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):
     with open(os.path.join(base, name + ".json"), "w", encoding="utf-8") as f:

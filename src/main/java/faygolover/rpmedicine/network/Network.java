@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 /** Сетевой канал мода. Сервер → клиент: только изменения и только то, что клиенту положено видеть. */
 public final class Network {
-    private static final String PROTOCOL = "1";
+    private static final String PROTOCOL = "2";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(RpMedicine.MODID, "main"),
@@ -35,11 +35,14 @@ public final class Network {
         toClient(ProgressPacket.class, ProgressPacket::encode, ProgressPacket::decode, ProgressPacket::handle);
         toClient(OpenHudEditorPacket.class, OpenHudEditorPacket::encode, OpenHudEditorPacket::decode, OpenHudEditorPacket::handle);
         toClient(EntityDownedPacket.class, EntityDownedPacket::encode, EntityDownedPacket::decode, EntityDownedPacket::handle);
+        toClient(HospitalBlocksPacket.class, HospitalBlocksPacket::encode, HospitalBlocksPacket::decode, HospitalBlocksPacket::handle);
+        toClient(MonitorPacket.class, MonitorPacket::encode, MonitorPacket::decode, MonitorPacket::handle);
         // Клиент → сервер
         toServer(RequestExamPacket.class, RequestExamPacket::encode, RequestExamPacket::decode, RequestExamPacket::handle);
         toServer(PanelActionPacket.class, PanelActionPacket::encode, PanelActionPacket::decode, PanelActionPacket::handle);
         toServer(DownedActionPacket.class, DownedActionPacket::encode, DownedActionPacket::decode, DownedActionPacket::handle);
         toServer(HoverRequestPacket.class, HoverRequestPacket::encode, HoverRequestPacket::decode, HoverRequestPacket::handle);
+        toServer(MonitorRequestPacket.class, MonitorRequestPacket::encode, MonitorRequestPacket::decode, MonitorRequestPacket::handle);
     }
 
     private static <T> void toClient(Class<T> type, BiConsumer<T, FriendlyByteBuf> enc, Function<FriendlyByteBuf, T> dec,

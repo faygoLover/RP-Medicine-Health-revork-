@@ -79,5 +79,14 @@
         "type": "event"
       }
     ]
+  },
+  "monitor_alarm": {
+    "subtitle": "subtitles.rpmedicine.monitor_alarm",
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bit",
+        "type": "event"
+      }
+    ]
   }
 }

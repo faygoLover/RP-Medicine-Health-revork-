@@ -9,6 +9,9 @@ import faygolover.rpmedicine.core.MedicalState;
 import faygolover.rpmedicine.data.DamageRules;
 import faygolover.rpmedicine.data.ItemRules;
 import faygolover.rpmedicine.data.MobRules;
+import faygolover.rpmedicine.hospital.BedPose;
+import faygolover.rpmedicine.hospital.HospitalBlocks;
+import faygolover.rpmedicine.hospital.HospitalService;
 import faygolover.rpmedicine.integration.Integrations;
 import faygolover.rpmedicine.network.EntityDownedPacket;
 import faygolover.rpmedicine.network.Network;
@@ -81,6 +84,9 @@ public final class ModSetup {
         bus.addListener(EventPriority.HIGH, ChatHandler::onCommand);
         // Датапак, команды, сервер
         bus.addListener(ModSetup::onReloadListeners);
+        bus.addListener(ModSetup::onDatapackSync);
+        // Госпиталь: размер лежащего на койке (обе стороны)
+        bus.addListener(BedPose::onSize);
         bus.addListener(ModSetup::onCommands);
         bus.addListener(ModSetup::onServerStarted);
         bus.addListener(ModSetup::onServerStopped);
@@ -90,6 +96,8 @@ public final class ModSetup {
         if (e.phase != TickEvent.Phase.END || !(e.player instanceof ServerPlayer sp)) return;
         PatientTicker.tickPlayer(sp);
         CarryService.tickCarrier(sp);
+        MedicalData d = Medical.data(sp);
+        if (d != null) HospitalService.tickPlayer(sp, d);
     }
 
     private static void onLivingTick(LivingEvent.LivingTickEvent e) {
@@ -112,7 +120,7 @@ public final class ModSetup {
         StubService.onLogin(sp);
         SelfSync.forceSync(sp);
         MedicalState m = Medical.state(sp);
-        if (m != null && m.isDown()) faygolover.rpmedicine.server.DownedService.broadcastDowned(sp, true);
+        if (m != null && (m.isDown() || HospitalService.isOnBed(sp))) faygolover.rpmedicine.server.DownedService.broadcastPose(sp);
     }
 
     private static void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
@@ -173,8 +181,10 @@ public final class ModSetup {
 
     /** Новый наблюдатель увидел лежачего игрока — сообщить ему позу. */
     private static void onStartTracking(PlayerEvent.StartTracking e) {
-        if (e.getTarget() instanceof ServerPlayer target && e.getEntity() instanceof ServerPlayer viewer && Medical.isDown(target)) {
-            Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new EntityDownedPacket(target.getId(), true));
+        if (e.getTarget() instanceof ServerPlayer target && e.getEntity() instanceof ServerPlayer viewer
+                && (Medical.isDown(target) || HospitalService.isOnBed(target))) {
+            Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer),
+                    new EntityDownedPacket(target.getId(), Medical.isDown(target), HospitalService.isOnBed(target)));
         }
     }
 
@@ -183,6 +193,14 @@ public final class ModSetup {
         e.addListener(ItemRules.ITEMS);
         e.addListener(ItemRules.ALIASES);
         e.addListener(MobRules.INSTANCE);
+        e.addListener(HospitalBlocks.LOADER);
+    }
+
+    /** Клиенты получают списки функций госпиталя при входе и после /reload. */
+    private static void onDatapackSync(net.minecraftforge.event.OnDatapackSyncEvent e) {
+        var packet = new faygolover.rpmedicine.network.HospitalBlocksPacket(HospitalBlocks.entries(), HospitalBlocks.radii());
+        if (e.getPlayer() != null) Network.send(e.getPlayer(), packet);
+        else Network.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
     }
 
     private static void onCommands(RegisterCommandsEvent e) {
