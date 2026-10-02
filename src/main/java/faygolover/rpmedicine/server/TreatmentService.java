@@ -45,6 +45,9 @@ public final class TreatmentService {
         ItemStack stack = actor.getInventory().getItem(slot);
         ItemRules.Spec spec = ItemRules.specFor(stack);
         if (spec == null) return false;
+        // Пока зажата ПКМ, взаимодействие повторяется каждые 4 тика — идущее лечение тем же предметом не перезапускаем.
+        if (ActionManager.current(actor) instanceof TreatmentTimedAction cur && cur.target == target && cur.slot == slot
+                && ItemStack.isSameItem(cur.original, stack)) return true;
         MedicalState m = Medical.state(target);
         if (m == null) return false;
         MedicalSettings s = MedicalSettings.get();
@@ -112,11 +115,11 @@ public final class TreatmentService {
 
     /** Лечение предметом с прогресс-баром. */
     static final class TreatmentTimedAction extends ActionManager.TimedAction {
-        private final LivingEntity target;
+        final LivingEntity target;
         private final BodyPart part;
         private final ItemRules.Spec spec;
-        private final int slot;
-        private final ItemStack original;
+        final int slot;
+        final ItemStack original;
         private final int level;
         private final boolean fromHand;
 

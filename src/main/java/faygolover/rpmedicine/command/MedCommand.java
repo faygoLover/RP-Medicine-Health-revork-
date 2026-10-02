@@ -56,6 +56,8 @@ public final class MedCommand {
     private MedCommand() {}
 
     private static final SimpleCommandExceptionType NOT_PATIENT = new SimpleCommandExceptionType(Component.translatable("rpmedicine.cmd.not_patient"));
+    private static final SimpleCommandExceptionType BAD_TYPE = new SimpleCommandExceptionType(Component.translatable("rpmedicine.cmd.bad_type"));
+    private static final SimpleCommandExceptionType BAD_PART = new SimpleCommandExceptionType(Component.translatable("rpmedicine.cmd.bad_part"));
     private static final SimpleCommandExceptionType BAD_DURATION = new SimpleCommandExceptionType(Component.translatable("rpmedicine.cmd.bad_duration"));
     private static final SuggestionProvider<CommandSourceStack> PARTS = (c, b) -> SharedSuggestionProvider.suggest(
             Arrays.stream(BodyPart.VALUES).map(p -> p.id), b);
@@ -148,8 +150,8 @@ public final class MedCommand {
     private static int injure(CommandContext<CommandSourceStack> c, double severity) throws CommandSyntaxException {
         String typeId = StringArgumentType.getString(c, "type");
         String partId = StringArgumentType.getString(c, "part");
-        WoundType type = WoundType.byId(typeId).orElseThrow(() -> NOT_PATIENT.create());
-        BodyPart part = BodyPart.byId(partId).orElseThrow(() -> NOT_PATIENT.create());
+        WoundType type = WoundType.byId(typeId).orElseThrow(() -> BAD_TYPE.create());
+        BodyPart part = BodyPart.byId(partId).orElseThrow(() -> BAD_PART.create());
         MedicalSettings s = MedicalSettings.get();
         // Тяжесть задаётся напрямую: урон = тяжесть / 5; осложнения — по правилу датапака для этого типа.
         InjuryProfile prof = profileForType(type);
@@ -199,7 +201,7 @@ public final class MedCommand {
                 m.reset(MedicalSettings.get());
                 if (wasDown && t instanceof ServerPlayer sp) DownedService.onWokeUp(sp);
             } else {
-                BodyPart part = BodyPart.byId(partId).orElseThrow(() -> NOT_PATIENT.create());
+                BodyPart part = BodyPart.byId(partId).orElseThrow(() -> BAD_PART.create());
                 m.healPart(part);
             }
             Medical.changed(t);
@@ -273,7 +275,7 @@ public final class MedCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> foreign(String name, boolean bullets) {
         return Commands.literal(name).then(Commands.argument("part", StringArgumentType.word()).suggests(PARTS)
                 .then(Commands.argument("count", IntegerArgumentType.integer(0, 20)).executes(c -> {
-                    BodyPart part = BodyPart.byId(StringArgumentType.getString(c, "part")).orElseThrow(() -> NOT_PATIENT.create());
+                    BodyPart part = BodyPart.byId(StringArgumentType.getString(c, "part")).orElseThrow(() -> BAD_PART.create());
                     int count = IntegerArgumentType.getInteger(c, "count");
                     int n = 0;
                     for (LivingEntity t : patients(c)) {

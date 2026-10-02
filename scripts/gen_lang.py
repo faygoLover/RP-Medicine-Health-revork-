@@ -162,6 +162,8 @@ for k, ru, en in [
  ("rpmedicine.tooltip.charges", "Зарядов: %s", "Charges: %s"), ("rpmedicine.tooltip.container", "Ячеек: %s, только медицина", "%s slots, medical items only"),
  ("rpmedicine.search.title", "Обыск: %s", "Searching: %s"), ("rpmedicine.search.curios", "Снаряжение", "Equipment"),
  ("rpmedicine.cmd.not_patient", "Цель — не игрок и не тело", "Target is not a player or a body"),
+ ("rpmedicine.cmd.bad_type", "Тип раны: bruise, cut, stab, gunshot, shrapnel, burn, bite", "Wound type: bruise, cut, stab, gunshot, shrapnel, burn, bite"),
+ ("rpmedicine.cmd.bad_part", "Часть тела: head, chest, abdomen, right_arm, left_arm, right_leg, left_leg, right_foot, left_foot", "Body part: head, chest, abdomen, right_arm, left_arm, right_leg, left_leg, right_foot, left_foot"),
  ("rpmedicine.cmd.bad_duration", "Длительность вида 30m, 2h, 1h30m, 600s", "Duration like 30m, 2h, 1h30m, 600s"),
  ("rpmedicine.cmd.reloaded", "RP Medicine: конфиг и датапак перечитаны", "RP Medicine: config and datapack reloaded"),
  ("rpmedicine.cmd.profile", "RP Medicine: %s мкс/тик, шагов физиологии %s/тик (%s мкс на шаг), игроков %s, заглушек %s", "RP Medicine: %s µs/tick, %s physiology steps/tick (%s µs per step), players %s, bodies %s"),

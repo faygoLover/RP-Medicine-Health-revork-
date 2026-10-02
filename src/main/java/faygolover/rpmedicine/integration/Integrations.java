@@ -81,6 +81,10 @@ public final class Integrations {
         if (tacz) faygolover.rpmedicine.integration.tacz.GunHits.flush();
     }
 
+    public static void serverStopped() {
+        if (tacz) faygolover.rpmedicine.integration.tacz.GunHits.clear();
+    }
+
     /** Расход выносливости RP Stamina (переноска тела). */
     public static void consumeStamina(ServerPlayer sp, float amount) {
         if (stamina) StaminaCompat.consume(sp, amount);

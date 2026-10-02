@@ -70,6 +70,8 @@
   "rpmedicine.clinical.hint": "Тело ещё можно спасти. Ждите медиков.",
   "rpmedicine.clinical.title": "Клиническая смерть",
   "rpmedicine.cmd.bad_duration": "Длительность вида 30m, 2h, 1h30m, 600s",
+  "rpmedicine.cmd.bad_part": "Часть тела: head, chest, abdomen, right_arm, left_arm, right_leg, left_leg, right_foot, left_foot",
+  "rpmedicine.cmd.bad_type": "Тип раны: bruise, cut, stab, gunshot, shrapnel, burn, bite",
   "rpmedicine.cmd.healed": "%s вылечен (%s)",
   "rpmedicine.cmd.injured": "%s: %s в %s, тяжесть %s, итог %s",
   "rpmedicine.cmd.killed": "%s убит",

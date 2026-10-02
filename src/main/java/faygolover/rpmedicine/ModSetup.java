@@ -198,6 +198,7 @@ public final class ModSetup {
         ActionManager.clear();
         CarryService.clear();
         ExamService.clear();
+        Integrations.serverStopped();
         faygolover.rpmedicine.integration.voice.VoiceState.clear();
     }
 }

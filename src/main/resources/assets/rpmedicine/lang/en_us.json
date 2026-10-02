@@ -70,6 +70,8 @@
   "rpmedicine.clinical.hint": "The body can still be saved. Wait for medics.",
   "rpmedicine.clinical.title": "Clinical death",
   "rpmedicine.cmd.bad_duration": "Duration like 30m, 2h, 1h30m, 600s",
+  "rpmedicine.cmd.bad_part": "Body part: head, chest, abdomen, right_arm, left_arm, right_leg, left_leg, right_foot, left_foot",
+  "rpmedicine.cmd.bad_type": "Wound type: bruise, cut, stab, gunshot, shrapnel, burn, bite",
   "rpmedicine.cmd.healed": "%s healed (%s)",
   "rpmedicine.cmd.injured": "%s: %s to %s, severity %s, result %s",
   "rpmedicine.cmd.killed": "%s killed",

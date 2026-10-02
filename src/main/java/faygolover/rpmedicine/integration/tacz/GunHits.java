@@ -115,6 +115,10 @@ public final class GunHits {
         return true;
     }
 
+    public static void clear() {
+        PENDING.clear();
+    }
+
     /** Конец тика сервера: превратить накопленные попадания в раны. */
     public static void flush() {
         if (PENDING.isEmpty()) return;

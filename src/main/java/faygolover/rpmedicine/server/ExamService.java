@@ -88,7 +88,9 @@ public final class ExamService {
             if (ps.occlusive) b |= 8;
             removable[ps.part.ordinal()] = (byte) b;
         }
-        return new ExamResultPacket(self ? -1 : target.getId(), self, target.getDisplayName(), view, removable, (byte) m.down.ordinal());
+        // Заглушка — всегда лежачее тело (её можно обыскать, даже если обморок прошёл).
+        byte down = (byte) (Medical.isDown(target) ? Math.max(1, m.down.ordinal()) : 0);
+        return new ExamResultPacket(self ? -1 : target.getId(), self, target.getDisplayName(), view, removable, down);
     }
 
     // ------------------------------------------------------------------ наведение

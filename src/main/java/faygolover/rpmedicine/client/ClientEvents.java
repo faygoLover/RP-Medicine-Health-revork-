@@ -71,7 +71,7 @@ public final class ClientEvents {
             Pose op = ClientState.DOWNED.contains(other.getId()) ? Pose.SWIMMING : null;
             if (other.getForcedPose() != op) other.setForcedPose(op);
         }
-        AimSway.tick(p, v);
+        if (mc.screen == null) AimSway.tick(p, v);
         ClientSounds.tick(mc, v);
         PostEffects.tick();
     }
@@ -185,6 +185,7 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onScreenOpen(ScreenEvent.Opening e) {
         SelfView v = ClientState.self;
+        if (Minecraft.getInstance().player == null) return;
         if (v.down == 3 && !(e.getNewScreen() instanceof ClinicalDeathScreen) && e.getNewScreen() != null
                 && !(e.getNewScreen() instanceof net.minecraft.client.gui.screens.PauseScreen)) {
             e.setCanceled(true);
