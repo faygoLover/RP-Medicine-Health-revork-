@@ -85,6 +85,10 @@ public final class TreatmentService {
                 return true;
             }
         }
+        if (action == TreatmentAction.HEMOANALYZER && !hasLancet(actor)) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_lancet").withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
         int level = Medical.medicineLevel(actor);
         boolean self = actor == target;
         GameplayEffects.Mods mods = Medical.data(actor) != null ? Medical.data(actor).lastMods : new GameplayEffects.Mods();
@@ -92,6 +96,23 @@ public final class TreatmentService {
         boolean fromHand = part == null;
         ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand));
         return true;
+    }
+
+    /** Гемоанализатор берёт каплю крови ланцетом — ланцет нужен в инвентаре. */
+    static boolean hasLancet(ServerPlayer actor) {
+        return actor.getAbilities().instabuild || actor.getInventory().contains(new ItemStack(faygolover.rpmedicine.registry.ModItems.LANCET.get()));
+    }
+
+    private static boolean consumeLancet(ServerPlayer actor) {
+        if (actor.getAbilities().instabuild) return true;
+        var inv = actor.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            if (inv.getItem(i).is(faygolover.rpmedicine.registry.ModItems.LANCET.get())) {
+                inv.getItem(i).shrink(1);
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Что несёт предмет: пакет крови (группа, годность) или препарат. */
@@ -181,14 +202,26 @@ public final class TreatmentService {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
                 return;
             }
-            boolean error = !spec.action().isInstrument() && RANDOM.nextDouble() < Skill.errorChance(level, spec.minLevel(), s);
+            boolean error;
+            if (spec.action().isDiagnostic()) {
+                // Прибор работает у любого, но без нужного уровня показания не разобрать.
+                error = RANDOM.nextDouble() < Math.min(s.maxErrorChance, Math.max(0, spec.minLevel() - level) * s.underLevelErrorPerLevel);
+                if (spec.action() == TreatmentAction.HEMOANALYZER && !consumeLancet(actor)) {
+                    actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_lancet").withStyle(ChatFormatting.YELLOW), true);
+                    return;
+                }
+            } else {
+                error = !spec.action().isInstrument() && RANDOM.nextDouble() < Skill.errorChance(level, spec.minLevel(), s);
+            }
             Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra);
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
+            if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) LabService.giveSample(actor, target);
             Medical.changed(target);
             sound(spec.action());
             Component msg = resultMessage(r, part);
-            actor.displayClientMessage(msg, true);
+            // Показания приборов длинные — в чат, остальное — над панелью.
+            actor.displayClientMessage(msg, !spec.action().isDiagnostic());
             if (target != actor && target instanceof ServerPlayer tp && !(spec.action().isInstrument())) {
                 tp.displayClientMessage(Component.translatable("rpmedicine.msg.treated_by", actor.getDisplayName(), Component.translatable(original.getDescriptionId())), true);
             }
@@ -222,9 +255,19 @@ public final class TreatmentService {
     static Component resultMessage(Treatments.Result r, BodyPart part) {
         Object[] args = new Object[r.args.length + 1];
         args[0] = Component.translatable(part.translationKey());
-        for (int i = 0; i < r.args.length; i++) args[i + 1] = (int) Math.round(r.args[i]);
+        for (int i = 0; i < r.args.length; i++) {
+            double v = r.args[i];
+            // Целые — без дробной части; термометр и т.п. — с одним знаком.
+            args[i + 1] = Math.abs(v - Math.rint(v)) < 1e-9 ? (Object) (int) Math.rint(v) : String.format(java.util.Locale.ROOT, "%.1f", v);
+        }
         ChatFormatting color = r.applied ? ChatFormatting.GREEN : ChatFormatting.RED;
-        return Component.translatable("rpmedicine.treat." + r.key, args).withStyle(color);
+        net.minecraft.network.chat.MutableComponent msg = Component.translatable("rpmedicine.treat." + r.key, args).withStyle(color);
+        // Показания приборов словами: «Стетоскоп: дыхание чистое; тоны ритмичные».
+        for (int i = 0; i < r.words.length; i++) {
+            msg.append(Component.literal(i == 0 ? " " : "; ").withStyle(ChatFormatting.GRAY));
+            msg.append(Component.translatable("rpmedicine.word." + r.words[i]).withStyle(ChatFormatting.WHITE));
+        }
+        return msg;
     }
 
     // ------------------------------------------------------------------ удержание (СЛР, Амбу)

@@ -23,6 +23,11 @@
     "rpmedicine:tonometer",
     "rpmedicine:empty_blood_bag",
     "rpmedicine:blood_bag",
+    "rpmedicine:stethoscope",
+    "rpmedicine:thermometer",
+    "rpmedicine:portable_scanner",
+    "rpmedicine:hemoanalyzer",
+    "rpmedicine:blood_draw_syringe",
     "rpmedicine:paracetamol",
     "rpmedicine:ibuprofen",
     "rpmedicine:ketorolac",
@@ -35,6 +40,8 @@
     "rpmedicine:atropine",
     "rpmedicine:antiseptic",
     "rpmedicine:antibiotic_ointment",
+    "rpmedicine:lancet",
+    "rpmedicine:blood_sample",
     {
       "id": "medicamod:adrenalin",
       "required": false

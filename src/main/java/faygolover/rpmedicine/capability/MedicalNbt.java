@@ -139,6 +139,7 @@ public final class MedicalNbt {
             }
             putIf(p, "isch", ps.ischemia);
             if (ps.occlusive) p.putBoolean("occl", true);
+            if (ps.dislocated) p.putBoolean("disl", true);
             parts.add(p);
         }
         if (!parts.isEmpty()) t.put("parts", parts);
@@ -246,6 +247,7 @@ public final class MedicalNbt {
             ps.tourniquetSeconds = p.getFloat("tqSec");
             ps.ischemia = p.getFloat("isch");
             ps.occlusive = p.getBoolean("occl");
+            ps.dislocated = p.getBoolean("disl");
         }
     }
 

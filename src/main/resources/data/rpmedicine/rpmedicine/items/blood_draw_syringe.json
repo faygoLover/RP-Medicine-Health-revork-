@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:blood_draw_syringe",
+  "action": "blood_sample",
+  "seconds": 3,
+  "min_level": 2,
+  "consume": true
+}

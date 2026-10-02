@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:thermometer",
+  "action": "thermometer",
+  "seconds": 5,
+  "min_level": 0,
+  "consume": false
+}

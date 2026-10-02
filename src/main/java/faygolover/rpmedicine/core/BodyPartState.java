@@ -51,6 +51,9 @@ public final class BodyPartState {
     /** Окклюзионная наклейка (грудь). */
     public boolean occlusive;
 
+    /** Вывих (второй этап, п. 7): плечо, локоть, колено, голеностоп. */
+    public boolean dislocated;
+
     public BodyPartState(BodyPart part) {
         this.part = part;
     }
@@ -81,7 +84,7 @@ public final class BodyPartState {
     /** Есть ли что-то, что требует пересчёта (иначе часть «здорова»). */
     public boolean isHealthy() {
         return wounds.isEmpty() && fracture == Fracture.NONE && bullets == 0 && fragments == 0 && !arterial
-                && internalBleed <= 0 && tourniquet == Tourniquet.NONE && ischemia <= 0 && !occlusive && !splint;
+                && internalBleed <= 0 && tourniquet == Tourniquet.NONE && ischemia <= 0 && !occlusive && !splint && !dislocated;
     }
 
     public boolean anyDressing() {
@@ -104,6 +107,7 @@ public final class BodyPartState {
         tourniquetSeconds = 0;
         ischemia = 0;
         occlusive = false;
+        dislocated = false;
     }
 
     public void copyFrom(BodyPartState o) {
@@ -122,5 +126,6 @@ public final class BodyPartState {
         tourniquetSeconds = o.tourniquetSeconds;
         ischemia = o.ischemia;
         occlusive = o.occlusive;
+        dislocated = o.dislocated;
     }
 }

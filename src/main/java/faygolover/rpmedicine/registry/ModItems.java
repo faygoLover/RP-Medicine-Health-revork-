@@ -63,6 +63,14 @@ public final class ModItems {
     public static final RegistryObject<Item> ATROPINE = medical("atropine", 8);
     public static final RegistryObject<Item> ANTISEPTIC = tool("antiseptic", () -> new MedicalItem(new Item.Properties().durability(20)));
     public static final RegistryObject<Item> ANTIBIOTIC_OINTMENT = tool("antibiotic_ointment", () -> new MedicalItem(new Item.Properties().durability(10)));
+    // Диагностика
+    public static final RegistryObject<Item> STETHOSCOPE = tool("stethoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> THERMOMETER = tool("thermometer", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> PORTABLE_SCANNER = tool("portable_scanner", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> HEMOANALYZER = tool("hemoanalyzer", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> LANCET = medical("lancet", 32);
+    public static final RegistryObject<Item> BLOOD_DRAW_SYRINGE = medical("blood_draw_syringe", 16);
+    public static final RegistryObject<Item> BLOOD_SAMPLE = tool("blood_sample", () -> new faygolover.rpmedicine.item.BloodSampleItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> GM_SCANNER = tool("gm_scanner", () -> new GmScannerItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
     public static final RegistryObject<CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()

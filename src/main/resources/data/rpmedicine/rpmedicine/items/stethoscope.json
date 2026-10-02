@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:stethoscope",
+  "action": "stethoscope",
+  "seconds": 4,
+  "min_level": 2,
+  "consume": false
+}

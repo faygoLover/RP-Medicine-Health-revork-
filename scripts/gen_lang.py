@@ -250,6 +250,15 @@ items2.update({
  "antiseptic": ("Антисептик", "Antiseptic", "Спрей на рану: шанс заражения ниже на 70 %.", "Spray on a wound: 70% lower chance of infection."),
  "antibiotic_ointment": ("Мазь с антибиотиком", "Antibiotic ointment", "Лечит заражение неглубокой раны и ожога. Медицина 2+.", "Treats infection of a shallow wound or a burn. Medicine 2+."),
 })
+items2.update({
+ "stethoscope": ("Стетоскоп", "Stethoscope", "Дыхание и сердце словами: хрипы, ослабленное дыхание, неровный ритм. Медицина 2+.", "Breathing and heart in words: crackles, weak breathing, irregular rhythm. Medicine 2+."),
+ "thermometer": ("Термометр", "Thermometer", "Температура тела.", "Body temperature."),
+ "portable_scanner": ("Портативный сканер", "Portable scanner", "На часть тела: внутреннее кровотечение, пули и осколки, перелом, вывих. Медицина 4+.", "On a body part: internal bleeding, bullets and fragments, fracture, dislocation. Medicine 4+."),
+ "hemoanalyzer": ("Гемоанализатор", "Hemoanalyzer", "Капля крови (нужен ланцет): группа, гемоглобин, признаки инфекции и сепсиса. Медицина 4+.", "A drop of blood (needs a lancet): blood type, hemoglobin, signs of infection and sepsis. Medicine 4+."),
+ "lancet": ("Ланцет", "Lancet", "Капля крови для гемоанализатора.", "A drop of blood for the hemoanalyzer."),
+ "blood_draw_syringe": ("Шприц для забора крови", "Blood draw syringe", "Пробирка крови пациента для лаборатории. Медицина 2+.", "Fills a blood sample tube for the lab. Medicine 2+."),
+ "blood_sample": ("Пробирка крови", "Blood sample", "На лабораторном столе — полный анализ за минуту.", "Full analysis at a lab table in a minute."),
+})
 for k, (ru, en, dru, den) in items2.items():
     t(f"item.rpmedicine.{k}", ru, en)
     t(f"item.rpmedicine.{k}.desc", dru, den)
@@ -289,7 +298,51 @@ for k, ru, en in [
  ("rpmedicine.treat.antiseptic_poor", "%s: обработано наспех", "%s: hastily disinfected"),
  ("rpmedicine.treat.ointment_applied", "%s: мазь наложена", "%s: ointment applied"),
  ("rpmedicine.treat.ointment_partial", "%s: мазь наложена плохо", "%s: ointment poorly applied"),
+ # диагностика
+ ("rpmedicine.refuse.need_lancet", "Нужен ланцет", "You need a lancet"),
+ ("rpmedicine.treat.unclear", "Не разобрать, что показывает прибор", "You can't make sense of the reading"),
+ ("rpmedicine.treat.stethoscope", "Стетоскоп:", "Stethoscope:"),
+ ("rpmedicine.treat.thermometer", "Термометр: %2$s °C", "Thermometer: %2$s °C"),
+ ("rpmedicine.treat.scanner", "Сканер, %1$s:", "Scanner, %1$s:"),
+ ("rpmedicine.treat.hemoanalyzer", "Гемоанализатор:", "Hemoanalyzer:"),
+ ("rpmedicine.treat.sample_taken", "Пробирка набрана", "Sample taken"),
+ ("rpmedicine.tooltip.sample_of", "Пациент: %s", "Patient: %s"),
+ ("rpmedicine.action.lab", "Анализ…", "Analysing…"),
+ ("rpmedicine.action.lab_left", "Прервано: вы отошли от стола", "Interrupted: you left the lab table"),
+ ("rpmedicine.lab.failed", "Анализ не удался: вы не разобрались в приборах", "The analysis failed: you couldn't work the equipment"),
+ ("rpmedicine.lab.title", "Анализ крови: %s", "Blood test: %s"),
+ ("rpmedicine.lab.blood_type", "  Группа крови: %s", "  Blood type: %s"),
+ ("rpmedicine.lab.hemoglobin", "  Гемоглобин: %s г/л (норма 120–160)", "  Hemoglobin: %s g/L (normal 120–160)"),
+ ("rpmedicine.lab.leukocytes", "  Лейкоциты: %s ×10⁹/л (норма 4–9)", "  White blood cells: %s ×10⁹/L (normal 4–9)"),
+ ("rpmedicine.lab.sepsis_yes", "  Признаки сепсиса: есть", "  Signs of sepsis: yes"),
+ ("rpmedicine.lab.sepsis_no", "  Признаки сепсиса: нет", "  Signs of sepsis: no"),
+ ("rpmedicine.lab.compat_yes", "  Пакет %s: совместим", "  Bag %s: compatible"),
+ ("rpmedicine.lab.compat_no", "  Пакет %s: НЕСОВМЕСТИМ", "  Bag %s: INCOMPATIBLE"),
+ ("rpmedicine.lab.compat_unknown", "  Совместимость с пакетом: группа не известна", "  Bag compatibility: unknown blood type"),
 ]: t(k, ru, en)
+
+# Слова показаний приборов: rpmedicine.word.<k>
+W = "rpmedicine.word."
+for k, ru, en in [
+ ("breath_none", "дыхания нет", "no breath sounds"), ("breath_one_side_weak", "дыхание с одной стороны ослаблено", "breath sounds weak on one side"),
+ ("breath_crackles", "хрипы", "crackles"), ("breath_shallow", "дыхание поверхностное, редкое", "shallow, slow breathing"),
+ ("breath_fast", "дыхание частое", "rapid breathing"), ("breath_normal", "дыхание чистое", "clear breath sounds"),
+ ("heart_none", "тоны сердца не слышны", "no heart sounds"), ("heart_irregular", "ритм беспорядочный, шумы", "chaotic rhythm, murmurs"),
+ ("heart_fast", "тоны частые", "rapid heartbeat"), ("heart_slow", "тоны редкие", "slow heartbeat"), ("heart_normal", "тоны ритмичные", "regular heartbeat"),
+ ("scan_internal_bleeding", "внутреннее кровотечение", "internal bleeding"), ("scan_no_internal", "кровотечения внутри нет", "no internal bleeding"),
+ ("scan_no_foreign", "инородных тел нет", "no foreign bodies"),
+ ("scan_rib_fracture", "перелом рёбер", "rib fracture"), ("scan_fracture_open", "открытый перелом", "open fracture"),
+ ("scan_fracture_closed", "закрытый перелом", "closed fracture"), ("scan_no_fracture", "кости целы", "bones intact"),
+ ("scan_dislocation", "вывих", "dislocation"),
+ ("hb_normal", "гемоглобин в норме", "hemoglobin normal"), ("hb_low", "гемоглобин понижен", "hemoglobin low"), ("hb_very_low", "гемоглобин очень низкий", "hemoglobin very low"),
+ ("infection_none", "признаков инфекции нет", "no signs of infection"), ("infection_local", "воспаление", "inflammation"),
+ ("infection_systemic", "признаки сепсиса", "signs of sepsis"), ("blood_unknown", "группа не определяется", "blood type unclear"),
+]: t(W + k, ru, en)
+for n in range(1, 6):
+    t(W + f"scan_bullets_{n}", f"пуль: {n}" + ("+" if n == 5 else ""), f"bullets: {n}" + ("+" if n == 5 else ""))
+    t(W + f"scan_fragments_{n}", f"осколков: {n}" + ("+" if n == 5 else ""), f"fragments: {n}" + ("+" if n == 5 else ""))
+for bt, label in [("o-", "O−"), ("o+", "O+"), ("a-", "A−"), ("a+", "A+"), ("b-", "B−"), ("b+", "B+"), ("ab-", "AB−"), ("ab+", "AB+")]:
+    t(W + f"blood_{bt}", f"группа {label}", f"type {label}")
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):

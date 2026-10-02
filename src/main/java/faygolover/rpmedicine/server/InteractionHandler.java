@@ -132,8 +132,16 @@ public final class InteractionHandler {
             event.setCancellationResult(InteractionResult.FAIL);
             return;
         }
-        // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
+        // Лабораторный стол: пробирка в руке (второй этап, п. 3).
+        if (p.getMainHandItem().is(faygolover.rpmedicine.registry.ModItems.BLOOD_SAMPLE.get())
+                && HospitalBlocks.is(event.getLevel().getBlockState(event.getPos()), faygolover.rpmedicine.hospital.HospitalFunction.LAB)) {
+            if (!event.getLevel().isClientSide) LabService.onUseBlock((ServerPlayer) p, event.getPos());
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            return;
+        }
+        // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
         boolean carrying = !p.getPassengers().isEmpty();
         if (!carrying && (p.isShiftKeyDown() || !p.getMainHandItem().isEmpty())) return;
         if (!HospitalBlocks.isBed(event.getLevel().getBlockState(event.getPos()))) return;

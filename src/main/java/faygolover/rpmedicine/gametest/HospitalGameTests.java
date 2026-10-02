@@ -45,7 +45,8 @@ public final class HospitalGameTests {
         HospitalBlocks.set(Map.of(
                 HospitalFunction.BED, List.of("minecraft:white_wool"),
                 HospitalFunction.MONITOR, List.of("minecraft:observer"),
-                HospitalFunction.IV_STAND, List.of("minecraft:iron_bars")), Map.of());
+                HospitalFunction.IV_STAND, List.of("minecraft:iron_bars"),
+                HospitalFunction.LAB, List.of("minecraft:crafting_table")), Map.of());
     }
 
     private static MedicalData data(ServerPlayer p) {
@@ -210,6 +211,52 @@ public final class HospitalGameTests {
             h.assertTrue(!w.isInfected() || w.infection < 15, "под антибиотиком инфекция спадает, было " + w.infection);
             remove(h, medic, patient);
             h.succeed();
+        });
+    }
+
+    /** Приборы и лаборатория: гемоанализатор без ланцета не работает; шприц — пробирка; анализ на столе. */
+    @GameTest(template = T, timeoutTicks = 2000)
+    public static void diagnosticsAndLab(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        testBlocks();
+        BlockPos lab = h.absolutePos(new BlockPos(1, 1, 1));
+        h.getLevel().setBlockAndUpdate(lab, Blocks.CRAFTING_TABLE.defaultBlockState());
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        state(patient).bloodType = faygolover.rpmedicine.core.BloodType.O_POS;
+        var inv = medic.getInventory();
+        inv.selected = 0;
+        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.HEMOANALYZER.get()));
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+        h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) == null, "без ланцета гемоанализатор не запускается");
+        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get()));
+        h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "забор в пробирку");
+        h.runAfterDelay(140, () -> {
+            h.assertTrue(!inv.contains(new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get())), "шприц потрачен");
+            int tube = -1;
+            for (int i = 0; i < inv.getContainerSize(); i++) if (inv.getItem(i).is(faygolover.rpmedicine.registry.ModItems.BLOOD_SAMPLE.get())) tube = i;
+            h.assertTrue(tube >= 0, "пробирка у медика");
+            var sample = inv.getItem(tube).copy();
+            h.assertTrue(patient.getName().getString().equals(faygolover.rpmedicine.server.LabService.patientName(sample)), "подписана пациентом");
+            // Совместимость с пакетом во второй руке: A+ пациенту O+ нельзя.
+            var bag = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_BAG.get());
+            faygolover.rpmedicine.item.BloodBagItem.fill(bag, faygolover.rpmedicine.core.BloodType.A_POS, h.getLevel().getGameTime(), "donor");
+            var m = new MedicalState(MedicalSettings.get());
+            faygolover.rpmedicine.capability.MedicalNbt.read(m, sample.getTag().getCompound("Medical"), MedicalSettings.get());
+            var lines = faygolover.rpmedicine.server.LabService.report(sample, faygolover.rpmedicine.core.Diagnostics.lab(m, MedicalSettings.get()), bag);
+            h.assertTrue(lines.stream().anyMatch(c -> c.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents tc
+                    && tc.getKey().equals("rpmedicine.lab.compat_no")), "лаборатория: пакет несовместим");
+            int tubeSlot = tube;
+            inv.setItem(tubeSlot, net.minecraft.world.item.ItemStack.EMPTY);
+            inv.setItem(0, sample);
+            inv.selected = 0;
+            h.assertTrue(faygolover.rpmedicine.server.LabService.onUseBlock(medic, lab), "анализ на лабораторном столе начался");
+            h.runAfterDelay(1250, () -> {
+                h.assertTrue(inv.getItem(0).isEmpty(), "пробирка ушла в анализ");
+                remove(h, medic, patient);
+                h.succeed();
+            });
         });
     }
 

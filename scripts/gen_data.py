@@ -143,6 +143,9 @@ ITEMS = [
     ("pulse_oximeter", "pulse_oximeter", 2, 0, False), ("tonometer", "tonometer", 6, 1, False),
     # второй этап
     ("empty_blood_bag", "blood_collect", 30, 3, True), ("blood_bag", "blood_bag", 10, 3, True),
+    ("stethoscope", "stethoscope", 4, 2, False), ("thermometer", "thermometer", 5, 0, False),
+    ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
+    ("blood_draw_syringe", "blood_sample", 3, 2, True),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -225,7 +228,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -330,6 +333,10 @@ ICONS = {
     "ceftriaxone": ("syringe", (240, 240, 220), (220, 180, 40)), "diazepam": ("syringe", (220, 220, 240), (60, 90, 200)),
     "norepinephrine": ("bag", (240, 230, 200), (200, 90, 30)), "atropine": ("syringe", (230, 220, 230), (150, 30, 120)),
     "antiseptic": ("patch", (200, 170, 120), (140, 60, 30)), "antibiotic_ointment": ("pills", (240, 240, 240), (230, 200, 40)),
+    "stethoscope": ("strap", (60, 60, 70), (200, 200, 210)), "thermometer": ("syringe", (240, 240, 240), (220, 40, 40)),
+    "portable_scanner": ("device", (60, 90, 120), (120, 220, 240)), "hemoanalyzer": ("device", (230, 230, 230), (200, 40, 50)),
+    "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
+    "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)),
 }
 for name, (shape, color, accent) in ICONS.items():
     png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))

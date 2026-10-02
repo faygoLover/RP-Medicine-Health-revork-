@@ -20,12 +20,24 @@ public final class Treatments {
         public final boolean consumed;
         public final String key;
         public final double[] args;
+        /** Слова после чисел: ключи {@code rpmedicine.word.<w>} (приборы второго этапа). */
+        public final String[] words;
 
         private Result(boolean applied, boolean consumed, String key, double... args) {
+            this(applied, consumed, key, new String[0], args);
+        }
+
+        private Result(boolean applied, boolean consumed, String key, String[] words, double... args) {
             this.applied = applied;
             this.consumed = consumed;
             this.key = key;
             this.args = args;
+            this.words = words;
+        }
+
+        /** Показание прибора словами; предмет не расходуется. */
+        public static Result reading(String key, String... words) {
+            return new Result(true, false, key, words);
         }
 
         public static Result ok(String key, double... args) {
@@ -367,6 +379,27 @@ public final class Treatments {
                 m.bloodDripType = bag.type();
                 m.bloodDripSpoiled = bag.spoiled();
                 return error ? Result.failed("transfusion_infiltrated") : Result.ok("transfusion_started");
+            }
+            case STETHOSCOPE -> {
+                if (error) return Result.reading("unclear");
+                return Result.reading("stethoscope", Diagnostics.breathSound(m), Diagnostics.heartSound(m));
+            }
+            case THERMOMETER -> {
+                if (error) return Result.reading("unclear");
+                return Result.okKeep("thermometer", Diagnostics.temperature(m));
+            }
+            case SCANNER -> {
+                if (error) return Result.reading("unclear");
+                return Result.reading("scanner", Diagnostics.scanPart(m, part).toArray(new String[0]));
+            }
+            case HEMOANALYZER -> {
+                if (error) return Result.reading("unclear");
+                String type = m.bloodType != null ? "blood_" + m.bloodType.id : "blood_unknown";
+                return Result.reading("hemoanalyzer", type, Diagnostics.hemoglobinWord(m, s), Diagnostics.infectionWord(m));
+            }
+            case BLOOD_SAMPLE -> {
+                if (error) return Result.failed("collect_failed");
+                return Result.ok("sample_taken");
             }
             case BLOOD_COLLECT -> {
                 if (error) return Result.failed("collect_failed");

@@ -34,7 +34,15 @@ public enum TreatmentAction {
     /** Препарат из датапака drugs: таблетки, укол, капельница. */
     DRUG("drug", Target.BODY),
     /** Наружное средство из датапака drugs: на часть тела. */
-    DRUG_TOPICAL("drug_topical", Target.PART);
+    DRUG_TOPICAL("drug_topical", Target.PART),
+    // Диагностика (второй этап, п. 3)
+    STETHOSCOPE("stethoscope", Target.BODY),
+    THERMOMETER("thermometer", Target.BODY),
+    SCANNER("scanner", Target.PART),
+    /** Гемоанализатор: капля крови (тратит ланцет). */
+    HEMOANALYZER("hemoanalyzer", Target.BODY),
+    /** Шприц для забора: пробирка крови для лаборатории. */
+    BLOOD_SAMPLE("blood_sample", Target.BODY);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }
@@ -50,6 +58,11 @@ public enum TreatmentAction {
     /** Пациент должен стоять на месте всё время действия (забор и установка капельницы). */
     public boolean requiresStill() {
         return this == BLOOD_BAG || this == BLOOD_COLLECT || this == SALINE;
+    }
+
+    /** Диагностика: ошибка только от нехватки уровня, результат — в чат. */
+    public boolean isDiagnostic() {
+        return this == STETHOSCOPE || this == THERMOMETER || this == SCANNER || this == HEMOANALYZER;
     }
 
     public boolean isInstrument() {
