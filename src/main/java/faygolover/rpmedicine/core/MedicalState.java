@@ -121,6 +121,9 @@ public final class MedicalState {
     public boolean bloodDripSpoiled;
     /** Реакция на несовместимую кровь: осталось секунд. */
     public double transfusionReactionSeconds;
+    /** Острая боль от манипуляций (вправление, пинцет) и сколько ещё секунд. */
+    public double acutePain;
+    public double acutePainSeconds;
     /** Опиаты из датапака (трамадол и т.п.): сколько ещё действуют — для налоксона и угнетения дыхания с седацией. */
     public double opioidSeconds;
     /** Дозы препаратов в окне: id препарата → сколько секунд в сети осталось каждой дозе до выхода из окна. */
@@ -212,6 +215,8 @@ public final class MedicalState {
         bloodDripSpoiled = false;
         transfusionReactionSeconds = 0;
         opioidSeconds = 0;
+        acutePain = 0;
+        acutePainSeconds = 0;
         doses.clear();
         effects.clear();
     }
@@ -248,7 +253,7 @@ public final class MedicalState {
                 || morphineOverdoseSeconds > 0 || txaSeconds > 0 || ambuSeconds > 0 || cprSeconds > 0) return false;
         if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
-        if (opioidSeconds > 0 || !doses.isEmpty()) return false;
+        if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
         if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
         return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
                 && Math.abs(respRate - s.normalRespRate) < 0.5 && Math.abs(spo2 - s.spo2Normal) < 0.5
@@ -333,10 +338,18 @@ public final class MedicalState {
         bloodDripSpoiled = o.bloodDripSpoiled;
         transfusionReactionSeconds = o.transfusionReactionSeconds;
         opioidSeconds = o.opioidSeconds;
+        acutePain = o.acutePain;
+        acutePainSeconds = o.acutePainSeconds;
         doses.clear();
         for (var e : o.doses.entrySet()) doses.put(e.getKey(), new java.util.ArrayList<>(e.getValue()));
         effects.clear();
         for (var e : o.effects.entrySet()) effects.put(e.getKey(), e.getValue().copy());
+    }
+
+    /** Острая боль от манипуляции: сильнее предыдущей — заменяет, дольше — продлевает. */
+    public void painSpike(double pain, double seconds) {
+        acutePain = Math.max(acutePainSeconds > 0 ? acutePain : 0, pain);
+        acutePainSeconds = Math.max(acutePainSeconds, seconds);
     }
 
     // ------------------------------------------------------------------ лекарства

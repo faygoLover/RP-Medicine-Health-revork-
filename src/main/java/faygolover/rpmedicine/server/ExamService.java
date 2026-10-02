@@ -86,6 +86,8 @@ public final class ExamService {
             if (ps.hasTourniquet()) b |= 2;
             if (ps.splint) b |= 4;
             if (ps.occlusive) b |= 8;
+            // Вправить вывих (второй этап): кнопка — тем, кто умеет (уровень 2+).
+            if (ps.dislocated && level >= 2) b |= 16;
             removable[ps.part.ordinal()] = (byte) b;
         }
         // Заглушка — всегда лежачее тело (её можно обыскать, даже если обморок прошёл).

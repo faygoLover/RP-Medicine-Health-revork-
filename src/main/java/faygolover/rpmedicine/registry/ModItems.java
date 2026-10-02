@@ -71,6 +71,10 @@ public final class ModItems {
     public static final RegistryObject<Item> LANCET = medical("lancet", 32);
     public static final RegistryObject<Item> BLOOD_DRAW_SYRINGE = medical("blood_draw_syringe", 16);
     public static final RegistryObject<Item> BLOOD_SAMPLE = tool("blood_sample", () -> new faygolover.rpmedicine.item.BloodSampleItem(new Item.Properties().stacksTo(1)));
+    // Пули, швы (второй этап, п. 8)
+    public static final RegistryObject<Item> SURGICAL_TWEEZERS = tool("surgical_tweezers", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SUTURE_KIT = tool("suture_kit", () -> new MedicalItem(new Item.Properties().durability(5)));
+    public static final RegistryObject<Item> SCISSORS = tool("scissors", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> GM_SCANNER = tool("gm_scanner", () -> new GmScannerItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
     public static final RegistryObject<CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()

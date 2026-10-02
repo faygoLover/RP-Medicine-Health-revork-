@@ -71,6 +71,7 @@ public final class Examination {
         else if (b == 2) c = Math.max(c, 2);
         else if (b == 1) c = Math.max(c, 1);
         if (ps.hasFracture()) c = Math.max(c, ps.fracture == Fracture.OPEN ? 3 : 2);
+        if (ps.dislocated) c = Math.max(c, 2);
         return c;
     }
 
@@ -99,6 +100,7 @@ public final class Examination {
             // Признаки инфекции раны — с уровня 4 (второй этап, п. 3).
             if (w.isInfected() && lvl >= 4) out.add(new Line(w.infection >= 60 ? "wound_pus" : "wound_inflamed"));
             if (w.isDressed()) out.add(new Line("dressing_" + w.dressing.id));
+            if (w.sutured) out.add(new Line(w.weakSuture() && lvl >= 3 ? "suture_weak" : "sutured"));
         }
         double bleed = Physiology.partExternalBleed(m, ps, s);
         int bc = bleedClass(bleed, s);
@@ -117,6 +119,12 @@ public final class Examination {
                     new int[]{(int) (ps.tourniquetSeconds / 60)}));
         }
         if (ps.ischemia > 20 && lvl >= 1) out.add(new Line("ischemia"));
+        // Вывих видно с уровня 4; ниже — просто «сустав деформирован».
+        if (ps.dislocated) {
+            if (lvl >= 4) out.add(new Line("dislocation_" + ps.part.kind.name().toLowerCase(java.util.Locale.ROOT)));
+            else if (lvl >= 1) out.add(new Line("joint_deformed"));
+            else out.add(new Line("broken"));
+        }
         if (ps.occlusive) out.add(new Line("occlusive"));
         if (lvl >= 2 && ps.internalBleed > 0) out.add(new Line("suspect_internal"));
         if (lvl >= 2 && ps.part == BodyPart.CHEST && m.pneumo != Pneumo.NONE) out.add(new Line("suspect_pneumothorax"));

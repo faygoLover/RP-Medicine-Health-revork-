@@ -42,7 +42,13 @@ public enum TreatmentAction {
     /** Гемоанализатор: капля крови (тратит ланцет). */
     HEMOANALYZER("hemoanalyzer", Target.BODY),
     /** Шприц для забора: пробирка крови для лаборатории. */
-    BLOOD_SAMPLE("blood_sample", Target.BODY);
+    BLOOD_SAMPLE("blood_sample", Target.BODY),
+    // Вывихи, пули, швы (второй этап, п. 7–8)
+    /** Вправление вывиха — пустой рукой с панели. */
+    REDUCE("reduce", Target.PART),
+    TWEEZERS("tweezers", Target.PART),
+    SUTURE("suture", Target.PART),
+    SCISSORS("scissors", Target.PART);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

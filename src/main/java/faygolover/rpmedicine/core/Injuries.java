@@ -16,7 +16,7 @@ public final class Injuries {
     /** Что получилось от одного попадания по части тела. */
     public enum Outcome {
         WOUND, FRACTURE, OPEN_FRACTURE, RIB_FRACTURE, ARTERIAL, INTERNAL, FOREIGN_BODY, CONCUSSION,
-        KNOCKOUT, PNEUMOTHORAX, DRESSING_REOPENED, INSTANT_DEATH
+        KNOCKOUT, PNEUMOTHORAX, DRESSING_REOPENED, INSTANT_DEATH, DISLOCATION
     }
 
     public static final class Report {
@@ -126,6 +126,13 @@ public final class Injuries {
             // Новый удар по сломанной кости может сделать перелом открытым.
             ps.fracture = Fracture.OPEN;
             rep.outcomes.add(Outcome.OPEN_FRACTURE);
+        }
+
+        // Вывих: тупой удар по конечности без перелома (второй этап, п. 7).
+        if (s.dislocationsEnabled && prof.wound == WoundType.BRUISE && part.isLimb() && !ps.hasFracture() && !ps.dislocated
+                && !rep.outcomes.contains(Outcome.FRACTURE) && rnd.nextDouble() < Math.min(0.5, sev * s.dislocationChancePerSeverity)) {
+            ps.dislocated = true;
+            rep.outcomes.add(Outcome.DISLOCATION);
         }
 
         // Артериальное кровотечение: руки, ноги, голова (шея).

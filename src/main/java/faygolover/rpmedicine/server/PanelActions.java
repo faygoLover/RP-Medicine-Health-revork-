@@ -36,6 +36,13 @@ public final class PanelActions {
             case REMOVE_OCCLUSIVE -> remove(sp, target, m, p, Treatments.Removal.OCCLUSIVE);
             case SEARCH -> SearchService.start(sp, target);
             case STOP_DRIP -> stopDrip(sp, target, m);
+            case REDUCE -> {
+                if (!sp.getMainHandItem().isEmpty()) {
+                    sp.displayClientMessage(Component.translatable("rpmedicine.refuse.empty_hand").withStyle(ChatFormatting.YELLOW), true);
+                    return;
+                }
+                TreatmentService.startHandAction(sp, target, p.part(), faygolover.rpmedicine.core.TreatmentAction.REDUCE, 4, 2);
+            }
             default -> { }
         }
     }

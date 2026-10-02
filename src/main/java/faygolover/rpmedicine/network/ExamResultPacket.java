@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * Сервер → клиент: результат осмотра для панели. Строки уже отфильтрованы по уровню медицины
  * осматривающего — цифр и скрытого состояния здесь нет.
  *
- * @param removable по частям: биты 1 — повязка, 2 — жгут, 4 — шина, 8 — окклюзионная наклейка
+ * @param removable по частям: биты 1 — повязка, 2 — жгут, 4 — шина, 8 — окклюзионная наклейка, 16 — вправить вывих
  * @param downState 0 — на ногах, 1 — обморок, 2 — нокдаун, 3 — клиническая смерть
  */
 public record ExamResultPacket(int targetId, boolean self, Component name, Examination.View view, byte[] removable, byte downState) {

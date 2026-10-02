@@ -291,6 +291,31 @@ public final class MedicalSettings {
     public double bloodSpoilWarmHours = 2.0;
     public double bloodSpoilFridgeDays = 7.0;
 
+    // ---------------- Вывихи, пинцет, швы (второй этап, п. 7–8) ----------------
+    public boolean dislocationsEnabled = true;
+    /** Шанс вывиха от тупого удара по конечности на единицу тяжести (тяжесть 20 — 6 %). */
+    public double dislocationChancePerSeverity = 0.003;
+    /** Шанс вывиха плеча, когда лежачего поднимают на плечо. */
+    public double carryDislocationChance = 0.02;
+    public double dislocationPain = 30.0;
+    /** Вывихнутая нога: минус скорость (меньше, чем перелом). */
+    public double dislocationSpeedPenalty = 0.2;
+    /** Вправление без обезболивания: боль и её длительность, секунды. */
+    public double reductionPain = 70.0;
+    public double reductionPainSeconds = 10.0;
+    /** Неудачное вправление: шанс перелома. */
+    public double reductionFractureChance = 0.1;
+    /** Извлечение пули без обезболивания: боль и длительность (может дать болевой шок). */
+    public double extractionPain = 90.0;
+    public double extractionPainSeconds = 30.0;
+    /** Ошибка пинцетом: порез, тяжесть. */
+    public double extractionErrorSeverity = 10.0;
+    /** Обезболивание не меньше этого снимает боль манипуляций. */
+    public double procedureAnalgesia = 30.0;
+    /** Зашитая рана заживает быстрее во столько раз; слабый шов кровит долей от обычного. */
+    public double sutureHealFactor = 2.0;
+    public double weakSutureBleedFactor = 0.3;
+
     // ---------------- Температура тела (второй этап, п. 5.4) ----------------
     public double normalBodyTemp = 36.6;
     /** Температура тела меняется не быстрее, °C в минуту. */

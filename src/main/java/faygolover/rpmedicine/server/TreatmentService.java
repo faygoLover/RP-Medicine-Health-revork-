@@ -120,6 +120,8 @@ public final class TreatmentService {
     static Treatments.Extra extraFor(ItemStack stack, ServerPlayer actor) {
         if (stack.getItem() instanceof faygolover.rpmedicine.item.BloodBagItem)
             return faygolover.rpmedicine.item.BloodBagItem.bag(stack, actor.level().getGameTime());
+        if (stack.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem)
+            return new Treatments.Instrument(faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(stack));
         return ItemRules.drugFor(stack);
     }
 
@@ -141,6 +143,77 @@ public final class TreatmentService {
         if (d != null && d.lastMods.armsDisabled) return "rpmedicine.refuse.arms_broken";
         if (actor != target && actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 0.5) return "rpmedicine.refuse.too_far";
         return null;
+    }
+
+    /**
+     * Действие пустой рукой с панели (вправление вывиха): прогресс-бар, проверка «нужно», ошибка по навыку.
+     */
+    public static void startHandAction(ServerPlayer actor, LivingEntity target, BodyPart part, TreatmentAction action, double seconds, int minLevel) {
+        MedicalState m = Medical.state(target);
+        if (m == null) return;
+        MedicalSettings s = MedicalSettings.get();
+        String refuse = actorRefusal(actor, target);
+        if (refuse != null) {
+            actor.displayClientMessage(Component.translatable(refuse).withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        String why = Treatments.check(m, part, action, s);
+        if (why != null) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        int level = Medical.medicineLevel(actor);
+        GameplayEffects.Mods mods = Medical.data(actor) != null ? Medical.data(actor).lastMods : new GameplayEffects.Mods();
+        double sec = Skill.applySeconds(seconds, level, actor == target, mods.useTimeFactor, s);
+        ActionManager.start(new HandTimedAction(actor, target, part, action, (int) Math.round(sec * 20), level, minLevel));
+    }
+
+    static final class HandTimedAction extends ActionManager.TimedAction {
+        private final LivingEntity target;
+        private final BodyPart part;
+        private final TreatmentAction action;
+        private final int level;
+        private final int minLevel;
+
+        HandTimedAction(ServerPlayer actor, LivingEntity target, BodyPart part, TreatmentAction action, int ticks, int level, int minLevel) {
+            super(actor, ticks);
+            this.target = target;
+            this.part = part;
+            this.action = action;
+            this.level = level;
+            this.minLevel = minLevel;
+        }
+
+        @Override
+        public String label() {
+            return "rpmedicine.action." + action.id;
+        }
+
+        @Override
+        public String checkContinue() {
+            if (target.isRemoved() || (target instanceof ServerPlayer tp && tp.isDeadOrDying())) return "rpmedicine.action.target_lost";
+            if (actor != target && actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 1.0) return "rpmedicine.action.target_lost";
+            if (!actor.getMainHandItem().isEmpty()) return "rpmedicine.action.item_changed";
+            return actorRefusal(actor, target);
+        }
+
+        @Override
+        public void complete() {
+            MedicalState m = Medical.state(target);
+            if (m == null) return;
+            MedicalSettings s = MedicalSettings.get();
+            String why = Treatments.check(m, part, action, s);
+            if (why != null) {
+                actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
+                return;
+            }
+            boolean error = RANDOM.nextDouble() < Skill.errorChance(level, minLevel, s);
+            Treatments.Result r = Treatments.apply(m, part, action, error, RANDOM.split(), s);
+            Medical.changed(target);
+            if (action == TreatmentAction.REDUCE && r.key.equals("reduction_fracture"))
+                target.level().playSound(null, target.getX(), target.getY(), target.getZ(), ModSounds.BONE_BREAK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
+            actor.displayClientMessage(resultMessage(r, part), true);
+        }
     }
 
     /** Лечение предметом с прогресс-баром. */
@@ -217,6 +290,10 @@ public final class TreatmentService {
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) LabService.giveSample(actor, target);
+            // Инструмент побывал в ране — больше не стерилен.
+            ItemStack used = actor.getInventory().getItem(slot);
+            if (used.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem && spec.action() == TreatmentAction.TWEEZERS)
+                faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(used, false);
             Medical.changed(target);
             sound(spec.action());
             Component msg = resultMessage(r, part);
@@ -243,7 +320,7 @@ public final class TreatmentService {
                     var d = ItemRules.drugFor(original);
                     yield d != null && d.form() == faygolover.rpmedicine.core.Drug.Form.PILL ? ModSounds.PILLS.get() : ModSounds.INJECTION.get();
                 }
-                case DRUG_TOPICAL -> ModSounds.BANDAGE.get();
+                case DRUG_TOPICAL, SUTURE -> ModSounds.BANDAGE.get();
                 case PAINKILLER, AMMONIA -> ModSounds.PILLS.get();
                 case DEFIBRILLATOR -> ModSounds.DEFIB_SHOCK.get();
                 default -> null;

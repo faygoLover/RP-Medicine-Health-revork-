@@ -70,7 +70,9 @@ public final class Infections {
                         }
                     }
                     case INFECTED -> {
-                        w.infection += (s.infectionGrowthPerHour - antibiotic) * dt / 3600.0;
+                        // Обработанная рана (швы) — источник под контролем: инфекция растёт вдвое медленнее.
+                        double growth = s.infectionGrowthPerHour * (w.sutured && !w.weakSuture() ? 0.5 : 1.0);
+                        w.infection += (growth - antibiotic) * dt / 3600.0;
                         w.immuneProgress += s.immuneGrowthPerHour * immunity * dt / 3600.0;
                         if (w.immuneProgress >= 100 || w.infection <= 0) {
                             w.infectionStage = Infection.CLEAN;

@@ -58,6 +58,9 @@ public final class Treatments {
     /** Что несёт предмет сверх действия: пакет крови, препарат. */
     public interface Extra {}
 
+    /** Инструмент: стерилен ли (пинцет; нестерильный — выше шанс заражения раны). */
+    public record Instrument(boolean sterile) implements Extra {}
+
     /** Содержимое пакета крови для переливания: группа (null — не подписан), объём, испорчен ли. */
     public record Bag(BloodType type, double volume, boolean spoiled) implements Extra {}
 
@@ -168,6 +171,22 @@ public final class Treatments {
                 if (m.bloodFraction(s) < 1 - s.donationMaxLossFraction || m.isDown()) return "donor_low";
                 return null;
             }
+            case REDUCE -> {
+                return ps.dislocated ? null : "no_dislocation";
+            }
+            case TWEEZERS -> {
+                return ps.hasForeignBodies() ? null : "no_foreign_body";
+            }
+            case SUTURE -> {
+                boolean any = false;
+                for (Wound w : ps.wounds) if (w.canBeSutured() && !w.sutured) any = true;
+                if (!any) return "nothing_to_suture";
+                return ps.hasForeignBodies() ? "foreign_body_first" : null;
+            }
+            case SCISSORS -> {
+                for (Wound w : ps.wounds) if (w.sutured) return null;
+                return "no_sutures";
+            }
             default -> {
                 return null;
             }
@@ -224,6 +243,7 @@ public final class Treatments {
             }
             case SPLINT -> ps.part.isLowerLimb() ? 2 : 1;
             case SURGICAL_KIT -> ps.internalBleed;
+            case TWEEZERS -> ps.bullets * 2 + ps.fragments;
             default -> bleed + 0.01 * ps.totalSeverity();
         };
     }
@@ -401,6 +421,58 @@ public final class Treatments {
                 if (error) return Result.failed("collect_failed");
                 return Result.ok("sample_taken");
             }
+            case REDUCE -> {
+                procedurePain(m, s.reductionPain, s.reductionPainSeconds, s);
+                if (error) {
+                    if (rnd.nextDouble() < s.reductionFractureChance) {
+                        ps.dislocated = false;
+                        ps.fracture = BodyPartState.Fracture.CLOSED;
+                        ps.fractureHeal = 0;
+                        return Result.failed("reduction_fracture");
+                    }
+                    return Result.failed("reduction_failed");
+                }
+                ps.dislocated = false;
+                return Result.ok("reduced");
+            }
+            case TWEEZERS -> {
+                procedurePain(m, s.extractionPain, s.extractionPainSeconds, s);
+                boolean sterile = !(extra instanceof Instrument i) || i.sterile();
+                if (!sterile) {
+                    for (Wound w : ps.wounds) {
+                        if (w.type != WoundType.GUNSHOT && w.type != WoundType.SHRAPNEL && w.type != WoundType.CUT) continue;
+                        w.infectionRisk *= s.nonSterileInfectionFactor;
+                        if (w.infectionStage == Wound.Infection.CLEAN) w.infectionStage = Wound.Infection.NEW;
+                    }
+                }
+                if (error) {
+                    // Задел стенку канала: кровит сильнее, больно; пуля на месте.
+                    Injuries.mergeWound(ps, WoundType.CUT, s.extractionErrorSeverity, s);
+                    return Result.failed("extraction_failed");
+                }
+                if (ps.bullets > 0) {
+                    ps.bullets--;
+                    return Result.ok("bullet_removed");
+                }
+                ps.fragments = Math.max(0, ps.fragments - 1);
+                return Result.ok("fragment_removed");
+            }
+            case SUTURE -> {
+                for (Wound w : ps.wounds) {
+                    if (!w.canBeSutured() || w.sutured) continue;
+                    w.sutured = true;
+                    w.sutureQuality = error ? 0.4 : 1.0;
+                    w.clot = 0;
+                }
+                return error ? Result.failed("suture_weak") : Result.ok("sutured");
+            }
+            case SCISSORS -> {
+                for (Wound w : ps.wounds) {
+                    w.sutured = false;
+                    w.sutureQuality = 1.0;
+                }
+                return Result.okKeep("sutures_removed");
+            }
             case BLOOD_COLLECT -> {
                 if (error) return Result.failed("collect_failed");
                 double take = Math.min(s.bloodBagVolume, m.bloodVolume);
@@ -412,6 +484,12 @@ public final class Treatments {
             default -> { }
         }
         return Result.failed("no_effect");
+    }
+
+    /** Боль от манипуляции, если обезболивания мало. */
+    static void procedurePain(MedicalState m, double pain, double seconds, MedicalSettings s) {
+        if (Physiology.analgesia(m, s) + (Physiology.adrenalineActive(m) ? s.adrenalinePainSuppression : 0) < s.procedureAnalgesia)
+            m.painSpike(pain, seconds);
     }
 
     private static void dress(BodyPartState ps, Dressing d, boolean error, MedicalSettings s) {

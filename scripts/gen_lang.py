@@ -259,6 +259,11 @@ items2.update({
  "blood_draw_syringe": ("Шприц для забора крови", "Blood draw syringe", "Пробирка крови пациента для лаборатории. Медицина 2+.", "Fills a blood sample tube for the lab. Medicine 2+."),
  "blood_sample": ("Пробирка крови", "Blood sample", "На лабораторном столе — полный анализ за минуту.", "Full analysis at a lab table in a minute."),
 })
+items2.update({
+ "surgical_tweezers": ("Хирургический пинцет", "Surgical tweezers", "Извлечь пулю или осколок. Без обезболивания — болевой шок. После работы нестерилен — в стерилизатор. Медицина 4+.", "Removes a bullet or fragment. Without pain relief — pain shock. Not sterile after use — use a sterilizer. Medicine 4+."),
+ "suture_kit": ("Набор для швов", "Suture kit", "Зашить рану: кровотечение останавливается, заживает вдвое быстрее. Сначала извлеките пули. Медицина 3+.", "Sutures a wound: bleeding stops, heals twice as fast. Remove bullets first. Medicine 3+."),
+ "scissors": ("Ножницы", "Scissors", "Снять швы.", "Remove sutures."),
+})
 for k, (ru, en, dru, den) in items2.items():
     t(f"item.rpmedicine.{k}", ru, en)
     t(f"item.rpmedicine.{k}.desc", dru, den)
@@ -319,6 +324,35 @@ for k, ru, en in [
  ("rpmedicine.lab.compat_yes", "  Пакет %s: совместим", "  Bag %s: compatible"),
  ("rpmedicine.lab.compat_no", "  Пакет %s: НЕСОВМЕСТИМ", "  Bag %s: INCOMPATIBLE"),
  ("rpmedicine.lab.compat_unknown", "  Совместимость с пакетом: группа не известна", "  Bag compatibility: unknown blood type"),
+]: t(k, ru, en)
+
+# Вывихи, пинцет, швы
+for k, ru, en in [
+ ("rpmedicine.refuse.no_dislocation", "Вывиха нет", "No dislocation"),
+ ("rpmedicine.refuse.no_foreign_body", "Здесь нет пуль и осколков", "No bullets or fragments here"),
+ ("rpmedicine.refuse.nothing_to_suture", "Нечего зашивать", "Nothing to suture"),
+ ("rpmedicine.refuse.foreign_body_first", "Сначала извлеките пулю или осколок", "Remove the bullet or fragment first"),
+ ("rpmedicine.refuse.no_sutures", "Швов нет", "No sutures"),
+ ("rpmedicine.treat.reduced", "%s: вывих вправлен", "%s: dislocation reduced"),
+ ("rpmedicine.treat.reduction_failed", "%s: вправить не удалось", "%s: failed to reduce"),
+ ("rpmedicine.treat.reduction_fracture", "%s: хруст — кость сломана!", "%s: a crack — the bone broke!"),
+ ("rpmedicine.treat.bullet_removed", "%s: пуля извлечена", "%s: bullet removed"),
+ ("rpmedicine.treat.fragment_removed", "%s: осколок извлечён", "%s: fragment removed"),
+ ("rpmedicine.treat.extraction_failed", "%s: задели стенку канала, кровит", "%s: you nicked the wound channel, bleeding"),
+ ("rpmedicine.treat.sutured", "%s: рана зашита", "%s: wound sutured"),
+ ("rpmedicine.treat.suture_weak", "%s: шов слабый", "%s: weak suture"),
+ ("rpmedicine.treat.sutures_removed", "%s: швы сняты", "%s: sutures removed"),
+ ("rpmedicine.action.reduce", "Вправление…", "Reducing…"),
+ ("rpmedicine.panel.reduce", "Вправить", "Reduce"),
+ ("rpmedicine.tooltip.sterile", "Стерилен", "Sterile"),
+ ("rpmedicine.tooltip.not_sterile", "Не стерилен", "Not sterile"),
+ ("rpmedicine.msg.sterilized", "Инструмент стерилизован", "Instrument sterilized"),
+ ("rpmedicine.exam.sutured", "  зашито", "  sutured"),
+ ("rpmedicine.exam.suture_weak", "  шов слабый", "  weak suture"),
+ ("rpmedicine.exam.joint_deformed", "Сустав деформирован", "The joint is deformed"),
+ ("rpmedicine.exam.dislocation_arm", "Вывих плеча или локтя", "Dislocated shoulder or elbow"),
+ ("rpmedicine.exam.dislocation_leg", "Вывих колена", "Dislocated knee"),
+ ("rpmedicine.exam.dislocation_foot", "Вывих голеностопа", "Dislocated ankle"),
 ]: t(k, ru, en)
 
 # Слова показаний приборов: rpmedicine.word.<k>

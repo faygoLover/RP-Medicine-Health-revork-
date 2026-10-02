@@ -18,7 +18,9 @@ public record PanelActionPacket(int targetId, Kind kind, BodyPart part, int slot
     public enum Kind {
         APPLY_ITEM, REMOVE_DRESSING, REMOVE_TOURNIQUET, REMOVE_SPLINT, REMOVE_OCCLUSIVE, SEARCH, CANCEL,
         /** Остановить капельницу (второй этап). */
-        STOP_DRIP
+        STOP_DRIP,
+        /** Вправить вывих пустой рукой (второй этап). */
+        REDUCE
     }
 
     public static void encode(PanelActionPacket p, FriendlyByteBuf buf) {

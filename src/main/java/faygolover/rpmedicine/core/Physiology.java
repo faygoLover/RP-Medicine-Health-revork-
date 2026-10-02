@@ -52,6 +52,8 @@ public final class Physiology {
         m.concussionKoSeconds = dec(m.concussionKoSeconds, dt);
         m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * (1 + m.effect(DrugEffect.CONCUSSION_RELIEF)) * dt);
         tickDrugTimers(m, dt, in.online);
+        m.acutePainSeconds = dec(m.acutePainSeconds, dt);
+        if (m.acutePainSeconds <= 0) m.acutePain = 0;
         if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
         if (m.cprSeconds <= 0) m.cprAccum = 0;
         // Воздуховод выпадает, когда человек приходит в себя.
@@ -273,6 +275,11 @@ public final class Physiology {
         double ip = ps.ischemia * 0.6 + (ps.hasTourniquet() ? 10 : 0);
         sum += ip;
         max = Math.max(max, ip);
+        if (ps.dislocated) {
+            double dp = s.dislocationPain * (ps.splint ? s.splintPainFactor : 1.0);
+            sum += dp;
+            max = Math.max(max, dp);
+        }
         return Math.min(100, max + (sum - max) * s.otherPainFactor);
     }
 
@@ -304,6 +311,10 @@ public final class Physiology {
             double p = partPain(m, ps, s);
             sum += p;
             max = Math.max(max, p);
+        }
+        if (m.acutePainSeconds > 0) {
+            sum += m.acutePain;
+            max = Math.max(max, m.acutePain);
         }
         if (m.transfusionReactionSeconds > 0) {
             // Реакция на несовместимую кровь: боль в спине и груди.

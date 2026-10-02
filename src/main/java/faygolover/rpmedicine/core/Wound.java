@@ -40,6 +40,19 @@ public final class Wound {
     /** Множитель шанса заражения: антисептик, грязная вода, нестерильный инструмент. */
     public double infectionRisk = 1.0;
 
+    /** Швы (второй этап, п. 8): закрывают рану, ускоряют заживление; качество меньше 0,75 — шов слабый. */
+    public boolean sutured;
+    public double sutureQuality = 1.0;
+
+    /** Раны, которые зашивают. */
+    public boolean canBeSutured() {
+        return type == WoundType.CUT || type == WoundType.STAB || type == WoundType.GUNSHOT || type == WoundType.SHRAPNEL || type == WoundType.BITE;
+    }
+
+    public boolean weakSuture() {
+        return sutured && sutureQuality < 0.75;
+    }
+
     public Wound(WoundType type, double severity) {
         this.type = type;
         this.severity = clampSeverity(severity);
@@ -59,6 +72,7 @@ public final class Wound {
     public double bleed(MedicalSettings s) {
         double raw = rawBleed(s);
         if (raw <= 0) return 0;
+        if (sutured) return weakSuture() ? raw * s.weakSutureBleedFactor : 0;
         double f = dressing.bleedFactor(raw, s);
         // Плохо наложенная повязка пропускает часть крови.
         f = f + (1.0 - f) * (1.0 - dressingQuality);
@@ -113,6 +127,8 @@ public final class Wound {
         w.infection = infection;
         w.immuneProgress = immuneProgress;
         w.infectionRisk = infectionRisk;
+        w.sutured = sutured;
+        w.sutureQuality = sutureQuality;
         return w;
     }
 }

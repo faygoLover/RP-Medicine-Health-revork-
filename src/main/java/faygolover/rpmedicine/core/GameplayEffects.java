@@ -59,15 +59,18 @@ public final class GameplayEffects {
         // Ноги: каждая плохая нога или стопа — минус скорость, бег и прыжок недоступны.
         int badLower = 0;
         int brokenLegs = 0;
+        int dislocatedLower = 0;
         for (BodyPart p : new BodyPart[]{BodyPart.RIGHT_LEG, BodyPart.LEFT_LEG, BodyPart.RIGHT_FOOT, BodyPart.LEFT_FOOT}) {
             BodyPartState ps = m.part(p);
             boolean fracture = ps.hasFracture() && !masked;
             boolean weak = ps.integrity() < s.limbIntegrityThreshold;
             if (fracture || weak) badLower++;
+            else if (ps.dislocated && !masked) dislocatedLower++;
             if (p.kind == BodyPart.Kind.LEG && ps.hasFracture()) brokenLegs++;
         }
-        double speed = 1.0 - badLower * s.speedPenaltyPerLeg;
-        if (badLower > 0) {
+        // Вывих — как перелом, но слабее (второй этап, п. 7).
+        double speed = 1.0 - badLower * s.speedPenaltyPerLeg - dislocatedLower * s.dislocationSpeedPenalty;
+        if (badLower > 0 || dislocatedLower > 0) {
             r.noSprint = true;
             r.noJump = true;
         }
@@ -99,8 +102,8 @@ public final class GameplayEffects {
         BodyPart main = traits.workingArm();
         BodyPartState mainArm = m.part(main);
         BodyPartState offArm = m.part(main.mirror());
-        r.mainArmBad = (mainArm.hasFracture() && !masked) || mainArm.integrity() < s.limbIntegrityThreshold || mainArm.ischemia > 30;
-        r.offArmBad = (offArm.hasFracture() && !masked) || offArm.integrity() < s.limbIntegrityThreshold || offArm.ischemia > 30;
+        r.mainArmBad = ((mainArm.hasFracture() || mainArm.dislocated) && !masked) || mainArm.integrity() < s.limbIntegrityThreshold || mainArm.ischemia > 30;
+        r.offArmBad = ((offArm.hasFracture() || offArm.dislocated) && !masked) || offArm.integrity() < s.limbIntegrityThreshold || offArm.ischemia > 30;
         r.armsDisabled = mainArm.hasFracture() && offArm.hasFracture() && !masked;
         if (r.mainArmBad) {
             r.useTimeFactor *= s.armUseSlowMain;

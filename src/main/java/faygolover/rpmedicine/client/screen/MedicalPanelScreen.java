@@ -74,14 +74,14 @@ public class MedicalPanelScreen extends Screen {
         removeButtons.clear();
         int x = left() + 100;
         int y = top() + 150;
-        String[] keys = {"dressing", "tourniquet", "splint", "occlusive"};
+        String[] keys = {"remove_dressing", "remove_tourniquet", "remove_splint", "remove_occlusive", "reduce"};
         PanelActionPacket.Kind[] kinds = {PanelActionPacket.Kind.REMOVE_DRESSING, PanelActionPacket.Kind.REMOVE_TOURNIQUET,
-                PanelActionPacket.Kind.REMOVE_SPLINT, PanelActionPacket.Kind.REMOVE_OCCLUSIVE};
-        for (int i = 0; i < 4; i++) {
+                PanelActionPacket.Kind.REMOVE_SPLINT, PanelActionPacket.Kind.REMOVE_OCCLUSIVE, PanelActionPacket.Kind.REDUCE};
+        for (int i = 0; i < kinds.length; i++) {
             PanelActionPacket.Kind kind = kinds[i];
-            Button b = Button.builder(Component.translatable("rpmedicine.panel.remove_" + keys[i]), btn -> {
+            Button b = Button.builder(Component.translatable("rpmedicine.panel." + keys[i]), btn -> {
                 if (selected != null) Network.sendToServer(new PanelActionPacket(targetId, kind, selected, -1));
-            }).bounds(x + (i % 2) * 112, y + (i / 2) * 22, 110, 20).build();
+            }).bounds(x + (i % 2) * 112, i < 4 ? y + (i / 2) * 22 : y - 22, 110, 20).build();
             removeButtons.add(addRenderableWidget(b));
         }
         searchButton = addRenderableWidget(Button.builder(Component.translatable("rpmedicine.panel.search"), btn -> {
@@ -134,7 +134,7 @@ public class MedicalPanelScreen extends Screen {
             List<Examination.Line> lines = exam.view().parts().get(selected.ordinal()).lines();
             if (lines.isEmpty()) g.drawString(font, Component.translatable("rpmedicine.exam.nothing_visible").withStyle(ChatFormatting.GRAY), x, y, 0xFFFFFF);
             for (Examination.Line line : lines) {
-                if (y > t + 140) break;
+                if (y > t + 118) break;
                 g.drawString(font, ExamText.format(line).withStyle(ExamText.color(line)), x, y, 0xFFFFFF);
                 y += 10;
             }

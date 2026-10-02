@@ -319,6 +319,23 @@ public final class ServerConfig {
         bind("sepsisFibrillationPerHour", "Сепсис от 60 %: шанс фибрилляции в час.");
         B.pop();
 
+        B.comment("Вывихи, извлечение пуль, швы (второй этап, п. 7–8).").push("procedures");
+        bind("dislocationsEnabled", "Вывихи включены.");
+        bind("dislocationChancePerSeverity", "Шанс вывиха от тупого удара по конечности на единицу тяжести.");
+        bind("carryDislocationChance", "Шанс вывиха плеча, когда лежачего поднимают на плечо.");
+        bind("dislocationPain", "Боль вывиха.");
+        bind("dislocationSpeedPenalty", "Вывихнутая нога или стопа: минус скорость.");
+        bind("reductionPain", "Вправление без обезболивания: боль…");
+        bind("reductionPainSeconds", "… столько секунд.");
+        bind("reductionFractureChance", "Неудачное вправление: шанс перелома.");
+        bind("extractionPain", "Извлечение пули без обезболивания: боль (может дать болевой шок)…");
+        bind("extractionPainSeconds", "… столько секунд.");
+        bind("extractionErrorSeverity", "Ошибка пинцетом: порез такой тяжести.");
+        bind("procedureAnalgesia", "Обезболивание не меньше этого снимает боль манипуляций.");
+        bind("sutureHealFactor", "Зашитая рана заживает быстрее во столько раз.");
+        bind("weakSutureBleedFactor", "Слабый шов кровит такой долей от обычного.");
+        B.pop();
+
         B.comment("Температура тела (второй этап, п. 5.4).").push("body_temperature");
         bind("normalBodyTemp", "Нормальная температура тела, °C.");
         bind("bodyTempChangePerMinute", "Температура меняется не быстрее, °C в минуту.");

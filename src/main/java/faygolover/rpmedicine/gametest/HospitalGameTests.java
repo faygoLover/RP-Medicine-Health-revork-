@@ -46,7 +46,8 @@ public final class HospitalGameTests {
                 HospitalFunction.BED, List.of("minecraft:white_wool"),
                 HospitalFunction.MONITOR, List.of("minecraft:observer"),
                 HospitalFunction.IV_STAND, List.of("minecraft:iron_bars"),
-                HospitalFunction.LAB, List.of("minecraft:crafting_table")), Map.of());
+                HospitalFunction.LAB, List.of("minecraft:crafting_table"),
+                HospitalFunction.STERILIZER, List.of("minecraft:furnace")), Map.of());
     }
 
     private static MedicalData data(ServerPlayer p) {
@@ -254,6 +255,44 @@ public final class HospitalGameTests {
             h.assertTrue(faygolover.rpmedicine.server.LabService.onUseBlock(medic, lab), "анализ на лабораторном столе начался");
             h.runAfterDelay(1250, () -> {
                 h.assertTrue(inv.getItem(0).isEmpty(), "пробирка ушла в анализ");
+                remove(h, medic, patient);
+                h.succeed();
+            });
+        });
+    }
+
+    /** Пинцет: пуля извлечена, инструмент нестерилен, стерилизатор возвращает стерильность; вправление вывиха с панели. */
+    @GameTest(template = T, timeoutTicks = 800)
+    public static void tweezersSterilizerAndReduction(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        testBlocks();
+        BlockPos sterilizer = h.absolutePos(new BlockPos(1, 1, 1));
+        h.getLevel().setBlockAndUpdate(sterilizer, Blocks.FURNACE.defaultBlockState());
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        MedicalState m = state(patient);
+        m.part(faygolover.rpmedicine.core.BodyPart.ABDOMEN).bullets = 1;
+        m.part(faygolover.rpmedicine.core.BodyPart.ABDOMEN).wounds.add(new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.GUNSHOT, 20));
+        m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).dislocated = true;
+        m.morphineSeconds = 900; // без шока от боли
+        var inv = medic.getInventory();
+        inv.selected = 0;
+        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SURGICAL_TWEEZERS.get()));
+        h.assertTrue(faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(inv.getItem(0)), "новый пинцет стерилен");
+        h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "извлечение началось");
+        h.runAfterDelay(300, () -> {
+            h.assertTrue(m.part(faygolover.rpmedicine.core.BodyPart.ABDOMEN).bullets == 0, "пуля извлечена");
+            h.assertTrue(!faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(inv.getItem(0)), "пинцет после раны нестерилен");
+            var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(sterilizer), net.minecraft.core.Direction.UP, sterilizer, false);
+            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock(
+                    medic, net.minecraft.world.InteractionHand.MAIN_HAND, sterilizer, hit));
+            h.assertTrue(faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(inv.getItem(0)), "стерилизатор");
+            inv.setItem(0, net.minecraft.world.item.ItemStack.EMPTY);
+            faygolover.rpmedicine.server.TreatmentService.startHandAction(medic, patient, faygolover.rpmedicine.core.BodyPart.LEFT_ARM,
+                    faygolover.rpmedicine.core.TreatmentAction.REDUCE, 4, 2);
+            h.runAfterDelay(200, () -> {
+                h.assertTrue(!m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).dislocated, "вывих вправлен");
                 remove(h, medic, patient);
                 h.succeed();
             });

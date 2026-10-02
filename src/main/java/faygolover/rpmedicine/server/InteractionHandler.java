@@ -141,6 +141,17 @@ public final class InteractionHandler {
             event.setCancellationResult(InteractionResult.SUCCESS);
             return;
         }
+        // Стерилизатор: инструмент в руке снова стерилен (второй этап, п. 2.1).
+        if (p.getMainHandItem().getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem
+                && HospitalBlocks.is(event.getLevel().getBlockState(event.getPos()), faygolover.rpmedicine.hospital.HospitalFunction.STERILIZER)) {
+            if (!event.getLevel().isClientSide) {
+                faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(p.getMainHandItem(), true);
+                p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.sterilized"), true);
+            }
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            return;
+        }
         // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
         boolean carrying = !p.getPassengers().isEmpty();
         if (!carrying && (p.isShiftKeyDown() || !p.getMainHandItem().isEmpty())) return;

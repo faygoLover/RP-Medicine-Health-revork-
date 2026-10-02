@@ -14,6 +14,7 @@ public final class Healing {
         double minutes = Physiology.lerp(s.healMinutesMin.getOrDefault(w.type, 30.0), s.healMinutesMax.getOrDefault(w.type, 60.0), Physiology.clamp(t, 0, 1));
         if (!w.isDressed()) minutes *= s.undressedHealFactor.getOrDefault(w.type, 2.0);
         if (w.bandageBoost) minutes /= 1.25;
+        if (w.sutured) minutes /= w.weakSuture() ? Math.max(1, s.sutureHealFactor * 0.5) : s.sutureHealFactor;
         return Math.max(1, minutes * 60.0);
     }
 

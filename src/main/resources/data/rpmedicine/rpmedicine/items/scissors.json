@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:scissors",
+  "action": "scissors",
+  "seconds": 3,
+  "min_level": 0,
+  "consume": false
+}

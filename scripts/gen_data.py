@@ -146,6 +146,7 @@ ITEMS = [
     ("stethoscope", "stethoscope", 4, 2, False), ("thermometer", "thermometer", 5, 0, False),
     ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
     ("blood_draw_syringe", "blood_sample", 3, 2, True),
+    ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -337,6 +338,8 @@ ICONS = {
     "portable_scanner": ("device", (60, 90, 120), (120, 220, 240)), "hemoanalyzer": ("device", (230, 230, 230), (200, 40, 50)),
     "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
     "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)),
+    "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
+    "scissors": ("strap", (190, 195, 205), (60, 60, 60)),
 }
 for name, (shape, color, accent) in ICONS.items():
     png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))

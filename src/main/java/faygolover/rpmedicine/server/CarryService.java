@@ -22,6 +22,7 @@ import java.util.UUID;
 public final class CarryService {
     private CarryService() {}
 
+    private static final java.util.SplittableRandom JERK = new java.util.SplittableRandom();
     /** Несущий → кого несёт. */
     private static final Map<UUID, Entity> CARRIED = new HashMap<>();
     /** Разрешённое нами слезание (сброс). */
@@ -52,6 +53,13 @@ public final class CarryService {
         if (carrier.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 0.5) return false;
         if (!target.startRiding(carrier, true)) return false;
         CARRIED.put(carrier.getUUID(), target);
+        // Рывок при подъёме на плечо — малый шанс вывиха плеча (второй этап, п. 7).
+        var s = faygolover.rpmedicine.core.MedicalSettings.get();
+        var m = Medical.state(target);
+        if (m != null && s.dislocationsEnabled && JERK.nextDouble() < s.carryDislocationChance) {
+            var arm = m.part(JERK.nextBoolean() ? faygolover.rpmedicine.core.BodyPart.LEFT_ARM : faygolover.rpmedicine.core.BodyPart.RIGHT_ARM);
+            if (!arm.hasFracture()) arm.dislocated = true;
+        }
         if (target instanceof ServerPlayer tp) ActionManager.cancel(tp, null);
         ActionManager.cancel(carrier, null);
         setCarrying(carrier, true);
