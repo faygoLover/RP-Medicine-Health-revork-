@@ -61,8 +61,12 @@ public final class Physiology {
         m.deafSeconds = dec(m.deafSeconds, dt);
         if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
         if (m.cprSeconds <= 0) m.cprAccum = 0;
-        // Воздуховод выпадает, когда человек приходит в себя.
-        if (m.down == Down.NONE) m.airway = false;
+        // Воздуховод выпадает, когда человек приходит в себя; трубку в сознании не терпят — вынимают.
+        if (m.down == Down.NONE) {
+            m.airway = false;
+            m.intubated = false;
+        }
+        for (BodyPartState ps : m.parts) if (ps.localAnesthesiaSeconds > 0) ps.localAnesthesiaSeconds = dec(ps.localAnesthesiaSeconds, dt);
         if (m.morphineOverdoseSeconds <= 0 && m.respiratoryArrest && m.heart == Heart.NORMAL && m.organ(Organ.LUNGS) < 100)
             m.respiratoryArrest = false;
         // Лёгкие 100 % — дыхания нет (третий этап).
@@ -332,7 +336,9 @@ public final class Physiology {
         double op = Organs.pain(m, ps.part, s);
         sum += op;
         max = Math.max(max, op);
-        return Math.min(100, max + (sum - max) * s.otherPainFactor);
+        double total = Math.min(100, max + (sum - max) * s.otherPainFactor);
+        // Местная анестезия (третий этап): боль части почти не чувствуется.
+        return ps.localAnesthesiaSeconds > 0 ? total * s.localAnesthesiaPainFactor : total;
     }
 
     static double fracturePain(BodyPartState ps, MedicalSettings s) {
@@ -377,6 +383,8 @@ public final class Physiology {
         m.rawPain = raw;
         double suppress = analgesia(m, s) + (adrenalineActive(m) ? s.adrenalinePainSuppression : 0);
         m.pain = clamp(raw - suppress, 0, 100);
+        // Под наркозом боль не чувствуется, болевой шок не копится (третий этап).
+        if (m.effect(DrugEffect.ANESTHESIA) > 0) m.pain = 0;
 
         // Болевой шок копится при боли выше порога.
         double threshold = in.traits.shockThreshold(s);
@@ -549,12 +557,16 @@ public final class Physiology {
     public static double ventilation(MedicalState m, StepInput in) {
         if (in.suffocating) return 0;
         double v;
+        // Интубированного на операционном столе дышит аппарат (третий этап).
+        boolean machine = m.intubated && in.ventilator;
         if (m.respiratoryArrest || m.heart != Heart.NORMAL) {
-            v = m.ambuSeconds > 0 ? 0.9 : 0;
+            v = machine ? 1.0 : m.ambuSeconds > 0 ? (m.intubated ? 1.0 : 0.9) : 0;
+        } else if (machine) {
+            v = 1;
         } else {
             v = 1;
-            // Без сознания (не в обмороке) западает язык: воздуховод держит дыхание.
-            if ((m.down == Down.KNOCKDOWN || m.down == Down.CLINICAL) && !m.airway && m.ambuSeconds <= 0) v = 0.6;
+            // Без сознания (не в обмороке) западает язык: воздуховод или трубка держат дыхание.
+            if ((m.down == Down.KNOCKDOWN || m.down == Down.CLINICAL) && !m.airway && !m.intubated && m.ambuSeconds <= 0) v = 0.6;
             if (m.morphineOverdoseSeconds > 0 && m.ambuSeconds <= 0) v *= 0.6;
             if (m.ambuSeconds <= 0) v *= 1 - respiratoryDepression(m);
         }
@@ -672,6 +684,7 @@ public final class Physiology {
         if (m.morphineOverdoseSeconds > 0) c = Math.min(c, 50);
         double sedation = m.effect(DrugEffect.SEDATION);
         if (sedation > 0) c = Math.min(c, 100 - sedation);
+        if (m.effect(DrugEffect.ANESTHESIA) > 0) c = 0;
         // Сепсис: от 30 % спутанность, 100 % — септический шок, человек падает.
         // Переохлаждение и перегрев туманят сознание.
         if (m.bodyTemp < 35) c = Math.min(c, 100 - (35 - m.bodyTemp) * 20);

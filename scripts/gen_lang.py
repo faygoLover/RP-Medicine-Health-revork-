@@ -484,6 +484,32 @@ for k, ru, en in [
  ("complaint_cough", "Кашель", "Coughing"),
  ("complaint_side_pain", "Тянет в правом боку", "Dull ache in the right side"),
 ]: t("rpmedicine.exam." + k, ru, en)
+# Анестезия (п. 3).
+items3 = {
+ "lidocaine": ("Лидокаин", "Lidocaine", "Местная анестезия части тела, куда сделан укол, на 20 минут: боль почти не чувствуется, можно оперировать. Медицина 4+.",
+               "Local anesthesia of the injected body part for 20 minutes: pain is barely felt, surgery is possible. Medicine 4+."),
+ "ketamine": ("Кетамин", "Ketamine", "Полевой наркоз на 5 минут: без сознания, дышит сам, давление выше. Медицина 7+.",
+              "Field anesthesia for 5 minutes: unconscious, breathes on their own, raises blood pressure. Medicine 7+."),
+ "propofol": ("Пропофол", "Propofol", "Общий наркоз на 10 минут. Угнетает дыхание — нужна интубация и стол или мешок Амбу. Медицина 7+.",
+              "General anesthesia for 10 minutes. Depresses breathing — needs intubation and a table, or a bag valve mask. Medicine 7+."),
+ "laryngoscope": ("Ларингоскоп", "Laryngoscope", "Нужен в инвентаре для интубации.", "Needed in the inventory for intubation."),
+ "endotracheal_tube": ("Интубационная трубка", "Endotracheal tube", "Интубация человека без сознания (нужен ларингоскоп): дыхательные пути открыты, на операционном столе дышит аппарат. Медицина 6+.",
+                       "Intubates an unconscious person (needs a laryngoscope): airway secured, an operating table breathes for them. Medicine 6+."),
+}
+for k, (ru, en, dru, den) in items3.items():
+    t(f"item.rpmedicine.{k}", ru, en)
+    t(f"item.rpmedicine.{k}.desc", dru, den)
+for k, ru, en in [("intubated_already", "Трубка уже стоит", "Already intubated"),
+                  ("under_anesthesia", "Под наркозом — не разбудить", "Under anesthesia — can't be woken"),
+                  ("need_laryngoscope", "Нужен ларингоскоп в инвентаре", "You need a laryngoscope in your inventory")]:
+    t(R + k, ru, en)
+for k, ru, en in [("intubated", "Интубация выполнена", "Intubated"),
+                  ("intubation_failed", "Трубка ушла в пищевод — вынули, трубка испорчена", "The tube went into the esophagus — pulled out, tube wasted")]:
+    t(P + k, ru, en)
+t("rpmedicine.exam.anesthesia", "Под наркозом", "Under anesthesia")
+t("rpmedicine.exam.intubated", "Интубирован", "Intubated")
+t("rpmedicine.exam.local_anesthesia", "Местная анестезия", "Local anesthesia")
+t("rpmedicine.action.intubate", "Интубация", "Intubation")
 t("rpmedicine.lab.alt", "  АЛТ (печень): %s ед/л (норма до 40)", "  ALT (liver): %s U/L (normal under 40)")
 t("rpmedicine.lab.creatinine", "  Креатинин (почки): %s мкмоль/л (норма 60–110)", "  Creatinine (kidneys): %s µmol/L (normal 60–110)")
 t("rpmedicine.lab.troponin", "  Тропонин (сердце): %s нг/л (норма до 14)", "  Troponin (heart): %s ng/L (normal under 14)")

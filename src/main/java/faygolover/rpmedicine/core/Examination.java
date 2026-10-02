@@ -126,6 +126,7 @@ public final class Examination {
             else out.add(new Line("broken"));
         }
         if (ps.occlusive) out.add(new Line("occlusive"));
+        if (ps.localAnesthesiaSeconds > 0 && lvl >= 1) out.add(new Line("local_anesthesia"));
         if (lvl >= 2 && ps.internalBleed > 0) out.add(new Line("suspect_internal"));
         if (lvl >= 2 && ps.part == BodyPart.CHEST && m.pneumo != Pneumo.NONE) out.add(new Line("suspect_pneumothorax"));
         if (lvl >= 3 && ps.hasForeignBodies()) {
@@ -170,6 +171,8 @@ public final class Examination {
             else out.add(new Line("pulse", new int[]{rateWord(m.heartRate, 55, 100), m.pressure < 85 ? 1 : 0}));
         }
         // Капельница видна всем; жар на ощупь — с уровня 4 (второй этап).
+        if (m.intubated) out.add(new Line("intubated"));
+        if (!self && lvl >= 4 && m.effect(DrugEffect.ANESTHESIA) > 0) out.add(new Line("anesthesia"));
         if (m.bloodDripRemaining > 0) out.add(new Line("drip_blood"));
         if (m.salineDripRemaining > 0) out.add(new Line("drip_saline"));
         if (!self && lvl >= 4) {

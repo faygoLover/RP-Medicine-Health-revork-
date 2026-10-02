@@ -1,0 +1,48 @@
+{
+  "items": [
+    "rpmedicine:ketamine"
+  ],
+  "form": "injection",
+  "min_level": 7,
+  "effects": [
+    {
+      "effect": "anesthesia",
+      "strength": 1,
+      "delay": 15,
+      "duration": 300
+    },
+    {
+      "effect": "pressure",
+      "strength": 10,
+      "delay": 15,
+      "duration": 300
+    },
+    {
+      "effect": "heart_rate",
+      "strength": 15,
+      "delay": 15,
+      "duration": 300
+    }
+  ],
+  "dose": {
+    "limit": 3,
+    "window_hours": 2
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "anesthesia",
+        "strength": 1,
+        "delay": 0,
+        "duration": 1200
+      },
+      {
+        "effect": "resp_depression",
+        "strength": 0.4,
+        "delay": 0,
+        "duration": 1200
+      }
+    ],
+    "arrest_chance": 0.05
+  }
+}

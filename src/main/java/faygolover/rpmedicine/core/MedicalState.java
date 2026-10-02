@@ -58,6 +58,8 @@ public final class MedicalState {
     public boolean respiratoryArrest;
     /** Воздуховод установлен (держится, пока человек без сознания). */
     public boolean airway;
+    /** Интубирован (третий этап, п. 3): дыхательные пути открыты, мешок или стол вентилируют полностью. */
+    public boolean intubated;
     /** Осталось секунд вентиляции мешком Амбу и СЛР (продлеваются, пока медик удерживает действие). */
     public double ambuSeconds;
     public double cprSeconds;
@@ -191,6 +193,7 @@ public final class MedicalState {
         spo2 = s.spo2Normal;
         respiratoryArrest = false;
         airway = false;
+        intubated = false;
         ambuSeconds = 0;
         cprSeconds = 0;
         cprAccum = 0;
@@ -281,7 +284,7 @@ public final class MedicalState {
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
         if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
         if (nauseaSeconds > 0 || deafSeconds > 0) return false;
-        if (organsMissing != 0) return false;
+        if (organsMissing != 0 || intubated) return false;
         for (double d : organs) if (d > 0) return false;
         if (thirst < s.dehydrationThreshold * 100) return false;
         if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
@@ -329,6 +332,7 @@ public final class MedicalState {
         spo2 = o.spo2;
         respiratoryArrest = o.respiratoryArrest;
         airway = o.airway;
+        intubated = o.intubated;
         ambuSeconds = o.ambuSeconds;
         cprSeconds = o.cprSeconds;
         cprAccum = o.cprAccum;

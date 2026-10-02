@@ -88,6 +88,11 @@ public final class TreatmentService {
                 return true;
             }
         }
+        if (action == TreatmentAction.INTUBATE && !actor.getAbilities().instabuild
+                && !actor.getInventory().contains(new ItemStack(faygolover.rpmedicine.registry.ModItems.LARYNGOSCOPE.get()))) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_laryngoscope").withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
         if (action == TreatmentAction.HEMOANALYZER && !hasLancet(actor)) {
             actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_lancet").withStyle(ChatFormatting.YELLOW), true);
             return true;

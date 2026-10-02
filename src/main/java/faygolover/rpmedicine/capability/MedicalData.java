@@ -53,6 +53,8 @@ public final class MedicalData {
     public boolean nearIvStand;
     /** Койка рядом с источником кислорода. */
     public boolean nearOxygen;
+    /** Лежит на операционном столе (третий этап). */
+    public boolean onTable;
     public long hospitalScanTick = Long.MIN_VALUE / 2;
     public long lastAlarmTick = Long.MIN_VALUE / 2;
     /**

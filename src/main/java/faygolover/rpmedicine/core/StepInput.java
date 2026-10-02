@@ -29,6 +29,8 @@ public final class StepInput {
     public double ambientTempShift;
     /** Дышит кислородом (койка рядом с источником кислорода). */
     public boolean oxygen;
+    /** Аппарат ИВЛ рядом (операционный стол): интубированного вентилирует полностью. */
+    public boolean ventilator;
     /** Вода 0–1 (своя жажда или LSO) и сытость 0–1 (ванильная еда). */
     public double hydration = 1.0;
     public double satiety = 1.0;

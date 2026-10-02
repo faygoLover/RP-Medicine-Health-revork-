@@ -1,0 +1,35 @@
+{
+  "items": [
+    "rpmedicine:lidocaine"
+  ],
+  "form": "injection",
+  "min_level": 4,
+  "effects": [
+    {
+      "effect": "local_anesthesia",
+      "strength": 1,
+      "delay": 0,
+      "duration": 1200
+    }
+  ],
+  "dose": {
+    "limit": 4,
+    "window_hours": 2
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "heart_rate",
+        "strength": -25,
+        "delay": 0,
+        "duration": 1200
+      },
+      {
+        "effect": "pressure",
+        "strength": -20,
+        "delay": 0,
+        "duration": 1200
+      }
+    ]
+  }
+}

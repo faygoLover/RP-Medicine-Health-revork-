@@ -192,12 +192,16 @@ public final class HospitalService {
             d.hospitalScanTick = now;
             d.monitorPos = bed != null ? HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.MONITOR, HospitalBlocks.radius(HospitalFunction.MONITOR)) : null;
             d.nearOxygen = bed != null && HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.OXYGEN, HospitalBlocks.radius(HospitalFunction.OXYGEN)) != null;
+            // Операционный стол (третий этап): аппарат ИВЛ, кислород и монитор в самом столе.
+            d.onTable = bed != null && HospitalBlocks.is(sp.level().getBlockState(bed), HospitalFunction.OPERATING_TABLE);
+            if (d.onTable && d.monitorPos == null) d.monitorPos = bed;
             d.nearIvStand = drip && HospitalBlocks.findNearest(sp.level(), sp.blockPosition(), HospitalFunction.IV_STAND,
                     HospitalBlocks.radius(HospitalFunction.IV_STAND)) != null;
         } else if (bed == null && !drip) {
             d.monitorPos = null;
             d.nearIvStand = false;
             d.nearOxygen = false;
+            d.onTable = false;
         }
         if (d.monitorPos != null && now - d.lastAlarmTick >= ALARM_TICKS && alarm(m)) {
             d.lastAlarmTick = now;
@@ -235,7 +239,8 @@ public final class HospitalService {
             in.brainRecoveryFactor *= s.bedBrainRecoveryFactor;
             in.infectionRiskFactor *= s.bedInfectionFactor;
             in.immunityFactor *= s.immunityBedFactor;
-            in.oxygen = d.nearOxygen;
+            in.oxygen = d.nearOxygen || d.onTable;
+            in.ventilator = d.onTable;
             in.still = true;
         }
         if (d.nearIvStand) in.still = true;
@@ -265,7 +270,9 @@ public final class HospitalService {
     /** Игрок смотрит на монитор: отправить цифры пациента (п. 2.3). */
     public static void onMonitorRequest(ServerPlayer viewer, BlockPos pos) {
         if (viewer.distanceToSqr(Vec3.atCenterOf(pos)) > sq(ServerConfig.MONITOR_VIEW_DISTANCE.get() + 1)) return;
-        if (!viewer.level().isLoaded(pos) || !HospitalBlocks.is(viewer.level().getBlockState(pos), HospitalFunction.MONITOR)) return;
+        if (!viewer.level().isLoaded(pos)) return;
+        var state = viewer.level().getBlockState(pos);
+        if (!HospitalBlocks.is(state, HospitalFunction.MONITOR) && !HospitalBlocks.is(state, HospitalFunction.OPERATING_TABLE)) return;
         if (Medical.isDown(viewer)) return;
         if (Medical.medicineLevel(viewer) < ServerConfig.MONITOR_MIN_LEVEL.get()) {
             Network.send(viewer, MonitorPacket.locked(pos));

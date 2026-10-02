@@ -53,6 +53,8 @@ public final class BodyPartState {
 
     /** Вывих (второй этап, п. 7): плечо, локоть, колено, голеностоп. */
     public boolean dislocated;
+    /** Местная анестезия этой части (третий этап, п. 3), секунд. */
+    public double localAnesthesiaSeconds;
 
     public BodyPartState(BodyPart part) {
         this.part = part;
@@ -84,7 +86,8 @@ public final class BodyPartState {
     /** Есть ли что-то, что требует пересчёта (иначе часть «здорова»). */
     public boolean isHealthy() {
         return wounds.isEmpty() && fracture == Fracture.NONE && bullets == 0 && fragments == 0 && !arterial
-                && internalBleed <= 0 && tourniquet == Tourniquet.NONE && ischemia <= 0 && !occlusive && !splint && !dislocated;
+                && internalBleed <= 0 && tourniquet == Tourniquet.NONE && ischemia <= 0 && !occlusive && !splint && !dislocated
+                && localAnesthesiaSeconds <= 0;
     }
 
     public boolean anyDressing() {
@@ -108,6 +111,7 @@ public final class BodyPartState {
         ischemia = 0;
         occlusive = false;
         dislocated = false;
+        localAnesthesiaSeconds = 0;
     }
 
     public void copyFrom(BodyPartState o) {
@@ -127,5 +131,6 @@ public final class BodyPartState {
         ischemia = o.ischemia;
         occlusive = o.occlusive;
         dislocated = o.dislocated;
+        localAnesthesiaSeconds = o.localAnesthesiaSeconds;
     }
 }

@@ -394,6 +394,10 @@ public final class ServerConfig {
         bind("organPainFactor", "Боль от органа: доля его повреждения.");
         B.pop();
 
+        B.comment("Анестезия (третий этап, п. 3). Препараты — в датапаке drugs.").push("anesthesia");
+        bind("localAnesthesiaPainFactor", "Местная анестезия: доля оставшейся боли части (0–1).");
+        B.pop();
+
         B.comment("Ванильные эффекты (второй этап, п. 13).").push("vanilla");
         bind("poisonNauseaSeconds", "Отравление: тошнота держится ещё столько секунд после эффекта.");
         bind("poisonVomitIntervalSeconds", "Отравление: рвота раз в столько секунд.");

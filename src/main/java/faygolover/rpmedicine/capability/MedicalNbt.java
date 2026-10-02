@@ -36,6 +36,7 @@ public final class MedicalNbt {
         t.putFloat("spo2", (float) m.spo2);
         if (m.respiratoryArrest) t.putBoolean("apnea", true);
         if (m.airway) t.putBoolean("airway", true);
+        if (m.intubated) t.putBoolean("intub", true);
         putIf(t, "adrenaline", m.adrenalineSeconds);
         putIf(t, "adrenalineInj", m.adrenalineInjectionSeconds);
         putIf(t, "painkiller", m.painkillerSeconds);
@@ -152,6 +153,7 @@ public final class MedicalNbt {
             putIf(p, "isch", ps.ischemia);
             if (ps.occlusive) p.putBoolean("occl", true);
             if (ps.dislocated) p.putBoolean("disl", true);
+            if (ps.localAnesthesiaSeconds > 0) p.putFloat("local", (float) ps.localAnesthesiaSeconds);
             parts.add(p);
         }
         if (!parts.isEmpty()) t.put("parts", parts);
@@ -177,6 +179,7 @@ public final class MedicalNbt {
         if (t.contains("spo2")) m.spo2 = t.getFloat("spo2");
         m.respiratoryArrest = t.getBoolean("apnea");
         m.airway = t.getBoolean("airway");
+        m.intubated = t.getBoolean("intub");
         m.adrenalineSeconds = t.getFloat("adrenaline");
         m.adrenalineInjectionSeconds = t.getFloat("adrenalineInj");
         m.painkillerSeconds = t.getFloat("painkiller");
@@ -267,6 +270,7 @@ public final class MedicalNbt {
             ps.ischemia = p.getFloat("isch");
             ps.occlusive = p.getBoolean("occl");
             ps.dislocated = p.getBoolean("disl");
+            ps.localAnesthesiaSeconds = p.getFloat("local");
         }
     }
 

@@ -40,7 +40,7 @@ import static faygolover.rpmedicine.gametest.MedicalGameTests.tickPatients;
 public final class HospitalGameTests {
     private HospitalGameTests() {}
 
-    /** Койка — белая шерсть, монитор — наблюдатель, стойка капельницы — железная решётка, кислород — котёл. */
+    /** Койка — белая шерсть, монитор — наблюдатель, стойка — железная решётка, кислород — котёл, операционный стол — гладкий камень. */
     static void testBlocks() {
         HospitalBlocks.set(Map.of(
                 HospitalFunction.BED, List.of("minecraft:white_wool"),
@@ -48,7 +48,8 @@ public final class HospitalGameTests {
                 HospitalFunction.IV_STAND, List.of("minecraft:iron_bars"),
                 HospitalFunction.LAB, List.of("minecraft:crafting_table"),
                 HospitalFunction.STERILIZER, List.of("minecraft:furnace"),
-                HospitalFunction.OXYGEN, List.of("minecraft:cauldron")), Map.of());
+                HospitalFunction.OXYGEN, List.of("minecraft:cauldron"),
+                HospitalFunction.OPERATING_TABLE, List.of("minecraft:smooth_stone")), Map.of());
     }
 
     private static MedicalData data(ServerPlayer p) {

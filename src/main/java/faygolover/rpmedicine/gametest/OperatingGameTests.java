@@ -64,4 +64,47 @@ public final class OperatingGameTests {
             s.gunshotOrganChance = chance;
         }
     }
+
+    /** Операционный стол: аппарат ИВЛ и монитор; интубация без ларингоскопа нельзя, с ним — трубка стоит, SpO2 держится. */
+    @GameTest(template = T, timeoutTicks = 400)
+    public static void intubationOnOperatingTable(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        HospitalGameTests.testBlocks();
+        MedicalSettings s = MedicalSettings.get();
+        net.minecraft.core.BlockPos table = h.absolutePos(new net.minecraft.core.BlockPos(2, 1, 2));
+        h.getLevel().setBlockAndUpdate(table, net.minecraft.world.level.block.Blocks.SMOOTH_STONE.defaultBlockState());
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        ServerPlayer medic = player(h, 3.5, 3.5);
+        h.assertTrue(faygolover.rpmedicine.hospital.HospitalService.onUseBlock(patient, table), "лечь на стол");
+        var d = faygolover.rpmedicine.server.Medical.data(patient);
+        faygolover.rpmedicine.hospital.HospitalService.tickPlayer(patient, d);
+        h.assertTrue(d.onTable && table.equals(d.monitorPos), "на столе, стол — монитор");
+        h.assertTrue(faygolover.rpmedicine.hospital.HospitalService.monitorPatient(h.getLevel(), table) == patient, "стол показывает пациента");
+        faygolover.rpmedicine.core.StepInput in = new faygolover.rpmedicine.core.StepInput(0.5);
+        faygolover.rpmedicine.hospital.HospitalService.applyConditions(d, in, s);
+        h.assertTrue(in.ventilator && in.oxygen, "аппарат и кислород");
+        // Пропофол: наркоз, дыхание угнетено.
+        MedicalState m = state(patient);
+        m.addEffect(faygolover.rpmedicine.core.DrugEffect.ANESTHESIA, 1, 0, 600);
+        m.addEffect(faygolover.rpmedicine.core.DrugEffect.RESP_DEPRESSION, 0.6, 0, 600);
+        m.down = MedicalState.Down.FAINT;
+        medic.getInventory().selected = 0;
+        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.ENDOTRACHEAL_TUBE.get(), 2));
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+        h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) == null, "без ларингоскопа не начать");
+        medic.getInventory().setItem(5, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.LARYNGOSCOPE.get()));
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+        h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) != null, "интубация началась");
+        h.runAfterDelay(300, () -> {
+            h.assertTrue(m.intubated, "трубка стоит");
+            h.assertTrue(medic.getInventory().getItem(0).getCount() == 1, "трубка потрачена");
+            // Минута физиологии на столе под пропофолом.
+            for (int i = 0; i < 60 * 20; i++) MedicalGameTests.tickPatients(patient);
+            h.assertTrue(m.down == MedicalState.Down.FAINT && m.intubated, "под наркозом, трубка на месте");
+            h.assertTrue(m.spo2 >= s.spo2Normal - 3, "на столе дышит аппарат, SpO2 " + m.spo2);
+            remove(h, patient, medic);
+            h.succeed();
+        });
+    }
 }
