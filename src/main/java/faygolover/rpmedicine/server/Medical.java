@@ -77,7 +77,15 @@ public final class Medical {
         return Long.MIN_VALUE / 2;
     }
 
+    /**
+     * Уровень «Медицины»: атрибут RP Perks, если он есть; иначе уровень от команды ГМа {@code skill}
+     * (спорный п. 16.4: свой уровень перекрывает перки, пока атрибута нет); иначе перки.
+     */
     public static int medicineLevel(Player p) {
+        if (!RpPerksCompat.hasMedicineAttribute()) {
+            MedicalData d = MedicalCapability.get(p);
+            if (d != null && d.skillOverride >= 0) return d.skillOverride;
+        }
         return RpPerksCompat.medicineLevel(p);
     }
 }

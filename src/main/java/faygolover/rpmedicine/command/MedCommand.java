@@ -29,6 +29,7 @@ import faygolover.rpmedicine.server.Profiler;
 import faygolover.rpmedicine.server.StubRegistry;
 import faygolover.rpmedicine.server.StubService;
 import net.minecraft.commands.CommandSourceStack;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -111,6 +112,22 @@ public final class MedCommand {
                 .then(Commands.argument("duration", StringArgumentType.word())
                         .executes(c -> timeAdd(c, false))
                         .then(Commands.literal("offline").executes(c -> timeAdd(c, true)))))));
+        // Уровень «Медицины» (второй этап, п. 11.2).
+        root.then(op("skill").then(Commands.argument("targets", EntityArgument.players())
+                .then(Commands.argument("level", IntegerArgumentType.integer(0, 10)).executes(c -> skill(c, IntegerArgumentType.getInteger(c, "level"))))
+                .then(Commands.literal("reset").executes(c -> skill(c, -1)))));
+        // Статистика и история (второй этап, п. 11.1).
+        root.then(op("stats")
+                .then(Commands.literal("history").then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
+                        .executes(MedCommand::statsHistory)))
+                .then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
+                        .executes(c -> stats(c, 24))
+                        .then(Commands.argument("hours", DoubleArgumentType.doubleArg(0.1, 24 * 90)).executes(c -> stats(c, DoubleArgumentType.getDouble(c, "hours"))))));
+        // Панель ГМа (второй этап, п. 11.3).
+        root.then(op("panel").executes(c -> {
+            faygolover.rpmedicine.server.GmPanelService.open(c.getSource().getPlayerOrException());
+            return 1;
+        }));
         // Медкарта (второй этап, п. 10): рост, вес, группа, аллергии, хронические состояния.
         root.then(op("card").then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
                 .then(Commands.argument("field", StringArgumentType.word())
@@ -118,6 +135,39 @@ public final class MedCommand {
                                 java.util.List.of("height", "weight", "blood_type", "allergies", "chronic"), b))
                         .then(Commands.argument("value", StringArgumentType.greedyString()).executes(MedCommand::card)))));
         d.register(root);
+    }
+
+    private static int skill(CommandContext<CommandSourceStack> c, int level) throws CommandSyntaxException {
+        int n = 0;
+        for (ServerPlayer sp : EntityArgument.getPlayers(c, "targets")) {
+            boolean attr = level >= 0 && faygolover.rpmedicine.integration.RpPerksCompat.setMedicine(sp, level);
+            var d = Medical.data(sp);
+            if (d != null) d.skillOverride = attr ? -1 : level;
+            n++;
+            c.getSource().sendSuccess(() -> Component.translatable(attr ? "rpmedicine.cmd.skill_attribute" : "rpmedicine.cmd.skill_own",
+                    sp.getDisplayName(), level < 0 ? "—" : String.valueOf(level), Medical.medicineLevel(sp)), true);
+        }
+        return n;
+    }
+
+    private static int stats(CommandContext<CommandSourceStack> c, double hours) throws CommandSyntaxException {
+        int n = 0;
+        for (var gp : net.minecraft.commands.arguments.GameProfileArgument.getGameProfiles(c, "player")) {
+            for (Component line : faygolover.rpmedicine.stats.StatsService.summary(c.getSource().getServer(), gp.getId(), gp.getName(), hours))
+                c.getSource().sendSuccess(() -> line, false);
+            n++;
+        }
+        return n;
+    }
+
+    private static int statsHistory(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        int n = 0;
+        for (var gp : net.minecraft.commands.arguments.GameProfileArgument.getGameProfiles(c, "player")) {
+            faygolover.rpmedicine.stats.History.load(c.getSource().getServer(), gp.getId());
+            for (Component line : faygolover.rpmedicine.stats.History.graph(gp.getId(), gp.getName())) c.getSource().sendSuccess(() -> line, false);
+            n++;
+        }
+        return n;
     }
 
     private static int card(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
@@ -240,36 +290,59 @@ public final class MedCommand {
 
     private static int revive(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         int n = 0;
-        MedicalSettings s = MedicalSettings.get();
         for (LivingEntity t : patients(c)) {
-            MedicalState m = Medical.state(t);
-            boolean wasDown = m.isDown();
-            m.heart = MedicalState.Heart.NORMAL;
-            m.respiratoryArrest = false;
-            m.morphineOverdoseSeconds = 0;
-            if (m.pneumo == MedicalState.Pneumo.TENSION) {
-                m.pneumo = MedicalState.Pneumo.OPEN;
-                m.tensionProgress = 0;
-                m.pneumoTimer = s.pneumoSealMaxSeconds;
-            }
-            m.bloodVolume = Math.max(m.bloodVolume, m.normalBlood(s) * 0.7);
-            m.spo2 = Math.max(m.spo2, 92);
-            m.pressure = Math.max(m.pressure, Physiology.pressureFromVolume(m.bloodFraction(s), s));
-            m.heartRate = Math.max(m.heartRate, s.normalHeartRate);
-            m.brain = Math.max(m.brain, 30);
-            m.painShock = false;
-            m.shockAccum = 0;
-            m.concussionKoSeconds = 0;
-            m.consciousness = 100;
-            m.down = MedicalState.Down.NONE;
-            m.wakeSeconds = -1;
-            m.knockdownNoTimer = false;
-            Medical.changed(t);
-            if (wasDown && t instanceof ServerPlayer sp) DownedService.onWokeUp(sp);
+            revive(t);
             n++;
             c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.revived", t.getDisplayName()), true);
         }
         return n;
+    }
+
+    /** Поднять: устранить угрозу жизни и вернуть сознание (ГМ, команда и панель). */
+    public static void revive(LivingEntity t) {
+        MedicalSettings s = MedicalSettings.get();
+        MedicalState m = Medical.state(t);
+        if (m == null) return;
+        boolean wasDown = m.isDown();
+        m.heart = MedicalState.Heart.NORMAL;
+        m.respiratoryArrest = false;
+        m.morphineOverdoseSeconds = 0;
+        if (m.pneumo == MedicalState.Pneumo.TENSION) {
+            m.pneumo = MedicalState.Pneumo.OPEN;
+            m.tensionProgress = 0;
+            m.pneumoTimer = s.pneumoSealMaxSeconds;
+        }
+        m.bloodVolume = Math.max(m.bloodVolume, m.normalBlood(s) * 0.7);
+        m.spo2 = Math.max(m.spo2, 92);
+        m.pressure = Math.max(m.pressure, Physiology.pressureFromVolume(m.bloodFraction(s), s));
+        m.heartRate = Math.max(m.heartRate, s.normalHeartRate);
+        m.brain = Math.max(m.brain, 30);
+        m.painShock = false;
+        m.shockAccum = 0;
+        m.concussionKoSeconds = 0;
+        m.sepsis = Math.min(m.sepsis, 99);
+        m.consciousness = 100;
+        m.down = MedicalState.Down.NONE;
+        m.wakeSeconds = -1;
+        m.knockdownNoTimer = false;
+        Medical.changed(t);
+        if (wasDown && t instanceof ServerPlayer sp) DownedService.onWokeUp(sp);
+    }
+
+    /** Вылечить всё (ГМ, команда и панель). */
+    public static void healAll(LivingEntity t) {
+        MedicalState m = Medical.state(t);
+        if (m == null) return;
+        boolean wasDown = m.isDown();
+        m.reset(MedicalSettings.get());
+        Medical.changed(t);
+        if (wasDown && t instanceof ServerPlayer sp) DownedService.onWokeUp(sp);
+    }
+
+    /** Убить по команде ГМа. */
+    public static void gmKill(LivingEntity t, @Nullable Entity killer) {
+        if (t instanceof ServerPlayer sp) DownedService.kill(sp, DownedService.GM_KILL, null);
+        else if (t instanceof BodyStubEntity stub) StubService.killStub(stub, DownedService.GM_KILL, killer);
     }
 
     private static int kill(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {

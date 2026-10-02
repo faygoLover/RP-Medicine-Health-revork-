@@ -44,6 +44,16 @@ public final class ClientHandlers {
         ClientState.hoverLines = p.lines();
     }
 
+    public static void onGmPanel(faygolover.rpmedicine.network.GmPanelPacket p) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen instanceof faygolover.rpmedicine.client.screen.GmPanelScreen s) s.update(p);
+        else mc.setScreen(new faygolover.rpmedicine.client.screen.GmPanelScreen(p));
+    }
+
+    public static void onGmReport(faygolover.rpmedicine.network.GmReportPacket p) {
+        if (Minecraft.getInstance().screen instanceof faygolover.rpmedicine.client.screen.GmPanelScreen s) s.report(p);
+    }
+
     public static void onMedcard(faygolover.rpmedicine.network.MedcardDataPacket p) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen instanceof faygolover.rpmedicine.client.screen.MedcardScreen ms && ms.uuid().equals(p.uuid())) ms.update(p);

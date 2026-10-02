@@ -45,7 +45,10 @@ public final class PatientTicker {
         d.lastZ = sp.getZ();
 
         int step = Math.max(1, s.stepTicks);
-        if ((++d.ticks + sp.getId()) % step != 0) return;
+        int t = ++d.ticks + sp.getId();
+        // История состояния для ГМа: снимок раз в 10 секунд (второй этап, п. 11.1).
+        if (t % faygolover.rpmedicine.stats.History.PERIOD_TICKS == 0) faygolover.rpmedicine.stats.History.record(sp.getUUID(), m);
+        if (t % step != 0) return;
 
         // На койке здоровый тоже «спит»: множители койки нужны только тому, кто лечится.
         boolean quiet = m.isQuiet(s) && d.distance < 0.01;
@@ -81,6 +84,8 @@ public final class PatientTicker {
     /** Каждый тик заглушки на сервере: физиология без заживления и восстановления. */
     public static void tickStub(BodyStubEntity stub) {
         MedicalSettings s = MedicalSettings.get();
+        if ((stub.tickCount + stub.getId()) % faygolover.rpmedicine.stats.History.PERIOD_TICKS == 0)
+            faygolover.rpmedicine.stats.History.record(stub.ownerId(), stub.state());
         int step = Math.max(1, s.stepTicks);
         if ((stub.tickCount + stub.getId()) % step != 0) return;
         MedicalState m = stub.state();

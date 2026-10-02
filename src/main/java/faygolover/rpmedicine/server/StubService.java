@@ -134,6 +134,7 @@ public final class StubService {
         fill(r, stub);
         r.dead = true;
         reg.setDirty();
+        faygolover.rpmedicine.stats.StatsService.event(stub, "death", src.getMsgId());
         RpMedicine.LOGGER.info("RP Medicine: заглушка игрока {} убита ({})", stub.ownerName(), src.getMsgId());
     }
 

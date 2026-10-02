@@ -41,6 +41,11 @@ public final class StubRegistry extends SavedData {
     }
 
     @Nullable
+    /** Все тела (для панели ГМа). */
+    public Map<UUID, Record> all() {
+        return java.util.Collections.unmodifiableMap(records);
+    }
+
     public Record get(UUID owner) {
         return records.get(owner);
     }

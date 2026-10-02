@@ -56,15 +56,20 @@ public final class MedicalData {
     /** Когда последний раз получил урон (правило «в бою — прогресс-бар»). */
     public long lastHurtTick = Long.MIN_VALUE / 2;
 
+    /** Уровень «Медицины», заданный командой ГМа (−1 — не задан), пока в RP Perks нет атрибута. Сохраняется. */
+    public int skillOverride = -1;
+
     public CompoundTag save() {
         CompoundTag t = MedicalNbt.write(state);
         if (bedPos != null) t.putLong("bed", bedPos.asLong());
+        if (skillOverride >= 0) t.putByte("skill", (byte) skillOverride);
         return t;
     }
 
     public void load(CompoundTag tag) {
         MedicalNbt.read(state, tag, MedicalSettings.get());
         bedPos = tag.contains("bed") ? BlockPos.of(tag.getLong("bed")) : null;
+        skillOverride = tag.contains("skill") ? tag.getByte("skill") : -1;
         dirty = true;
     }
 

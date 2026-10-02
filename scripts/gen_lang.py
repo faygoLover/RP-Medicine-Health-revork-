@@ -389,6 +389,28 @@ for k, ru, en in [
  ("rpmedicine.cmd.card_bad", "Медкарта: неверное значение %s (%s)", "Medical record: bad value for %s (%s)"),
 ]: t(k, ru, en)
 
+# ГМ: статистика, история, панель, skill
+for k, ru, en in [
+ ("rpmedicine.gm.title", "Панель ГМа — RP Medicine", "GM panel — RP Medicine"),
+ ("rpmedicine.gm.empty", "Никого", "Nobody"), ("rpmedicine.gm.pick", "Выберите игрока или тело слева", "Pick a player or body on the left"),
+ ("rpmedicine.gm.not_loaded", "Тело в незагруженном чанке — телепортируйтесь к нему", "The body is in an unloaded chunk — teleport to it"),
+ ("rpmedicine.gm.heal", "Вылечить", "Heal"), ("rpmedicine.gm.revive", "Поднять", "Revive"), ("rpmedicine.gm.kill", "Убить", "Kill"),
+ ("rpmedicine.gm.teleport", "Телепорт", "Teleport"), ("rpmedicine.gm.history", "История", "History"), ("rpmedicine.gm.inspect", "Осмотр", "Inspect"),
+ ("rpmedicine.cmd.skill_attribute", "%s: «Медицина» %s (атрибут RP Perks), сейчас %s", "%s: Medicine %s (RP Perks attribute), now %s"),
+ ("rpmedicine.cmd.skill_own", "%s: «Медицина» %s (свой уровень мода), сейчас %s", "%s: Medicine %s (mod's own level), now %s"),
+ ("rpmedicine.stats.title", "Статистика %s за %s ч", "Stats for %s over %s h"),
+ ("rpmedicine.stats.treat_given", "  Лечил: %s раз, ошибок %s", "  Treated others: %s times, %s errors"),
+ ("rpmedicine.stats.treat_received", "  Лечили его: %s раз, ошибок %s", "  Was treated: %s times, %s errors"),
+ ("rpmedicine.stats.injuries", "  Травм: %s", "  Injuries: %s"),
+ ("rpmedicine.stats.outcomes", "  Клинических смертей %s, вытащили %s, смертей %s", "  Clinical deaths %s, rescued %s, deaths %s"),
+ ("rpmedicine.stats.history_title", "История %s, последние %s мин (столбец — минута)", "History of %s, last %s min (one column per minute)"),
+ ("rpmedicine.stats.no_history", "Истории нет", "No history"),
+ ("rpmedicine.stats.metric_blood", "Кровь %  ", "Blood %  "), ("rpmedicine.stats.metric_bp", "Давление ", "BP       "),
+ ("rpmedicine.stats.metric_hr", "Пульс    ", "HR       "), ("rpmedicine.stats.metric_spo2", "SpO₂     ", "SpO₂     "),
+ ("rpmedicine.stats.metric_consciousness", "Сознание ", "Conscious"), ("rpmedicine.stats.metric_brain", "Мозг     ", "Brain    "),
+ ("rpmedicine.stats.metric_temp", "Темп.    ", "Temp     "),
+]: t(k, ru, en)
+
 # Мини-игры
 for k, ru, en in [
  ("rpmedicine.minigame.injection", "укол", "injection"), ("rpmedicine.minigame.vein", "в вену", "into the vein"),

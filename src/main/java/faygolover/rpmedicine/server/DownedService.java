@@ -61,9 +61,13 @@ public final class DownedService {
         if (r.has(StepResult.Event.CLINICAL_DEATH)) {
             onWentDown(sp, m);
             MedcardHooks.clinicalDeath(sp);
+            faygolover.rpmedicine.stats.StatsService.event(sp, "clinical", "");
             sp.displayClientMessage(Component.translatable("rpmedicine.msg.clinical_death").withStyle(ChatFormatting.DARK_RED), true);
         }
-        if (r.has(StepResult.Event.RESCUED_FROM_CLINICAL)) broadcastDowned(sp, true);
+        if (r.has(StepResult.Event.RESCUED_FROM_CLINICAL)) {
+            broadcastDowned(sp, true);
+            faygolover.rpmedicine.stats.StatsService.event(sp, "rescue", "");
+        }
         if (r.has(StepResult.Event.WOKE_UP)) onWokeUp(sp);
         if (r.has(StepResult.Event.DRESSING_REOPENED))
             sp.displayClientMessage(Component.translatable("rpmedicine.msg.dressing_reopened").withStyle(ChatFormatting.RED), true);
@@ -127,6 +131,7 @@ public final class DownedService {
         CarryService.dropCarried(sp);
         CarryService.dropIfCarried(sp);
         DamageSource src = source(sp.serverLevel(), type, killer);
+        faygolover.rpmedicine.stats.StatsService.event(sp, "death", type.location().getPath());
         sp.invulnerableTime = 0;
         sp.hurt(src, Float.MAX_VALUE);
         if (!sp.isDeadOrDying()) {

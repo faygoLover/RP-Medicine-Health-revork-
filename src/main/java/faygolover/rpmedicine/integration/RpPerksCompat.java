@@ -46,6 +46,21 @@ public final class RpPerksCompat {
         return 0;
     }
 
+    /** Есть ли атрибут «Медицина» в RP Perks. */
+    public static boolean hasMedicineAttribute() {
+        return medicineAttribute() != null;
+    }
+
+    /** Записать уровень в атрибут RP Perks (база атрибута). false — атрибута нет. */
+    public static boolean setMedicine(Player player, int level) {
+        Attribute a = medicineAttribute();
+        if (a == null) return false;
+        AttributeInstance inst = player.getAttribute(a);
+        if (inst == null) return false;
+        inst.setBaseValue(level);
+        return true;
+    }
+
     public static PatientTraits traits(Player player) {
         boolean left = player.getMainArm() == HumanoidArm.LEFT;
         PlayerPerks p = perks(player);

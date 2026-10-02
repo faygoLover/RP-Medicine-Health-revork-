@@ -39,6 +39,8 @@ public final class Network {
         toClient(MonitorPacket.class, MonitorPacket::encode, MonitorPacket::decode, MonitorPacket::handle);
         toClient(MinigameStartPacket.class, MinigameStartPacket::encode, MinigameStartPacket::decode, MinigameStartPacket::handle);
         toClient(MedcardDataPacket.class, MedcardDataPacket::encode, MedcardDataPacket::decode, MedcardDataPacket::handle);
+        toClient(GmPanelPacket.class, GmPanelPacket::encode, GmPanelPacket::decode, GmPanelPacket::handle);
+        toClient(GmReportPacket.class, GmReportPacket::encode, GmReportPacket::decode, GmReportPacket::handle);
         // Клиент → сервер
         toServer(RequestExamPacket.class, RequestExamPacket::encode, RequestExamPacket::decode, RequestExamPacket::handle);
         toServer(PanelActionPacket.class, PanelActionPacket::encode, PanelActionPacket::decode, PanelActionPacket::handle);
@@ -47,6 +49,7 @@ public final class Network {
         toServer(MonitorRequestPacket.class, MonitorRequestPacket::encode, MonitorRequestPacket::decode, MonitorRequestPacket::handle);
         toServer(MinigameResultPacket.class, MinigameResultPacket::encode, MinigameResultPacket::decode, MinigameResultPacket::handle);
         toServer(MedcardActionPacket.class, MedcardActionPacket::encode, MedcardActionPacket::decode, MedcardActionPacket::handle);
+        toServer(GmActionPacket.class, GmActionPacket::encode, GmActionPacket::decode, GmActionPacket::handle);
     }
 
     private static <T> void toClient(Class<T> type, BiConsumer<T, FriendlyByteBuf> enc, Function<FriendlyByteBuf, T> dec,

@@ -402,6 +402,58 @@ public final class HospitalGameTests {
         });
     }
 
+    /** ГМ: уровень «Медицины» командой, журнал и сводка, история и график, панель (вылечить, поднять). */
+    @GameTest(template = T, timeoutTicks = 300)
+    public static void gmSkillStatsHistoryPanel(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        var server = h.getLevel().getServer();
+        ServerPlayer gm = player(h, 1.5, 1.5);
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        // Тестовый сервер даёт операторам уровень 0 — задаём уровень явно.
+        server.getPlayerList().getOps().add(new net.minecraft.server.players.ServerOpListEntry(gm.getGameProfile(), 4, false));
+        h.assertTrue(MedicalGameTests.command(h, "rpmedicine skill " + medic.getGameProfile().getName() + " 6") == 1, "команда skill");
+        h.assertTrue(Medical.medicineLevel(medic) == 6, "свой уровень «Медицины» вместо перков, было " + Medical.medicineLevel(medic));
+        // Лечение попадает в журнал.
+        m(patient).part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.add(new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.CUT, 20));
+        medic.getInventory().selected = 0;
+        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BANDAGE.get(), 2));
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+        // История: снимки раз в 10 секунд.
+        for (int i = 0; i < 3; i++) faygolover.rpmedicine.stats.History.record(patient.getUUID(), m(patient));
+        h.runAfterDelay(120, () -> {
+            var summary = faygolover.rpmedicine.stats.StatsService.summary(server, medic.getUUID(), medic.getGameProfile().getName(), 1);
+            h.assertTrue(summary.stream().anyMatch(c -> c.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents tc
+                    && tc.getKey().equals("rpmedicine.stats.treat_given") && tc.getArgs().length > 0 && ((Integer) tc.getArgs()[0]) >= 1), "в сводке медика есть лечение");
+            var graph = faygolover.rpmedicine.stats.History.graph(patient.getUUID(), "p");
+            h.assertTrue(graph.size() == 8, "график: заголовок и 7 показателей, было " + graph.size());
+            // Панель ГМа: тяжёлый пациент — поднять, затем вылечить.
+            m(patient).bloodVolume = 1500;
+            m(patient).down = MedicalState.Down.KNOCKDOWN;
+            h.assertTrue(faygolover.rpmedicine.server.GmPanelService.colorOf(patient) == 3, "цвет «лежит»");
+            faygolover.rpmedicine.server.GmPanelService.onAction(gm, new faygolover.rpmedicine.network.GmActionPacket(patient.getUUID(),
+                    faygolover.rpmedicine.network.GmActionPacket.Action.REVIVE));
+            h.assertTrue(!m(patient).isDown(), "поднят");
+            faygolover.rpmedicine.server.GmPanelService.onAction(gm, new faygolover.rpmedicine.network.GmActionPacket(patient.getUUID(),
+                    faygolover.rpmedicine.network.GmActionPacket.Action.HEAL));
+            h.assertTrue(m(patient).isQuiet(MedicalSettings.get()), "вылечен");
+            // Не оператор — действия не проходят.
+            m(patient).bloodVolume = 3000;
+            faygolover.rpmedicine.server.GmPanelService.onAction(medic, new faygolover.rpmedicine.network.GmActionPacket(patient.getUUID(),
+                    faygolover.rpmedicine.network.GmActionPacket.Action.HEAL));
+            h.assertTrue(m(patient).bloodVolume == 3000, "не оператор — нельзя");
+            MedicalGameTests.command(h, "rpmedicine skill " + medic.getGameProfile().getName() + " reset");
+            server.getPlayerList().getOps().remove(gm.getGameProfile());
+            remove(h, gm, medic, patient);
+            h.succeed();
+        });
+    }
+
+    private static MedicalState m(ServerPlayer p) {
+        return state(p);
+    }
+
     /** Капельница идёт на ходу, пока рядом стойка. */
     @GameTest(template = T, timeoutTicks = 200)
     public static void ivStandLetsDripRunWhileMoving(GameTestHelper h) {

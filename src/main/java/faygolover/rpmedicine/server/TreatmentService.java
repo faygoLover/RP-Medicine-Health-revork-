@@ -250,6 +250,7 @@ public final class TreatmentService {
             boolean error = quality >= 0 ? Minigames.failed(quality, s)
                     : RANDOM.nextDouble() < Math.min(s.maxErrorChance, Skill.errorChance(level, minLevel, s) * errorFactor);
             Treatments.Result r = Treatments.apply(m, part, action, error, RANDOM.split(), s, null, quality >= 0 ? quality : 1.0);
+            faygolover.rpmedicine.stats.StatsService.treatment(actor, target, "hand", action.id, part, r.key, error);
             Medical.changed(target);
             if (action == TreatmentAction.REDUCE && r.key.equals("reduction_fracture"))
                 target.level().playSound(null, target.getX(), target.getY(), target.getZ(), ModSounds.BONE_BREAK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -351,6 +352,8 @@ public final class TreatmentService {
                         : !spec.action().isInstrument() && RANDOM.nextDouble() < Math.min(s.maxErrorChance, Skill.errorChance(level, spec.minLevel(), s) * errorFactor);
             }
             Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra, quality >= 0 ? quality : 1.0);
+            faygolover.rpmedicine.stats.StatsService.treatment(actor, target, String.valueOf(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(original.getItem())),
+                    spec.action().id, part, r.key, error);
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) LabService.giveSample(actor, target);
