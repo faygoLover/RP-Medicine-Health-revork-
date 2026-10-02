@@ -53,6 +53,8 @@ public final class MedicalData {
     public boolean nearIvStand;
     public long hospitalScanTick = Long.MIN_VALUE / 2;
     public long lastAlarmTick = Long.MIN_VALUE / 2;
+    /** Когда последний раз получил урон (правило «в бою — прогресс-бар»). */
+    public long lastHurtTick = Long.MIN_VALUE / 2;
 
     public CompoundTag save() {
         CompoundTag t = MedicalNbt.write(state);

@@ -336,6 +336,15 @@ public final class ServerConfig {
         bind("weakSutureBleedFactor", "Слабый шов кровит такой долей от обычного.");
         B.pop();
 
+        B.comment("Мини-игры лечения вне боя (второй этап, п. 9).").push("minigames");
+        bind("minigamesEnabled", "Мини-игры включены (иначе всё прогресс-баром, как на первом этапе).");
+        bind("combatSeconds", "«Бой»: медик или пациент получали урон за столько секунд — только прогресс-бар. Ещё бой — нокдаун с таймером и клиническая смерть.");
+        bind("minigameFailQuality", "Качество мини-игры (0–1) ниже — ошибка медика.");
+        bind("minigameRefuseAllowed", "Можно отказаться от мини-игры: тогда прогресс-бар.");
+        bind("minigameRefuseTimeFactor", "Отказ: прогресс-бар дольше во столько раз…");
+        bind("minigameRefuseErrorFactor", "… и шанс ошибки выше во столько раз.");
+        B.pop();
+
         B.comment("Температура тела (второй этап, п. 5.4).").push("body_temperature");
         bind("normalBodyTemp", "Нормальная температура тела, °C.");
         bind("bodyTempChangePerMinute", "Температура меняется не быстрее, °C в минуту.");

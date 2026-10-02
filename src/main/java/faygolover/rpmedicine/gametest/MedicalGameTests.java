@@ -61,6 +61,8 @@ public final class MedicalGameTests {
         MedicalSettings s = MedicalSettings.get();
         s.skillError = new double[s.skillError.length];
         s.underLevelErrorPerLevel = 0;
+        // Мини-игры (второй этап) играет клиент; у фальшивого игрока его нет — только прогресс-бар.
+        s.minigamesEnabled = false;
     }
 
     static ServerPlayer player(GameTestHelper h, double x, double z) {

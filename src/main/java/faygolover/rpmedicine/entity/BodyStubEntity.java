@@ -61,6 +61,8 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
     private int selectedSlot;
     private byte traitFlags;
     private boolean changed;
+    /** Когда тело последний раз ранили (правило «в бою — прогресс-бар»). */
+    public long lastHurtTick = Long.MIN_VALUE / 2;
     /** Койка, на которой лежит тело (второй этап: выход на койке оставляет тело на ней). */
     @Nullable
     private net.minecraft.core.BlockPos bedPos;

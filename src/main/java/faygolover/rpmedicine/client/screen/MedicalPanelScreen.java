@@ -39,6 +39,8 @@ public class MedicalPanelScreen extends Screen {
     private final List<Button> removeButtons = new ArrayList<>();
     private Button searchButton;
     private Button dripButton;
+    /** Панель уже открывалась и отписалась от осмотра (вернулись после мини-игры) — подписаться снова. */
+    private boolean unsubscribed;
 
     public MedicalPanelScreen(int targetId) {
         super(Component.translatable("rpmedicine.panel.title"));
@@ -71,6 +73,10 @@ public class MedicalPanelScreen extends Screen {
 
     @Override
     protected void init() {
+        if (unsubscribed) {
+            Network.sendToServer(new RequestExamPacket(targetId, true));
+            unsubscribed = false;
+        }
         removeButtons.clear();
         int x = left() + 100;
         int y = top() + 150;
@@ -252,6 +258,7 @@ public class MedicalPanelScreen extends Screen {
     @Override
     public void removed() {
         Network.sendToServer(new RequestExamPacket(targetId, false));
+        unsubscribed = true;
         super.removed();
     }
 

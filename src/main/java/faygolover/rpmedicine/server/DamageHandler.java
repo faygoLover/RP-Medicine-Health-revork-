@@ -88,6 +88,7 @@ public final class DamageHandler {
     public static void applyInjury(LivingEntity target, MedicalState m, InjuryProfile prof, double amount, BodyPart part, double side,
                                    @Nullable Entity killer) {
         if (amount <= 0) return;
+        Medical.markHurt(target);
         MedicalSettings s = MedicalSettings.get();
         PatientTraits traits = Medical.traits(target);
         if (part != null && Injuries.isInstantlyLethal(part, amount, s) && m.down != MedicalState.Down.CLINICAL) {

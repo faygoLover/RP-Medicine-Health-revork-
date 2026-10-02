@@ -316,6 +316,17 @@ public final class MedicalSettings {
     public double sutureHealFactor = 2.0;
     public double weakSutureBleedFactor = 0.3;
 
+    // ---------------- Мини-игры (второй этап, п. 9) ----------------
+    public boolean minigamesEnabled = true;
+    /** Урон по медику или пациенту за столько секунд — «бой»: только прогресс-бар. */
+    public double combatSeconds = 30.0;
+    /** Качество мини-игры ниже — ошибка медика. */
+    public double minigameFailQuality = 0.3;
+    /** Можно отказаться от мини-игры: прогресс-бар дольше и ошибка чаще. */
+    public boolean minigameRefuseAllowed = true;
+    public double minigameRefuseTimeFactor = 2.0;
+    public double minigameRefuseErrorFactor = 1.5;
+
     // ---------------- Температура тела (второй этап, п. 5.4) ----------------
     public double normalBodyTemp = 36.6;
     /** Температура тела меняется не быстрее, °C в минуту. */

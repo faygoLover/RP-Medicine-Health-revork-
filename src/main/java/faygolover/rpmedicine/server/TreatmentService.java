@@ -5,6 +5,7 @@ import faygolover.rpmedicine.core.BodyPart;
 import faygolover.rpmedicine.core.GameplayEffects;
 import faygolover.rpmedicine.core.MedicalSettings;
 import faygolover.rpmedicine.core.MedicalState;
+import faygolover.rpmedicine.core.Minigames;
 import faygolover.rpmedicine.core.Skill;
 import faygolover.rpmedicine.core.TreatmentAction;
 import faygolover.rpmedicine.core.Treatments;
@@ -48,6 +49,8 @@ public final class TreatmentService {
         // Пока зажата ПКМ, взаимодействие повторяется каждые 4 тика — идущее лечение тем же предметом не перезапускаем.
         if (ActionManager.current(actor) instanceof TreatmentTimedAction cur && cur.target == target && cur.slot == slot
                 && ItemStack.isSameItem(cur.original, stack)) return true;
+        // Идёт мини-игра — повторные клики (удержание ПКМ) её не перезапускают.
+        if (MinigameService.currentSession(actor) > 0) return true;
         MedicalState m = Medical.state(target);
         if (m == null) return false;
         MedicalSettings s = MedicalSettings.get();
@@ -94,6 +97,20 @@ public final class TreatmentService {
         GameplayEffects.Mods mods = Medical.data(actor) != null ? Medical.data(actor).lastMods : new GameplayEffects.Mods();
         double seconds = Skill.applySeconds(spec.seconds(), level, self, mods.useTimeFactor, s);
         boolean fromHand = part == null;
+        // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
+        Minigames.Type mg = MinigameService.minigameFor(actor, target, m,
+                Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
+        if (mg != null) {
+            final BodyPart part0 = p;
+            final ItemStack copy = stack.copy();
+            TreatmentTimedAction probe = new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand);
+            MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), q -> {
+                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand).withQuality(q);
+                return new TreatmentTimedAction(actor, target, part0, spec, slot, copy,
+                        (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor);
+            }, probe::checkItem);
+            return true;
+        }
         ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand));
         return true;
     }
@@ -165,6 +182,15 @@ public final class TreatmentService {
         int level = Medical.medicineLevel(actor);
         GameplayEffects.Mods mods = Medical.data(actor) != null ? Medical.data(actor).lastMods : new GameplayEffects.Mods();
         double sec = Skill.applySeconds(seconds, level, actor == target, mods.useTimeFactor, s);
+        Minigames.Type mg = MinigameService.minigameFor(actor, target, m, Minigames.typeFor(action, null));
+        if (mg != null) {
+            MinigameService.start(actor, target, mg, level, minLevel, "rpmedicine.action." + action.id, q -> {
+                if (q >= 0) return new HandTimedAction(actor, target, part, action, 1, level, minLevel).withQuality(q);
+                return new HandTimedAction(actor, target, part, action, (int) Math.round(sec * 20 * s.minigameRefuseTimeFactor), level, minLevel)
+                        .withErrorFactor(s.minigameRefuseErrorFactor);
+            }, () -> actor.getMainHandItem().isEmpty() ? null : "rpmedicine.action.item_changed");
+            return;
+        }
         ActionManager.start(new HandTimedAction(actor, target, part, action, (int) Math.round(sec * 20), level, minLevel));
     }
 
@@ -174,6 +200,20 @@ public final class TreatmentService {
         private final TreatmentAction action;
         private final int level;
         private final int minLevel;
+
+        /** Качество мини-игры (−1 — прогресс-бар) и множитель ошибки (отказ от мини-игры). */
+        private double quality = -1;
+        private double errorFactor = 1;
+
+        HandTimedAction withQuality(double q) {
+            this.quality = q;
+            return this;
+        }
+
+        HandTimedAction withErrorFactor(double f) {
+            this.errorFactor = f;
+            return this;
+        }
 
         HandTimedAction(ServerPlayer actor, LivingEntity target, BodyPart part, TreatmentAction action, int ticks, int level, int minLevel) {
             super(actor, ticks);
@@ -207,8 +247,9 @@ public final class TreatmentService {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
                 return;
             }
-            boolean error = RANDOM.nextDouble() < Skill.errorChance(level, minLevel, s);
-            Treatments.Result r = Treatments.apply(m, part, action, error, RANDOM.split(), s);
+            boolean error = quality >= 0 ? Minigames.failed(quality, s)
+                    : RANDOM.nextDouble() < Math.min(s.maxErrorChance, Skill.errorChance(level, minLevel, s) * errorFactor);
+            Treatments.Result r = Treatments.apply(m, part, action, error, RANDOM.split(), s, null, quality >= 0 ? quality : 1.0);
             Medical.changed(target);
             if (action == TreatmentAction.REDUCE && r.key.equals("reduction_fracture"))
                 target.level().playSound(null, target.getX(), target.getY(), target.getZ(), ModSounds.BONE_BREAK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -227,6 +268,28 @@ public final class TreatmentService {
         private final boolean fromHand;
         /** Где стоял пациент в начале (забор крови и капельница — стоять на месте). */
         private final net.minecraft.world.phys.Vec3 startPos;
+
+        /** Качество мини-игры (−1 — прогресс-бар) и множитель ошибки (отказ от мини-игры). */
+        private double quality = -1;
+        private double errorFactor = 1;
+
+        TreatmentTimedAction withQuality(double q) {
+            this.quality = q;
+            return this;
+        }
+
+        TreatmentTimedAction withErrorFactor(double f) {
+            this.errorFactor = f;
+            return this;
+        }
+
+        /** Предмет на месте (для мини-игры, пока идёт). */
+        String checkItem() {
+            ItemStack now = actor.getInventory().getItem(slot);
+            if (!ItemStack.isSameItem(now, original)) return "rpmedicine.action.item_changed";
+            if (fromHand && slot < 9 && actor.getInventory().selected != slot) return "rpmedicine.action.item_changed";
+            return actorRefusal(actor, target);
+        }
 
         TreatmentTimedAction(ServerPlayer actor, LivingEntity target, BodyPart part, ItemRules.Spec spec, int slot, ItemStack original, int ticks, int level, boolean fromHand) {
             super(actor, ticks);
@@ -284,9 +347,10 @@ public final class TreatmentService {
                     return;
                 }
             } else {
-                error = !spec.action().isInstrument() && RANDOM.nextDouble() < Skill.errorChance(level, spec.minLevel(), s);
+                error = quality >= 0 ? Minigames.failed(quality, s)
+                        : !spec.action().isInstrument() && RANDOM.nextDouble() < Math.min(s.maxErrorChance, Skill.errorChance(level, spec.minLevel(), s) * errorFactor);
             }
-            Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra);
+            Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra, quality >= 0 ? quality : 1.0);
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) LabService.giveSample(actor, target);

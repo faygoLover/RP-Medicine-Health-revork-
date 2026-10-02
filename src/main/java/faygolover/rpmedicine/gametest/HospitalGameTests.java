@@ -299,6 +299,58 @@ public final class HospitalGameTests {
         });
     }
 
+    /** Мини-игра вне боя: качество из ответа клиента, слишком быстрый ответ — провал, отказ — прогресс-бар; в бою — сразу прогресс-бар. */
+    @GameTest(template = T, batch = "minigames", timeoutTicks = 600)
+    public static void minigameOutsideCombat(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        MedicalSettings.get().minigamesEnabled = true;
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        MedicalState m = state(patient);
+        var w = new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.CUT, 20);
+        m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.add(w);
+        var inv = medic.getInventory();
+        inv.selected = 0;
+        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BANDAGE.get(), 4));
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+        int session = faygolover.rpmedicine.server.MinigameService.currentSession(medic);
+        h.assertTrue(session > 0, "вне боя — мини-игра");
+        // Ответ мгновенно — подделка: провал (повязка плохая).
+        faygolover.rpmedicine.server.MinigameService.onResult(medic, session, 1f);
+        h.runAfterDelay(3, () -> {
+            h.assertTrue(w.isDressed() && w.dressingQuality < 0.75, "слишком быстрый ответ — ошибка, качество " + w.dressingQuality);
+            w.removeDressing();
+            faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+            int s2 = faygolover.rpmedicine.server.MinigameService.currentSession(medic);
+            h.assertTrue(s2 > 0, "вторая мини-игра началась: действие " + faygolover.rpmedicine.server.ActionManager.current(medic)
+                    + ", повязка " + w.dressing + ", бинтов " + inv.getItem(0));
+            h.runAfterDelay(50, () -> {
+                h.assertTrue(faygolover.rpmedicine.server.MinigameService.currentSession(medic) == s2,
+                        "мини-игра ещё идёт, сейчас " + faygolover.rpmedicine.server.ActionManager.current(medic));
+                faygolover.rpmedicine.server.MinigameService.onResult(medic, s2, 0.9f);
+                h.runAfterDelay(3, () -> {
+                    h.assertTrue(w.isDressed() && w.dressingQuality > 0.9, "хорошая мини-игра — хорошая повязка, " + w.dressingQuality);
+                    w.removeDressing();
+                    faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+                    int s3 = faygolover.rpmedicine.server.MinigameService.currentSession(medic);
+                    faygolover.rpmedicine.server.MinigameService.onResult(medic, s3, -1f);
+                    h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) != null
+                            && faygolover.rpmedicine.server.MinigameService.currentSession(medic) < 0, "отказ — прогресс-бар");
+                    faygolover.rpmedicine.server.ActionManager.cancel(medic, null);
+                    // Бой: пациента только что ранили — сразу прогресс-бар.
+                    patient.hurt(patient.damageSources().generic(), 1f);
+                    faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
+                    h.assertTrue(faygolover.rpmedicine.server.MinigameService.currentSession(medic) < 0
+                            && faygolover.rpmedicine.server.ActionManager.current(medic) != null, "в бою — прогресс-бар");
+                    MedicalSettings.get().minigamesEnabled = false;
+                    remove(h, medic, patient);
+                    h.succeed();
+                });
+            });
+        });
+    }
+
     /** Капельница идёт на ходу, пока рядом стойка. */
     @GameTest(template = T, timeoutTicks = 200)
     public static void ivStandLetsDripRunWhileMoving(GameTestHelper h) {

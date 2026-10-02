@@ -355,6 +355,28 @@ for k, ru, en in [
  ("rpmedicine.exam.dislocation_foot", "Вывих голеностопа", "Dislocated ankle"),
 ]: t(k, ru, en)
 
+# Мини-игры
+for k, ru, en in [
+ ("rpmedicine.minigame.injection", "укол", "injection"), ("rpmedicine.minigame.vein", "в вену", "into the vein"),
+ ("rpmedicine.minigame.bandage", "перевязка", "bandaging"), ("rpmedicine.minigame.tourniquet", "жгут", "tourniquet"),
+ ("rpmedicine.minigame.tweezers", "пинцет", "tweezers"), ("rpmedicine.minigame.suture", "швы", "sutures"),
+ ("rpmedicine.minigame.reduce", "вправление", "reduction"),
+ ("rpmedicine.minigame.hint_injection", "Нажмите, когда метка в зелёном окне (клик или пробел)", "Click when the marker is in the green window (or Space)"),
+ ("rpmedicine.minigame.hint_vein", "Попадите в вену дважды", "Hit the vein twice"),
+ ("rpmedicine.minigame.hint_reduce", "Резкий рывок — точно в окне", "A sharp jerk — right in the window"),
+ ("rpmedicine.minigame.hint_bandage", "Зажмите кнопку мыши и ровно ведите три круга по зелёной линии", "Hold the mouse button and draw three even circles along the green line"),
+ ("rpmedicine.minigame.hint_tourniquet", "Держите кнопку — затягивать, отпустите — ослабить. 3 с в зелёной зоне", "Hold to tighten, release to loosen. 3 s in the green zone"),
+ ("rpmedicine.minigame.hint_tweezers", "От зелёной точки проведите пинцет по каналу, не задевая стенок", "From the green dot, guide the tweezers along the channel without touching the walls"),
+ ("rpmedicine.minigame.hint_suture", "Кликайте по жёлтым точкам вдоль раны", "Click the yellow points along the wound"),
+ ("rpmedicine.minigame.refuse", "Без мини-игры (дольше)", "Skip (takes longer)"),
+ ("rpmedicine.minigame.hits", "Попаданий: %s / %s", "Hits: %s / %s"),
+ ("rpmedicine.minigame.turns", "Кругов: %s / 3", "Turns: %s / 3"),
+ ("rpmedicine.minigame.hold", "%s / 3 с", "%s / 3 s"),
+ ("rpmedicine.minigame.touches", "Касаний стенок: %s", "Wall touches: %s"),
+ ("rpmedicine.action.minigame", "Лечение…", "Treating…"),
+ ("rpmedicine.action.minigame_timeout", "Слишком долго — бросили", "Took too long — gave up"),
+]: t(k, ru, en)
+
 # Слова показаний приборов: rpmedicine.word.<k>
 W = "rpmedicine.word."
 for k, ru, en in [

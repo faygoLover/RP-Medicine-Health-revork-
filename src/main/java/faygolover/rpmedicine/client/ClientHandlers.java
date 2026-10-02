@@ -11,6 +11,7 @@ import faygolover.rpmedicine.network.HoverInfoPacket;
 import faygolover.rpmedicine.network.ProgressPacket;
 import faygolover.rpmedicine.network.SelfView;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +44,16 @@ public final class ClientHandlers {
         ClientState.hoverLines = p.lines();
     }
 
+    public static void onMinigame(faygolover.rpmedicine.network.MinigameStartPacket p) {
+        Minecraft mc = Minecraft.getInstance();
+        Screen back = mc.screen instanceof faygolover.rpmedicine.client.screen.MinigameScreen ? null : mc.screen;
+        mc.setScreen(new faygolover.rpmedicine.client.screen.MinigameScreen(p, back));
+    }
+
     public static void onProgress(ProgressPacket p) {
+        // Сервер остановил действие, пока шла мини-игра (урон, ушли от пациента) — закрыть её.
+        if (p.totalTicks() == 0 && Minecraft.getInstance().screen instanceof faygolover.rpmedicine.client.screen.MinigameScreen ms)
+            ms.cancelledByServer();
         ClientState.progressLabel = p.labelKey();
         ClientState.progressTotal = p.totalTicks();
         ClientState.progressDone = p.doneTicks();

@@ -258,23 +258,32 @@ public final class Treatments {
         return apply(m, part, a, error, rnd, s, null);
     }
 
-    /** {@code bag} — содержимое пакета для переливания (для остальных действий null). */
     public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s, Extra extra) {
+        return apply(m, part, a, error, rnd, s, extra, 1.0);
+    }
+
+    /**
+     * {@code extra} — содержимое предмета (пакет крови, препарат, инструмент); {@code quality} — качество
+     * мини-игры 0–1 (прогресс-бар — 1): повязка держит лучше, швы крепче, меньше боль.
+     */
+    public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s,
+                               Extra extra, double quality) {
+        double q = Physiology.clamp(quality, 0, 1);
         if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
             return extra instanceof Drug d ? Drugs.apply(m, part, d, error, rnd, s) : Result.failed("no_effect");
         Bag bag = extra instanceof Bag b ? b : null;
         BodyPartState ps = m.part(part);
         switch (a) {
             case BANDAGE -> {
-                dress(ps, Dressing.BANDAGE, error, s);
+                dress(ps, Dressing.BANDAGE, error, q, s);
                 return error ? Result.failed("dressing_poor") : Result.ok("bandaged");
             }
             case PRESSURE_DRESSING -> {
-                dress(ps, Dressing.PRESSURE, error, s);
+                dress(ps, Dressing.PRESSURE, error, q, s);
                 return error ? Result.failed("dressing_poor") : Result.ok("pressure_applied");
             }
             case HEMOSTATIC -> {
-                dress(ps, Dressing.HEMOSTATIC, error, s);
+                dress(ps, Dressing.HEMOSTATIC, error, q, s);
                 if (!error && ps.arterial) ps.arterial = false;
                 return error ? Result.failed("dressing_poor") : Result.ok("hemostatic_applied");
             }
@@ -422,7 +431,7 @@ public final class Treatments {
                 return Result.ok("sample_taken");
             }
             case REDUCE -> {
-                procedurePain(m, s.reductionPain, s.reductionPainSeconds, s);
+                procedurePain(m, s.reductionPain * (1.3 - 0.3 * q), s.reductionPainSeconds, s);
                 if (error) {
                     if (rnd.nextDouble() < s.reductionFractureChance) {
                         ps.dislocated = false;
@@ -436,7 +445,7 @@ public final class Treatments {
                 return Result.ok("reduced");
             }
             case TWEEZERS -> {
-                procedurePain(m, s.extractionPain, s.extractionPainSeconds, s);
+                procedurePain(m, s.extractionPain * (1.3 - 0.3 * q), s.extractionPainSeconds, s);
                 boolean sterile = !(extra instanceof Instrument i) || i.sterile();
                 if (!sterile) {
                     for (Wound w : ps.wounds) {
@@ -461,7 +470,7 @@ public final class Treatments {
                 for (Wound w : ps.wounds) {
                     if (!w.canBeSutured() || w.sutured) continue;
                     w.sutured = true;
-                    w.sutureQuality = error ? 0.4 : 1.0;
+                    w.sutureQuality = error ? 0.4 : 0.6 + 0.4 * q;
                     w.clot = 0;
                 }
                 return error ? Result.failed("suture_weak") : Result.ok("sutured");
@@ -492,13 +501,13 @@ public final class Treatments {
             m.painSpike(pain, seconds);
     }
 
-    private static void dress(BodyPartState ps, Dressing d, boolean error, MedicalSettings s) {
+    private static void dress(BodyPartState ps, Dressing d, boolean error, double quality, MedicalSettings s) {
         for (Wound w : ps.wounds) {
             if (w.type == WoundType.BRUISE) continue;
             // Более сильная повязка заменяет слабую; гемостатик не снимается обычной повязкой.
             if (w.dressing.ordinal() > d.ordinal()) continue;
             w.dressing = d;
-            w.dressingQuality = error ? 0.5 : 1.0;
+            w.dressingQuality = error ? 0.5 : 0.6 + 0.4 * quality;
             w.dressingAge = 0;
             w.bandageBoost = d == Dressing.BANDAGE && !error;
         }

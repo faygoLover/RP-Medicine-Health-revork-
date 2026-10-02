@@ -57,6 +57,26 @@ public final class Medical {
         return m != null && m.isDown();
     }
 
+    /** Отметить урон по пациенту (для правила «в бою — прогресс-бар»). */
+    public static void markHurt(Entity e) {
+        long now = e.level().getGameTime();
+        if (e instanceof Player p) {
+            MedicalData d = MedicalCapability.get(p);
+            if (d != null) d.lastHurtTick = now;
+        } else if (e instanceof BodyStubEntity stub) {
+            stub.lastHurtTick = now;
+        }
+    }
+
+    public static long lastHurtTick(Entity e) {
+        if (e instanceof Player p) {
+            MedicalData d = MedicalCapability.get(p);
+            return d != null ? d.lastHurtTick : Long.MIN_VALUE / 2;
+        }
+        if (e instanceof BodyStubEntity stub) return stub.lastHurtTick;
+        return Long.MIN_VALUE / 2;
+    }
+
     public static int medicineLevel(Player p) {
         return RpPerksCompat.medicineLevel(p);
     }

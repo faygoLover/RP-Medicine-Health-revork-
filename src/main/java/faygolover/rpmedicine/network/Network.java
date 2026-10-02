@@ -37,12 +37,14 @@ public final class Network {
         toClient(EntityDownedPacket.class, EntityDownedPacket::encode, EntityDownedPacket::decode, EntityDownedPacket::handle);
         toClient(HospitalBlocksPacket.class, HospitalBlocksPacket::encode, HospitalBlocksPacket::decode, HospitalBlocksPacket::handle);
         toClient(MonitorPacket.class, MonitorPacket::encode, MonitorPacket::decode, MonitorPacket::handle);
+        toClient(MinigameStartPacket.class, MinigameStartPacket::encode, MinigameStartPacket::decode, MinigameStartPacket::handle);
         // Клиент → сервер
         toServer(RequestExamPacket.class, RequestExamPacket::encode, RequestExamPacket::decode, RequestExamPacket::handle);
         toServer(PanelActionPacket.class, PanelActionPacket::encode, PanelActionPacket::decode, PanelActionPacket::handle);
         toServer(DownedActionPacket.class, DownedActionPacket::encode, DownedActionPacket::decode, DownedActionPacket::handle);
         toServer(HoverRequestPacket.class, HoverRequestPacket::encode, HoverRequestPacket::decode, HoverRequestPacket::handle);
         toServer(MonitorRequestPacket.class, MonitorRequestPacket::encode, MonitorRequestPacket::decode, MonitorRequestPacket::handle);
+        toServer(MinigameResultPacket.class, MinigameResultPacket::encode, MinigameResultPacket::decode, MinigameResultPacket::handle);
     }
 
     private static <T> void toClient(Class<T> type, BiConsumer<T, FriendlyByteBuf> enc, Function<FriendlyByteBuf, T> dec,
