@@ -1,0 +1,50 @@
+package faygolover.rpmedicine.core;
+
+import java.util.Locale;
+import java.util.Optional;
+
+/** Действия лечения (п. 6.2 ТЗ). Предметы из датапака {@code items} ссылаются на них по id. */
+public enum TreatmentAction {
+    BANDAGE("bandage", Target.PART),
+    PRESSURE_DRESSING("pressure_dressing", Target.PART),
+    HEMOSTATIC("hemostatic", Target.PART),
+    TOURNIQUET("tourniquet", Target.PART),
+    ESMARCH("esmarch", Target.PART),
+    SPLINT("splint", Target.PART),
+    OCCLUSIVE("occlusive", Target.PART),
+    NEEDLE("needle", Target.PART),
+    PAINKILLER("painkiller", Target.BODY),
+    MORPHINE("morphine", Target.BODY),
+    ADRENALINE("adrenaline", Target.BODY),
+    TXA("txa", Target.BODY),
+    SURGICAL_KIT("surgical_kit", Target.PART),
+    SALINE("saline", Target.BODY),
+    AMMONIA("ammonia", Target.BODY),
+    AIRWAY("airway", Target.BODY),
+    AMBU("ambu", Target.HOLD),
+    DEFIBRILLATOR("defibrillator", Target.BODY),
+    CPR("cpr", Target.HOLD),
+    PULSE_OXIMETER("pulse_oximeter", Target.BODY),
+    TONOMETER("tonometer", Target.BODY);
+
+    /** Куда применяется: на часть тела, на человека целиком, удержанием. */
+    public enum Target { PART, BODY, HOLD }
+
+    public final String id;
+    public final Target target;
+
+    TreatmentAction(String id, Target target) {
+        this.id = id;
+        this.target = target;
+    }
+
+    public boolean isInstrument() {
+        return this == PULSE_OXIMETER || this == TONOMETER;
+    }
+
+    public static Optional<TreatmentAction> byId(String id) {
+        String s = id.toLowerCase(Locale.ROOT);
+        for (TreatmentAction a : values()) if (a.id.equals(s)) return Optional.of(a);
+        return Optional.empty();
+    }
+}
