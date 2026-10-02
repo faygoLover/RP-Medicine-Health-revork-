@@ -48,6 +48,23 @@ public final class MedicalReports {
                 m.pneumo, m.pneumo == MedicalState.Pneumo.OPEN ? String.format(Locale.ROOT, " (до напряжённого %.0f с)", m.pneumoTimer)
                         : m.pneumo == MedicalState.Pneumo.TENSION ? String.format(Locale.ROOT, " (%.0f%%)", m.tensionProgress * 100) : "",
                 m.airway ? "да" : "нет", m.ambuSeconds, m.cprSeconds, m.heightCm, m.weightKg));
+        // Второй этап: группа, капельницы, температура, сепсис, лекарства.
+        out.add(line("Группа %s, температура %.1f °C, сепсис %.0f%%%s%s",
+                m.bloodType != null ? m.bloodType.label : "не задана", m.bodyTemp, m.sepsis,
+                m.spoiledBloodSeconds > 0 ? ", испорченная кровь" : "",
+                m.transfusionReactionSeconds > 0 ? String.format(Locale.ROOT, ", РЕАКЦИЯ на кровь %.0f с", m.transfusionReactionSeconds) : ""));
+        if (m.bloodDripRemaining > 0)
+            out.add(line("Переливание: осталось %.0f мл, группа пакета %s%s", m.bloodDripRemaining,
+                    m.bloodDripType != null ? m.bloodDripType.label : "?", m.bloodDripSpoiled ? ", испорчен" : ""));
+        if (!m.effects.isEmpty()) {
+            StringBuilder eb = new StringBuilder("Лекарства:");
+            for (var e : m.effects.entrySet()) {
+                var a = e.getValue();
+                eb.append(String.format(Locale.ROOT, " %s %.2f (%s%.0f с)", e.getKey().id, a.strength,
+                        a.delay > 0 ? String.format(Locale.ROOT, "через %.0f с, ", a.delay) : "", a.seconds));
+            }
+            out.add(line("%s", eb));
+        }
         if (m.down == MedicalState.Down.KNOCKDOWN && Physiology.lifeThreat(m, s) && !m.knockdownNoTimer) {
             double rate = Physiology.knockdownBrainRate(m, s, Medical.traits(target));
             out.add(line("Нокдаун: осталось ~%.0f с", m.brain / Math.max(1e-6, rate)));
@@ -58,8 +75,8 @@ public final class MedicalReports {
             StringBuilder sb = new StringBuilder();
             sb.append(String.format(Locale.ROOT, ": целостность %.0f", ps.integrity()));
             for (Wound w : ps.wounds) {
-                sb.append(String.format(Locale.ROOT, "; %s %.1f (кровь %.0f мл/мин%s)", w.type.id, w.severity, w.bleed(s),
-                        w.isDressed() ? ", " + w.dressing.id + (w.dressingQuality < 1 ? " плохо" : "") : ""));
+                sb.append(String.format(Locale.ROOT, "; %s %.1f (кровь %.0f мл/мин%s%s)", w.type.id, w.severity, w.bleed(s),
+                        w.isDressed() ? ", " + w.dressing.id + (w.dressingQuality < 1 ? " плохо" : "") : "", infection(w)));
             }
             if (ps.hasFracture()) sb.append("; перелом ").append(ps.fracture).append(ps.splint ? " (шина)" : "")
                     .append(String.format(Locale.ROOT, " %.0f%%", ps.fractureHeal * 100));
@@ -73,6 +90,14 @@ public final class MedicalReports {
             out.add(c.append(Component.literal(sb.toString()).withStyle(ChatFormatting.WHITE)));
         }
         return out;
+    }
+
+    private static String infection(Wound w) {
+        return switch (w.infectionStage) {
+            case PENDING -> String.format(Locale.ROOT, ", проверка заражения через %.0f мин", w.infectionTimer / 60);
+            case INFECTED -> String.format(Locale.ROOT, ", ИНФЕКЦИЯ %.0f%% / иммунитет %.0f%%", w.infection, w.immuneProgress);
+            default -> "";
+        };
     }
 
     private static Component line(String fmt, Object... args) {

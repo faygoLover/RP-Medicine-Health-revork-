@@ -96,6 +96,8 @@ public final class Examination {
                 out.add(new Line("wound_typed_severity", new int[]{w.type.ordinal(), severityWord(w.severity)}));
             }
             if (w.type == WoundType.BURN && lvl >= 1) out.add(new Line("burn_degree", new int[]{w.burnDegree(s)}));
+            // Признаки инфекции раны — с уровня 4 (второй этап, п. 3).
+            if (w.isInfected() && lvl >= 4) out.add(new Line(w.infection >= 60 ? "wound_pus" : "wound_inflamed"));
             if (w.isDressed()) out.add(new Line("dressing_" + w.dressing.id));
         }
         double bleed = Physiology.partExternalBleed(m, ps, s);
@@ -159,6 +161,13 @@ public final class Examination {
             if (m.heart != Heart.NORMAL || m.pressure < 50) out.add(new Line("pulse_none"));
             else out.add(new Line("pulse", new int[]{rateWord(m.heartRate, 55, 100), m.pressure < 85 ? 1 : 0}));
         }
+        // Капельница видна всем; жар на ощупь — с уровня 4 (второй этап).
+        if (m.bloodDripRemaining > 0) out.add(new Line("drip_blood"));
+        if (m.salineDripRemaining > 0) out.add(new Line("drip_saline"));
+        if (!self && lvl >= 4) {
+            if (m.bodyTemp >= 37.8) out.add(new Line("feels_hot"));
+            else if (m.bodyTemp <= 35.5) out.add(new Line("feels_cold"));
+        }
         // Жалобы — только от того, кто в сознании (и свои ощущения).
         if (m.down == Down.NONE) {
             for (String k : complaints(m, s)) out.add(new Line("complaint_" + k));
@@ -198,7 +207,9 @@ public final class Examination {
         if (m.concussion > 30 || m.part(BodyPart.ABDOMEN).internalBleed > 0) c.add("nausea");
         if (m.concussion > 20) c.add("ringing");
         if (m.heartRate > 115) c.add("heart_pounding");
-        if (m.postClinicalSeconds > 0 || loss >= 0.3) c.add("weak");
+        if (m.postClinicalSeconds > 0 || loss >= 0.3 || m.sepsis >= 30) c.add("weak");
+        if (m.bodyTemp >= 37.8) c.add("fever");
+        if (m.transfusionReactionSeconds > 0) c.add("back_pain");
         return c;
     }
 }

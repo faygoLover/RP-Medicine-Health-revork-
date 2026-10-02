@@ -21,6 +21,8 @@
     "rpmedicine:defibrillator",
     "rpmedicine:pulse_oximeter",
     "rpmedicine:tonometer",
+    "rpmedicine:empty_blood_bag",
+    "rpmedicine:blood_bag",
     {
       "id": "medicamod:adrenalin",
       "required": false

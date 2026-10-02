@@ -22,6 +22,11 @@ public final class StepInput {
     public double healFactor = 1.0;
     public double bloodRegenFactor = 1.0;
     public double brainRecoveryFactor = 1.0;
+    /** Множители условий для инфекции: шанс заражения ран и сила иммунитета (койка). */
+    public double infectionRiskFactor = 1.0;
+    public double immunityFactor = 1.0;
+    /** Сдвиг температуры тела от среды (переохлаждение, перегрев из LSO), °C. */
+    public double ambientTempShift;
     public RandomGenerator random = new java.util.SplittableRandom();
 
     public StepInput() {}

@@ -43,6 +43,9 @@ public final class Treatments {
         }
     }
 
+    /** Содержимое пакета крови для переливания: группа (null — не подписан), объём, испорчен ли. */
+    public record Bag(BloodType type, double volume, boolean spoiled) {}
+
     // ------------------------------------------------------------------ проверка «лечение нужно»
 
     /** null — лечение нужно; иначе ключ причины ({@code rpmedicine.refuse.<key>}). */
@@ -133,6 +136,16 @@ public final class Treatments {
             case PULSE_OXIMETER, TONOMETER -> {
                 return null;
             }
+            case BLOOD_BAG -> {
+                if (m.bloodDripRemaining > 0 || m.salineDripRemaining > 0) return "already_dripping";
+                if (m.bloodVolume - m.saline >= m.normalBlood(s) * 0.97) return "volume_ok";
+                return null;
+            }
+            case BLOOD_COLLECT -> {
+                if (m.bloodDripRemaining > 0) return "already_dripping";
+                if (m.bloodFraction(s) < 1 - s.donationMaxLossFraction || m.isDown()) return "donor_low";
+                return null;
+            }
         }
         return null;
     }
@@ -193,6 +206,11 @@ public final class Treatments {
      * предмет потрачен, эффект слабее.
      */
     public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s) {
+        return apply(m, part, a, error, rnd, s, null);
+    }
+
+    /** {@code bag} — содержимое пакета для переливания (для остальных действий null). */
+    public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s, Bag bag) {
         BodyPartState ps = m.part(part);
         switch (a) {
             case BANDAGE -> {
@@ -319,6 +337,24 @@ public final class Treatments {
                 double sys = Math.round(m.pressure);
                 double dia = Math.round(m.pressure * 0.65);
                 return Result.okKeep("tonometer", sys, dia);
+            }
+            case BLOOD_BAG -> {
+                if (bag == null) return Result.failed("no_effect");
+                // Промах мимо вены: половина пакета уходит под кожу.
+                double vol = bag.volume() * (error ? 0.5 : 1.0);
+                m.bloodDripRemaining = vol;
+                m.bloodDripRate = vol / Math.max(1, s.transfusionSeconds);
+                m.bloodDripType = bag.type();
+                m.bloodDripSpoiled = bag.spoiled();
+                return error ? Result.failed("transfusion_infiltrated") : Result.ok("transfusion_started");
+            }
+            case BLOOD_COLLECT -> {
+                if (error) return Result.failed("collect_failed");
+                double take = Math.min(s.bloodBagVolume, m.bloodVolume);
+                double frac = m.bloodVolume > 0 ? m.saline / m.bloodVolume : 0;
+                m.bloodVolume -= take;
+                m.saline = Math.max(0, m.saline - take * frac);
+                return Result.ok("blood_collected");
             }
         }
         return Result.failed("no_effect");

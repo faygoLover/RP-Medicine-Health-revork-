@@ -34,6 +34,8 @@ public final class BodyPartState {
     /** Инородные тела внутри: пули и осколки. */
     public int bullets;
     public int fragments;
+    /** Сколько секунд в сети инородные тела внутри (второй этап: долго внутри — выше шанс заражения). */
+    public double foreignBodySeconds;
 
     /** Артериальное кровотечение. Останавливается жгутом или тампонадой гемостатиком. */
     public boolean arterial;
@@ -95,6 +97,7 @@ public final class BodyPartState {
         fractureHeal = 0;
         bullets = 0;
         fragments = 0;
+        foreignBodySeconds = 0;
         arterial = false;
         internalBleed = 0;
         tourniquet = Tourniquet.NONE;
@@ -112,6 +115,7 @@ public final class BodyPartState {
         fractureHeal = o.fractureHeal;
         bullets = o.bullets;
         fragments = o.fragments;
+        foreignBodySeconds = o.foreignBodySeconds;
         arterial = o.arterial;
         internalBleed = o.internalBleed;
         tourniquet = o.tourniquet;

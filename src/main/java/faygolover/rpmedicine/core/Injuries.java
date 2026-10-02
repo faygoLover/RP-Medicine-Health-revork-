@@ -21,6 +21,8 @@ public final class Injuries {
 
     public static final class Report {
         public final EnumSet<Outcome> outcomes = EnumSet.noneOf(Outcome.class);
+        /** Раны, в которые попал урон (для условий ранения: грязная вода и т.п.). */
+        public final List<Wound> wounds = new ArrayList<>();
         public final List<BodyPart> parts = new ArrayList<>();
         public double totalSeverity;
 
@@ -32,6 +34,7 @@ public final class Injuries {
             outcomes.addAll(o.outcomes);
             for (BodyPart p : o.parts) if (!parts.contains(p)) parts.add(p);
             totalSeverity += o.totalSeverity;
+            for (Wound w : o.wounds) if (!wounds.contains(w)) wounds.add(w);
         }
     }
 
@@ -49,6 +52,7 @@ public final class Injuries {
                 w.severity = Wound.clampSeverity(w.severity + severity);
                 w.peakSeverity = w.severity;
                 w.clot = 0;
+                recontaminate(w);
                 return w;
             }
         }
@@ -67,7 +71,13 @@ public final class Injuries {
         target.peakSeverity = target.severity;
         target.clot = 0;
         if (target.dressing != Dressing.HEMOSTATIC) target.removeDressing();
+        recontaminate(target);
         return target;
+    }
+
+    /** Новый урон по чистой ране — её снова проверят на заражение. */
+    private static void recontaminate(Wound w) {
+        if (w.infectionStage == Wound.Infection.CLEAN) w.infectionStage = Wound.Infection.NEW;
     }
 
     /**
@@ -91,7 +101,8 @@ public final class Injuries {
                 rep.outcomes.add(Outcome.DRESSING_REOPENED);
             }
         }
-        mergeWound(ps, prof.wound, sev, s);
+        Wound hit = mergeWound(ps, prof.wound, sev, s);
+        if (hit != null) rep.wounds.add(hit);
         rep.outcomes.add(Outcome.WOUND);
 
         // Перелом: рёбра в груди, кости рук, ног, стоп.

@@ -20,6 +20,26 @@ public final class Wound {
     /** Бинт ускоряет заживление. */
     public boolean bandageBoost;
 
+    // ---------------- Инфекция (второй этап, п. 5) ----------------
+    /** Стадия: новая (проверка не назначена), ждёт проверки, чистая, заражена. Порядок — в сохранении. */
+    public enum Infection {
+        NEW, PENDING, CLEAN, INFECTED;
+
+        public static Infection byOrdinal(int i) {
+            return i >= 0 && i < values().length ? values()[i] : NEW;
+        }
+    }
+
+    public Infection infectionStage = Infection.NEW;
+    /** Секунд в сети до проверки на заражение. */
+    public double infectionTimer;
+    /** Инфекция в ране 0–100. */
+    public double infection;
+    /** Ответ иммунитета на эту рану 0–100: дошёл до 100 раньше инфекции — рана очистилась. */
+    public double immuneProgress;
+    /** Множитель шанса заражения: антисептик, грязная вода, нестерильный инструмент. */
+    public double infectionRisk = 1.0;
+
     public Wound(WoundType type, double severity) {
         this.type = type;
         this.severity = clampSeverity(severity);
@@ -48,7 +68,13 @@ public final class Wound {
     }
 
     public double pain(MedicalSettings s) {
-        return Math.min(100.0, s.painPer(type) * severity);
+        double p = s.painPer(type) * severity;
+        if (isInfected()) p += s.infectionPain;
+        return Math.min(100.0, p);
+    }
+
+    public boolean isInfected() {
+        return infectionStage == Infection.INFECTED;
     }
 
     public boolean isDressed() {
@@ -82,6 +108,11 @@ public final class Wound {
         w.dressingAge = dressingAge;
         w.clot = clot;
         w.bandageBoost = bandageBoost;
+        w.infectionStage = infectionStage;
+        w.infectionTimer = infectionTimer;
+        w.infection = infection;
+        w.immuneProgress = immuneProgress;
+        w.infectionRisk = infectionRisk;
         return w;
     }
 }

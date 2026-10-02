@@ -53,6 +53,7 @@ public final class ServerConfig {
     // Госпиталь
     public static final ForgeConfigSpec.IntValue MONITOR_MIN_LEVEL;
     public static final ForgeConfigSpec.DoubleValue MONITOR_VIEW_DISTANCE;
+    public static final ForgeConfigSpec.BooleanValue RANDOM_BLOOD_TYPE;
 
     static {
         B.comment("RP Medicine — серверный конфиг. Все значения по умолчанию — из ТЗ первого этапа.").push("general");
@@ -267,6 +268,64 @@ public final class ServerConfig {
         bind("monitorAlarmSpo2", "Монитор звучит тревогой при SpO2 ниже (и при остановке сердца).");
         MONITOR_MIN_LEVEL = B.comment("Цифры монитора видит тот, у кого уровень «Медицины» не ниже (0 — все).").defineInRange("monitor_min_level", 0, 0, 10);
         MONITOR_VIEW_DISTANCE = B.comment("Цифры монитора видны с расстояния до, блоки.").defineInRange("monitor_view_distance", 6.0, 1.0, 32.0);
+        B.pop();
+
+        B.comment("Кровь: группы, забор, переливание (второй этап, п. 4).").push("blood_transfusion");
+        bindArray("bloodTypeWeights", "Распределение групп крови при первом входе: O−, O+, A−, A+, B−, B+, AB−, AB+ (веса).");
+        RANDOM_BLOOD_TYPE = B.comment("Группа крови задаётся случайно при первом входе (иначе — «не задана», пока ГМ не впишет командой).").define("random_blood_type", true);
+        bind("bloodBagVolume", "Объём пакета крови, мл.");
+        bind("transfusionSeconds", "Пакет крови капает столько секунд.");
+        bind("donationMaxLossFraction", "Брать кровь можно, пока донор потерял не больше этой доли.");
+        bind("transfusionReactionMinMinutes", "Реакция на несовместимую кровь длится после остановки капельницы не меньше, минуты.");
+        bind("transfusionReactionMaxMinutes", "… и не больше, минуты.");
+        bind("transfusionReactionFever", "Реакция: лихорадка, °C.");
+        bind("transfusionReactionPain", "Реакция: боль в спине и груди.");
+        bind("transfusionReactionPressureDrop", "Реакция: падение давления.");
+        bind("transfusionReactionArrestChance", "Реакция: шанс фибрилляции в начале.");
+        bind("bloodSpoilWarmHours", "Пакет вне холодильника портится за столько часов работы сервера.");
+        bind("bloodSpoilFridgeDays", "Пакет в холодильнике портится за столько дней работы сервера.");
+        B.pop();
+
+        B.comment("Инфекция ран, иммунитет, сепсис (второй этап, п. 5). Время — в сети.").push("infection");
+        bind("infectionEnabled", "Инфекция ран включена.");
+        bindMap("infectionChance", "Шанс заражения раны");
+        bind("infectionCheckMinMinutes", "Рана проверяется на заражение не раньше, минуты после ранения.");
+        bind("infectionCheckMaxMinutes", "… и не позже, минуты.");
+        bind("dressingInfectionReduction", "Повязка снижает шанс заражения: ×(1 − это × качество повязки).");
+        bind("antisepticInfectionFactor", "Антисептик: множитель шанса заражения.");
+        bind("dirtyWaterInfectionFactor", "Ранен в воде: множитель шанса заражения.");
+        bind("nonSterileInfectionFactor", "Нестерильный инструмент: множитель шанса заражения.");
+        bind("bedInfectionFactor", "Больничная койка: множитель шанса заражения.");
+        bind("foreignBodyInfectionHours", "Пуля или осколок внутри дольше стольких часов — повторная проверка раны.");
+        bind("foreignBodyInfectionFactor", "… с таким множителем шанса.");
+        bind("infectionGrowthPerHour", "Рост инфекции в ране, % в час.");
+        bind("immuneGrowthPerHour", "Ответ иммунитета на рану, % в час (кто первым дойдёт до 100).");
+        bind("infectionPain", "Заражённая рана болит сильнее на.");
+        bind("immunityBloodLossFraction", "Иммунитет слабее при потере крови больше этой доли…");
+        bind("immunityBloodLossFactor", "… во столько раз.");
+        bind("immunityHungerFactor", "Иммунитет при голоде и жажде: множитель.");
+        bind("immunitySepsisFactor", "Иммунитет при сепсисе от 30 %: множитель.");
+        bind("immunityBedFactor", "Иммунитет на больничной койке: множитель.");
+        bind("sepsisPerHourPerSource", "Сепсис растёт от каждой раны с инфекцией 100 %, % в час.");
+        bind("spoiledBloodSepsis", "Испорченная кровь: сепсис сразу, %.");
+        bind("spoiledBloodSepsisPerHour", "Испорченная кровь: рост сепсиса, % в час…");
+        bind("spoiledBloodSepsisHours", "… в течение стольких часов.");
+        bind("sepsisAntibioticDeclinePerHour", "Сепсис спадает под антибиотиком силы 10, % в час.");
+        bind("sepsisNaturalDeclinePerHour", "Лёгкий сепсис (ниже 30 %) без источника и антибиотика спадает сам, % в час. Тяжёлый — только под антибиотиком.");
+        bind("sepsisPressureDrop30", "Сепсис от 30 %: давление ниже на.");
+        bind("sepsisPressureDrop60", "Сепсис от 60 %: давление ниже на.");
+        bind("sepsisConsciousnessLimit", "Сепсис от 30 %: сознание не выше.");
+        bind("sepsisSpo2Penalty", "Сепсис от 60 %: потолок SpO2 ниже на.");
+        bind("sepsisFibrillationPerHour", "Сепсис от 60 %: шанс фибрилляции в час.");
+        B.pop();
+
+        B.comment("Температура тела (второй этап, п. 5.4).").push("body_temperature");
+        bind("normalBodyTemp", "Нормальная температура тела, °C.");
+        bind("bodyTempChangePerMinute", "Температура меняется не быстрее, °C в минуту.");
+        bind("localInfectionFever", "Лихорадка от заражённой раны (при инфекции 100 %), °C.");
+        bind("sepsisFeverMin", "Лихорадка при сепсисе 10 %, °C над нормой.");
+        bind("sepsisFeverMax", "Лихорадка при сепсисе 100 %, °C над нормой.");
+        bind("feverHeartRatePerDegree", "Пульс чаще на столько за каждый градус выше 37.");
         B.pop();
 
         SPEC = B.build();

@@ -105,6 +105,25 @@ public final class MedicalState {
     /** Чужое лечение (зелья, другие моды): секунды ускоренного заживления. */
     public double healBoostSeconds;
 
+    // Второй этап: инфекция, температура, лекарства
+    /** Сепсис 0–100. */
+    public double sepsis;
+    /** Температура тела, °C. */
+    public double bodyTemp;
+    /** Испорченная кровь: сколько ещё секунд она питает сепсис. */
+    public double spoiledBloodSeconds;
+    /** Группа крови (null — не задана). Как рост и вес, переживает смерть. */
+    public BloodType bloodType;
+    /** Переливание крови: осталось влить, мл, и скорость, мл/с; группа и годность пакета. */
+    public double bloodDripRemaining;
+    public double bloodDripRate;
+    public BloodType bloodDripType;
+    public boolean bloodDripSpoiled;
+    /** Реакция на несовместимую кровь: осталось секунд. */
+    public double transfusionReactionSeconds;
+    /** Действующие эффекты лекарств из датапака. */
+    public final java.util.EnumMap<DrugEffect, DrugEffect.Active> effects = new java.util.EnumMap<>(DrugEffect.class);
+
     public MedicalState() {
         for (BodyPart p : BodyPart.VALUES) parts[p.ordinal()] = new BodyPartState(p);
         reset(MedicalSettings.get());
@@ -180,6 +199,15 @@ public final class MedicalState {
         wakeSeconds = -1;
         knockdownNoTimer = false;
         healBoostSeconds = 0;
+        sepsis = 0;
+        bodyTemp = s.normalBodyTemp;
+        spoiledBloodSeconds = 0;
+        bloodDripRemaining = 0;
+        bloodDripRate = 0;
+        bloodDripType = null;
+        bloodDripSpoiled = false;
+        transfusionReactionSeconds = 0;
+        effects.clear();
     }
 
     /** Лечение части или всего тела командой ГМа: убирает травмы, но не сбрасывает лекарства. */
@@ -213,6 +241,8 @@ public final class MedicalState {
         if (adrenalineSeconds > 0 || adrenalineInjectionSeconds > 0 || painkillerSeconds > 0 || morphineSeconds > 0
                 || morphineOverdoseSeconds > 0 || txaSeconds > 0 || ambuSeconds > 0 || cprSeconds > 0) return false;
         if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
+        if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
+        if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
         return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
                 && Math.abs(respRate - s.normalRespRate) < 0.5 && Math.abs(spo2 - s.spo2Normal) < 0.5
                 && consciousness >= 99.5;
@@ -286,5 +316,44 @@ public final class MedicalState {
         wakeSeconds = o.wakeSeconds;
         knockdownNoTimer = o.knockdownNoTimer;
         healBoostSeconds = o.healBoostSeconds;
+        sepsis = o.sepsis;
+        bodyTemp = o.bodyTemp;
+        spoiledBloodSeconds = o.spoiledBloodSeconds;
+        bloodType = o.bloodType;
+        bloodDripRemaining = o.bloodDripRemaining;
+        bloodDripRate = o.bloodDripRate;
+        bloodDripType = o.bloodDripType;
+        bloodDripSpoiled = o.bloodDripSpoiled;
+        transfusionReactionSeconds = o.transfusionReactionSeconds;
+        effects.clear();
+        for (var e : o.effects.entrySet()) effects.put(e.getKey(), e.getValue().copy());
+    }
+
+    // ------------------------------------------------------------------ лекарства
+
+    /** Действующая сила эффекта (0, если не действует или ещё не начал). */
+    public double effect(DrugEffect e) {
+        DrugEffect.Active a = effects.get(e);
+        return a != null && a.working() ? a.strength : 0;
+    }
+
+    public boolean hasEffect(DrugEffect e) {
+        DrugEffect.Active a = effects.get(e);
+        return a != null && a.seconds > 0;
+    }
+
+    /**
+     * Добавить эффект дозы: одинаковые эффекты не складываются по силе, а продлеваются по времени
+     * (Casualties Unknown); сила — наибольшая из доз.
+     */
+    public void addEffect(DrugEffect e, double strength, double delay, double seconds) {
+        DrugEffect.Active a = effects.get(e);
+        if (a == null || a.seconds <= 0) {
+            effects.put(e, new DrugEffect.Active(strength, delay, seconds));
+            return;
+        }
+        a.seconds += seconds;
+        if (Math.abs(strength) > Math.abs(a.strength)) a.strength = strength;
+        a.delay = Math.min(a.delay, delay);
     }
 }

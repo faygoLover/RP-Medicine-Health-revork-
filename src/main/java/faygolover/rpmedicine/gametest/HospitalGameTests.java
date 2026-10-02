@@ -141,6 +141,53 @@ public final class HospitalGameTests {
         });
     }
 
+    /** Забор крови у донора: пакет подписан его группой; переливание; порча вне холодильника. */
+    @GameTest(template = T, timeoutTicks = 2400)
+    public static void bloodDonationAndTransfusion(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        ServerPlayer medic = player(h, 3.5, 3.5);
+        ServerPlayer donor = player(h, 2.5, 3.5);
+        ServerPlayer patient = player(h, 4.5, 3.5);
+        state(donor).bloodType = faygolover.rpmedicine.core.BloodType.A_POS;
+        state(patient).bloodType = faygolover.rpmedicine.core.BloodType.O_POS;
+        state(patient).bloodVolume = 3500;
+        double donorBefore = state(donor).bloodVolume;
+        medic.getInventory().selected = 0;
+        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.EMPTY_BLOOD_BAG.get(), 2));
+        h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, donor, 0, null), "забор начался");
+        h.runAfterDelay(1150, () -> {
+            h.assertTrue(state(donor).bloodVolume <= donorBefore - 449, "у донора взяли 450 мл");
+            int slot = -1;
+            for (int i = 0; i < medic.getInventory().getContainerSize(); i++)
+                if (medic.getInventory().getItem(i).is(faygolover.rpmedicine.registry.ModItems.BLOOD_BAG.get())) slot = i;
+            h.assertTrue(slot >= 0, "у медика полный пакет");
+            var bag = medic.getInventory().getItem(slot);
+            h.assertTrue(faygolover.rpmedicine.item.BloodBagItem.type(bag) == faygolover.rpmedicine.core.BloodType.A_POS, "пакет подписан группой донора");
+            long now = h.getLevel().getGameTime();
+            h.assertTrue(!faygolover.rpmedicine.item.BloodBagItem.isSpoiled(bag, now), "свежий");
+            h.assertTrue(faygolover.rpmedicine.item.BloodBagItem.isSpoiled(bag, now + 3 * 72000), "вне холодильника за 3 часа испортился");
+            var cold = bag.copy();
+            faygolover.rpmedicine.item.BloodBagItem.setCold(cold, true, now);
+            h.assertTrue(!faygolover.rpmedicine.item.BloodBagItem.isSpoiled(cold, now + 3 * 72000), "в холодильнике за 3 часа цел");
+            h.assertTrue(faygolover.rpmedicine.item.BloodBagItem.isSpoiled(cold, now + 8L * 24 * 72000), "за 8 дней испортился и в холодильнике");
+            // Переливание несовместимой крови (A+ → O+).
+            medic.getInventory().selected = slot < 9 ? slot : 0;
+            if (slot >= 9) {
+                medic.getInventory().setItem(0, bag.copy());
+                medic.getInventory().setItem(slot, net.minecraft.world.item.ItemStack.EMPTY);
+            }
+            int use = medic.getInventory().selected;
+            h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, use, null), "переливание началось");
+            h.runAfterDelay(400, () -> {
+                MedicalState pm = state(patient);
+                h.assertTrue(pm.bloodDripRemaining > 0 && pm.bloodDripType == faygolover.rpmedicine.core.BloodType.A_POS, "капает пакет A+");
+                remove(h, medic, donor, patient);
+                h.succeed();
+            });
+        });
+    }
+
     /** Капельница идёт на ходу, пока рядом стойка. */
     @GameTest(template = T, timeoutTicks = 200)
     public static void ivStandLetsDripRunWhileMoving(GameTestHelper h) {

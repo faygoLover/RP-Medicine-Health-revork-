@@ -141,6 +141,8 @@ ITEMS = [
     ("ammonia", "ammonia", 1, 0, True), ("airway", "airway", 4, 2, True),
     ("ambu_bag", "ambu", 1, 2, False), ("defibrillator", "defibrillator", 6, 1, True),
     ("pulse_oximeter", "pulse_oximeter", 2, 0, False), ("tonometer", "tonometer", 6, 1, False),
+    # второй этап
+    ("empty_blood_bag", "blood_collect", 30, 3, True), ("blood_bag", "blood_bag", 10, 3, True),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -275,6 +277,7 @@ ICONS = {
     "pulse_oximeter": ("device", (60, 60, 70), (80, 220, 120)), "tonometer": ("device", (230, 230, 230), (60, 60, 60)),
     "medical_pouch": ("box", (90, 100, 60), (200, 50, 50)), "first_aid_kit": ("box", (200, 50, 50), (240, 240, 240)),
     "gm_scanner": ("device", (120, 40, 160), (240, 200, 60)),
+    "empty_blood_bag": ("bag", (225, 225, 230), (150, 150, 160)), "blood_bag": ("bag", (170, 20, 30), (230, 230, 230)),
 }
 for name, (shape, color, accent) in ICONS.items():
     png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))

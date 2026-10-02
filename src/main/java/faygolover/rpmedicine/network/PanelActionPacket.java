@@ -16,7 +16,9 @@ import java.util.function.Supplier;
  */
 public record PanelActionPacket(int targetId, Kind kind, BodyPart part, int slot) {
     public enum Kind {
-        APPLY_ITEM, REMOVE_DRESSING, REMOVE_TOURNIQUET, REMOVE_SPLINT, REMOVE_OCCLUSIVE, SEARCH, CANCEL
+        APPLY_ITEM, REMOVE_DRESSING, REMOVE_TOURNIQUET, REMOVE_SPLINT, REMOVE_OCCLUSIVE, SEARCH, CANCEL,
+        /** Остановить капельницу (второй этап). */
+        STOP_DRIP
     }
 
     public static void encode(PanelActionPacket p, FriendlyByteBuf buf) {

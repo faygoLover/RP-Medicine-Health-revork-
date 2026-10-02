@@ -35,8 +35,28 @@ public final class PanelActions {
             case REMOVE_SPLINT -> remove(sp, target, m, p, Treatments.Removal.SPLINT);
             case REMOVE_OCCLUSIVE -> remove(sp, target, m, p, Treatments.Removal.OCCLUSIVE);
             case SEARCH -> SearchService.start(sp, target);
+            case STOP_DRIP -> stopDrip(sp, target, m);
             default -> { }
         }
+    }
+
+    /** Остановить капельницу: несовместимую кровь надо снять (второй этап, п. 4.2). */
+    private static void stopDrip(ServerPlayer sp, LivingEntity target, MedicalState m) {
+        String refuse = TreatmentService.actorRefusal(sp, target);
+        if (refuse != null) {
+            sp.displayClientMessage(Component.translatable(refuse).withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        if (m.bloodDripRemaining <= 0 && m.salineDripRemaining <= 0) return;
+        m.bloodDripRemaining = 0;
+        m.bloodDripRate = 0;
+        m.bloodDripType = null;
+        m.bloodDripSpoiled = false;
+        m.salineDripRemaining = 0;
+        m.salineDripRate = 0;
+        Medical.changed(target);
+        sp.displayClientMessage(Component.translatable("rpmedicine.msg.drip_stopped"), true);
+        ExamService.refreshFor(sp);
     }
 
     private static LivingEntity target(ServerPlayer sp, int id) {

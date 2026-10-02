@@ -23,8 +23,9 @@ public final class Physiology {
 
         tickTimers(m, in, s);
         tickLimbs(m, in, s, r);
-        double bleedPerMin = tickBlood(m, in, s);
+        double bleedPerMin = tickBlood(m, in, s, r);
         if (in.online) Healing.advance(m, dt * in.healFactor, s);
+        Infections.tick(m, in, s, r);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
         tickCirculation(m, in, s, r, bleedPerMin);
@@ -49,7 +50,15 @@ public final class Physiology {
         m.cprSeconds = dec(m.cprSeconds, dt);
         m.healBoostSeconds = dec(m.healBoostSeconds, dt);
         m.concussionKoSeconds = dec(m.concussionKoSeconds, dt);
-        m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * dt);
+        m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * (1 + m.effect(DrugEffect.CONCUSSION_RELIEF)) * dt);
+        // Эффекты лекарств: сначала задержка, потом действие.
+        var it = m.effects.values().iterator();
+        while (it.hasNext()) {
+            DrugEffect.Active a = it.next();
+            if (a.delay > 0) a.delay = dec(a.delay, dt);
+            else a.seconds = dec(a.seconds, dt);
+            if (a.seconds <= 0 && a.delay <= 0) it.remove();
+        }
         if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
         if (m.cprSeconds <= 0) m.cprAccum = 0;
         // Воздуховод выпадает, когда человек приходит в себя.
@@ -134,7 +143,7 @@ public final class Physiology {
         return clamp(0.4 + 0.6 * m.pressure / s.normalPressure, 0.15, 1.2);
     }
 
-    private static double tickBlood(MedicalState m, StepInput in, MedicalSettings s) {
+    private static double tickBlood(MedicalState m, StepInput in, MedicalSettings s, StepResult r) {
         double dt = in.dt;
         double external = 0;
         double internal = 0;
@@ -146,6 +155,9 @@ public final class Physiology {
             external *= s.txaExternalFactor;
             internal *= s.txaInternalFactor;
         }
+        double coag = clamp(m.effect(DrugEffect.COAGULATION), 0, 0.9);
+        external *= 1 - coag;
+        internal *= 1 - coag;
         double perMin = (external + internal) * s.bleedMultiplier * in.traits.bleedFactor(s) * perfusionBleedFactor(m, s);
         double lost = perMin * dt / 60.0;
         if (lost > 0) {
@@ -171,6 +183,14 @@ public final class Physiology {
             m.salineDripRemaining -= add;
             infuseSaline(m, add, s);
         }
+        // Переливание крови: настоящая кровь, несёт кислород.
+        if (m.bloodDripRemaining > 0 && in.still) {
+            double add = Math.min(m.bloodDripRemaining, m.bloodDripRate * dt);
+            m.bloodDripRemaining -= add;
+            transfuse(m, add, in, s, r);
+        }
+        if (m.transfusionReactionSeconds > 0 && !(m.bloodDripRemaining > 0 && incompatibleDrip(m)))
+            m.transfusionReactionSeconds = dec(m.transfusionReactionSeconds, dt);
         // Физраствор сам уходит из сосудов.
         if (m.saline > 0) {
             double out = Math.min(m.saline, m.saline * s.salineLossPerHour * dt / 3600.0);
@@ -192,6 +212,32 @@ public final class Physiology {
         m.bloodVolume += add;
         m.saline += add;
         return add;
+    }
+
+    static boolean incompatibleDrip(MedicalState m) {
+        return m.bloodDripType != null && m.bloodType != null && !m.bloodDripType.canDonateTo(m.bloodType);
+    }
+
+    /** Влить {@code ml} крови из пакета: несовместимая — реакция, испорченная — сепсис. */
+    static void transfuse(MedicalState m, double ml, StepInput in, MedicalSettings s, StepResult r) {
+        if (m.bloodDripSpoiled) {
+            Infections.spoiledBlood(m, s);
+            m.bloodDripSpoiled = false;
+        }
+        if (incompatibleDrip(m)) {
+            if (m.transfusionReactionSeconds <= 0) {
+                r.add(Event.TRANSFUSION_REACTION);
+                if (in.random.nextDouble() < s.transfusionReactionArrestChance && m.heart == Heart.NORMAL) {
+                    m.heart = Heart.FIBRILLATION;
+                    m.fibrillationSeconds = 0;
+                    r.add(Event.HEART_FIBRILLATION);
+                }
+            }
+            // Пока несовместимая кровь капает, реакция не проходит.
+            m.transfusionReactionSeconds = Math.max(m.transfusionReactionSeconds,
+                    lerp(s.transfusionReactionMinMinutes, s.transfusionReactionMaxMinutes, in.random.nextDouble()) * 60.0);
+        }
+        regenerateBlood(m, ml, s);
     }
 
     /** Восстановление настоящей крови: сначала объём, затем замещение физраствора. */
@@ -236,6 +282,7 @@ public final class Physiology {
         double a = 0;
         if (m.painkillerSeconds > 0 && m.painkillerDelay <= 0) a += s.painkillerStrength;
         if (m.morphineSeconds > 0 && m.morphineDelay <= 0) a += s.morphineStrength;
+        a += m.effect(DrugEffect.ANALGESIA);
         return a;
     }
 
@@ -251,6 +298,11 @@ public final class Physiology {
             sum += p;
             max = Math.max(max, p);
         }
+        if (m.transfusionReactionSeconds > 0) {
+            // Реакция на несовместимую кровь: боль в спине и груди.
+            sum += s.transfusionReactionPain;
+            max = Math.max(max, s.transfusionReactionPain);
+        }
         double raw = Math.min(100, (max + (sum - max) * s.otherPainFactor) * s.painMultiplier);
         m.rawPain = raw;
         double suppress = analgesia(m, s) + (adrenalineActive(m) ? s.adrenalinePainSuppression : 0);
@@ -260,7 +312,8 @@ public final class Physiology {
         double threshold = in.traits.shockThreshold(s);
         if (m.pain >= threshold) {
             if (m.shockLimit <= 0) m.shockLimit = lerp(s.painShockMinSeconds, s.painShockMaxSeconds, in.random.nextDouble());
-            m.shockAccum += in.dt;
+            // Седация замедляет болевой шок.
+            m.shockAccum += in.dt * (m.effect(DrugEffect.SEDATION) > 0 ? 0.5 : 1.0);
             if (!m.painShock && m.shockAccum >= m.shockLimit) {
                 m.painShock = true;
                 r.add(Event.PAIN_SHOCK);
@@ -323,7 +376,8 @@ public final class Physiology {
             else m.lowPressureSeconds = 0;
             if (m.spo2 < 40) m.hypoxiaSeconds += dt;
             else m.hypoxiaSeconds = 0;
-            if (m.lowPressureSeconds >= s.fibrillationDelaySeconds || m.hypoxiaSeconds >= 30) {
+            boolean septicArrhythmia = m.sepsis >= 60 && rnd.nextDouble() < s.sepsisFibrillationPerHour * dt / 3600.0;
+            if (m.lowPressureSeconds >= s.fibrillationDelaySeconds || m.hypoxiaSeconds >= 30 || septicArrhythmia) {
                 m.heart = Heart.FIBRILLATION;
                 m.fibrillationSeconds = 0;
                 m.lowPressureSeconds = 0;
@@ -359,6 +413,10 @@ public final class Physiology {
             if (m.pain >= 60) target += 8;
             if (m.morphineSeconds > 0 && m.morphineDelay <= 0) target -= 5;
             if (m.pneumo == Pneumo.TENSION) target -= s.tensionPressureDrop * m.tensionProgress;
+            target += m.effect(DrugEffect.PRESSURE);
+            if (m.sepsis >= 60) target -= s.sepsisPressureDrop60;
+            else if (m.sepsis >= 30) target -= s.sepsisPressureDrop30;
+            if (m.transfusionReactionSeconds > 0) target -= s.transfusionReactionPressureDrop;
             target = clamp(target, 0, 200);
         } else {
             target = m.cprSeconds > 0 ? 25 : 0;
@@ -374,6 +432,9 @@ public final class Physiology {
             if (m.adrenalineInjectionSeconds > 0) hr += 40;
             if (m.morphineSeconds > 0 && m.morphineDelay <= 0) hr -= 8;
             if (m.spo2 < 90) hr += (90 - m.spo2) * 0.8;
+            if (m.bodyTemp > 37) hr += (m.bodyTemp - 37) * s.feverHeartRatePerDegree;
+            hr += m.effect(DrugEffect.HEART_RATE);
+            hr -= m.effect(DrugEffect.SEDATION) * 0.2;
             hr = clamp(hr, 35, 200);
             m.heartRate += (hr - m.heartRate) * Math.min(1.0, dt / 3.0);
             if (Math.abs(m.heartRate - hr) < 0.05) m.heartRate = hr;
@@ -417,8 +478,17 @@ public final class Physiology {
             // Без сознания (не в обмороке) западает язык: воздуховод держит дыхание.
             if ((m.down == Down.KNOCKDOWN || m.down == Down.CLINICAL) && !m.airway && m.ambuSeconds <= 0) v = 0.6;
             if (m.morphineOverdoseSeconds > 0 && m.ambuSeconds <= 0) v *= 0.6;
+            if (m.ambuSeconds <= 0) v *= 1 - respiratoryDepression(m);
         }
         return v;
+    }
+
+    /** Угнетение дыхания лекарствами 0–0,9: эффект и седация вместе с опиатами. */
+    public static double respiratoryDepression(MedicalState m) {
+        double d = m.effect(DrugEffect.RESP_DEPRESSION);
+        boolean opioid = m.morphineSeconds > 0 && m.morphineDelay <= 0;
+        if (m.effect(DrugEffect.SEDATION) > 0 && opioid) d += 0.3;
+        return clamp(d, 0, 0.9);
     }
 
     public static double spo2Ceiling(MedicalState m, MedicalSettings s) {
@@ -432,6 +502,7 @@ public final class Physiology {
         if (m.part(BodyPart.CHEST).hasFracture()) c -= s.ribSpo2Penalty;
         double cap = m.oxygenCapacity(s);
         if (cap < 0.6) c -= (0.6 - cap) * 80;
+        if (m.sepsis >= 60) c -= s.sepsisSpo2Penalty;
         return clamp(c, 0, 100);
     }
 
@@ -471,6 +542,8 @@ public final class Physiology {
         if (m.pressure < 90) rr += (90 - m.pressure) * 0.1;
         if (m.morphineSeconds > 0 && m.morphineDelay <= 0) rr -= 4;
         if (m.morphineOverdoseSeconds > 0) rr -= 6;
+        rr -= respiratoryDepression(m) * 10;
+        if (m.bodyTemp > 37.5) rr += (m.bodyTemp - 37.5) * 2;
         if (m.down != Down.NONE) rr -= 2;
         rr = clamp(rr, 4, 45);
         m.respRate += (rr - m.respRate) * Math.min(1.0, dt / 3.0);
@@ -495,6 +568,7 @@ public final class Physiology {
         if (m.bloodFraction(s) < 0.6) return true;
         if (m.spo2 < 60 || m.pressure < 60) return true;
         if (m.pneumo == Pneumo.TENSION) return true;
+        if (m.sepsis >= 100) return true;
         for (BodyPart p : new BodyPart[]{BodyPart.HEAD, BodyPart.CHEST}) {
             BodyPartState ps = m.part(p);
             if (ps.integrity() < 25) {
@@ -515,6 +589,11 @@ public final class Physiology {
         c = Math.min(c, 100 - m.concussion * 0.6);
         c = Math.min(c, 50 + m.brain * 0.5);
         if (m.morphineOverdoseSeconds > 0) c = Math.min(c, 50);
+        double sedation = m.effect(DrugEffect.SEDATION);
+        if (sedation > 0) c = Math.min(c, 100 - sedation);
+        // Сепсис: от 30 % спутанность, 100 % — септический шок, человек падает.
+        if (m.sepsis >= 100) c = Math.min(c, 20);
+        else if (m.sepsis >= 30) c = Math.min(c, s.sepsisConsciousnessLimit);
         return clamp(c, 0, 100);
     }
 

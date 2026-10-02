@@ -79,6 +79,7 @@ public final class ModSetup {
         bus.addListener(InteractionHandler::onPickup);
         bus.addListener(InteractionHandler::onUseStart);
         bus.addListener(InteractionHandler::onJump);
+        bus.addListener(faygolover.rpmedicine.server.BloodService::onContainerClose);
         // Чат
         bus.addListener(EventPriority.HIGH, ChatHandler::onChat);
         bus.addListener(EventPriority.HIGH, ChatHandler::onCommand);
@@ -118,6 +119,7 @@ public final class ModSetup {
     private static void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer sp)) return;
         StubService.onLogin(sp);
+        faygolover.rpmedicine.server.BloodService.onLogin(sp);
         SelfSync.forceSync(sp);
         MedicalState m = Medical.state(sp);
         if (m != null && (m.isDown() || HospitalService.isOnBed(sp))) faygolover.rpmedicine.server.DownedService.broadcastPose(sp);
@@ -145,6 +147,7 @@ public final class ModSetup {
                 MedicalState n = newD.state;
                 n.weightKg = o.weightKg;
                 n.heightCm = o.heightCm;
+                n.bloodType = o.bloodType;
                 n.reset(s);
                 if (ServerConfig.keepAfterDeath("brain")) n.brain = Math.max(1, o.brain);
                 if (ServerConfig.keepAfterDeath("blood")) n.bloodVolume = Math.max(n.normalBlood(s) * 0.6, o.bloodVolume);

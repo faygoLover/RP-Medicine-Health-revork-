@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:empty_blood_bag",
+  "action": "blood_collect",
+  "seconds": 30,
+  "min_level": 3,
+  "consume": true
+}

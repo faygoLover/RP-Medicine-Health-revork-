@@ -25,7 +25,12 @@ public enum TreatmentAction {
     DEFIBRILLATOR("defibrillator", Target.BODY),
     CPR("cpr", Target.HOLD),
     PULSE_OXIMETER("pulse_oximeter", Target.BODY),
-    TONOMETER("tonometer", Target.BODY);
+    TONOMETER("tonometer", Target.BODY),
+    // Второй этап
+    /** Пакет крови: переливание (капает несколько минут). */
+    BLOOD_BAG("blood_bag", Target.BODY),
+    /** Пустой пакет: забор крови у донора. */
+    BLOOD_COLLECT("blood_collect", Target.BODY);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }
@@ -36,6 +41,11 @@ public enum TreatmentAction {
     TreatmentAction(String id, Target target) {
         this.id = id;
         this.target = target;
+    }
+
+    /** Пациент должен стоять на месте всё время действия (забор и установка капельницы). */
+    public boolean requiresStill() {
+        return this == BLOOD_BAG || this == BLOOD_COLLECT || this == SALINE;
     }
 
     public boolean isInstrument() {

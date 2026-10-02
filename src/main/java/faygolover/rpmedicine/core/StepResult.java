@@ -23,7 +23,11 @@ public final class StepResult {
         DRESSING_REOPENED,
         TENSION_PNEUMOTHORAX,
         FRACTURE_WORSENED,
-        PAIN_SHOCK
+        PAIN_SHOCK,
+        /** Рана заразилась (второй этап). */
+        WOUND_INFECTED,
+        /** Началась реакция на несовместимую кровь. */
+        TRANSFUSION_REACTION
     }
 
     public final EnumSet<Event> events = EnumSet.noneOf(Event.class);

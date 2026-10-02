@@ -231,6 +231,8 @@ public final class HospitalService {
             in.healFactor *= s.bedHealFactor;
             in.bloodRegenFactor *= s.bedBloodRegenFactor;
             in.brainRecoveryFactor *= s.bedBrainRecoveryFactor;
+            in.infectionRiskFactor *= s.bedInfectionFactor;
+            in.immunityFactor *= s.immunityBedFactor;
             in.still = true;
         }
         if (d.nearIvStand) in.still = true;

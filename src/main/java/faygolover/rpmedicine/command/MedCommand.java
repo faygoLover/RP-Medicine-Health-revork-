@@ -103,6 +103,8 @@ public final class MedCommand {
                 .then(scalar("spo2", 0, 100, (m, v) -> m.spo2 = v))
                 .then(scalar("concussion", 0, 100, (m, v) -> m.concussion = v))
                 .then(scalar("pain_shock", 0, 1, (m, v) -> m.painShock = v >= 0.5))
+                .then(scalar("sepsis", 0, 100, (m, v) -> m.sepsis = v))
+                .then(scalar("temperature", 30, 43, (m, v) -> m.bodyTemp = v))
                 .then(foreign("bullets", true))
                 .then(foreign("fragments", false))));
         root.then(op("time").then(Commands.literal("add").then(Commands.argument("targets", EntityArgument.players())

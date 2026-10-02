@@ -38,6 +38,7 @@ public class MedicalPanelScreen extends Screen {
     private int dragSlot = -1;
     private final List<Button> removeButtons = new ArrayList<>();
     private Button searchButton;
+    private Button dripButton;
 
     public MedicalPanelScreen(int targetId) {
         super(Component.translatable("rpmedicine.panel.title"));
@@ -87,6 +88,9 @@ public class MedicalPanelScreen extends Screen {
             Network.sendToServer(new PanelActionPacket(targetId, PanelActionPacket.Kind.SEARCH, BodyPart.CHEST, -1));
             onClose();
         }).bounds(left() + 10, top() + 190, 80, 20).build());
+        dripButton = addRenderableWidget(Button.builder(Component.translatable("rpmedicine.panel.stop_drip"), btn ->
+                Network.sendToServer(new PanelActionPacket(targetId, PanelActionPacket.Kind.STOP_DRIP, BodyPart.CHEST, -1)))
+                .bounds(left() + 225, top() + 128, 110, 20).build());
         if (ClientState.exam != null) onExam(ClientState.exam);
         updateButtons();
     }
@@ -98,6 +102,8 @@ public class MedicalPanelScreen extends Screen {
             b.visible = (bits & (1 << i)) != 0;
         }
         if (searchButton != null) searchButton.visible = exam != null && !exam.self() && exam.downState() != 0;
+        if (dripButton != null) dripButton.visible = exam != null && exam.view().general().stream()
+                .anyMatch(l -> l.key().equals("drip_blood") || l.key().equals("drip_saline"));
     }
 
     @Override
@@ -140,7 +146,7 @@ public class MedicalPanelScreen extends Screen {
         gy += 12;
         if (exam != null) {
             for (Examination.Line line : exam.view().general()) {
-                if (gy > t + 140) break;
+                if (gy > t + 120) break;
                 for (var seq : font.split(ExamText.format(line).withStyle(ExamText.color(line)), 110)) {
                     g.drawString(font, seq, gx, gy, 0xFFFFFF);
                     gy += 10;

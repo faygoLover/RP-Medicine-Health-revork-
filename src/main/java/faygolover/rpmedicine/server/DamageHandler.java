@@ -95,6 +95,8 @@ public final class DamageHandler {
             DownedService.lethal(target, DownedService.FINISHED, killer);
         } else {
             Injuries.Report rep = Injuries.apply(m, prof, amount, part, side, traits, RANDOM.split(), s);
+            // Ранен в воде — грязная рана, выше шанс заражения (второй этап, п. 5.1).
+            if (target.isInWater()) for (var w : rep.wounds) w.infectionRisk = Math.max(w.infectionRisk, s.dirtyWaterInfectionFactor);
             if (target instanceof ServerPlayer sp) Feedback.onInjury(sp, rep);
         }
         Medical.changed(target);

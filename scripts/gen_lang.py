@@ -231,6 +231,37 @@ for k, ru, en in [
  ("subtitles.rpmedicine.monitor_alarm", "Тревога монитора", "Monitor alarm"),
 ]: t(k, ru, en)
 
+# Кровь, инфекция, температура
+items2 = {
+ "empty_blood_bag": ("Пустой пакет для крови", "Empty blood bag", "Забор 450 мл крови у донора. Донор стоит на месте 30 с. Медицина 3+.", "Collects 450 ml of blood from a donor. The donor stands still for 30 s. Medicine 3+."),
+ "blood_bag": ("Пакет крови", "Blood bag", "Переливание: настоящая кровь, несёт кислород. Проверяйте группу! Вне холодильника портится.", "Transfusion: real blood that carries oxygen. Check the blood type! Spoils outside a fridge."),
+}
+for k, (ru, en, dru, den) in items2.items():
+    t(f"item.rpmedicine.{k}", ru, en)
+    t(f"item.rpmedicine.{k}.desc", dru, den)
+for k, ru, en in [
+ ("rpmedicine.tooltip.blood_type", "Группа: %s", "Blood type: %s"),
+ ("rpmedicine.tooltip.blood_fresh", "Свежая", "Fresh"),
+ ("rpmedicine.tooltip.blood_spoiled", "Испорчена!", "Spoiled!"),
+ ("rpmedicine.refuse.donor_low", "Донору нельзя: он сам потерял кровь", "The donor has lost blood already"),
+ ("rpmedicine.action.target_moved", "Прервано: пациент двинулся", "Interrupted: the patient moved"),
+ ("rpmedicine.treat.transfusion_started", "Переливание началось", "Transfusion started"),
+ ("rpmedicine.treat.transfusion_infiltrated", "Игла не в вене: половина пакета ушла под кожу", "Missed the vein: half the bag went under the skin"),
+ ("rpmedicine.treat.collect_failed", "Не удалось попасть в вену", "Couldn't find the vein"),
+ ("rpmedicine.treat.blood_collected", "Кровь взята", "Blood collected"),
+ ("rpmedicine.msg.bag_filled", "Пакет крови: группа %s", "Blood bag: type %s"),
+ ("rpmedicine.msg.drip_stopped", "Капельница остановлена", "Drip stopped"),
+ ("rpmedicine.panel.stop_drip", "Снять капельницу", "Stop the drip"),
+ ("rpmedicine.exam.wound_inflamed", "  рана воспалена: покраснение, отёк", "  the wound is inflamed: red and swollen"),
+ ("rpmedicine.exam.wound_pus", "  рана гноится", "  the wound is festering"),
+ ("rpmedicine.exam.drip_blood", "Капельница: кровь", "Drip: blood"),
+ ("rpmedicine.exam.drip_saline", "Капельница: физраствор", "Drip: saline"),
+ ("rpmedicine.exam.feels_hot", "На ощупь горячий — жар", "Hot to the touch — fever"),
+ ("rpmedicine.exam.feels_cold", "На ощупь холодный", "Cold to the touch"),
+ ("rpmedicine.exam.complaint_fever", "Знобит, жарко", "Feverish chills"),
+ ("rpmedicine.exam.complaint_back_pain", "Ломит поясницу и грудь", "Aching lower back and chest"),
+]: t(k, ru, en)
+
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):
     with open(os.path.join(base, name + ".json"), "w", encoding="utf-8") as f:

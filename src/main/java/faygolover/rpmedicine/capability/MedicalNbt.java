@@ -1,6 +1,8 @@
 package faygolover.rpmedicine.capability;
 
+import faygolover.rpmedicine.core.BloodType;
 import faygolover.rpmedicine.core.BodyPart;
+import faygolover.rpmedicine.core.DrugEffect;
 import faygolover.rpmedicine.core.BodyPartState;
 import faygolover.rpmedicine.core.Dressing;
 import faygolover.rpmedicine.core.MedicalSettings;
@@ -15,7 +17,7 @@ import net.minecraft.nbt.Tag;
 public final class MedicalNbt {
     private MedicalNbt() {}
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     public static CompoundTag write(MedicalState m) {
         CompoundTag t = new CompoundTag();
@@ -59,6 +61,30 @@ public final class MedicalNbt {
         if (m.wakeSeconds >= 0) t.putFloat("wake", (float) m.wakeSeconds);
         if (m.knockdownNoTimer) t.putBoolean("noTimer", true);
         putIf(t, "healBoost", m.healBoostSeconds);
+        // Второй этап
+        putIf(t, "sepsis", m.sepsis);
+        if (Math.abs(m.bodyTemp - MedicalSettings.get().normalBodyTemp) > 0.001) t.putFloat("temp", (float) m.bodyTemp);
+        putIf(t, "spoiled", m.spoiledBloodSeconds);
+        if (m.bloodType != null) t.putByte("bloodType", (byte) m.bloodType.ordinal());
+        if (m.bloodDripRemaining > 0) {
+            t.putFloat("bDrip", (float) m.bloodDripRemaining);
+            t.putFloat("bDripRate", (float) m.bloodDripRate);
+            if (m.bloodDripType != null) t.putByte("bDripType", (byte) m.bloodDripType.ordinal());
+            if (m.bloodDripSpoiled) t.putBoolean("bDripSpoiled", true);
+        }
+        putIf(t, "reaction", m.transfusionReactionSeconds);
+        if (!m.effects.isEmpty()) {
+            ListTag effects = new ListTag();
+            for (var e : m.effects.entrySet()) {
+                CompoundTag et = new CompoundTag();
+                et.putByte("e", (byte) e.getKey().ordinal());
+                et.putFloat("s", (float) e.getValue().strength);
+                putIf(et, "d", e.getValue().delay);
+                et.putFloat("t", (float) e.getValue().seconds);
+                effects.add(et);
+            }
+            t.put("effects", effects);
+        }
 
         ListTag parts = new ListTag();
         for (BodyPartState ps : m.parts) {
@@ -78,6 +104,11 @@ public final class MedicalNbt {
                 }
                 putIf(wt, "clot", w.clot);
                 if (w.bandageBoost) wt.putBoolean("boost", true);
+                if (w.infectionStage != Wound.Infection.NEW) wt.putByte("inf", (byte) w.infectionStage.ordinal());
+                putIf(wt, "infT", w.infectionTimer);
+                putIf(wt, "infV", w.infection);
+                putIf(wt, "imm", w.immuneProgress);
+                if (w.infectionRisk != 1.0) wt.putFloat("risk", (float) w.infectionRisk);
                 ws.add(wt);
             }
             if (!ws.isEmpty()) p.put("w", ws);
@@ -89,6 +120,7 @@ public final class MedicalNbt {
             putIf(p, "frHeal", ps.fractureHeal);
             if (ps.bullets > 0) p.putByte("bullets", (byte) Math.min(127, ps.bullets));
             if (ps.fragments > 0) p.putByte("frags", (byte) Math.min(127, ps.fragments));
+            putIf(p, "fbSec", ps.foreignBodySeconds);
             if (ps.arterial) p.putBoolean("art", true);
             putIf(p, "internal", ps.internalBleed);
             if (ps.tourniquet != BodyPartState.Tourniquet.NONE) {
@@ -147,6 +179,20 @@ public final class MedicalNbt {
         m.wakeSeconds = t.contains("wake") ? t.getFloat("wake") : -1;
         m.knockdownNoTimer = t.getBoolean("noTimer");
         m.healBoostSeconds = t.getFloat("healBoost");
+        m.sepsis = t.getFloat("sepsis");
+        if (t.contains("temp")) m.bodyTemp = t.getFloat("temp");
+        m.spoiledBloodSeconds = t.getFloat("spoiled");
+        m.bloodType = t.contains("bloodType") ? BloodType.byOrdinal(t.getByte("bloodType")) : null;
+        m.bloodDripRemaining = t.getFloat("bDrip");
+        m.bloodDripRate = t.getFloat("bDripRate");
+        m.bloodDripType = t.contains("bDripType") ? BloodType.byOrdinal(t.getByte("bDripType")) : null;
+        m.bloodDripSpoiled = t.getBoolean("bDripSpoiled");
+        m.transfusionReactionSeconds = t.getFloat("reaction");
+        ListTag effects = t.getList("effects", Tag.TAG_COMPOUND);
+        for (int i = 0; i < effects.size(); i++) {
+            CompoundTag et = effects.getCompound(i);
+            m.effects.put(DrugEffect.byOrdinal(et.getByte("e")), new DrugEffect.Active(et.getFloat("s"), et.getFloat("d"), et.getFloat("t")));
+        }
 
         ListTag parts = t.getList("parts", Tag.TAG_COMPOUND);
         for (int i = 0; i < parts.size(); i++) {
@@ -162,6 +208,11 @@ public final class MedicalNbt {
                 w.dressingAge = wt.getFloat("da");
                 w.clot = wt.getFloat("clot");
                 w.bandageBoost = wt.getBoolean("boost");
+                w.infectionStage = Wound.Infection.byOrdinal(wt.getByte("inf"));
+                w.infectionTimer = wt.getFloat("infT");
+                w.infection = wt.getFloat("infV");
+                w.immuneProgress = wt.getFloat("imm");
+                w.infectionRisk = wt.contains("risk") ? wt.getFloat("risk") : 1.0;
                 if (w.severity > 0 && ps.wounds.size() < 16) ps.wounds.add(w);
             }
             ps.fracture = BodyPartState.Fracture.byOrdinal(p.getByte("fr"));
@@ -170,6 +221,7 @@ public final class MedicalNbt {
             ps.fractureHeal = p.getFloat("frHeal");
             ps.bullets = p.getByte("bullets");
             ps.fragments = p.getByte("frags");
+            ps.foreignBodySeconds = p.getFloat("fbSec");
             ps.arterial = p.getBoolean("art");
             ps.internalBleed = p.getFloat("internal");
             ps.tourniquet = BodyPartState.Tourniquet.byOrdinal(p.getByte("tq"));

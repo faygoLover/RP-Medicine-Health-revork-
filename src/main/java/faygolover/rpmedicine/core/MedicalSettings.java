@@ -228,7 +228,83 @@ public final class MedicalSettings {
     /** Монитор звучит тревогой при SpO2 ниже. */
     public double monitorAlarmSpo2 = 85.0;
 
+    // ---------------- Инфекция, иммунитет, сепсис (второй этап, п. 5) ----------------
+    public boolean infectionEnabled = true;
+    /** Шанс заражения раны по типу. */
+    public final EnumMap<WoundType, Double> infectionChance = new EnumMap<>(WoundType.class);
+    /** Рана проверяется на заражение через столько минут в сети после ранения. */
+    public double infectionCheckMinMinutes = 20.0;
+    public double infectionCheckMaxMinutes = 60.0;
+    /** Повязка снижает шанс заражения: ×(1 − это × качество повязки). */
+    public double dressingInfectionReduction = 0.8;
+    public double antisepticInfectionFactor = 0.3;
+    public double dirtyWaterInfectionFactor = 1.5;
+    public double nonSterileInfectionFactor = 1.5;
+    public double bedInfectionFactor = 0.7;
+    /** Пуля или осколок внутри дольше стольких часов в сети — повторная проверка раны с шансом ×2. */
+    public double foreignBodyInfectionHours = 6.0;
+    public double foreignBodyInfectionFactor = 2.0;
+    /** Рост инфекции в ране и ответа иммунитета, % в час в сети. */
+    public double infectionGrowthPerHour = 4.0;
+    public double immuneGrowthPerHour = 3.0;
+    /** Заражённая рана болит сильнее на. */
+    public double infectionPain = 15.0;
+    /** Иммунитет слабее при потере крови больше этой доли. */
+    public double immunityBloodLossFraction = 0.3;
+    public double immunityBloodLossFactor = 0.7;
+    public double immunityHungerFactor = 0.8;
+    public double immunitySepsisFactor = 0.8;
+    public double immunityBedFactor = 1.1;
+    /** Сепсис растёт от каждой раны с инфекцией 100 %, % в час. */
+    public double sepsisPerHourPerSource = 8.0;
+    /** Испорченная кровь: сепсис сразу и рост, % в час, столько часов. */
+    public double spoiledBloodSepsis = 30.0;
+    public double spoiledBloodSepsisPerHour = 10.0;
+    public double spoiledBloodSepsisHours = 2.0;
+    /** Сепсис спадает под антибиотиком силы 10, % в час (пропорционально силе). */
+    public double sepsisAntibioticDeclinePerHour = 5.0;
+    /** Лёгкий сепсис (ниже 30 %) без источника и без антибиотика спадает сам, % в час. Тяжёлый — только под антибиотиком. */
+    public double sepsisNaturalDeclinePerHour = 1.0;
+    public double sepsisPressureDrop30 = 15.0;
+    public double sepsisPressureDrop60 = 35.0;
+    public double sepsisConsciousnessLimit = 80.0;
+    public double sepsisSpo2Penalty = 5.0;
+    /** Шанс фибрилляции при сепсисе от 60 %, в час. */
+    public double sepsisFibrillationPerHour = 0.3;
+
+    // ---------------- Кровь: группы и переливание (второй этап, п. 4) ----------------
+    /** Распределение групп: O−, O+, A−, A+, B−, B+, AB−, AB+ (веса, не обязательно в сумме 100). */
+    public double[] bloodTypeWeights = {6, 35, 5, 30, 3, 15, 1, 5};
+    public double bloodBagVolume = 450.0;
+    /** Пакет крови капает столько секунд. */
+    public double transfusionSeconds = 240.0;
+    /** Брать кровь у донора можно, пока он потерял не больше этой доли. */
+    public double donationMaxLossFraction = 0.15;
+    /** Реакция на несовместимую кровь: длительность после остановки капельницы, минуты. */
+    public double transfusionReactionMinMinutes = 10.0;
+    public double transfusionReactionMaxMinutes = 20.0;
+    public double transfusionReactionFever = 2.0;
+    public double transfusionReactionPain = 30.0;
+    public double transfusionReactionPressureDrop = 30.0;
+    public double transfusionReactionArrestChance = 0.25;
+    /** Пакет вне холодильника портится за столько часов (время работы сервера), в холодильнике — за столько дней. */
+    public double bloodSpoilWarmHours = 2.0;
+    public double bloodSpoilFridgeDays = 7.0;
+
+    // ---------------- Температура тела (второй этап, п. 5.4) ----------------
+    public double normalBodyTemp = 36.6;
+    /** Температура тела меняется не быстрее, °C в минуту. */
+    public double bodyTempChangePerMinute = 0.1;
+    /** Лихорадка от заражённой раны (при инфекции 100 %), °C. */
+    public double localInfectionFever = 1.0;
+    /** Лихорадка при сепсисе 10 % и 100 %, °C. */
+    public double sepsisFeverMin = 1.4;
+    public double sepsisFeverMax = 2.4;
+    /** Пульс чаще на столько за каждый градус выше 37. */
+    public double feverHeartRatePerDegree = 10.0;
+
     public MedicalSettings() {
+        put(infectionChance, 0, 0.10, 0.10, 0.15, 0.15, 0.20, 0.30);
         put(bleedPerSeverity, 0, 2.0, 0.8, 6.0, 3.0, 0, 2.0);
         put(painPerSeverity, 1.0, 1.2, 1.4, 2.0, 1.8, 2.5, 1.2);
         put(healMinutesMin, 15, 30, 45, 120, 90, 60, 30);

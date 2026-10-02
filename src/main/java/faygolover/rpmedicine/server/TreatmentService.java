@@ -122,6 +122,8 @@ public final class TreatmentService {
         final ItemStack original;
         private final int level;
         private final boolean fromHand;
+        /** Где стоял пациент в начале (забор крови и капельница — стоять на месте). */
+        private final net.minecraft.world.phys.Vec3 startPos;
 
         TreatmentTimedAction(ServerPlayer actor, LivingEntity target, BodyPart part, ItemRules.Spec spec, int slot, ItemStack original, int ticks, int level, boolean fromHand) {
             super(actor, ticks);
@@ -132,6 +134,7 @@ public final class TreatmentService {
             this.original = original;
             this.level = level;
             this.fromHand = fromHand;
+            this.startPos = target.position();
         }
 
         @Override
@@ -147,6 +150,8 @@ public final class TreatmentService {
             if (!ItemStack.isSameItem(now, original)) return "rpmedicine.action.item_changed";
             // Быстрый способ: предмет в руке, смена слота прерывает.
             if (fromHand && slot < 9 && actor.getInventory().selected != slot) return "rpmedicine.action.item_changed";
+            if (spec.action().requiresStill() && !Medical.isDown(target) && target.position().distanceToSqr(startPos) > 0.35 * 0.35)
+                return "rpmedicine.action.target_moved";
             return actorRefusal(actor, target);
         }
 
@@ -162,8 +167,11 @@ public final class TreatmentService {
                 return;
             }
             boolean error = !spec.action().isInstrument() && RANDOM.nextDouble() < Skill.errorChance(level, spec.minLevel(), s);
-            Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s);
+            Treatments.Bag bag = spec.action() == TreatmentAction.BLOOD_BAG
+                    ? faygolover.rpmedicine.item.BloodBagItem.bag(actor.getInventory().getItem(slot), actor.level().getGameTime()) : null;
+            Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, bag);
             if (r.consumed && spec.consume()) consume();
+            if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             Medical.changed(target);
             sound(spec.action());
             Component msg = resultMessage(r, part);
@@ -184,7 +192,7 @@ public final class TreatmentService {
             SoundEvent ev = switch (a) {
                 case BANDAGE, PRESSURE_DRESSING, HEMOSTATIC, OCCLUSIVE, SPLINT -> ModSounds.BANDAGE.get();
                 case TOURNIQUET, ESMARCH -> ModSounds.TOURNIQUET.get();
-                case MORPHINE, ADRENALINE, TXA, NEEDLE, SALINE -> ModSounds.INJECTION.get();
+                case MORPHINE, ADRENALINE, TXA, NEEDLE, SALINE, BLOOD_BAG, BLOOD_COLLECT -> ModSounds.INJECTION.get();
                 case PAINKILLER, AMMONIA -> ModSounds.PILLS.get();
                 case DEFIBRILLATOR -> ModSounds.DEFIB_SHOCK.get();
                 default -> null;
