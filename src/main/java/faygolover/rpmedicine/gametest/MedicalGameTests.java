@@ -53,6 +53,16 @@ public final class MedicalGameTests {
         MedicalSettings.get().noDeathMode = on;
     }
 
+    /**
+     * Медик без ошибок: у фальшивого игрока уровень «Медицины» 0, шанс ошибки 25 % сделал бы сценарий
+     * лечения случайным. Ошибки медика проверяют юнит-тесты.
+     */
+    static void noErrors() {
+        MedicalSettings s = MedicalSettings.get();
+        s.skillError = new double[s.skillError.length];
+        s.underLevelErrorPerLevel = 0;
+    }
+
     private static ServerPlayer player(GameTestHelper h, double x, double z) {
         var server = h.getLevel().getServer();
         var profile = new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "rpm-test-" + (counter++));
@@ -182,6 +192,7 @@ public final class MedicalGameTests {
     @GameTest(template = T, timeoutTicks = 480)
     public static void arterialBleedingAndTourniquet(GameTestHelper h) {
         noDeath(false);
+        noErrors();
         ServerPlayer patient = player(h, 2, 3);
         ServerPlayer medic = player(h, 3, 3);
         MedicalState m = state(patient);
@@ -229,6 +240,7 @@ public final class MedicalGameTests {
     @GameTest(template = T, timeoutTicks = 3080, batch = "nodeath")
     public static void clinicalDeathAndResuscitation(GameTestHelper h) {
         noDeath(true);
+        noErrors();
         ServerPlayer p = player(h, 2, 3);
         ServerPlayer medic = player(h, 3, 3);
         MedicalState m = state(p);
