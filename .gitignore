@@ -36,3 +36,4 @@ run/
 
 # Чужие моды, скачанные scripts/fetch_deps.sh
 external/
+__pycache__/

@@ -2,7 +2,10 @@
 """Генерирует ресурсы RP Medicine: датапак по умолчанию (damage_sources, items, item_aliases, mobs),
 типы урона и теги, модели и текстуры-заглушки предметов, sounds.json.
 Запуск из корня репозитория: python3 scripts/gen_data.py. Сгенерированное коммитится."""
-import json, os, struct, zlib
+import json, os, struct, sys, zlib
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import foreign_assets  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources")
 DATA = os.path.join(ROOT, "data")
@@ -278,7 +281,12 @@ SOUNDS = {
     "pills": "minecraft:entity.generic.eat", "monitor_alarm": "minecraft:block.note_block.bit",
     "vomit": "minecraft:entity.player.burp",
 }
-write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": [{"name": v, "type": "event"}]}
+def sound_entries(k, v):
+    # Звук из Tactical Medicine или Health & Disease (файл в моде), иначе ссылка на ванильное событие.
+    if k in foreign_assets.SOUNDS:
+        return [{"name": f"rpmedicine:{foreign_assets.sound_file(k, i)}"} for i in range(len(foreign_assets.SOUNDS[k]))]
+    return [{"name": v, "type": "event"}]
+write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": sound_entries(k, v)}
                                 for k, v in SOUNDS.items()})
 
 # ---------------------------------------------------------------- модели и текстуры-заглушки
@@ -354,7 +362,9 @@ ICONS = {
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
 }
 for name, (shape, color, accent) in ICONS.items():
-    png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))
+    # Текстуры из Tactical Medicine и Health & Disease кладёт scripts/foreign_assets.py — не затираем.
+    if name not in foreign_assets.TEXTURES:
+        png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))
     write(f"{ASSETS}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"rpmedicine:item/{name}"}})
 
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})

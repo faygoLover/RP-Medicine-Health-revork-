@@ -146,6 +146,8 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
+    // Ассеты Tactical Medicine и Health & Disease под MIT: уведомление об авторах едет вместе с модом.
+    from('docs/assets_credits.md') { into 'META-INF' }
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,

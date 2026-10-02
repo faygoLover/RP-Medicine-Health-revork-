@@ -12,8 +12,13 @@
     "subtitle": "subtitles.rpmedicine.heavy_breathing",
     "sounds": [
       {
-        "name": "minecraft:entity.player.hurt_drown",
-        "type": "event"
+        "name": "rpmedicine:heavy_breathing_1"
+      },
+      {
+        "name": "rpmedicine:heavy_breathing_2"
+      },
+      {
+        "name": "rpmedicine:heavy_breathing_3"
       }
     ]
   },
@@ -30,8 +35,7 @@
     "subtitle": "subtitles.rpmedicine.bandage",
     "sounds": [
       {
-        "name": "minecraft:item.armor.equip_leather",
-        "type": "event"
+        "name": "rpmedicine:bandage_1"
       }
     ]
   },
@@ -48,8 +52,7 @@
     "subtitle": "subtitles.rpmedicine.tourniquet",
     "sounds": [
       {
-        "name": "minecraft:item.armor.equip_chain",
-        "type": "event"
+        "name": "rpmedicine:tourniquet_1"
       }
     ]
   },
@@ -66,8 +69,7 @@
     "subtitle": "subtitles.rpmedicine.bone_break",
     "sounds": [
       {
-        "name": "minecraft:entity.zombie.break_wooden_door",
-        "type": "event"
+        "name": "rpmedicine:bone_break_1"
       }
     ]
   },
@@ -75,8 +77,7 @@
     "subtitle": "subtitles.rpmedicine.pills",
     "sounds": [
       {
-        "name": "minecraft:entity.generic.eat",
-        "type": "event"
+        "name": "rpmedicine:pills_1"
       }
     ]
   },
