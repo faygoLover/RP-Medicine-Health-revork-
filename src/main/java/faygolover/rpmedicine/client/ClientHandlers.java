@@ -57,8 +57,13 @@ public final class ClientHandlers {
     public static void onEntityDowned(EntityDownedPacket p) {
         if (p.down()) ClientState.DOWNED.add(p.entityId());
         else ClientState.DOWNED.remove(p.entityId());
-        if (p.onBed()) BedPose.CLIENT_ON_BED.add(p.entityId());
-        else BedPose.CLIENT_ON_BED.remove(p.entityId());
+        if (p.onBed()) {
+            BedPose.CLIENT_ON_BED.add(p.entityId());
+            BedPose.CLIENT_BED_YAW.put(p.entityId(), p.bedQuarter() * 90f);
+        } else {
+            BedPose.CLIENT_ON_BED.remove(p.entityId());
+            BedPose.CLIENT_BED_YAW.remove(p.entityId());
+        }
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
         Entity e = mc.level.getEntity(p.entityId());

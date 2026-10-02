@@ -191,6 +191,31 @@ public final class ClientEvents {
         if (e.getOverlay() == VanillaGuiOverlay.CHAT_PANEL.type() && ClientState.self.down == 3) e.setCanceled(true);
     }
 
+    /** Игроки на койке, для которых в {@link #onRenderPlayerPre} сдвинута матрица. */
+    private static final java.util.Set<Integer> BED_SHIFTED = new java.util.HashSet<>();
+
+    /**
+     * На койке: поза сна ванили рисует тело от ног вдоль поворота тела. Поворот фиксируем (иначе тело
+     * крутится вслед за взглядом), а тело сдвигаем так, чтобы его середина была над койкой.
+     */
+    @SubscribeEvent
+    public static void onRenderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre e) {
+        Player p = e.getEntity();
+        Float yaw = BedPose.CLIENT_BED_YAW.get(p.getId());
+        if (yaw == null || !p.hasPose(Pose.SLEEPING)) return;
+        p.yBodyRot = yaw;
+        p.yBodyRotO = yaw;
+        double a = Math.toRadians(yaw);
+        e.getPoseStack().pushPose();
+        e.getPoseStack().translate(0.9 * Math.cos(a), 0, -0.9 * Math.sin(a));
+        BED_SHIFTED.add(p.getId());
+    }
+
+    @SubscribeEvent
+    public static void onRenderPlayerPost(net.minecraftforge.client.event.RenderPlayerEvent.Post e) {
+        if (BED_SHIFTED.remove(e.getEntity().getId())) e.getPoseStack().popPose();
+    }
+
     /** Лежачий ничего не держит в руках — руку не рисуем. */
     @SubscribeEvent
     public static void onRenderHand(net.minecraftforge.client.event.RenderHandEvent e) {

@@ -45,6 +45,8 @@ public final class MedicalData {
     /** Койка, на которой лежит игрок (null — не на койке). Сохраняется. */
     @Nullable
     public BlockPos bedPos;
+    /** Куда смотрит тело на койке: четверть оборота 0–3 (юг, запад, север, восток). */
+    public byte bedQuarter;
     /** Кэш поиска блоков рядом (п. 14 ТЗ второго этапа: раз в 2 с, не каждый тик). */
     @Nullable
     public BlockPos monitorPos;

@@ -116,6 +116,7 @@ public final class HospitalService {
             sp.stopUsingItem();
             sp.setSprinting(false);
             d.bedPos = pos.immutable();
+            d.bedQuarter = (byte) (Math.floorMod(Math.round(sp.getYRot() / 90f), 4));
             d.hospitalScanTick = Long.MIN_VALUE / 2;
             sp.teleportTo(spot.x, spot.y, spot.z);
             sp.setDeltaMovement(Vec3.ZERO);

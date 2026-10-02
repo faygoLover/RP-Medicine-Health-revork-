@@ -184,7 +184,8 @@ public final class ModSetup {
         if (e.getTarget() instanceof ServerPlayer target && e.getEntity() instanceof ServerPlayer viewer
                 && (Medical.isDown(target) || HospitalService.isOnBed(target))) {
             Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer),
-                    new EntityDownedPacket(target.getId(), Medical.isDown(target), HospitalService.isOnBed(target)));
+                    new EntityDownedPacket(target.getId(), Medical.isDown(target), HospitalService.isOnBed(target),
+                            faygolover.rpmedicine.server.DownedService.bedQuarter(target)));
         }
     }
 

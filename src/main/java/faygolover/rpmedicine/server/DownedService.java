@@ -91,12 +91,17 @@ public final class DownedService {
 
     /** Сообщить всем, кто видит игрока (и ему самому), что он лежит или встал. */
     public static void broadcastDowned(ServerPlayer sp, boolean down) {
-        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp), new EntityDownedPacket(sp.getId(), down, onBed(sp)));
+        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp), new EntityDownedPacket(sp.getId(), down, onBed(sp), bedQuarter(sp)));
     }
 
     /** Сообщить позу по текущему состоянию (лежит, на койке). */
     public static void broadcastPose(ServerPlayer sp) {
         broadcastDowned(sp, Medical.isDown(sp));
+    }
+
+    public static byte bedQuarter(ServerPlayer sp) {
+        MedicalData d = Medical.data(sp);
+        return d != null ? d.bedQuarter : 0;
     }
 
     private static boolean onBed(ServerPlayer sp) {

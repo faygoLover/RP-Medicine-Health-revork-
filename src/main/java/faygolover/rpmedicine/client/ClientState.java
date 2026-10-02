@@ -46,6 +46,7 @@ public final class ClientState {
         progressTotal = 0;
         DOWNED.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_ON_BED.clear();
+        faygolover.rpmedicine.hospital.BedPose.CLIENT_BED_YAW.clear();
         monitor = null;
     }
 

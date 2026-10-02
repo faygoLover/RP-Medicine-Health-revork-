@@ -23,6 +23,8 @@ public final class BedPose {
 
     /** Клиент: id игроков на койках (заполняется пакетом позы). */
     public static final Set<Integer> CLIENT_ON_BED = ConcurrentHashMap.newKeySet();
+    /** Клиент: поворот тела на койке, градусы. */
+    public static final java.util.Map<Integer, Float> CLIENT_BED_YAW = new ConcurrentHashMap<>();
 
     public static boolean onBed(Player p) {
         if (p.level().isClientSide) return CLIENT_ON_BED.contains(p.getId());
