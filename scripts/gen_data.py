@@ -263,3 +263,33 @@ for name, (shape, color, accent) in ICONS.items():
 
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
 print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(ALIASES), "аналогов")
+
+# ---------------------------------------------------------------- площадка для GameTest (7×5×7, пол из камня)
+import gzip
+def nbt_named(tag_type, name, payload):
+    n = name.encode("utf-8")
+    return bytes([tag_type]) + struct.pack(">H", len(n)) + n + payload
+def nbt_int(v): return struct.pack(">i", v)
+def nbt_string(s):
+    b = s.encode("utf-8"); return struct.pack(">H", len(b)) + b
+def nbt_list(elem_type, items): return bytes([elem_type]) + struct.pack(">i", len(items)) + b"".join(items)
+def nbt_compound(entries): return b"".join(entries) + b"\x00"
+
+SX, SY, SZ = 7, 5, 7
+palette = [nbt_compound([nbt_named(8, "Name", nbt_string("minecraft:stone"))])]
+blocks = []
+for x in range(SX):
+    for z in range(SZ):
+        blocks.append(nbt_compound([nbt_named(9, "pos", nbt_list(3, [nbt_int(x), nbt_int(0), nbt_int(z)])),
+                                    nbt_named(3, "state", nbt_int(0))]))
+root = nbt_compound([
+    nbt_named(3, "DataVersion", nbt_int(3465)),
+    nbt_named(9, "size", nbt_list(3, [nbt_int(SX), nbt_int(SY), nbt_int(SZ)])),
+    nbt_named(9, "palette", nbt_list(10, palette)),
+    nbt_named(9, "blocks", nbt_list(10, blocks)),
+    nbt_named(9, "entities", nbt_list(10, [])),
+])
+path = os.path.join(DATA, "rpmedicine", "structures", "platform.nbt")
+os.makedirs(os.path.dirname(path), exist_ok=True)
+with open(path, "wb") as f:
+    f.write(gzip.compress(nbt_named(10, "", root)))

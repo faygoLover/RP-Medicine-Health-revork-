@@ -18,7 +18,7 @@ public final class StepInput {
     public boolean suffocating;
     /** Стоит на месте или лежит (капельница идёт только так). */
     public boolean still = true;
-    public RandomGenerator random = RandomGenerator.getDefault();
+    public RandomGenerator random = new java.util.SplittableRandom();
 
     public StepInput() {}
 

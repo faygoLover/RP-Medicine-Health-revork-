@@ -13,6 +13,8 @@ public final class MedicalData {
     public final MedicalState state = new MedicalState();
 
     // --- накопители между шагами физиологии (не сохраняются) ---
+    /** Свой счётчик тиков для шага физиологии (не зависит от tickCount, который трогают другие моды). */
+    public int ticks;
     public double sprintTicks;
     public int jumps;
     public double distance;

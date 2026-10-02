@@ -44,7 +44,7 @@ public final class PatientTicker {
         d.lastZ = sp.getZ();
 
         int step = Math.max(1, s.stepTicks);
-        if ((sp.tickCount + sp.getId()) % step != 0) return;
+        if ((++d.ticks + sp.getId()) % step != 0) return;
 
         boolean quiet = m.isQuiet(s) && d.distance < 0.01;
         if (!quiet) {

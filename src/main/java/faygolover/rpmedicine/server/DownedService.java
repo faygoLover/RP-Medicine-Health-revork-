@@ -114,7 +114,7 @@ public final class DownedService {
         sp.invulnerableTime = 0;
         sp.hurt(src, Float.MAX_VALUE);
         if (!sp.isDeadOrDying()) {
-            // Что-то отменило урон (другой мод): добиваем напрямую.
+            // Урон отменён (PvP выключен, другой мод): добиваем напрямую.
             sp.setHealth(0);
             sp.die(src);
         }
