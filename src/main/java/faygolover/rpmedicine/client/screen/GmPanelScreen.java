@@ -89,7 +89,7 @@ public class GmPanelScreen extends Screen {
             int y = t + 20 + i * ROW_H;
             if (r.uuid().equals(selected)) g.fill(l + 3, y - 1, l + LIST_W, y + ROW_H - 1, 0x40FFFFFF);
             g.fill(l + 6, y + 2, l + 12, y + 8, COLORS[Math.max(0, Math.min(4, r.color()))]);
-            String name = (r.stub() ? "⚰ " : "") + r.name();
+            String name = (r.stub() ? "† " : "") + r.name();
             g.drawString(font, font.plainSubstrByWidth(name, LIST_W - 20), l + 16, y + 1, r.stub() ? 0xAAAAAA : 0xFFFFFF, false);
         }
         if (rows.isEmpty()) g.drawString(font, Component.translatable("rpmedicine.gm.empty"), l + 6, t + 20, 0x808080, false);

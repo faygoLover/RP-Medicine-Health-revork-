@@ -54,7 +54,7 @@ public final class GmPanelService {
             StubRegistry.Record r = e.getValue();
             BodyStubEntity stub = stubEntity(server, r);
             MedicalState m = stub != null ? stub.state() : null;
-            String name = stub != null ? stub.ownerName() : e.getKey().toString().substring(0, 8);
+            String name = stub != null ? stub.ownerName() : !r.name.isEmpty() ? r.name : e.getKey().toString().substring(0, 8);
             rows.add(new GmPanelPacket.Row(e.getKey(), name, true, m != null ? stateColor(m) : (r.dead ? 4 : 3),
                     r.dimension.location().toString(), (int) r.pos.x, (int) r.pos.y, (int) r.pos.z));
         }

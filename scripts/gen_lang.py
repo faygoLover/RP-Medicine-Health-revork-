@@ -395,7 +395,7 @@ for k, ru, en in [
  ("rpmedicine.gm.empty", "Никого", "Nobody"), ("rpmedicine.gm.pick", "Выберите игрока или тело слева", "Pick a player or body on the left"),
  ("rpmedicine.gm.not_loaded", "Тело в незагруженном чанке — телепортируйтесь к нему", "The body is in an unloaded chunk — teleport to it"),
  ("rpmedicine.gm.heal", "Вылечить", "Heal"), ("rpmedicine.gm.revive", "Поднять", "Revive"), ("rpmedicine.gm.kill", "Убить", "Kill"),
- ("rpmedicine.gm.teleport", "Телепорт", "Teleport"), ("rpmedicine.gm.history", "История", "History"), ("rpmedicine.gm.inspect", "Осмотр", "Inspect"),
+ ("rpmedicine.gm.teleport", "К нему", "Go to"), ("rpmedicine.gm.history", "История", "History"), ("rpmedicine.gm.inspect", "Осмотр", "Inspect"),
  ("rpmedicine.cmd.skill_attribute", "%s: «Медицина» %s (атрибут RP Perks), сейчас %s", "%s: Medicine %s (RP Perks attribute), now %s"),
  ("rpmedicine.cmd.skill_own", "%s: «Медицина» %s (свой уровень мода), сейчас %s", "%s: Medicine %s (mod's own level), now %s"),
  ("rpmedicine.stats.title", "Статистика %s за %s ч", "Stats for %s over %s h"),

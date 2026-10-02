@@ -249,7 +249,7 @@
   "rpmedicine.gm.not_loaded": "The body is in an unloaded chunk — teleport to it",
   "rpmedicine.gm.pick": "Pick a player or body on the left",
   "rpmedicine.gm.revive": "Revive",
-  "rpmedicine.gm.teleport": "Teleport",
+  "rpmedicine.gm.teleport": "Go to",
   "rpmedicine.gm.title": "GM panel — RP Medicine",
   "rpmedicine.hud.analgesia": "Painkillers",
   "rpmedicine.hud.bleed_1": "Bleeding: light",

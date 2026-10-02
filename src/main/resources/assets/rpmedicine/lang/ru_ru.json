@@ -249,7 +249,7 @@
   "rpmedicine.gm.not_loaded": "Тело в незагруженном чанке — телепортируйтесь к нему",
   "rpmedicine.gm.pick": "Выберите игрока или тело слева",
   "rpmedicine.gm.revive": "Поднять",
-  "rpmedicine.gm.teleport": "Телепорт",
+  "rpmedicine.gm.teleport": "К нему",
   "rpmedicine.gm.title": "Панель ГМа — RP Medicine",
   "rpmedicine.hud.analgesia": "Обезболен",
   "rpmedicine.hud.bleed_1": "Кровь: слабо",

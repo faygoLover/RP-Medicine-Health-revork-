@@ -32,6 +32,8 @@ public final class StubRegistry extends SavedData {
         public CompoundTag snapshot = new CompoundTag();
         /** Заглушку убили (режим «без смерти» выключен): игрок войдёт мёртвым. */
         public boolean dead;
+        /** Имя владельца (для панели ГМа, когда тело в незагруженном чанке). */
+        public String name = "";
     }
 
     private final Map<UUID, Record> records = new HashMap<>();
@@ -90,6 +92,7 @@ public final class StubRegistry extends SavedData {
             t.putFloat("Yaw", r.yaw);
             t.put("Snapshot", r.snapshot);
             t.putBoolean("Dead", r.dead);
+            t.putString("Name", r.name);
             list.add(t);
         }
         tag.put("Stubs", list);
@@ -108,6 +111,7 @@ public final class StubRegistry extends SavedData {
             r.yaw = t.getFloat("Yaw");
             r.snapshot = t.getCompound("Snapshot");
             r.dead = t.getBoolean("Dead");
+            r.name = t.getString("Name");
             reg.records.put(t.getUUID("Owner"), r);
         }
         return reg;

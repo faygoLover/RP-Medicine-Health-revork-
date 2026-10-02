@@ -88,6 +88,7 @@ public final class StubService {
     }
 
     private static void fill(StubRegistry.Record r, BodyStubEntity stub) {
+        r.name = stub.ownerName();
         r.dimension = stub.level().dimension();
         r.pos = stub.position();
         r.yaw = stub.getYRot();
