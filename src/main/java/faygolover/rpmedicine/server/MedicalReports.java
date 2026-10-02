@@ -76,7 +76,8 @@ public final class MedicalReports {
             sb.append(String.format(Locale.ROOT, ": целостность %.0f", ps.integrity()));
             for (Wound w : ps.wounds) {
                 sb.append(String.format(Locale.ROOT, "; %s %.1f (кровь %.0f мл/мин%s%s)", w.type.id, w.severity, w.bleed(s),
-                        w.isDressed() ? ", " + w.dressing.id + (w.dressingQuality < 1 ? " плохо" : "") : "", infection(w)));
+                        w.isDressed() ? ", " + w.dressing.id + (w.dressingQuality < 1 ? String.format(Locale.ROOT, " %.2f", w.dressingQuality) : "") : "",
+                        infection(w) + (w.sutured ? String.format(Locale.ROOT, ", швы %.2f", w.sutureQuality) : "")));
             }
             if (ps.hasFracture()) sb.append("; перелом ").append(ps.fracture).append(ps.splint ? " (шина)" : "")
                     .append(String.format(Locale.ROOT, " %.0f%%", ps.fractureHeal * 100));

@@ -153,8 +153,12 @@ public class MinigameScreen extends Screen {
         g.fill(l, t, l + W, t + H, 0xE0101418);
         g.renderOutline(l, t, W, H, 0xFF505860);
         g.drawCenteredString(font, Component.translatable(task.itemKey()).append(" — ").append(title), width / 2, t + 6, 0xFFFFFF);
-        g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.hint_" + task.type().id()).withStyle(ChatFormatting.GRAY),
-                width / 2, t + 18, 0xFFFFFF);
+        // Подсказка переносится внутри рамки.
+        int hy = t + 18;
+        for (var line : font.split(Component.translatable("rpmedicine.minigame.hint_" + task.type().id()).withStyle(ChatFormatting.GRAY), W - 12)) {
+            g.drawCenteredString(font, line, width / 2, hy, 0xFFFFFF);
+            hy += 9;
+        }
         long now = System.currentTimeMillis();
         double dt = Math.min(0.1, (now - lastFrameMs) / 1000.0);
         lastFrameMs = now;
