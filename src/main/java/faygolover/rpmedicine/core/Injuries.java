@@ -16,7 +16,7 @@ public final class Injuries {
     /** Что получилось от одного попадания по части тела. */
     public enum Outcome {
         WOUND, FRACTURE, OPEN_FRACTURE, RIB_FRACTURE, ARTERIAL, INTERNAL, FOREIGN_BODY, CONCUSSION,
-        KNOCKOUT, PNEUMOTHORAX, DRESSING_REOPENED, INSTANT_DEATH, DISLOCATION
+        KNOCKOUT, PNEUMOTHORAX, DRESSING_REOPENED, INSTANT_DEATH, DISLOCATION, ORGAN
     }
 
     public static final class Report {
@@ -24,6 +24,8 @@ public final class Injuries {
         /** Раны, в которые попал урон (для условий ранения: грязная вода и т.п.). */
         public final List<Wound> wounds = new ArrayList<>();
         public final List<BodyPart> parts = new ArrayList<>();
+        /** Задетые органы (третий этап). */
+        public final List<Organ> organs = new ArrayList<>();
         public double totalSeverity;
 
         public boolean has(Outcome o) {
@@ -35,6 +37,7 @@ public final class Injuries {
             for (BodyPart p : o.parts) if (!parts.contains(p)) parts.add(p);
             totalSeverity += o.totalSeverity;
             for (Wound w : o.wounds) if (!wounds.contains(w)) wounds.add(w);
+            for (Organ g : o.organs) if (!organs.contains(g)) organs.add(g);
         }
     }
 
@@ -148,6 +151,36 @@ public final class Injuries {
             rep.outcomes.add(Outcome.INTERNAL);
         }
 
+        // Органы (третий этап, п. 2.2): проникающая рана задевает один орган части, сильный тупой удар — ушиб.
+        if (s.organsEnabled && part.isTorso()) {
+            Organ hitOrgan = null;
+            double amount = 0;
+            double chance = switch (prof.wound) {
+                case GUNSHOT -> s.gunshotOrganChance;
+                case STAB -> s.stabOrganChance;
+                case SHRAPNEL -> s.shrapnelOrganChance;
+                default -> 0;
+            };
+            if (chance > 0 && rnd.nextDouble() < chance) {
+                hitOrgan = randomOrgan(part, rnd);
+                amount = sev * Physiology.lerp(s.organDamagePerSeverityMin, s.organDamagePerSeverityMax, rnd.nextDouble());
+            } else if (prof.wound == WoundType.BRUISE && damage >= s.bluntOrganMinDamage) {
+                hitOrgan = randomOrgan(part, rnd);
+                amount = damage * s.bluntOrganFactor;
+            }
+            if (hitOrgan != null && m.hasOrgan(hitOrgan)) {
+                m.damageOrgan(hitOrgan, amount);
+                rep.outcomes.add(Outcome.ORGAN);
+                rep.organs.add(hitOrgan);
+                // Огнестрел в печень, почки, кишечник — заражённая брюшная полость.
+                if (s.abdominalGunshotInfects && prof.wound == WoundType.GUNSHOT && part == BodyPart.ABDOMEN && hit != null
+                        && hit.infectionStage != Wound.Infection.INFECTED) {
+                    hit.infectionStage = Wound.Infection.INFECTED;
+                    hit.infection = Math.max(hit.infection, 10);
+                }
+            }
+        }
+
         // Инородные тела: слепое огнестрельное, осколки.
         if (rnd.nextDouble() < prof.foreignBody.at(sev)) {
             int n = prof.foreignBodyMin + (prof.foreignBodyMax > prof.foreignBodyMin
@@ -174,6 +207,13 @@ public final class Injuries {
             rep.outcomes.add(Outcome.PNEUMOTHORAX);
         }
         return rep;
+    }
+
+    /** Случайный орган части тела (грудь: сердце или лёгкие, живот: печень, почки, кишечник). */
+    static Organ randomOrgan(BodyPart part, RandomGenerator rnd) {
+        List<Organ> in = new ArrayList<>();
+        for (Organ o : Organ.VALUES) if (o.part == part) in.add(o);
+        return in.get(rnd.nextInt(in.size()));
     }
 
     /** Контузия: копится, при сильной — короткая потеря сознания. Возвращает true при потере сознания. */

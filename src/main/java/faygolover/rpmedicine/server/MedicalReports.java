@@ -65,6 +65,15 @@ public final class MedicalReports {
             }
             out.add(line("%s", eb));
         }
+        // Третий этап: органы.
+        if (faygolover.rpmedicine.core.Organs.worst(m) > 0) {
+            StringBuilder ob = new StringBuilder("Органы:");
+            for (faygolover.rpmedicine.core.Organ o : faygolover.rpmedicine.core.Organ.VALUES) {
+                if (!m.hasOrgan(o)) ob.append(' ').append(o.id).append(" ИЗЪЯТ");
+                else if (m.organ(o) > 0) ob.append(String.format(Locale.ROOT, " %s %.0f%%", o.id, m.organ(o)));
+            }
+            out.add(line("%s", ob));
+        }
         if (m.down == MedicalState.Down.KNOCKDOWN && Physiology.lifeThreat(m, s) && !m.knockdownNoTimer) {
             double rate = Physiology.knockdownBrainRate(m, s, Medical.traits(target));
             out.add(line("Нокдаун: осталось ~%.0f с", m.brain / Math.max(1e-6, rate)));

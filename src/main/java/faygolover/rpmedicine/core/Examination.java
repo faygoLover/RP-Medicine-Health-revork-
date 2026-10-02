@@ -175,6 +175,10 @@ public final class Examination {
         if (!self && lvl >= 4) {
             if (m.bodyTemp >= 37.8) out.add(new Line("feels_hot"));
             else if (m.bodyTemp <= 35.5) out.add(new Line("feels_cold"));
+            // Органы (третий этап): желтуха, отёки, напряжённый живот.
+            if (m.organ(Organ.LIVER) >= 80) out.add(new Line("jaundice"));
+            if (m.organ(Organ.HEART) >= 80 || m.organ(Organ.KIDNEYS) >= 80) out.add(new Line("edema"));
+            if (m.organ(Organ.INTESTINES) >= 30) out.add(new Line("abdomen_tense"));
         }
         // Жалобы — только от того, кто в сознании (и свои ощущения).
         if (m.down == Down.NONE) {
@@ -222,6 +226,10 @@ public final class Examination {
         if (m.thirst < s.dehydrationThreshold * 100 + 10) c.add("thirsty");
         if (m.bodyTemp < 35.5) c.add("freezing");
         if (m.deafSeconds > 0) c.add("deaf");
+        // Органы (третий этап).
+        if (m.organ(Organ.LUNGS) >= 50 || m.organ(Organ.HEART) >= 50) c.add("cough");
+        if (m.organ(Organ.LIVER) >= 50) c.add("side_pain");
+        if (m.organ(Organ.KIDNEYS) >= 50 && !c.contains("nausea")) c.add("nausea");
         return c;
     }
 }

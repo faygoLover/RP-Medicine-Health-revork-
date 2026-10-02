@@ -19,7 +19,7 @@ public final class Diagnostics {
         if (m.respiratoryArrest || m.heart != Heart.NORMAL || m.respRate <= 0) return "breath_none";
         if (m.pneumo != Pneumo.NONE) return "breath_one_side_weak";
         BodyPartState chest = m.part(BodyPart.CHEST);
-        if (chest.internalBleed > 0 || chest.hasFracture()) return "breath_crackles";
+        if (chest.internalBleed > 0 || chest.hasFracture() || m.organ(Organ.LUNGS) >= 50) return "breath_crackles";
         if (m.respRate < 10) return "breath_shallow";
         if (m.respRate > 24) return "breath_fast";
         return "breath_normal";
@@ -30,7 +30,8 @@ public final class Diagnostics {
         return switch (m.heart) {
             case ARREST -> "heart_none";
             case FIBRILLATION -> "heart_irregular";
-            case NORMAL -> m.heartRate > 100 ? "heart_fast" : m.heartRate < 55 ? "heart_slow" : "heart_normal";
+            case NORMAL -> m.organ(Organ.HEART) >= 30 ? "heart_uneven"
+                    : m.heartRate > 100 ? "heart_fast" : m.heartRate < 55 ? "heart_slow" : "heart_normal";
         };
     }
 
@@ -50,7 +51,30 @@ public final class Diagnostics {
         if (ps.hasFracture()) out.add(part == BodyPart.CHEST ? "scan_rib_fracture" : ps.fracture == Fracture.OPEN ? "scan_fracture_open" : "scan_fracture_closed");
         else out.add("scan_no_fracture");
         if (ps.dislocated) out.add("scan_dislocation");
+        // Органы части (третий этап): ушиб, повреждение, тяжёлое, нет органа.
+        if (part.isTorso()) {
+            boolean any = false;
+            for (Organ o : Organ.VALUES) {
+                if (o.part != part) continue;
+                String w = organWord(m, o);
+                if (w != null) {
+                    out.add("scan_" + o.id + "_" + w);
+                    any = true;
+                }
+            }
+            if (!any) out.add("scan_organs_ok");
+        }
         return out;
+    }
+
+    /** Состояние органа словом для сканера: null — цел. */
+    static String organWord(MedicalState m, Organ o) {
+        if (!m.hasOrgan(o)) return "missing";
+        double v = m.organ(o);
+        if (v <= 0.5) return null;
+        if (v < 30) return "bruise";
+        if (v < 70) return "damage";
+        return "severe";
     }
 
     /** Гемоглобин словами по кислородной ёмкости крови. */
@@ -69,7 +93,8 @@ public final class Diagnostics {
     }
 
     /** Полный анализ крови в лаборатории (цифрами). */
-    public record Lab(BloodType bloodType, double hemoglobin, double leukocytes, boolean sepsis, double oxygenCapacity) {}
+    public record Lab(BloodType bloodType, double hemoglobin, double leukocytes, boolean sepsis, double oxygenCapacity,
+                      double alt, double creatinine, double troponin) {}
 
     public static Lab lab(MedicalState m, MedicalSettings s) {
         double cap = m.oxygenCapacity(s);
@@ -77,6 +102,10 @@ public final class Diagnostics {
         double maxInf = 0;
         for (BodyPartState ps : m.parts) for (Wound w : ps.wounds) if (w.isInfected()) maxInf = Math.max(maxInf, w.infection);
         double wbc = 6.5 + maxInf * 0.08 + m.sepsis * 0.15;
-        return new Lab(m.bloodType, hb, Math.round(wbc * 10) / 10.0, m.sepsis >= 10, cap);
+        // Органы (третий этап): печёночные пробы (АЛТ, ед/л), креатинин (мкмоль/л), тропонин (нг/л).
+        double alt = Math.round(25 + m.organ(Organ.LIVER) * 15);
+        double creat = Math.round(80 + m.organ(Organ.KIDNEYS) * 8);
+        double trop = Math.round(5 + m.organ(Organ.HEART) * 20);
+        return new Lab(m.bloodType, hb, Math.round(wbc * 10) / 10.0, m.sepsis >= 10, cap, alt, creat, trop);
     }
 }

@@ -163,7 +163,8 @@ H = 3600
 DRUGS = {
     "paracetamol": {"form": "pill", "min_level": 0, "effects": [eff("analgesia", 12, 60, 30 * 60), eff("antipyretic", 0.7, 300, 4 * H)],
                     "dose": {"limit": 4, "window_hours": 24},
-                    "overdose": {"effects": [eff("pressure", -15, 600, 2 * H), eff("heart_rate", 15, 600, 2 * H)]}},
+                    "overdose": {"effects": [eff("pressure", -15, 600, 2 * H), eff("heart_rate", 15, 600, 2 * H),
+                                             eff("liver_toxicity", 30, 1800, H)]}},
     "ibuprofen": {"form": "pill", "min_level": 0,
                   "effects": [eff("analgesia", 18, 60, 40 * 60), eff("antipyretic", 0.6, 300, 4 * H), eff("concussion_relief", 1.0, 120, 2 * H)],
                   "dose": {"limit": 3, "window_hours": 24},

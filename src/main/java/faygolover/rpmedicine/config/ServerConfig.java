@@ -364,6 +364,36 @@ public final class ServerConfig {
         bind("feverToLso", "Лихорадка поднимает температуру LSO: единиц на 1 °C жара.");
         B.pop();
 
+        B.comment("Органы (третий этап, п. 2): повреждение 0–100 %.").push("organs");
+        bind("organsEnabled", "Органы включены.");
+        bind("gunshotOrganChance", "Шанс задеть орган огнестрелом в грудь или живот.");
+        bind("stabOrganChance", "Шанс задеть орган колотой раной.");
+        bind("shrapnelOrganChance", "Шанс задеть орган осколком.");
+        bind("organDamagePerSeverityMin", "Урон органу: от такой доли тяжести раны…");
+        bind("organDamagePerSeverityMax", "… до такой.");
+        bind("bluntOrganMinDamage", "Тупой удар по груди или животу сильнее этого урона — ушиб органа.");
+        bind("bluntOrganFactor", "Ушиб органа: доля урона.");
+        bind("abdominalGunshotInfects", "Огнестрел в орган живота — рана сразу заражена.");
+        bind("organSelfHealLimit", "Ниже этого (%) орган заживает сам; выше — только операцией.");
+        bind("organHealPerHour", "Заживление органа, % в час в сети.");
+        bind("sepsisOrganPerHour", "Сепсис от 30 %: все органы теряют столько % в час.");
+        bind("hypoxiaOrganSpo2", "SpO2 ниже — сердце страдает от гипоксии…");
+        bind("hypoxiaHeartPerHour", "… на столько % в час.");
+        bind("lowPressureKidneys", "Давление ниже — почки страдают…");
+        bind("lowPressureKidneysPerHour", "… на столько % в час.");
+        bind("heartFibrillationPerHour", "Сердце от 50 %: шанс фибрилляции в час при нагрузке (пульс > 130 или кровопотеря > 30 %).");
+        bind("heartFailurePressure", "Сердце от 80 %: давление ниже на столько.");
+        bind("lungsSpo2Penalty50", "Лёгкие от 50 %: потолок SpO2 ниже на столько.");
+        bind("lungsSpo2Penalty80", "Лёгкие от 80 %: потолок SpO2 ниже на столько.");
+        bind("liverBleedFactor50", "Печень от 50 %: кровотечение сильнее во столько раз.");
+        bind("liverBleedFactor80", "Печень от 80 %: кровотечение сильнее во столько раз.");
+        bind("liverFailureInternalBleed", "Печень 100 %: внутреннее кровотечение в живот не меньше, мл/мин.");
+        bind("kidneyBrainPerHour80", "Почки от 80 %: мозг теряет % в час.");
+        bind("kidneyBrainPerHour100", "Почки 100 %: мозг теряет % в час.");
+        bind("missingOrganBrainPerHour", "Нет печени или почек: мозг теряет % в час.");
+        bind("organPainFactor", "Боль от органа: доля его повреждения.");
+        B.pop();
+
         B.comment("Ванильные эффекты (второй этап, п. 13).").push("vanilla");
         bind("poisonNauseaSeconds", "Отравление: тошнота держится ещё столько секунд после эффекта.");
         bind("poisonVomitIntervalSeconds", "Отравление: рвота раз в столько секунд.");

@@ -117,6 +117,8 @@ public final class Infections {
     public static int sepsisSources(MedicalState m) {
         int n = 0;
         for (BodyPartState ps : m.parts) for (Wound w : ps.wounds) if (w.isInfected() && w.infection >= 100) n++;
+        // Перитонит (кишечник 100 %) — тоже источник (третий этап).
+        if (Organs.peritonitis(m)) n++;
         return n;
     }
 

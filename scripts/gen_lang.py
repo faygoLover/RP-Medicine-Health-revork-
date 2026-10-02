@@ -462,6 +462,32 @@ for n in range(1, 6):
 for bt, label in [("o-", "O−"), ("o+", "O+"), ("a-", "A−"), ("a+", "A+"), ("b-", "B−"), ("b+", "B+"), ("ab-", "AB−"), ("ab+", "AB+")]:
     t(W + f"blood_{bt}", f"группа {label}", f"type {label}")
 
+# ---------------------------------------------------------------- третий этап
+# Органы (п. 2): названия, сканер, осмотр, жалобы, лаборатория.
+organs = {"heart": ("сердце", "heart", "сердца", "heart"), "lungs": ("лёгкие", "lungs", "лёгких", "lungs"),
+          "liver": ("печень", "liver", "печени", "liver"), "kidneys": ("почки", "kidneys", "почек", "kidneys"),
+          "intestines": ("кишечник", "intestines", "кишечника", "intestines")}
+for k, (ru, en, gen_ru, gen_en) in organs.items():
+    t(f"rpmedicine.organ.{k}", ru, en)
+    t(W + f"scan_{k}_bruise", f"ушиб {gen_ru}", f"{gen_en} contusion")
+    t(W + f"scan_{k}_damage", f"повреждение {gen_ru}", f"{gen_en} damage")
+    t(W + f"scan_{k}_severe", f"тяжёлое повреждение {gen_ru}", f"severe {gen_en} damage")
+    t(W + f"scan_{k}_missing", f"{gen_ru} нет" if k not in ("lungs", "kidneys") else f"{ru} отсутствуют",
+      f"no {en}" if k in ("lungs", "kidneys", "intestines") else f"no {en}")
+t(W + "scan_organs_ok", "органы без повреждений", "organs intact")
+t("rpmedicine.medcard.entry.organ", "Травма органа: %s", "Organ injury: %s")
+t(W + "heart_uneven", "тоны неровные", "uneven heartbeat")
+for k, ru, en in [
+ ("jaundice", "Кожа и глаза желтоватые", "Yellowish skin and eyes"),
+ ("edema", "Отёки на ногах", "Swollen legs"),
+ ("abdomen_tense", "Живот напряжён, болезненный", "Abdomen tense and tender"),
+ ("complaint_cough", "Кашель", "Coughing"),
+ ("complaint_side_pain", "Тянет в правом боку", "Dull ache in the right side"),
+]: t("rpmedicine.exam." + k, ru, en)
+t("rpmedicine.lab.alt", "  АЛТ (печень): %s ед/л (норма до 40)", "  ALT (liver): %s U/L (normal under 40)")
+t("rpmedicine.lab.creatinine", "  Креатинин (почки): %s мкмоль/л (норма 60–110)", "  Creatinine (kidneys): %s µmol/L (normal 60–110)")
+t("rpmedicine.lab.troponin", "  Тропонин (сердце): %s нг/л (норма до 14)", "  Troponin (heart): %s ng/L (normal under 14)")
+
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):
     with open(os.path.join(base, name + ".json"), "w", encoding="utf-8") as f:

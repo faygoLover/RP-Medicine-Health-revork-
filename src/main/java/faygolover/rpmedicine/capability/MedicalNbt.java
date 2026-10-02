@@ -76,6 +76,15 @@ public final class MedicalNbt {
         putIf(t, "opioid", m.opioidSeconds);
         if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
         putIf(t, "pFood", m.pendingFoodLoss);
+        // Органы (третий этап): только если что-то повреждено или изъято.
+        boolean anyOrgan = m.organsMissing != 0;
+        for (double v : m.organs) anyOrgan |= v > 0;
+        if (anyOrgan) {
+            ListTag ol = new ListTag();
+            for (double v : m.organs) ol.add(net.minecraft.nbt.FloatTag.valueOf((float) v));
+            t.put("organs", ol);
+        }
+        if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
         putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
             CompoundTag doses = new CompoundTag();
@@ -205,6 +214,10 @@ public final class MedicalNbt {
         m.opioidSeconds = t.getFloat("opioid");
         m.thirst = t.contains("thirst") ? t.getFloat("thirst") : 100;
         m.pendingFoodLoss = t.getFloat("pFood");
+        java.util.Arrays.fill(m.organs, 0);
+        ListTag ol = t.getList("organs", Tag.TAG_FLOAT);
+        for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
+        m.organsMissing = t.getByte("orgMiss") & 0xFF;
         m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");
         for (String k : doses.getAllKeys()) {

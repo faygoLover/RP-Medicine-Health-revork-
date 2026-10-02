@@ -126,6 +126,10 @@ public final class MedicalState {
     /** Команда food add для офлайн-игроков: сколько сытости и воды снять при входе. */
     public double pendingFoodLoss;
     public double pendingThirstLoss;
+    /** Повреждение органов 0–100 (третий этап, п. 2), по {@link Organ#ordinal()}. */
+    public final double[] organs = new double[Organ.COUNT];
+    /** Изъятые органы: биты {@link Organ#bit()}. */
+    public int organsMissing;
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -231,6 +235,8 @@ public final class MedicalState {
         nauseaSeconds = 0;
         vomitTimer = 0;
         deafSeconds = 0;
+        java.util.Arrays.fill(organs, 0);
+        organsMissing = 0;
         doses.clear();
         effects.clear();
     }
@@ -239,6 +245,12 @@ public final class MedicalState {
     public void healPart(BodyPart p) {
         BodyPartState ps = part(p);
         ps.clear();
+        for (Organ o : Organ.VALUES) {
+            if (o.part == p) {
+                organs[o.ordinal()] = 0;
+                organsMissing &= ~o.bit();
+            }
+        }
         if (p == BodyPart.CHEST) {
             pneumo = Pneumo.NONE;
             pneumoTimer = 0;
@@ -269,6 +281,8 @@ public final class MedicalState {
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
         if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
         if (nauseaSeconds > 0 || deafSeconds > 0) return false;
+        if (organsMissing != 0) return false;
+        for (double d : organs) if (d > 0) return false;
         if (thirst < s.dehydrationThreshold * 100) return false;
         if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
         return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
@@ -359,6 +373,8 @@ public final class MedicalState {
         nauseaSeconds = o.nauseaSeconds;
         vomitTimer = o.vomitTimer;
         deafSeconds = o.deafSeconds;
+        System.arraycopy(o.organs, 0, organs, 0, Organ.COUNT);
+        organsMissing = o.organsMissing;
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;
@@ -400,5 +416,26 @@ public final class MedicalState {
         a.seconds += seconds;
         if (Math.abs(strength) > Math.abs(a.strength)) a.strength = strength;
         a.delay = Math.min(a.delay, delay);
+    }
+
+    // ------------------------------------------------------------------ органы (третий этап)
+
+    /** Повреждение органа 0–100; изъятый — 100. */
+    public double organ(Organ o) {
+        return hasOrgan(o) ? organs[o.ordinal()] : 100;
+    }
+
+    public boolean hasOrgan(Organ o) {
+        return (organsMissing & o.bit()) == 0;
+    }
+
+    /** Добавить повреждение органу (не выше 100). */
+    public void damageOrgan(Organ o, double amount) {
+        if (amount <= 0 || !hasOrgan(o)) return;
+        organs[o.ordinal()] = Math.min(100, organs[o.ordinal()] + amount);
+    }
+
+    public void setOrgan(Organ o, double value) {
+        organs[o.ordinal()] = Math.max(0, Math.min(100, value));
     }
 }
