@@ -174,6 +174,12 @@ public final class ClientEvents {
         if (e.getOverlay() == VanillaGuiOverlay.CHAT_PANEL.type() && ClientState.self.down == 3) e.setCanceled(true);
     }
 
+    /** Лежачий ничего не держит в руках — руку не рисуем. */
+    @SubscribeEvent
+    public static void onRenderHand(net.minecraftforge.client.event.RenderHandEvent e) {
+        if (ClientState.self.isDown()) e.setCanceled(true);
+    }
+
     @SubscribeEvent
     public static void onCamera(ViewportEvent.ComputeCameraAngles e) {
         Minecraft mc = Minecraft.getInstance();

@@ -149,6 +149,13 @@ public class MedicalPanelScreen extends Screen {
         }
         // Медицинские предметы для перетаскивания.
         drawItems(g, mx, my);
+        // Прогресс действия поверх панели (HUD рисуется под экраном).
+        if (ClientState.progressActive()) {
+            g.pose().pushPose();
+            g.pose().translate(l + 225, t + 160, 0);
+            faygolover.rpmedicine.client.MedicalHud.drawElement(g, font, faygolover.rpmedicine.config.ClientConfig.HudElement.PROGRESS, ClientState.self, false);
+            g.pose().popPose();
+        }
         super.render(g, mx, my, pt);
         if (dragSlot >= 0) {
             ItemStack s = minecraft.player.getInventory().getItem(dragSlot);

@@ -23,7 +23,7 @@ public final class ScreenEffects {
 
     public static void render(ForgeGui gui, GuiGraphics g, float partialTick, int sw, int sh) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) return;
+        if (mc.player == null || mc.player.isDeadOrDying()) return;
         SelfView v = ClientState.self;
         float tv = ClientConfig.PAIN_VIGNETTE.get() ? f(v.vignette) : 0;
         float td = ClientConfig.LOW_PRESSURE_DARKEN.get() ? f(v.darken) : 0;
@@ -43,11 +43,12 @@ public final class ScreenEffects {
 
     /** Затемнение краёв полосами с убывающей прозрачностью. */
     private static void edges(GuiGraphics g, int sw, int sh, float strength, int rgb) {
-        int steps = 16;
         int depth = (int) (Math.min(sw, sh) * (0.18f + 0.3f * strength));
-        int step = Math.max(1, depth / steps);
+        int steps = Math.max(1, depth);
+        int step = 1;
         for (int i = 0; i < steps; i++) {
-            float a = strength * 0.85f * (1f - (float) i / steps);
+            float k = 1f - (float) i / steps;
+            float a = strength * 0.85f * k * k;
             int c = argb(a, rgb);
             int o = i * step;
             g.fill(o, o, sw - o, o + step, c);

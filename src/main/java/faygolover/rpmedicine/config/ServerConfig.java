@@ -260,7 +260,19 @@ public final class ServerConfig {
         SPEC = B.build();
     }
 
+    /** Загруженный файл конфига (для перечитывания командой reload). */
+    public static net.minecraftforge.fml.config.ModConfig loaded;
+
     private ServerConfig() {}
+
+    /** Перечитать файл с диска (команда {@code /rpmedicine reload}) и применить. */
+    public static void reloadFromDisk() {
+        if (loaded != null && loaded.getConfigData() instanceof com.electronwill.nightconfig.core.file.FileConfig fc) {
+            fc.load();
+            SPEC.afterReload();
+        }
+        apply();
+    }
 
     /** Перечитывает конфиг в новый {@link MedicalSettings} и подменяет текущий. */
     public static void apply() {

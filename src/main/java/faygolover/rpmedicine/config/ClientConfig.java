@@ -35,7 +35,7 @@ public final class ClientConfig {
     /** Элементы HUD (п. 7.4 ТЗ) и их положение по умолчанию. */
     public enum HudElement {
         SILHOUETTE("silhouette", Anchor.BOTTOM_LEFT, 6, -54, 1.0),
-        STATUS("status", Anchor.BOTTOM_LEFT, 34, -22, 1.0),
+        STATUS("status", Anchor.BOTTOM_LEFT, 44, -22, 1.0),
         PROGRESS("progress", Anchor.CENTER, -50, 18, 1.0),
         KNOCKDOWN_TIMER("knockdown_timer", Anchor.TOP_CENTER, 0, 30, 1.0),
         HOVER("hover", Anchor.CENTER, 12, -4, 1.0);

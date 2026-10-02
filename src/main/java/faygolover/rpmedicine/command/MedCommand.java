@@ -123,13 +123,15 @@ public final class MedCommand {
 
     private static List<LivingEntity> patients(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         List<LivingEntity> out = new ArrayList<>();
-        for (Entity e : EntityArgument.getEntities(c, "targets")) if (e instanceof LivingEntity le && Medical.isPatient(le)) out.add(le);
+        // У мёртвого игрока на экране возрождения Forge уже снял capability — такие цели пропускаем.
+        for (Entity e : EntityArgument.getEntities(c, "targets"))
+            if (e instanceof LivingEntity le && Medical.isPatient(le) && Medical.state(le) != null) out.add(le);
         if (out.isEmpty()) throw NOT_PATIENT.create();
         return out;
     }
 
     private static int reload(CommandContext<CommandSourceStack> c) {
-        ServerConfig.apply();
+        ServerConfig.reloadFromDisk();
         MinecraftServer server = c.getSource().getServer();
         server.reloadResources(server.getPackRepository().getSelectedIds()).thenRun(() ->
                 c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.reloaded"), true));
@@ -319,7 +321,9 @@ public final class MedCommand {
         Collection<ServerPlayer> players = EntityArgument.getPlayers(c, "targets");
         int n = 0;
         for (ServerPlayer sp : players) {
-            Healing.fastForward(Medical.state(sp), seconds, s);
+            MedicalState m = Medical.state(sp);
+            if (m == null) continue;
+            Healing.fastForward(m, seconds, s);
             Medical.changed(sp);
             n++;
         }

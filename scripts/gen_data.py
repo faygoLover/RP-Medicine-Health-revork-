@@ -189,14 +189,17 @@ write(f"{DATA}/rpmedicine/tags/entity_types/biting_mobs.json",
                                     "minecraft:ocelot", "minecraft:panda", "minecraft:hoglin", "minecraft:zoglin",
                                     "minecraft:piglin", "minecraft:axolotl"]})
 
-# ---------------------------------------------------------------- звуки (заглушки на ванильные файлы)
+# ---------------------------------------------------------------- звуки (заглушки: ссылки на ванильные звуковые события)
+# Ссылка на событие ("type": "event"), а не на файл: пути файлов в ресурсах ванили меняются от версии к версии.
 SOUNDS = {
-    "heartbeat": "minecraft:block/note_block/basedrum", "heavy_breathing": "minecraft:mob/player/hurt/drown1",
-    "ear_ringing": "minecraft:block/note_block/bell", "bandage": "minecraft:item/armor/equip_leather1",
-    "injection": "minecraft:random/click", "tourniquet": "minecraft:item/armor/equip_chain1",
-    "defib_shock": "minecraft:random/fizz", "bone_break": "minecraft:mob/zombie/woodbreak", "pills": "minecraft:random/eat1",
+    "heartbeat": "minecraft:block.note_block.basedrum", "heavy_breathing": "minecraft:entity.player.hurt_drown",
+    "ear_ringing": "minecraft:block.note_block.bell", "bandage": "minecraft:item.armor.equip_leather",
+    "injection": "minecraft:ui.button.click", "tourniquet": "minecraft:item.armor.equip_chain",
+    "defib_shock": "minecraft:block.fire.extinguish", "bone_break": "minecraft:entity.zombie.break_wooden_door",
+    "pills": "minecraft:entity.generic.eat",
 }
-write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": [v]} for k, v in SOUNDS.items()})
+write(f"{ASSETS}/sounds.json", {k: {"subtitle": f"subtitles.rpmedicine.{k}", "sounds": [{"name": v, "type": "event"}]}
+                                for k, v in SOUNDS.items()})
 
 # ---------------------------------------------------------------- модели и текстуры-заглушки
 def png(path, pixels):
@@ -292,4 +295,4 @@ root = nbt_compound([
 path = os.path.join(DATA, "rpmedicine", "structures", "platform.nbt")
 os.makedirs(os.path.dirname(path), exist_ok=True)
 with open(path, "wb") as f:
-    f.write(gzip.compress(nbt_named(10, "", root)))
+    f.write(gzip.compress(nbt_named(10, "", root), mtime=0))

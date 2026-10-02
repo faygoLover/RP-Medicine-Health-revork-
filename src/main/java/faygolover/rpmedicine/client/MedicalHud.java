@@ -58,7 +58,7 @@ public final class MedicalHud {
     /** Точка входа слоя HUD (сигнатура IGuiOverlay). */
     public static void render(ForgeGui gui, GuiGraphics g, float partialTick, int sw, int sh) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.options.hideGui) return;
+        if (mc.player == null || mc.options.hideGui || mc.player.isDeadOrDying()) return;
         SelfView v = ClientState.self;
         for (HudElement e : HudElement.values()) {
             if (!ClientConfig.hud(e).visible.get()) continue;

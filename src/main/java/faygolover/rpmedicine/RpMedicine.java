@@ -48,7 +48,10 @@ public final class RpMedicine {
     }
 
     private void onConfig(ModConfigEvent.Loading event) {
-        if (event.getConfig().getSpec() == ServerConfig.SPEC) ServerConfig.apply();
+        if (event.getConfig().getSpec() == ServerConfig.SPEC) {
+            ServerConfig.loaded = event.getConfig();
+            ServerConfig.apply();
+        }
     }
 
     private void onConfigReload(ModConfigEvent.Reloading event) {

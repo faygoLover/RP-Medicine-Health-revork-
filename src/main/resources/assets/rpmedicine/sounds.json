@@ -2,55 +2,82 @@
   "heartbeat": {
     "subtitle": "subtitles.rpmedicine.heartbeat",
     "sounds": [
-      "minecraft:block/note_block/basedrum"
+      {
+        "name": "minecraft:block.note_block.basedrum",
+        "type": "event"
+      }
     ]
   },
   "heavy_breathing": {
     "subtitle": "subtitles.rpmedicine.heavy_breathing",
     "sounds": [
-      "minecraft:mob/player/hurt/drown1"
+      {
+        "name": "minecraft:entity.player.hurt_drown",
+        "type": "event"
+      }
     ]
   },
   "ear_ringing": {
     "subtitle": "subtitles.rpmedicine.ear_ringing",
     "sounds": [
-      "minecraft:block/note_block/bell"
+      {
+        "name": "minecraft:block.note_block.bell",
+        "type": "event"
+      }
     ]
   },
   "bandage": {
     "subtitle": "subtitles.rpmedicine.bandage",
     "sounds": [
-      "minecraft:item/armor/equip_leather1"
+      {
+        "name": "minecraft:item.armor.equip_leather",
+        "type": "event"
+      }
     ]
   },
   "injection": {
     "subtitle": "subtitles.rpmedicine.injection",
     "sounds": [
-      "minecraft:random/click"
+      {
+        "name": "minecraft:ui.button.click",
+        "type": "event"
+      }
     ]
   },
   "tourniquet": {
     "subtitle": "subtitles.rpmedicine.tourniquet",
     "sounds": [
-      "minecraft:item/armor/equip_chain1"
+      {
+        "name": "minecraft:item.armor.equip_chain",
+        "type": "event"
+      }
     ]
   },
   "defib_shock": {
     "subtitle": "subtitles.rpmedicine.defib_shock",
     "sounds": [
-      "minecraft:random/fizz"
+      {
+        "name": "minecraft:block.fire.extinguish",
+        "type": "event"
+      }
     ]
   },
   "bone_break": {
     "subtitle": "subtitles.rpmedicine.bone_break",
     "sounds": [
-      "minecraft:mob/zombie/woodbreak"
+      {
+        "name": "minecraft:entity.zombie.break_wooden_door",
+        "type": "event"
+      }
     ]
   },
   "pills": {
     "subtitle": "subtitles.rpmedicine.pills",
     "sounds": [
-      "minecraft:random/eat1"
+      {
+        "name": "minecraft:entity.generic.eat",
+        "type": "event"
+      }
     ]
   }
 }

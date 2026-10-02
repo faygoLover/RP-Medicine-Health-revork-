@@ -38,7 +38,11 @@ minecraft {
         }
 
         client {
+            workingDirectory project.file('run/client')
             property 'forge.enabledGameTestNamespaces', mod_id
+            // Автоподключение к серверу: ./gradlew runClient -Pquickplay=localhost
+            if (project.hasProperty('quickplay')) args '--quickPlayMultiplayer', project.property('quickplay')
+            if (project.hasProperty('username')) args '--username', project.property('username')
         }
 
         server {
