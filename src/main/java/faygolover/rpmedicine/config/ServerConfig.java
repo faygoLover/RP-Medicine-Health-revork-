@@ -265,6 +265,7 @@ public final class ServerConfig {
         bind("bedHealFactor", "На больничной койке заживление быстрее во столько раз.");
         bind("bedBloodRegenFactor", "На больничной койке кровь восстанавливается быстрее во столько раз.");
         bind("bedBrainRecoveryFactor", "На больничной койке мозг восстанавливается быстрее во столько раз.");
+        bind("oxygenTherapyFactor", "Койка рядом с источником кислорода: потолок SpO2 возвращается к норме на эту долю потери (0–1).");
         bind("monitorAlarmSpo2", "Монитор звучит тревогой при SpO2 ниже (и при остановке сердца).");
         MONITOR_MIN_LEVEL = B.comment("Цифры монитора видит тот, у кого уровень «Медицины» не ниже (0 — все).").defineInRange("monitor_min_level", 0, 0, 10);
         MONITOR_VIEW_DISTANCE = B.comment("Цифры монитора видны с расстояния до, блоки.").defineInRange("monitor_view_distance", 6.0, 1.0, 32.0);
@@ -306,6 +307,7 @@ public final class ServerConfig {
         bind("immunityHungerFactor", "Иммунитет при голоде и жажде: множитель.");
         bind("immunitySepsisFactor", "Иммунитет при сепсисе от 30 %: множитель.");
         bind("immunityBedFactor", "Иммунитет на больничной койке: множитель.");
+        bind("immunitySleepFactor", "Иммунитет во сне (ванильная кровать): множитель.");
         bind("sepsisPerHourPerSource", "Сепсис растёт от каждой раны с инфекцией 100 %, % в час.");
         bind("spoiledBloodSepsis", "Испорченная кровь: сепсис сразу, %.");
         bind("spoiledBloodSepsisPerHour", "Испорченная кровь: рост сепсиса, % в час…");

@@ -51,10 +51,15 @@ public final class MedicalData {
     @Nullable
     public BlockPos monitorPos;
     public boolean nearIvStand;
+    /** Койка рядом с источником кислорода. */
+    public boolean nearOxygen;
     public long hospitalScanTick = Long.MIN_VALUE / 2;
     public long lastAlarmTick = Long.MIN_VALUE / 2;
-    /** Последний модификатор температуры LSO от лихорадки. */
-    public double lastLsoFever;
+    /**
+     * Последний модификатор температуры LSO от лихорадки. Модификатор LSO постоянный (сохраняется с
+     * игроком), поэтому после входа значение неизвестно (NaN) — первый шаг его перезаписывает.
+     */
+    public double lastLsoFever = Double.NaN;
     /** Когда последний раз получил урон (правило «в бою — прогресс-бар»). */
     public long lastHurtTick = Long.MIN_VALUE / 2;
 

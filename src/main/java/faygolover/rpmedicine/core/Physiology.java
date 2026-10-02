@@ -574,6 +574,8 @@ public final class Physiology {
         double v = ventilation(m, in);
         boolean circulating = m.heart == Heart.NORMAL;
         double ceiling = spo2Ceiling(m, s);
+        // Кислород возвращает часть потерянного потолка (второй этап, п. 2.1).
+        if (in.oxygen && ceiling < s.spo2Normal) ceiling += (s.spo2Normal - ceiling) * clamp(s.oxygenTherapyFactor, 0, 1);
         double target;
         double fall;
         if (v <= 0.01) {

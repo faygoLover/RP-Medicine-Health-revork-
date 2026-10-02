@@ -191,11 +191,13 @@ public final class HospitalService {
         if ((bed != null || drip) && now - d.hospitalScanTick >= SCAN_TICKS) {
             d.hospitalScanTick = now;
             d.monitorPos = bed != null ? HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.MONITOR, HospitalBlocks.radius(HospitalFunction.MONITOR)) : null;
+            d.nearOxygen = bed != null && HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.OXYGEN, HospitalBlocks.radius(HospitalFunction.OXYGEN)) != null;
             d.nearIvStand = drip && HospitalBlocks.findNearest(sp.level(), sp.blockPosition(), HospitalFunction.IV_STAND,
                     HospitalBlocks.radius(HospitalFunction.IV_STAND)) != null;
         } else if (bed == null && !drip) {
             d.monitorPos = null;
             d.nearIvStand = false;
+            d.nearOxygen = false;
         }
         if (d.monitorPos != null && now - d.lastAlarmTick >= ALARM_TICKS && alarm(m)) {
             d.lastAlarmTick = now;
@@ -233,6 +235,7 @@ public final class HospitalService {
             in.brainRecoveryFactor *= s.bedBrainRecoveryFactor;
             in.infectionRiskFactor *= s.bedInfectionFactor;
             in.immunityFactor *= s.immunityBedFactor;
+            in.oxygen = d.nearOxygen;
             in.still = true;
         }
         if (d.nearIvStand) in.still = true;

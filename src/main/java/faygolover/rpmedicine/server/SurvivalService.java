@@ -66,6 +66,8 @@ public final class SurvivalService {
         MedicalSettings s = MedicalSettings.get();
         MedicalState m = d.state;
         in.satiety = sp.getFoodData().getFoodLevel() / 20.0;
+        // Сон в кровати поддерживает иммунитет (второй этап, п. 5.2).
+        if (sp.isSleeping()) in.immunityFactor *= s.immunitySleepFactor;
         boolean survival = !sp.isCreative() && !sp.isSpectator();
         if (Integrations.lso()) {
             double h = LsoCompat.hydration(sp);
@@ -73,7 +75,7 @@ public final class SurvivalService {
             in.ambientTempShift = LsoCompat.temperatureOffset(sp) * s.lsoTempScale;
             // Лихорадка поднимает температуру LSO; модификатор обновляется, только когда заметно изменился.
             double fever = Math.max(0, m.bodyTemp - s.normalBodyTemp - 0.3) * s.feverToLso;
-            if (Math.abs(fever - d.lastLsoFever) > 0.25 || (fever == 0 && d.lastLsoFever != 0)) {
+            if (Double.isNaN(d.lastLsoFever) || Math.abs(fever - d.lastLsoFever) > 0.25 || (fever == 0 && d.lastLsoFever != 0)) {
                 LsoCompat.setFever(sp, fever);
                 d.lastLsoFever = fever;
             }

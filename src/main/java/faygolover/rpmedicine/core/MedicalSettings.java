@@ -225,6 +225,8 @@ public final class MedicalSettings {
     public double bedHealFactor = 1.5;
     public double bedBloodRegenFactor = 1.5;
     public double bedBrainRecoveryFactor = 2.0;
+    /** Койка рядом с источником кислорода: потолок SpO2 возвращается к норме на эту долю потери. */
+    public double oxygenTherapyFactor = 0.5;
     /** Монитор звучит тревогой при SpO2 ниже. */
     public double monitorAlarmSpo2 = 85.0;
 
@@ -255,6 +257,7 @@ public final class MedicalSettings {
     public double immunityHungerFactor = 0.8;
     public double immunitySepsisFactor = 0.8;
     public double immunityBedFactor = 1.1;
+    public double immunitySleepFactor = 1.1;
     /** Сепсис растёт от каждой раны с инфекцией 100 %, % в час. */
     public double sepsisPerHourPerSource = 8.0;
     /** Испорченная кровь: сепсис сразу и рост, % в час, столько часов. */

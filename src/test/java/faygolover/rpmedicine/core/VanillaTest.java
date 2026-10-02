@@ -69,4 +69,21 @@ class VanillaTest {
         assertEquals(0, m.deafSeconds);
         assertFalse(Examination.complaints(m, s).contains("deaf"));
     }
+
+    @Test
+    void oxygenRaisesSpo2Ceiling() {
+        MedicalSettings s = settings();
+        MedicalState air = new MedicalState(s);
+        MedicalState o2 = new MedicalState(s);
+        air.pneumo = MedicalState.Pneumo.OPEN;
+        o2.pneumo = MedicalState.Pneumo.OPEN;
+        air.pneumoTimer = o2.pneumoTimer = 1e9;
+        StepInput a = input(5);
+        StepInput b = input(5);
+        b.oxygen = true;
+        run(air, a, s, 120);
+        run(o2, b, s, 120);
+        assertTrue(o2.spo2 > air.spo2 + 3, "кислород: SpO2 выше, " + o2.spo2 + " против " + air.spo2);
+        assertTrue(o2.spo2 <= s.spo2Normal + 0.01, "не выше нормы");
+    }
 }

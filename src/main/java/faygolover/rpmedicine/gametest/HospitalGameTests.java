@@ -40,14 +40,15 @@ import static faygolover.rpmedicine.gametest.MedicalGameTests.tickPatients;
 public final class HospitalGameTests {
     private HospitalGameTests() {}
 
-    /** Койка — белая шерсть, монитор — наблюдатель, стойка капельницы — железная решётка. */
+    /** Койка — белая шерсть, монитор — наблюдатель, стойка капельницы — железная решётка, кислород — котёл. */
     static void testBlocks() {
         HospitalBlocks.set(Map.of(
                 HospitalFunction.BED, List.of("minecraft:white_wool"),
                 HospitalFunction.MONITOR, List.of("minecraft:observer"),
                 HospitalFunction.IV_STAND, List.of("minecraft:iron_bars"),
                 HospitalFunction.LAB, List.of("minecraft:crafting_table"),
-                HospitalFunction.STERILIZER, List.of("minecraft:furnace")), Map.of());
+                HospitalFunction.STERILIZER, List.of("minecraft:furnace"),
+                HospitalFunction.OXYGEN, List.of("minecraft:cauldron")), Map.of());
     }
 
     private static MedicalData data(ServerPlayer p) {
@@ -61,8 +62,10 @@ public final class HospitalGameTests {
         testBlocks();
         BlockPos bed = h.absolutePos(new BlockPos(2, 1, 2));
         BlockPos monitor = h.absolutePos(new BlockPos(4, 1, 2));
+        BlockPos oxygen = h.absolutePos(new BlockPos(2, 1, 4));
         h.getLevel().setBlockAndUpdate(bed, Blocks.WHITE_WOOL.defaultBlockState());
         h.getLevel().setBlockAndUpdate(monitor, Blocks.OBSERVER.defaultBlockState());
+        h.getLevel().setBlockAndUpdate(oxygen, Blocks.CAULDRON.defaultBlockState());
         ServerPlayer p = player(h, 3.5, 2.5);
         h.assertTrue(HospitalService.onUseBlock(p, bed), "ПКМ по койке пустой рукой — лечь");
         h.assertTrue(bed.equals(data(p).bedPos), "игрок на койке");
@@ -81,6 +84,9 @@ public final class HospitalGameTests {
         HospitalService.tickPlayer(p, data(p));
         h.assertTrue(monitor.equals(data(p).monitorPos), "монитор рядом с койкой найден");
         h.assertTrue(HospitalService.monitorPatient(h.getLevel(), monitor) == p, "монитор показывает этого пациента");
+        StepInput in2 = new StepInput(0.5);
+        HospitalService.applyConditions(data(p), in2, MedicalSettings.get());
+        h.assertTrue(in2.oxygen, "источник кислорода рядом с койкой");
 
         // Вторым на занятую койку не лечь.
         ServerPlayer other = player(h, 1.5, 2.5);
@@ -537,6 +543,7 @@ public final class HospitalGameTests {
         StepInput in2 = new StepInput(0.5);
         faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in2, 0);
         h.assertTrue(Math.abs(in2.hydration - expected / 20.0) < 1e-9, "вода LSO во входных данных");
+        h.assertTrue(data(p).lastLsoFever == 0, "после входа модификатор LSO перезаписан");
         // Лихорадка: модификатор температуры LSO.
         m.bodyTemp = 39.0;
         faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), new StepInput(0.5), 0);
