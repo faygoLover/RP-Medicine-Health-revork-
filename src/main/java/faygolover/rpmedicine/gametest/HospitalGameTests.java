@@ -474,4 +474,78 @@ public final class HospitalGameTests {
         remove(h, p);
         h.succeed();
     }
+
+    /** Голод и жажда (второй этап, п. 12): своя жажда убывает, вода её восполняет, food add прокручивает и офлайн. */
+    @GameTest(template = T, timeoutTicks = 100)
+    public static void hungerThirstAndFoodCommand(GameTestHelper h) {
+        noDeath(false);
+        MedicalSettings s = MedicalSettings.get();
+        ServerPlayer p = player(h, 2.5, 2.5);
+        MedicalState m = state(p);
+        if (faygolover.rpmedicine.integration.Integrations.lso()) {
+            lsoThirstAndFood(h, p, m, s);
+            return;
+        }
+        // Своя жажда убывает со временем в сети.
+        StepInput in = new StepInput(3600);
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in, 0);
+        h.assertTrue(Math.abs(m.thirst - (100 - s.thirstLossPerHour)) < 0.01, "за час жажда −" + s.thirstLossPerHour + ", было " + m.thirst);
+        h.assertTrue(Math.abs(in.hydration - m.thirst / 100) < 1e-9 && in.satiety == 1.0, "вода и сытость во входных данных");
+        // Бутылка воды восполняет, другое зелье — нет.
+        var water = net.minecraft.world.item.alchemy.PotionUtils.setPotion(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.POTION),
+                net.minecraft.world.item.alchemy.Potions.WATER);
+        var swift = net.minecraft.world.item.alchemy.PotionUtils.setPotion(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.POTION),
+                net.minecraft.world.item.alchemy.Potions.SWIFTNESS);
+        double before = m.thirst;
+        faygolover.rpmedicine.server.SurvivalService.onUseFinish(new net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish(p, swift, 0, swift));
+        h.assertTrue(m.thirst == before, "зелье скорости — не вода");
+        faygolover.rpmedicine.server.SurvivalService.onUseFinish(new net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish(p, water, 0, water));
+        h.assertTrue(Math.abs(m.thirst - Math.min(100, before + 35)) < 0.01, "вода восполняет жажду, было " + m.thirst);
+        // Команда food add: сытость и жажда за 3 часа.
+        p.getFoodData().setFoodLevel(20);
+        m.thirst = 100;
+        h.assertTrue(MedicalGameTests.command(h, "rpmedicine food add " + p.getGameProfile().getName() + " 3h") == 1, "команда food add");
+        h.assertTrue(p.getFoodData().getFoodLevel() == 20 - (int) Math.round(s.foodLossPerHour * 3), "сытость снята, было " + p.getFoodData().getFoodLevel());
+        h.assertTrue(Math.abs(m.thirst - (100 - s.thirstLossPerHour * 3)) < 0.01, "жажда снята, было " + m.thirst);
+        // Голодный и обезвоженный — во входных данных.
+        StepInput in2 = new StepInput(0.5);
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in2, 0);
+        h.assertTrue(in2.satiety < s.hungerThreshold + 0.5 && in2.hydration < 0.5, "голод и жажда видны физиологии");
+        // Офлайн: снимается при входе.
+        p.getFoodData().setFoodLevel(20);
+        m.thirst = 100;
+        faygolover.rpmedicine.server.SurvivalService.advanceOffline(m, 2);
+        faygolover.rpmedicine.server.SurvivalService.onLogin(p);
+        h.assertTrue(p.getFoodData().getFoodLevel() == 20 - (int) Math.round(s.foodLossPerHour * 2) && m.pendingFoodLoss == 0,
+                "офлайн-прокрутка снята при входе, сытость " + p.getFoodData().getFoodLevel());
+        h.assertTrue(Math.abs(m.thirst - (100 - s.thirstLossPerHour * 2)) < 0.01, "и жажда, было " + m.thirst);
+        remove(h, p);
+        h.succeed();
+    }
+
+    /** С LSO: вода берётся из него, food add снимает его воду, лихорадка поднимает его температуру. */
+    private static void lsoThirstAndFood(GameTestHelper h, ServerPlayer p, MedicalState m, MedicalSettings s) {
+        // Классы LSO — только через LsoCompat, чтобы тест загружался и без LSO.
+        h.assertTrue(faygolover.rpmedicine.integration.lso.LsoCompat.hydration(p) == 1.0, "новый игрок LSO напоен");
+        StepInput in = new StepInput(3600);
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in, 0);
+        h.assertTrue(m.thirst == 100 && in.hydration == 1.0, "своя жажда не убывает, вода из LSO");
+        h.assertTrue(MedicalGameTests.command(h, "rpmedicine food add " + p.getGameProfile().getName() + " 2h") == 1, "команда food add");
+        int expected = 20 - (int) Math.round(s.lsoThirstLossPerHour * 2);
+        double h20 = faygolover.rpmedicine.integration.lso.LsoCompat.hydration(p) * 20;
+        h.assertTrue(Math.abs(h20 - expected) < 1e-6, "вода LSO снята, было " + h20);
+        StepInput in2 = new StepInput(0.5);
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in2, 0);
+        h.assertTrue(Math.abs(in2.hydration - expected / 20.0) < 1e-9, "вода LSO во входных данных");
+        // Лихорадка: модификатор температуры LSO.
+        m.bodyTemp = 39.0;
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), new StepInput(0.5), 0);
+        double fever = (39.0 - s.normalBodyTemp - 0.3) * s.feverToLso;
+        h.assertTrue(Math.abs(data(p).lastLsoFever - fever) < 1e-9, "лихорадка передана в LSO");
+        m.bodyTemp = s.normalBodyTemp;
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), new StepInput(0.5), 0);
+        h.assertTrue(data(p).lastLsoFever == 0, "лихорадка снята");
+        remove(h, p);
+        h.succeed();
+    }
 }

@@ -327,6 +327,30 @@ public final class MedicalSettings {
     public double minigameRefuseTimeFactor = 2.0;
     public double minigameRefuseErrorFactor = 1.5;
 
+    // ---------------- Голод, жажда, среда (второй этап, п. 12) ----------------
+    /** Своя жажда, если LSO не стоит (решение 1.8: внутренние значения без баров). */
+    public boolean ownThirstEnabled = true;
+    /** Жажда убывает на столько процентов за час в сети; на бегу — быстрее во столько раз. */
+    public double thirstLossPerHour = 20.0;
+    public double thirstSprintFactor = 2.0;
+    /** Вода ниже этой доли — обезвоживание: объём крови для давления меньше (до доли ниже), иммунитет слабее. */
+    public double dehydrationThreshold = 0.3;
+    public double dehydrationVolumeLoss = 0.1;
+    /** Сытость ниже этой доли — голод: заживление и иммунитет медленнее. */
+    public double hungerThreshold = 0.3;
+    public double hungerHealFactor = 0.7;
+    /** Команда food add: ванильной сытости за час, единиц (из 20), и воды LSO за час (из 20). */
+    public double foodLossPerHour = 4.0;
+    public double lsoThirstLossPerHour = 4.0;
+    /** Без LSO: сдвиг температуры тела в холодном и жарком биоме и в рыхлом снегу, °C. */
+    public double coldBiomeTempShift = -1.5;
+    public double hotBiomeTempShift = 1.0;
+    public double powderSnowTempShift = -3.0;
+    /** С LSO: на сколько °C тела одна единица температуры LSO за пределами нормы (16–24). */
+    public double lsoTempScale = 0.25;
+    /** Лихорадка поднимает температуру LSO: единиц на 1 °C жара. */
+    public double feverToLso = 2.0;
+
     // ---------------- Температура тела (второй этап, п. 5.4) ----------------
     public double normalBodyTemp = 36.6;
     /** Температура тела меняется не быстрее, °C в минуту. */

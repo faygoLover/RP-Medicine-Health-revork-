@@ -121,6 +121,11 @@ public final class MedicalState {
     public boolean bloodDripSpoiled;
     /** Реакция на несовместимую кровь: осталось секунд. */
     public double transfusionReactionSeconds;
+    /** Своя жажда без LSO: вода 0–100. */
+    public double thirst = 100;
+    /** Команда food add для офлайн-игроков: сколько сытости и воды снять при входе. */
+    public double pendingFoodLoss;
+    public double pendingThirstLoss;
     /** Острая боль от манипуляций (вправление, пинцет) и сколько ещё секунд. */
     public double acutePain;
     public double acutePainSeconds;
@@ -217,6 +222,7 @@ public final class MedicalState {
         opioidSeconds = 0;
         acutePain = 0;
         acutePainSeconds = 0;
+        thirst = 100;
         doses.clear();
         effects.clear();
     }
@@ -254,6 +260,7 @@ public final class MedicalState {
         if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
         if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
+        if (thirst < s.dehydrationThreshold * 100) return false;
         if (sepsis > 0 || spoiledBloodSeconds > 0 || !effects.isEmpty() || Math.abs(bodyTemp - s.normalBodyTemp) > 0.05) return false;
         return Math.abs(pressure - s.normalPressure) < 0.5 && Math.abs(heartRate - s.normalHeartRate) < 0.5
                 && Math.abs(respRate - s.normalRespRate) < 0.5 && Math.abs(spo2 - s.spo2Normal) < 0.5
@@ -340,6 +347,9 @@ public final class MedicalState {
         opioidSeconds = o.opioidSeconds;
         acutePain = o.acutePain;
         acutePainSeconds = o.acutePainSeconds;
+        thirst = o.thirst;
+        pendingFoodLoss = o.pendingFoodLoss;
+        pendingThirstLoss = o.pendingThirstLoss;
         doses.clear();
         for (var e : o.doses.entrySet()) doses.put(e.getKey(), new java.util.ArrayList<>(e.getValue()));
         effects.clear();

@@ -51,19 +51,21 @@ public final class PatientTicker {
         if (t % step != 0) return;
 
         // На койке здоровый тоже «спит»: множители койки нужны только тому, кто лечится.
-        boolean quiet = m.isQuiet(s) && d.distance < 0.01;
+        StepInput in = new StepInput(step / 20.0);
+        in.traits = Medical.traits(sp);
+        in.online = true;
+        in.sprintSeconds = d.sprintTicks / 20.0;
+        in.jumps = d.jumps;
+        in.distance = d.distance;
+        in.suffocating = sp.getAirSupply() <= 0 && (sp.isEyeInFluid(FluidTags.WATER) || sp.isInWall());
+        in.still = d.distance < 0.05 * step || m.isDown();
+        HospitalService.applyConditions(d, in, s);
+        // Голод, жажда, среда (второй этап, п. 12): своя жажда убывает и у здорового.
+        SurvivalService.prepareStep(sp, d, in, in.sprintSeconds);
+        boolean quiet = m.isQuiet(s) && d.distance < 0.01 && in.ambientTempShift == 0;
         if (!quiet) {
             long t0 = System.nanoTime();
-            StepInput in = new StepInput(step / 20.0);
-            in.traits = Medical.traits(sp);
-            in.online = true;
-            in.sprintSeconds = d.sprintTicks / 20.0;
-            in.jumps = d.jumps;
-            in.distance = d.distance;
-            in.suffocating = sp.getAirSupply() <= 0 && (sp.isEyeInFluid(FluidTags.WATER) || sp.isInWall());
-            in.still = d.distance < 0.05 * step || m.isDown();
             in.random = RANDOM.split();
-            HospitalService.applyConditions(d, in, s);
             StepResult r = Physiology.step(m, in, s);
             DownedService.onStep(sp, m, r);
             d.markDirty();

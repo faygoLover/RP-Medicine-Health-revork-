@@ -24,7 +24,8 @@ public final class Physiology {
         tickTimers(m, in, s);
         tickLimbs(m, in, s, r);
         double bleedPerMin = tickBlood(m, in, s, r);
-        if (in.online) Healing.advance(m, dt * in.healFactor, s);
+        double hungerFactor = in.satiety < s.hungerThreshold ? s.hungerHealFactor : 1.0;
+        if (in.online) Healing.advance(m, dt * in.healFactor * hungerFactor, s);
         Infections.tick(m, in, s, r);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
@@ -143,6 +144,12 @@ public final class Physiology {
             if (t.hasTourniquet() && part.isDistalTo(t.part)) return true;
         }
         return false;
+    }
+
+    /** Обезвоживание 0–1: насколько вода ниже порога. */
+    public static double dehydration(StepInput in, MedicalSettings s) {
+        if (in.hydration >= s.dehydrationThreshold || s.dehydrationThreshold <= 0) return 0;
+        return clamp((s.dehydrationThreshold - in.hydration) / s.dehydrationThreshold, 0, 1);
     }
 
     /** Множитель кровотечения от давления: при низком давлении кровь уходит медленнее. */
@@ -381,6 +388,8 @@ public final class Physiology {
         double dt = in.dt;
         RandomGenerator rnd = in.random;
         double f = m.bloodFraction(s);
+        // Обезвоживание: для давления крови меньше, до −10 % (второй этап, п. 12).
+        double fPressure = f - s.dehydrationVolumeLoss * dehydration(in, s);
         boolean tensionArrest = m.pneumo == Pneumo.TENSION && m.tensionProgress >= 1.0;
 
         // Переходы состояния сердца.
@@ -425,7 +434,7 @@ public final class Physiology {
 
         double target;
         if (m.heart == Heart.NORMAL) {
-            target = pressureFromVolume(f, s);
+            target = pressureFromVolume(fPressure, s);
             if (m.adrenalineSeconds > 0) target += 10;
             if (m.adrenalineInjectionSeconds > 0) target += s.adrenalineInjectionPressure;
             if (m.pain >= 60) target += 8;
@@ -451,6 +460,8 @@ public final class Physiology {
             if (m.morphineSeconds > 0 && m.morphineDelay <= 0) hr -= 8;
             if (m.spo2 < 90) hr += (90 - m.spo2) * 0.8;
             if (m.bodyTemp > 37) hr += (m.bodyTemp - 37) * s.feverHeartRatePerDegree;
+            // Переохлаждение: пульс реже.
+            if (m.bodyTemp < 35) hr -= (35 - m.bodyTemp) * 10;
             hr += m.effect(DrugEffect.HEART_RATE);
             hr -= m.effect(DrugEffect.SEDATION) * 0.2;
             hr = clamp(hr, 35, 200);
@@ -610,6 +621,9 @@ public final class Physiology {
         double sedation = m.effect(DrugEffect.SEDATION);
         if (sedation > 0) c = Math.min(c, 100 - sedation);
         // Сепсис: от 30 % спутанность, 100 % — септический шок, человек падает.
+        // Переохлаждение и перегрев туманят сознание.
+        if (m.bodyTemp < 35) c = Math.min(c, 100 - (35 - m.bodyTemp) * 20);
+        if (m.bodyTemp > 40) c = Math.min(c, 100 - (m.bodyTemp - 40) * 40);
         if (m.sepsis >= 100) c = Math.min(c, 20);
         else if (m.sepsis >= 30) c = Math.min(c, s.sepsisConsciousnessLimit);
         return clamp(c, 0, 100);

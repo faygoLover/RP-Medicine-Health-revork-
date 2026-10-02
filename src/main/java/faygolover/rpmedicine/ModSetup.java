@@ -80,6 +80,7 @@ public final class ModSetup {
         bus.addListener(InteractionHandler::onUseStart);
         bus.addListener(InteractionHandler::onJump);
         bus.addListener(faygolover.rpmedicine.server.BloodService::onContainerClose);
+        bus.addListener(faygolover.rpmedicine.server.SurvivalService::onUseFinish);
         // Чат
         bus.addListener(EventPriority.HIGH, ChatHandler::onChat);
         bus.addListener(EventPriority.HIGH, ChatHandler::onCommand);
@@ -121,6 +122,7 @@ public final class ModSetup {
         StubService.onLogin(sp);
         faygolover.rpmedicine.server.BloodService.onLogin(sp);
         faygolover.rpmedicine.medcard.MedcardService.onLogin(sp);
+        faygolover.rpmedicine.server.SurvivalService.onLogin(sp);
         faygolover.rpmedicine.stats.History.load(sp.server, sp.getUUID());
         SelfSync.forceSync(sp);
         MedicalState m = Medical.state(sp);
@@ -202,6 +204,7 @@ public final class ModSetup {
         e.addListener(MobRules.INSTANCE);
         e.addListener(HospitalBlocks.LOADER);
         e.addListener(faygolover.rpmedicine.data.DrugRules.LOADER);
+        e.addListener(faygolover.rpmedicine.server.SurvivalService.DRINKS);
     }
 
     /** Клиенты получают списки функций госпиталя при входе и после /reload. */

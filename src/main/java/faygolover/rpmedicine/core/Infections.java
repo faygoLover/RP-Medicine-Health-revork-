@@ -102,6 +102,8 @@ public final class Infections {
         double f = in.immunityFactor;
         if (m.bloodFraction(s) < 1 - s.immunityBloodLossFraction) f *= s.immunityBloodLossFactor;
         if (m.sepsis >= 30) f *= s.immunitySepsisFactor;
+        // Голод и жажда ослабляют иммунитет.
+        if (in.satiety < s.hungerThreshold || in.hydration < s.dehydrationThreshold) f *= s.immunityHungerFactor;
         return f;
     }
 

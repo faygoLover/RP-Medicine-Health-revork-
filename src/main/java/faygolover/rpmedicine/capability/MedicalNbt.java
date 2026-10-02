@@ -74,6 +74,9 @@ public final class MedicalNbt {
         }
         putIf(t, "reaction", m.transfusionReactionSeconds);
         putIf(t, "opioid", m.opioidSeconds);
+        if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
+        putIf(t, "pFood", m.pendingFoodLoss);
+        putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
             CompoundTag doses = new CompoundTag();
             for (var e : m.doses.entrySet()) {
@@ -200,6 +203,9 @@ public final class MedicalNbt {
         m.bloodDripSpoiled = t.getBoolean("bDripSpoiled");
         m.transfusionReactionSeconds = t.getFloat("reaction");
         m.opioidSeconds = t.getFloat("opioid");
+        m.thirst = t.contains("thirst") ? t.getFloat("thirst") : 100;
+        m.pendingFoodLoss = t.getFloat("pFood");
+        m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");
         for (String k : doses.getAllKeys()) {
             ListTag l = doses.getList(k, Tag.TAG_FLOAT);

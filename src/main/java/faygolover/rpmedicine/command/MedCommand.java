@@ -112,6 +112,11 @@ public final class MedCommand {
                 .then(Commands.argument("duration", StringArgumentType.word())
                         .executes(c -> timeAdd(c, false))
                         .then(Commands.literal("offline").executes(c -> timeAdd(c, true)))))));
+        // Прокрутка голода и жажды (второй этап, п. 12).
+        root.then(op("food").then(Commands.literal("add").then(Commands.argument("targets", EntityArgument.players())
+                .then(Commands.argument("duration", StringArgumentType.word())
+                        .executes(c -> foodAdd(c, false))
+                        .then(Commands.literal("offline").executes(c -> foodAdd(c, true)))))));
         // Уровень «Медицины» (второй этап, п. 11.2).
         root.then(op("skill").then(Commands.argument("targets", EntityArgument.players())
                 .then(Commands.argument("level", IntegerArgumentType.integer(0, 10)).executes(c -> skill(c, IntegerArgumentType.getInteger(c, "level"))))
@@ -425,15 +430,31 @@ public final class MedCommand {
             Medical.changed(sp);
             n++;
         }
-        if (offline) n += timeAddOffline(c.getSource().getServer(), seconds, s);
+        if (offline) n += forOffline(c.getSource().getServer(), s, m -> Healing.fastForward(m, seconds, s));
         int count = n;
         c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.time_added", count,
                 String.format(Locale.ROOT, "%.0f", seconds / 60)), true);
         return n;
     }
 
+    private static int foodAdd(CommandContext<CommandSourceStack> c, boolean offline) throws CommandSyntaxException {
+        double hours = parseDuration(StringArgumentType.getString(c, "duration")) / 3600.0;
+        MedicalSettings s = MedicalSettings.get();
+        int n = 0;
+        for (ServerPlayer sp : EntityArgument.getPlayers(c, "targets")) {
+            faygolover.rpmedicine.server.SurvivalService.advance(sp, hours);
+            n++;
+        }
+        // Офлайн: снимется при входе (ванильная еда и вода LSO живут в игроке, не в теле).
+        if (offline) n += forOffline(c.getSource().getServer(), s, m -> faygolover.rpmedicine.server.SurvivalService.advanceOffline(m, hours));
+        int count = n;
+        c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.food_added", count,
+                String.format(Locale.ROOT, "%.0f", hours * 60)), true);
+        return n;
+    }
+
     /** Офлайн-игроки с заглушкой: загруженные тела и снимки незагруженных. */
-    private static int timeAddOffline(MinecraftServer server, double seconds, MedicalSettings s) {
+    private static int forOffline(MinecraftServer server, MedicalSettings s, java.util.function.Consumer<MedicalState> action) {
         StubRegistry reg = StubRegistry.get(server);
         int n = 0;
         for (UUID owner : reg.owners()) {
@@ -442,12 +463,12 @@ public final class MedCommand {
             ServerLevel level = server.getLevel(r.dimension);
             Entity e = level != null ? level.getEntity(r.entityId) : null;
             if (e instanceof BodyStubEntity stub) {
-                Healing.fastForward(stub.state(), seconds, s);
+                action.accept(stub.state());
                 stub.markChanged();
             } else {
                 MedicalState m = new MedicalState(s);
                 MedicalNbt.read(m, r.snapshot.getCompound("Medical"), s);
-                Healing.fastForward(m, seconds, s);
+                action.accept(m);
                 CompoundTag snap = r.snapshot.copy();
                 snap.put("Medical", MedicalNbt.write(m));
                 r.snapshot = snap;

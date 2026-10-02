@@ -218,6 +218,9 @@ public final class Examination {
         if (m.postClinicalSeconds > 0 || loss >= 0.3 || m.sepsis >= 30) c.add("weak");
         if (m.bodyTemp >= 37.8) c.add("fever");
         if (m.transfusionReactionSeconds > 0) c.add("back_pain");
+        // Голод, жажда, среда (второй этап, п. 12). Своя жажда — только без LSO, у LSO своя полоска.
+        if (m.thirst < s.dehydrationThreshold * 100 + 10) c.add("thirsty");
+        if (m.bodyTemp < 35.5) c.add("freezing");
         return c;
     }
 }

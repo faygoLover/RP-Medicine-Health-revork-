@@ -257,6 +257,17 @@ HOSPITAL = {
 for name, obj in HOSPITAL.items():
     write(f"{DATA}/rpmedicine/rpmedicine/hospital_blocks/{name}.json", obj)
 
+# ---------------------------------------------------------------- напитки для своей жажды (без LSO; второй этап, п. 12)
+DRINKS = {
+    "water": {"items": ["minecraft:potion"], "potion": "minecraft:water", "amount": 35},
+    "milk": {"items": ["minecraft:milk_bucket"], "amount": 25},
+    "honey": {"items": ["minecraft:honey_bottle"], "amount": 10},
+    "soups": {"items": ["minecraft:mushroom_stew", "minecraft:beetroot_soup", "minecraft:rabbit_stew", "minecraft:suspicious_stew"], "amount": 10},
+    "melon": {"items": ["minecraft:melon_slice"], "amount": 5},
+}
+for name, obj in DRINKS.items():
+    write(f"{DATA}/rpmedicine/rpmedicine/drinks/{name}.json", obj)
+
 # ---------------------------------------------------------------- звуки (заглушки: ссылки на ванильные звуковые события)
 # Ссылка на событие ("type": "event"), а не на файл: пути файлов в ресурсах ванили меняются от версии к версии.
 SOUNDS = {

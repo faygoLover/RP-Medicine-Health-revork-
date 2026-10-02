@@ -345,6 +345,23 @@ public final class ServerConfig {
         bind("minigameRefuseErrorFactor", "… и шанс ошибки выше во столько раз.");
         B.pop();
 
+        B.comment("Голод, жажда, среда (второй этап, п. 12). С LSO жажду и температуру среды считает он.").push("survival");
+        bind("ownThirstEnabled", "Своя жажда, если LSO не установлен (внутреннее значение, без полоски).");
+        bind("thirstLossPerHour", "Своя жажда: убывает на столько процентов за час в сети.");
+        bind("thirstSprintFactor", "На бегу жажда убывает быстрее во столько раз.");
+        bind("dehydrationThreshold", "Вода ниже этой доли (0–1) — обезвоживание.");
+        bind("dehydrationVolumeLoss", "При полном обезвоживании давление считается как при объёме крови меньше на эту долю.");
+        bind("hungerThreshold", "Сытость ниже этой доли (0–1) — голод.");
+        bind("hungerHealFactor", "Заживление при голоде: множитель.");
+        bind("foodLossPerHour", "Команда food add: ванильной сытости за час, единиц из 20.");
+        bind("lsoThirstLossPerHour", "Команда food add с LSO: воды LSO за час, единиц из 20.");
+        bind("coldBiomeTempShift", "Без LSO: сдвиг температуры тела в холодном биоме, °C.");
+        bind("hotBiomeTempShift", "Без LSO: сдвиг температуры тела в жарком биоме, °C.");
+        bind("powderSnowTempShift", "Без LSO: сдвиг температуры тела в рыхлом снегу, °C.");
+        bind("lsoTempScale", "С LSO: °C тела на одну единицу температуры LSO за пределами нормы (16–24).");
+        bind("feverToLso", "Лихорадка поднимает температуру LSO: единиц на 1 °C жара.");
+        B.pop();
+
         B.comment("Температура тела (второй этап, п. 5.4).").push("body_temperature");
         bind("normalBodyTemp", "Нормальная температура тела, °C.");
         bind("bodyTempChangePerMinute", "Температура меняется не быстрее, °C в минуту.");

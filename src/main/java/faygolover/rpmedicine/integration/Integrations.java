@@ -21,6 +21,7 @@ public final class Integrations {
     private static boolean curios;
     private static boolean carryOn;
     private static boolean voicechat;
+    private static boolean lso;
 
     public static void init() {
         ModList ml = ModList.get();
@@ -30,9 +31,10 @@ public final class Integrations {
         curios = ml.isLoaded("curios");
         carryOn = ml.isLoaded("carryon");
         voicechat = ml.isLoaded("voicechat");
+        lso = ml.isLoaded("legendarysurvivaloverhaul");
         if (tacz) MinecraftForge.EVENT_BUS.register(faygolover.rpmedicine.integration.tacz.GunHits.class);
-        RpMedicine.LOGGER.info("RP Medicine: интеграции — TaCZ {}, Zero Contact {}, RP Stamina {}, Curios {}, Carry On {}, Simple Voice Chat {}",
-                tacz, zeroContact, stamina, curios, carryOn, voicechat);
+        RpMedicine.LOGGER.info("RP Medicine: интеграции — TaCZ {}, Zero Contact {}, RP Stamina {}, Curios {}, Carry On {}, Simple Voice Chat {}, LSO {}",
+                tacz, zeroContact, stamina, curios, carryOn, voicechat, lso);
     }
 
     /** Предупредить о модах, с которыми RP Medicine конфликтует (п. 9 ТЗ). */
@@ -66,6 +68,11 @@ public final class Integrations {
 
     public static boolean carryOn() {
         return carryOn;
+    }
+
+    /** Legendary Survival Overhaul: жажда и температура берутся из него. */
+    public static boolean lso() {
+        return lso;
     }
 
     public static boolean voicechat() {

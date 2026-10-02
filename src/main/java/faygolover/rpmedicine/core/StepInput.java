@@ -27,6 +27,9 @@ public final class StepInput {
     public double immunityFactor = 1.0;
     /** Сдвиг температуры тела от среды (переохлаждение, перегрев из LSO), °C. */
     public double ambientTempShift;
+    /** Вода 0–1 (своя жажда или LSO) и сытость 0–1 (ванильная еда). */
+    public double hydration = 1.0;
+    public double satiety = 1.0;
     public RandomGenerator random = new java.util.SplittableRandom();
 
     public StepInput() {}

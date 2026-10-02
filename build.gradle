@@ -96,6 +96,7 @@ dependencies {
     compileOnly fg.deobf("maven.modrinth:zerocontact:${zerocontact_version}")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
     compileOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
+    compileOnly fg.deobf("maven.modrinth:legendary-survival-overhaul:${lso_version}")
 
     if (withOptional) {
         // Для проверки интеграций при runServer/runClient: -Pwith_optional=true
@@ -106,6 +107,7 @@ dependencies {
         runtimeOnly fg.deobf("maven.modrinth:architectury-api:1MKTLiiG")
         runtimeOnly fg.deobf("maven.modrinth:geckolib:aC5KMoNg")
         runtimeOnly fg.deobf("maven.modrinth:simple-voice-chat:lWvbAZ3P")
+        runtimeOnly fg.deobf("maven.modrinth:legendary-survival-overhaul:${lso_version}")
     }
 
     testImplementation "org.junit.jupiter:junit-jupiter:${junit_version}"
