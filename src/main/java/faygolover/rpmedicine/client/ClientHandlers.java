@@ -44,6 +44,12 @@ public final class ClientHandlers {
         ClientState.hoverLines = p.lines();
     }
 
+    public static void onMedcard(faygolover.rpmedicine.network.MedcardDataPacket p) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen instanceof faygolover.rpmedicine.client.screen.MedcardScreen ms && ms.uuid().equals(p.uuid())) ms.update(p);
+        else mc.setScreen(new faygolover.rpmedicine.client.screen.MedcardScreen(p));
+    }
+
     public static void onMinigame(faygolover.rpmedicine.network.MinigameStartPacket p) {
         Minecraft mc = Minecraft.getInstance();
         Screen back = mc.screen instanceof faygolover.rpmedicine.client.screen.MinigameScreen ? null : mc.screen;

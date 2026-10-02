@@ -264,6 +264,9 @@ items2.update({
  "suture_kit": ("Набор для швов", "Suture kit", "Зашить рану: кровотечение останавливается, заживает вдвое быстрее. Сначала извлеките пули. Медицина 3+.", "Sutures a wound: bleeding stops, heals twice as fast. Remove bullets first. Medicine 3+."),
  "scissors": ("Ножницы", "Scissors", "Снять швы.", "Remove sutures."),
 })
+items2.update({
+ "medcard": ("Медкарта", "Medical record", "Пустая: ПКМ по игроку — завести его карту, ПКМ в воздух — свою. Привязанная: ПКМ — открыть.", "Blank: right click a player to bind it to them, right click the air for your own. Bound: right click to open."),
+})
 for k, (ru, en, dru, den) in items2.items():
     t(f"item.rpmedicine.{k}", ru, en)
     t(f"item.rpmedicine.{k}.desc", dru, den)
@@ -353,6 +356,37 @@ for k, ru, en in [
  ("rpmedicine.exam.dislocation_arm", "Вывих плеча или локтя", "Dislocated shoulder or elbow"),
  ("rpmedicine.exam.dislocation_leg", "Вывих колена", "Dislocated knee"),
  ("rpmedicine.exam.dislocation_foot", "Вывих голеностопа", "Dislocated ankle"),
+]: t(k, ru, en)
+
+# Медкарта
+for k, ru, en in [
+ ("rpmedicine.medcard.title", "Медкарта", "Medical record"), ("rpmedicine.medcard.title_of", "Медкарта: %s", "Medical record: %s"),
+ ("rpmedicine.medcard.vitals", "Рост %s см   Вес %s кг   Группа крови %s", "Height %s cm   Weight %s kg   Blood type %s"),
+ ("rpmedicine.medcard.allergies", "Аллергии:", "Allergies:"), ("rpmedicine.medcard.chronic", "Хронические:", "Chronic:"),
+ ("rpmedicine.medcard.entries", "Записи", "Entries"), ("rpmedicine.medcard.no_entries", "Записей нет", "No entries"),
+ ("rpmedicine.medcard.save", "Сохранить", "Save"), ("rpmedicine.medcard.add", "Добавить запись", "Add entry"),
+ ("rpmedicine.medcard.new_entry", "Новая запись", "New entry"), ("rpmedicine.medcard.editing", "Правка записи:", "Editing entry:"),
+ ("rpmedicine.medcard.edit", "Изменить", "Edit"), ("rpmedicine.medcard.accept", "Принять", "Accept"), ("rpmedicine.medcard.decline", "Отклонить", "Decline"),
+ ("rpmedicine.medcard.proposed", " (предложено)", " (suggested)"),
+ ("rpmedicine.medcard.blank", "Пустая карта", "Blank record"), ("rpmedicine.medcard.of", "Пациент: %s", "Patient: %s"),
+ ("rpmedicine.medcard.bound", "Медкарта: %s", "Medical record: %s"),
+ ("rpmedicine.medcard.yes", "есть", "yes"), ("rpmedicine.medcard.no", "нет", "no"),
+ ("rpmedicine.medcard.entry.fracture", "Перелом: %s", "Fracture: %s"),
+ ("rpmedicine.medcard.entry.open_fracture", "Открытый перелом: %s", "Open fracture: %s"),
+ ("rpmedicine.medcard.entry.rib_fracture", "Перелом рёбер", "Rib fracture"),
+ ("rpmedicine.medcard.entry.arterial", "Артериальное кровотечение: %s", "Arterial bleeding: %s"),
+ ("rpmedicine.medcard.entry.pneumothorax", "Пневмоторакс", "Pneumothorax"),
+ ("rpmedicine.medcard.entry.internal", "Внутреннее кровотечение: %s", "Internal bleeding: %s"),
+ ("rpmedicine.medcard.entry.dislocation", "Вывих: %s", "Dislocation: %s"),
+ ("rpmedicine.medcard.entry.gunshot", "Огнестрельное ранение: %s", "Gunshot wound: %s"),
+ ("rpmedicine.medcard.entry.shrapnel", "Осколочное ранение: %s", "Shrapnel wound: %s"),
+ ("rpmedicine.medcard.entry.clinical_death", "Клиническая смерть", "Clinical death"),
+ ("rpmedicine.medcard.entry.transfusion", "Переливание крови, пакет %s", "Blood transfusion, bag %s"),
+ ("rpmedicine.medcard.entry.bullet_removed", "Извлечена пуля: %s", "Bullet removed: %s"),
+ ("rpmedicine.medcard.entry.fragment_removed", "Извлечён осколок: %s", "Fragment removed: %s"),
+ ("rpmedicine.medcard.entry.lab", "Анализ крови: группа %s, гемоглобин %s г/л, лейкоциты %s, сепсис: %s", "Blood test: type %s, hemoglobin %s g/L, WBC %s, sepsis: %s"),
+ ("rpmedicine.cmd.card_set", "Медкарта %s: %s = %s", "Medical record %s: %s = %s"),
+ ("rpmedicine.cmd.card_bad", "Медкарта: неверное значение %s (%s)", "Medical record: bad value for %s (%s)"),
 ]: t(k, ru, en)
 
 # Мини-игры

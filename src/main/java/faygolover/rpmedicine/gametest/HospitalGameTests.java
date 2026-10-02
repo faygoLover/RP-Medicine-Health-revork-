@@ -351,6 +351,57 @@ public final class HospitalGameTests {
         });
     }
 
+    /** Медкарта: привязка пустой карты, предложение после огнестрела, принять и отклонить, команда ГМа, файл на сервере. */
+    @GameTest(template = T, timeoutTicks = 200)
+    public static void medcardProposalsAndGmFields(GameTestHelper h) {
+        noDeath(false);
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        var blank = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.MEDCARD.get(), 3);
+        medic.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, blank);
+        blank.getItem().interactLivingEntity(blank, medic, patient, net.minecraft.world.InteractionHand.MAIN_HAND);
+        var card = medic.getInventory().items.stream().filter(st -> faygolover.rpmedicine.item.MedcardItem.owner(st) != null).findFirst();
+        h.assertTrue(card.isPresent() && patient.getUUID().equals(faygolover.rpmedicine.item.MedcardItem.owner(card.get())), "карта привязана к пациенту");
+        h.assertTrue(medic.getMainHandItem().getCount() == 2, "из стопки ушла одна карта");
+
+        // Огнестрел в ногу — мод предлагает запись (одну, даже если попаданий несколько).
+        var rep = new faygolover.rpmedicine.core.Injuries.Report();
+        var w = new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.GUNSHOT, 20);
+        rep.outcomes.add(faygolover.rpmedicine.core.Injuries.Outcome.WOUND);
+        rep.wounds.add(w);
+        faygolover.rpmedicine.server.MedcardHooks.injury(patient, rep, faygolover.rpmedicine.core.BodyPart.LEFT_LEG);
+        faygolover.rpmedicine.server.MedcardHooks.injury(patient, rep, faygolover.rpmedicine.core.BodyPart.LEFT_LEG);
+        var server = h.getLevel().getServer();
+        var mc = faygolover.rpmedicine.medcard.MedcardStore.get(server, patient.getUUID());
+        h.assertTrue(mc.entries.size() == 1 && mc.entries.get(0).proposed && mc.entries.get(0).key.equals("gunshot"), "одно предложение «огнестрел»");
+        int id = mc.entries.get(0).id;
+        medic.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, card.get().copy());
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, new faygolover.rpmedicine.network.MedcardActionPacket(
+                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.EDIT, id, "Огнестрел левого бедра, пуля извлечена"));
+        h.assertTrue(!mc.entries.get(0).proposed && mc.entries.get(0).text.startsWith("Огнестрел"), "правка принимает запись");
+        faygolover.rpmedicine.medcard.MedcardService.propose(server, patient, "clinical_death", List.of(), "");
+        int id2 = mc.entries.get(1).id;
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, new faygolover.rpmedicine.network.MedcardActionPacket(
+                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.DECLINE, id2, ""));
+        h.assertTrue(mc.entries.size() == 1, "отклонённое предложение удалено");
+        // Без карты в руках — правка не проходит.
+        medic.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, new faygolover.rpmedicine.network.MedcardActionPacket(
+                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.ADD, -1, "чужая запись"));
+        h.assertTrue(mc.entries.size() == 1, "без карты — нельзя");
+        // ГМ меняет группу и вес.
+        faygolover.rpmedicine.medcard.MedcardService.gmSet(server, patient.getUUID(), patient.getGameProfile().getName(), "blood_type", "ab-");
+        faygolover.rpmedicine.medcard.MedcardService.gmSet(server, patient.getUUID(), patient.getGameProfile().getName(), "weight", "90");
+        h.assertTrue(state(patient).bloodType == faygolover.rpmedicine.core.BloodType.AB_NEG && state(patient).weightKg == 90, "группа и вес — и в карте, и у персонажа");
+        java.nio.file.Path file = server.getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT)
+                .resolve("rpmedicine/cards/" + patient.getUUID() + ".json");
+        h.runAfterDelay(20, () -> {
+            h.assertTrue(java.nio.file.Files.exists(file), "файл медкарты на сервере");
+            remove(h, medic, patient);
+            h.succeed();
+        });
+    }
+
     /** Капельница идёт на ходу, пока рядом стойка. */
     @GameTest(template = T, timeoutTicks = 200)
     public static void ivStandLetsDripRunWhileMoving(GameTestHelper h) {

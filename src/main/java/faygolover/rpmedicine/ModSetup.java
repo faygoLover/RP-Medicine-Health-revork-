@@ -120,6 +120,7 @@ public final class ModSetup {
         if (!(e.getEntity() instanceof ServerPlayer sp)) return;
         StubService.onLogin(sp);
         faygolover.rpmedicine.server.BloodService.onLogin(sp);
+        faygolover.rpmedicine.medcard.MedcardService.onLogin(sp);
         SelfSync.forceSync(sp);
         MedicalState m = Medical.state(sp);
         if (m != null && (m.isDown() || HospitalService.isOnBed(sp))) faygolover.rpmedicine.server.DownedService.broadcastPose(sp);
@@ -223,5 +224,6 @@ public final class ModSetup {
         ExamService.clear();
         Integrations.serverStopped();
         faygolover.rpmedicine.integration.voice.VoiceState.clear();
+        faygolover.rpmedicine.medcard.MedcardStore.shutdown();
     }
 }

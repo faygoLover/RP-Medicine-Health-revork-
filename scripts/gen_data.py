@@ -339,7 +339,7 @@ ICONS = {
     "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
     "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)),
     "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
-    "scissors": ("strap", (190, 195, 205), (60, 60, 60)),
+    "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
 }
 for name, (shape, color, accent) in ICONS.items():
     png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))

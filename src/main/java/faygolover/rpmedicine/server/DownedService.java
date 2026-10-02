@@ -60,6 +60,7 @@ public final class DownedService {
         if (r.has(StepResult.Event.WENT_DOWN)) onWentDown(sp, m);
         if (r.has(StepResult.Event.CLINICAL_DEATH)) {
             onWentDown(sp, m);
+            MedcardHooks.clinicalDeath(sp);
             sp.displayClientMessage(Component.translatable("rpmedicine.msg.clinical_death").withStyle(ChatFormatting.DARK_RED), true);
         }
         if (r.has(StepResult.Event.RESCUED_FROM_CLINICAL)) broadcastDowned(sp, true);

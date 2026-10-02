@@ -111,7 +111,30 @@ public final class MedCommand {
                 .then(Commands.argument("duration", StringArgumentType.word())
                         .executes(c -> timeAdd(c, false))
                         .then(Commands.literal("offline").executes(c -> timeAdd(c, true)))))));
+        // Медкарта (второй этап, п. 10): рост, вес, группа, аллергии, хронические состояния.
+        root.then(op("card").then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
+                .then(Commands.argument("field", StringArgumentType.word())
+                        .suggests((c, b) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
+                                java.util.List.of("height", "weight", "blood_type", "allergies", "chronic"), b))
+                        .then(Commands.argument("value", StringArgumentType.greedyString()).executes(MedCommand::card)))));
         d.register(root);
+    }
+
+    private static int card(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
+        var profiles = net.minecraft.commands.arguments.GameProfileArgument.getGameProfiles(c, "player");
+        String field = StringArgumentType.getString(c, "field");
+        String value = StringArgumentType.getString(c, "value");
+        int n = 0;
+        for (var gp : profiles) {
+            try {
+                Component msg = faygolover.rpmedicine.medcard.MedcardService.gmSet(c.getSource().getServer(), gp.getId(), gp.getName(), field, value);
+                c.getSource().sendSuccess(() -> msg, true);
+                n++;
+            } catch (IllegalArgumentException e) {
+                c.getSource().sendFailure(Component.translatable("rpmedicine.cmd.card_bad", field, e.getMessage()));
+            }
+        }
+        return n;
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> op(String name) {

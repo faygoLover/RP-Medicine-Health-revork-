@@ -354,6 +354,11 @@ public final class TreatmentService {
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) LabService.giveSample(actor, target);
+            // Предложения записей в медкарту (второй этап, п. 10).
+            if (spec.action() == TreatmentAction.BLOOD_BAG && r.applied && extra instanceof Treatments.Bag bag)
+                MedcardHooks.transfusion(actor, target, bag.type());
+            if (spec.action() == TreatmentAction.TWEEZERS && r.applied)
+                MedcardHooks.extraction(actor, target, part, r.key.equals("bullet_removed"));
             // Инструмент побывал в ране — больше не стерилен.
             ItemStack used = actor.getInventory().getItem(slot);
             if (used.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem && spec.action() == TreatmentAction.TWEEZERS)
