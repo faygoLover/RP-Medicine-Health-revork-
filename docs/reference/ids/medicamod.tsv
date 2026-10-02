@@ -1,0 +1,48 @@
+# medicamod | файл medicamod-1.0.0-forge-1.20.1.jar | лицензия в mods.toml: Not specified
+type	id	en	ru
+block	medicamod:dealer_block	Dealer profession block	Прилавок дилера
+block	medicamod:pharmacy_block	Pharmacy profession block	Аптечный прилавок
+item	medicamod:acetylcysteine	Acetylcysteine 600	АЦЦ
+item	medicamod:adrenalin	Adrenalin 1	Адреналин
+item	medicamod:amol	Amol	Амол
+item	medicamod:antidote	Antidote	Антидот
+item	medicamod:apirin	Aspirin	Аспирин
+item	medicamod:aviomarin	Aviomarin 50	Драмина
+item	medicamod:azithromycin	Azithromycin 500	Сумамед
+item	medicamod:caffeine	Caffeine 200	Кофеин
+item	medicamod:codeine	Codeine 15	Коделак
+item	medicamod:deflegmin	Deflegmin 75	Бромгексин
+item	medicamod:diazepam	Diazepam 5	Реланиум
+item	medicamod:espumisan	Espumisan 40	Эспумизан
+item	medicamod:glimbax	Glimbax	Глимбакс
+item	medicamod:hitaxa	Hitaxa 5	Целебрекс
+item	medicamod:hydrocortisone	Hydrocortisone 5	Гидрокортизон
+item	medicamod:hydroxyzine	Hydroxyzine 25	Атаракс
+item	medicamod:ibuprofen	Ibuprofen 200	Нурофен
+item	medicamod:insulin	Insulin 3	Инсулин
+item	medicamod:isotretinoin	Isotretinoin 10	Роаккутан
+item	medicamod:ketonal	Ketonal 50	Кетонал
+item	medicamod:loperamide	Loperamide 2	Имодиум
+item	medicamod:lugols_iodine	Lugol's iodine	Раствор Люголя
+item	medicamod:medikinet	Medikinet 10	Риталин
+item	medicamod:melatonin	Melatonin 5	Мелаксен
+item	medicamod:metamizol	Metamizol 500	Анальгин
+item	medicamod:morphine	Morphine 10	Морфин
+item	medicamod:nospa	No-spa 80	Но-шпа
+item	medicamod:pantoprazole	Pantoprazole 20	Контролок
+item	medicamod:paracetamol	Paracetamol 500	Панадол
+item	medicamod:penicillin	Penicillin 600	Пенициллин
+item	medicamod:placebo	Placebo	Плацебо
+item	medicamod:probiotic	Probiotic 250	Пробиотик
+item	medicamod:sertraline	Sertraline 50	Золофт
+item	medicamod:strepsils	Strepsils 	Стрепсилс
+item	medicamod:testosterone	Testosterone 150	Тестостерон
+item	medicamod:trazodon	Trazodon 75	Тразодон
+item	medicamod:viagra	Viagra 50	Виагра
+item	medicamod:vitamin_a	Vitamin A 800	Ретинол
+item	medicamod:vitamin_b	Vitamin B	Нейромультивит
+item	medicamod:vitamin_c	Vitamin C 1000	Аскорбиновая кислота
+item	medicamod:vitamin_d	Vitamin D 2000	Колекальциферол
+item	medicamod:vitamin_e	Vitamin E 20	Токоферол
+item	medicamod:vitamin_h	Vitamin H (Biotin)	Биотин
+item	medicamod:vitamin_k	Vitamin K 75	Викасол

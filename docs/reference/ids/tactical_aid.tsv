@@ -1,0 +1,15 @@
+# tactical_aid | файл tactical_aid-1.20.1-v1.3.9.jar | лицензия в mods.toml: Academic Free License v3.0
+type	id	en	ru
+item	tactical_aid:adrenalineinjector	Adrenaline injector	Адреналиновый инъектор
+item	tactical_aid:adrenalineinjector_ii	Adrenaline injector II	Адреналиновый инъектор II
+item	tactical_aid:adrenalineinjector_iii	adrenaline injector III	Адреналиновый инъектор III
+item	tactical_aid:aggressivenessinjector	Aggressiveness injector	Инъектор агрессии
+item	tactical_aid:foodbag	Foodstorage	Сумка для еды
+item	tactical_aid:glucoseinjector	Glucose injector	Глюкозный инъектор
+item	tactical_aid:harness	injector Harness	Подсумок для инъекторов
+item	tactical_aid:metabolizeinjector	Metabolize injector	Метаболический инъектор
+item	tactical_aid:nanometre_particlesinjector	Nanometre Particles injector	Инъектор наночастиц
+item	tactical_aid:painlessinjector	Painless injector	Безболезненный инъектор
+item	tactical_aid:quickactioninjector	Quick action injector	Инъектор быстрого действия
+item	tactical_aid:quickactioninjector_ii	Quick action injector II	Инъектор быстрого действия II
+item	tactical_aid:relief_injector	Relief injector	Инъектор с обезболивающим

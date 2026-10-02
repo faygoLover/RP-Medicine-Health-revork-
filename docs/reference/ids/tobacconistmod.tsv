@@ -1,0 +1,244 @@
+# tobacconistmod | файл tobacconistmod-4.0.0-beta.2-forge-1.20.1.jar | лицензия в mods.toml: All Rights Reserved
+type	id	en	ru
+block	tobacconistmod:blended_tobacco_crate	Blended Tobacco Crate	Blended Tobacco Crate
+block	tobacconistmod:burley_tobacco_crate	Burley Tobacco Crate	Ящик табака «Бёрли»
+block	tobacconistmod:dokha_tobacco_crate	Dokha Tobacco Crate	Ящик табака «Доха»
+block	tobacconistmod:emerald_hookah_block	Emerald Hookah	Emerald Hookah
+block	tobacconistmod:exposed_copper_hookah_block	Exposed Copper Hookah	Exposed Copper Hookah
+block	tobacconistmod:flue_firebox	Flue Firebox	Жаровая топка
+block	tobacconistmod:glass_ashtray	Glass Ashtray	Glass Ashtray
+block	tobacconistmod:hanging_tobacco_leaves	Hanging Tobacco Leaves	Hanging Tobacco Leaves
+block	tobacconistmod:hookah_block	Hookah	Кальян
+block	tobacconistmod:industrial_drying_rack	Industrial Drying Rack	Industrial Drying Rack
+block	tobacconistmod:lapis_hookah_block	Lapis Hookah	Lapis Hookah
+block	tobacconistmod:netherite_hookah_block	Netherite Hookah	Netherite Hookah
+block	tobacconistmod:obsidian_hookah_block	Obsidian Hookah	Obsidian Hookah
+block	tobacconistmod:oriental_tobacco_crate	Oriental Tobacco Crate	Ящик табака «Ориентал»
+block	tobacconistmod:ornate_amethyst_hookah_block	Amethyst Hookah	Узорчатый аметистовый кальян
+block	tobacconistmod:ornate_copper_hookah_block	Copper Hookah	Узорчатый медный кальян
+block	tobacconistmod:ornate_diamond_hookah_block	Diamond Hookah	Узорчатый алмазный кальян
+block	tobacconistmod:ornate_gold_hookah_block	Gold Hookah	Узорчатый золотой кальян
+block	tobacconistmod:ornate_iron_hookah_block	Iron Hookah	Узорчатый железный кальян
+block	tobacconistmod:oxidized_copper_hookah_block	Oxidized Copper Hookah	Oxidized Copper Hookah
+block	tobacconistmod:potted_wild_flowering_tobacco	Potted Wild Flowering Tobacco	Potted Wild Flowering Tobacco
+block	tobacconistmod:production_monitor	Production Monitor	Production Monitor
+block	tobacconistmod:raw_burley_tobacco_crate	Raw Burley Tobacco Crate	Raw Burley Tobacco Crate
+block	tobacconistmod:raw_dokha_tobacco_crate	Raw Dokha Tobacco Crate	Raw Dokha Tobacco Crate
+block	tobacconistmod:raw_oriental_tobacco_crate	Raw Oriental Tobacco Crate	Raw Oriental Tobacco Crate
+block	tobacconistmod:raw_shade_tobacco_crate	Raw Shade Tobacco Crate	Raw Shade Tobacco Crate
+block	tobacconistmod:raw_virginia_tobacco_crate	Raw Virginia Tobacco Crate	Raw Virginia Tobacco Crate
+block	tobacconistmod:raw_wild_tobacco_crate	Raw Wild Tobacco Crate	Raw Wild Tobacco Crate
+block	tobacconistmod:redstone_hookah_block	Redstone Hookah	Redstone Hookah
+block	tobacconistmod:shade_tobacco_crate	Shade Tobacco Crate	Ящик теневого табака
+block	tobacconistmod:tall_hookah_block	Tall Hookah	Tall Hookah
+block	tobacconistmod:tobacco_barrel	Tobacco Barrel	Табачная бочка
+block	tobacconistmod:tobacco_crop_burley	Burley Tobacco Crop	Куст табака «Бёрли»
+block	tobacconistmod:tobacco_crop_dokha	Dokha Tobacco Crop	Куст табака «Доха»
+block	tobacconistmod:tobacco_crop_oriental	Oriental Tobacco Crop	Куст табака «Ориентал»
+block	tobacconistmod:tobacco_crop_shade	Shade Tobacco Crop	Куст теневого табака
+block	tobacconistmod:tobacco_crop_virginia	Virginia Tobacco Crop	Куст табака «Вирджиния»
+block	tobacconistmod:tobacco_crop_wild	Wild Tobacco Crop	Куст дикого табака
+block	tobacconistmod:tobacco_drying_rack_block	Tobacco Drying Rack	Сушилка для табака
+block	tobacconistmod:virginia_tobacco_crate	Virginia Tobacco Crate	Ящик табака «Вирджиния»
+block	tobacconistmod:waxed_copper_hookah_block	Waxed Copper Hookah	Waxed Copper Hookah
+block	tobacconistmod:waxed_exposed_copper_hookah_block	Waxed Exposed Copper Hookah	Waxed Exposed Copper Hookah
+block	tobacconistmod:waxed_oxidized_copper_hookah_block	Waxed Oxidized Copper Hookah	Waxed Oxidized Copper Hookah
+block	tobacconistmod:waxed_weathered_copper_hookah_block	Waxed Weathered Copper Hookah	Waxed Weathered Copper Hookah
+block	tobacconistmod:weathered_copper_hookah_block	Weathered Copper Hookah	Weathered Copper Hookah
+block	tobacconistmod:wild_flowering_tobacco_block	Wild Flowering Tobacco	Дикий цветущий табак
+block	tobacconistmod:wild_tobacco_crate	Wild Tobacco Crate	Ящик дикого табака
+item	tobacconistmod:bamboo_charcoal	Bamboo Charcoal	Бамбуковый уголь
+item	tobacconistmod:blended_tobacco	Blended Tobacco	Blended Tobacco
+item	tobacconistmod:bottled_aqua_vitae	Bottle of Aqua Vitae	Bottle of Aqua Vitae
+item	tobacconistmod:bottled_molasses_apple_flavor	Bottle of Molasses (Apple Flavored)	Бутылочка мелассы (со вкусом яблока)
+item	tobacconistmod:bottled_molasses_applepie_flavor	Bottle of Molasses (Apple Pie Flavored)	Бутылочка мелассы (со вкусом яблочного пирога)
+item	tobacconistmod:bottled_molasses_apricot_flavor	Bottle of Molasses (Apricot Flavored)	Bottle of Molasses (Apricot Flavored)
+item	tobacconistmod:bottled_molasses_banana_flavor	Bottle of Molasses (Banana Flavored)	Bottle of Molasses (Banana Flavored)
+item	tobacconistmod:bottled_molasses_bayberry_flavor	Bottle of Molasses (Bayberry Flavored)	Бутылочка мелассы (со вкусом восковницы)
+item	tobacconistmod:bottled_molasses_berry_flavor	Bottle of Molasses (Berry Flavored)	Бутылочка мелассы (со вкусом ягод)
+item	tobacconistmod:bottled_molasses_blackberry_flavor	Bottle of Molasses (Blackberry Flavored)	Bottle of Molasses (Blackberry Flavored)
+item	tobacconistmod:bottled_molasses_blueberry_flavor	Bottle of Molasses (Blueberry Flavored)	Бутылочка мелассы (со вкусом черники)
+item	tobacconistmod:bottled_molasses_brownie_flavor	Bottle of Molasses (Brownie Flavored)	Bottle of Molasses (Brownie Flavored)
+item	tobacconistmod:bottled_molasses_cake_flavor	Bottle of Molasses (Cake Flavored)	Бутылочка мелассы (со вкусом торта)
+item	tobacconistmod:bottled_molasses_caramel_flavor	Bottle of Molasses (Caramel Flavored)	Bottle of Molasses (Caramel Flavored)
+item	tobacconistmod:bottled_molasses_carrot_flavor	Bottle of Molasses (Carrot Flavored)	Бутылочка мелассы (со вкусом моркови)
+item	tobacconistmod:bottled_molasses_cherry_flavor	Bottle of Molasses (Cherry Flavored)	Bottle of Molasses (Cherry Flavored)
+item	tobacconistmod:bottled_molasses_chocolatepie_flavor	Bottle of Molasses (Chocolate Pie Flavored)	Бутылочка мелассы (со вкусом шоколадного пирога)
+item	tobacconistmod:bottled_molasses_chorus_fruit_flavor	Bottle of Molasses (Chorus Fruit Flavored)	Бутылочка мелассы (со вкусом плода хоруса)
+item	tobacconistmod:bottled_molasses_cinnamon_flavor	Bottle of Molasses (Cinnamon Flavored)	Bottle of Molasses (Cinnamon Flavored)
+item	tobacconistmod:bottled_molasses_cocoa_flavor	Bottle of Molasses (Cocoa Flavored)	Бутылочка мелассы (со вкусом какао)
+item	tobacconistmod:bottled_molasses_coconut_flavor	Bottle of Molasses (Coconut Flavored)	Bottle of Molasses (Coconut Flavored)
+item	tobacconistmod:bottled_molasses_coffee_flavor	Bottle of Molasses (Coffee Flavored)	Bottle of Molasses (Coffee Flavored)
+item	tobacconistmod:bottled_molasses_cookies_flavor	Bottle of Molasses (Cookies Flavored)	Бутылочка мелассы (со вкусом печенья)
+item	tobacconistmod:bottled_molasses_cranberry_flavor	Bottle of Molasses (Cranberry Flavored)	Бутылочка мелассы (со вкусом клюквы)
+item	tobacconistmod:bottled_molasses_cream_flavor	Bottle of Molasses (Cream Flavored)	Бутылочка мелассы (со вкусом сливок)
+item	tobacconistmod:bottled_molasses_custard_flavor	Bottle of Molasses (Custard Flavored)	Bottle of Molasses (Custard Flavored)
+item	tobacconistmod:bottled_molasses_dragonfruit_flavor	Bottle of Molasses (Dragonfruit Flavored)	Bottle of Molasses (Dragonfruit Flavored)
+item	tobacconistmod:bottled_molasses_durian_flavor	Bottle of Molasses (Durian Flavored)	Бутылочка meлассы (со вкусом дуриана)
+item	tobacconistmod:bottled_molasses_fig_flavor	Bottle of Molasses (Fig Flavored)	Бутылочка мелассы (со вкусом инжира)
+item	tobacconistmod:bottled_molasses_glowberry_custard_flavor	Bottle of Molasses (Glowberry Custard Flavored)	Бутылочка мелассы (со вкусом крема со светящимися ягодами)
+item	tobacconistmod:bottled_molasses_glowberry_flavor	Bottle of Molasses (Glowberry Flavored)	Бутылочка мелассы (со вкусом светящихся ягод)
+item	tobacconistmod:bottled_molasses_goldenapple_flavor	Bottle of Molasses (Golden Apple Flavored)	Бутылочка мелассы (со вкусом золотого яблока)
+item	tobacconistmod:bottled_molasses_grape_flavor	Bottle of Molasses (Grape Flavored)	Bottle of Molasses (Grape Flavored)
+item	tobacconistmod:bottled_molasses_grapefruit_flavor	Bottle of Molasses (Grapefruit Flavored)	Bottle of Molasses (Grapefruit Flavored)
+item	tobacconistmod:bottled_molasses_hamimelon_flavor	Bottle of Molasses (Hamimelon Flavored)	Бутылочка мелассы (со вкусом хамийской дыни)
+item	tobacconistmod:bottled_molasses_hawberry_flavor	Bottle of Molasses (Hawberry Flavored)	Бутылочка мелассы (со вкусом боярышника)
+item	tobacconistmod:bottled_molasses_hibiscus_flavor	Bottle of Molasses (Hibiscus Flavored)	Bottle of Molasses (Hibiscus Flavored)
+item	tobacconistmod:bottled_molasses_honey_flavor	Bottle of Molasses (Honey Flavored)	Бутылочка мелассы (со вкусом мёда)
+item	tobacconistmod:bottled_molasses_honeycookie_flavor	Bottle of Molasses (Honey Cookie Flavored)	Бутылочка мелассы (со вкусом медового печенья)
+item	tobacconistmod:bottled_molasses_kiwi_flavor	Bottle of Molasses (Kiwi Flavored)	Бутылочка мелассы (со вкусом киви)
+item	tobacconistmod:bottled_molasses_lavender_flavor	Bottle of Molasses (Lavender Flavored)	Bottle of Molasses (Lavender Flavored)
+item	tobacconistmod:bottled_molasses_lemon_flavor	Bottle of Molasses (Lemon Flavored)	Бутылочка мелассы (со вкусом лимона)
+item	tobacconistmod:bottled_molasses_lime_flavor	Bottle of Molasses (Lime Flavored)	Bottle of Molasses (Lime Flavored)
+item	tobacconistmod:bottled_molasses_lychee_flavor	Bottle of Molasses (Lychee Flavored)	Бутылочка мелассы (со вкусом личи)
+item	tobacconistmod:bottled_molasses_mango_flavor	Bottle of Molasses (Mango Flavored)	Бутылочка мелассы (со вкусом манго)
+item	tobacconistmod:bottled_molasses_mangosteen_flavor	Bottle of Molasses (Mangosteen Flavored)	Бутылочка мелассы (со вкусом мангостина)
+item	tobacconistmod:bottled_molasses_marshmallow_flavor	Bottle of Molasses (Marshmallow Flavored)	Bottle of Molasses (Marshmallow Flavored)
+item	tobacconistmod:bottled_molasses_melon_flavor	Bottle of Molasses (Melon Flavored)	Бутылочка мелассы (со вкусом арбуза)
+item	tobacconistmod:bottled_molasses_melonpopsicle_flavor	Bottle of Molasses (Melon Ice Flavored)	Бутылочка мелассы (со вкусом арбузного льда)
+item	tobacconistmod:bottled_molasses_mint_flavor	Bottle of Molasses (Mint Flavored)	Bottle of Molasses (Mint Flavored)
+item	tobacconistmod:bottled_molasses_orange_flavor	Bottle of Molasses (Orange Flavored)	Бутылочка мелассы (со вкусом апельсина)
+item	tobacconistmod:bottled_molasses_peach_flavor	Bottle of Molasses (Peach Flavored)	Бутылочка мелассы (со вкусом персика)
+item	tobacconistmod:bottled_molasses_peanut_flavor	Bottle of Molasses (Peanut Flavored)	Bottle of Molasses (Peanut Flavored)
+item	tobacconistmod:bottled_molasses_pear_flavor	Bottle of Molasses (Pear Flavored)	Бутылочка мелассы (со вкусом груши)
+item	tobacconistmod:bottled_molasses_persimmon_flavor	Bottle of Molasses (Persimmon Flavored)	Бутылочка мелассы (со вкусом хурмы)
+item	tobacconistmod:bottled_molasses_pineapple_flavor	Bottle of Molasses (Pineapple Flavored)	Бутылочка мелассы (со вкусом ананаса)
+item	tobacconistmod:bottled_molasses_plain	Bottle of Molasses	Бутылочка мелассы
+item	tobacconistmod:bottled_molasses_plum_flavor	Bottle of Molasses (Plum Flavored)	Bottle of Molasses (Plum Flavored)
+item	tobacconistmod:bottled_molasses_pumpkin_flavor	Bottle of Molasses (Pumpkin Flavored)	Бутылочка мелассы (со вкусом тыквы)
+item	tobacconistmod:bottled_molasses_raspberry_flavor	Bottle of Molasses (Raspberry Flavored)	Bottle of Molasses (Raspberry Flavored)
+item	tobacconistmod:bottled_molasses_royalapple_flavor	Bottle of Molasses (Royal Apple Flavored)	Бутылочка мелассы (со вкусом королевского яблока)
+item	tobacconistmod:bottled_molasses_strawberry_flavor	Bottle of Molasses (Strawberry Flavored)	Bottle of Molasses (Strawberry Flavored)
+item	tobacconistmod:bottled_molasses_sugar_flavor	Bottle of Molasses (Sugar Flavored)	Бутылочка мелассы (со вкусом сахара)
+item	tobacconistmod:bottled_molasses_sweetberry_cheesecake_flavor	Bottle of Molasses (Sweet Berry Cheesecake Flavored)	Бутылочка мелассы (со вкусом чизкейка со сладкими ягодами)
+item	tobacconistmod:bottled_molasses_sweetberry_cookie_flavor	Bottle of Molasses (Cookie Flavored)	Бутылочка мелассы (со вкусом ягодного печенья)
+item	tobacconistmod:bottled_molasses_sweetberry_flavor	Bottle of Molasses (Sweetberry Flavored)	Бутылочка мелассы (со вкусом сладких ягод)
+item	tobacconistmod:bottled_molasses_tea_flavor	Bottle of Molasses (Tea Flavored)	Bottle of Molasses (Tea Flavored)
+item	tobacconistmod:bottled_molasses_two_apples_flavor	Bottle of Molasses (Double Apple Flavored)	Бутылочка мелассы (со вкусом двойного яблока)
+item	tobacconistmod:bottled_molasses_two_goldenapples_flavor	Bottle of Molasses (Double Golden Apple Flavored)	Бутылочка мелассы (со вкусом двойного золотого яблока)
+item	tobacconistmod:bottled_molasses_two_royalapples_flavor	Bottle of Molasses (Double Royal Apple Flavored)	Бутылочка мелассы (со вкусом двойного королевского яблока)
+item	tobacconistmod:bottled_molasses_vanilla_flavor	Bottle of Molasses (Vanilla Flavored)	Bottle of Molasses (Vanilla Flavored)
+item	tobacconistmod:brass_name_tag	Brass Label	Brass Label
+item	tobacconistmod:burley_tobacco_seeds	Burley Tobacco Seeds	Семена табака «Бёрли»
+item	tobacconistmod:cigar	Cigar	Сигара
+item	tobacconistmod:cigarette	Cigarette	Сигарета
+item	tobacconistmod:clay_smoking_pipe	Clay Smoking Pipe	Clay Smoking Pipe
+item	tobacconistmod:copper_chaveta	Copper Chaveta	Медная чавета
+item	tobacconistmod:copper_smoking_pipe	Copper Smoking Pipe	Медная курительная трубка
+item	tobacconistmod:diamond_chaveta	Diamond Chaveta	Алмазная чавета
+item	tobacconistmod:diamond_encrusted_smoking_pipe	Diamond-Encrusted Smoking Pipe	Алмазная курительная трубка
+item	tobacconistmod:dirty_hookah_water	Dirty Hookah Water	Dirty Hookah Water
+item	tobacconistmod:dokha_tobacco_seeds	Dokha Tobacco Seeds	Семена табака «Доха»
+item	tobacconistmod:emerald_aztec_smoking_pipe	Emerald-Aztec Smoking Pipe	Изумрудная ацтекская курительная трубка
+item	tobacconistmod:emerald_encrusted_smoking_pipe	Emerald-Encrusted Smoking Pipe	Изумрудная курительная трубка
+item	tobacconistmod:flavoring_essence_apple	Apple Flavoring Essence	Apple Flavoring Essence
+item	tobacconistmod:flavoring_essence_applepie	Apple Pie Flavoring Essence	Apple Pie Flavoring Essence
+item	tobacconistmod:flavoring_essence_apricot	Apricot Flavoring Essence	Apricot Flavoring Essence
+item	tobacconistmod:flavoring_essence_banana	Banana Flavoring Essence	Banana Flavoring Essence
+item	tobacconistmod:flavoring_essence_bayberry	Bayberry Flavoring Essence	Bayberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_berry	Berry Flavoring Essence	Berry Flavoring Essence
+item	tobacconistmod:flavoring_essence_blackberry	Blackberry Flavoring Essence	Blackberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_blueberry	Blueberry Flavoring Essence	Blueberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_brownie	Brownie Flavoring Essence	Brownie Flavoring Essence
+item	tobacconistmod:flavoring_essence_cake	Cake Flavoring Essence	Cake Flavoring Essence
+item	tobacconistmod:flavoring_essence_caramel	Caramel Flavoring Essence	Caramel Flavoring Essence
+item	tobacconistmod:flavoring_essence_carrot	Carrot Flavoring Essence	Carrot Flavoring Essence
+item	tobacconistmod:flavoring_essence_cherry	Cherry Flavoring Essence	Cherry Flavoring Essence
+item	tobacconistmod:flavoring_essence_chocolatepie	Chocolate Pie Flavoring Essence	Chocolate Pie Flavoring Essence
+item	tobacconistmod:flavoring_essence_chorus_fruit	Chorus Fruit Flavoring Essence	Chorus Fruit Flavoring Essence
+item	tobacconistmod:flavoring_essence_cinnamon	Cinnamon Flavoring Essence	Cinnamon Flavoring Essence
+item	tobacconistmod:flavoring_essence_cocoa	Cocoa Flavoring Essence	Cocoa Flavoring Essence
+item	tobacconistmod:flavoring_essence_coconut	Coconut Flavoring Essence	Coconut Flavoring Essence
+item	tobacconistmod:flavoring_essence_coffee	Coffee Flavoring Essence	Coffee Flavoring Essence
+item	tobacconistmod:flavoring_essence_cookies	Cookies Flavoring Essence	Cookies Flavoring Essence
+item	tobacconistmod:flavoring_essence_cranberry	Cranberry Flavoring Essence	Cranberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_cream	Cream Flavoring Essence	Cream Flavoring Essence
+item	tobacconistmod:flavoring_essence_custard	Custard Flavoring Essence	Custard Flavoring Essence
+item	tobacconistmod:flavoring_essence_dragonfruit	Dragonfruit Flavoring Essence	Dragonfruit Flavoring Essence
+item	tobacconistmod:flavoring_essence_durian	Durian Flavoring Essence	Durian Flavoring Essence
+item	tobacconistmod:flavoring_essence_fig	Fig Flavoring Essence	Fig Flavoring Essence
+item	tobacconistmod:flavoring_essence_glowberry	Glow Berry Flavoring Essence	Glow Berry Flavoring Essence
+item	tobacconistmod:flavoring_essence_glowberry_custard	Glow Berry Custard Flavoring Essence	Glow Berry Custard Flavoring Essence
+item	tobacconistmod:flavoring_essence_goldenapple	Golden Apple Flavoring Essence	Golden Apple Flavoring Essence
+item	tobacconistmod:flavoring_essence_grape	Grape Flavoring Essence	Grape Flavoring Essence
+item	tobacconistmod:flavoring_essence_grapefruit	Grapefruit Flavoring Essence	Grapefruit Flavoring Essence
+item	tobacconistmod:flavoring_essence_hamimelon	Hamimelon Flavoring Essence	Hamimelon Flavoring Essence
+item	tobacconistmod:flavoring_essence_hawberry	Hawberry Flavoring Essence	Hawberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_hibiscus	Hibiscus Flavoring Essence	Hibiscus Flavoring Essence
+item	tobacconistmod:flavoring_essence_honey	Honey Flavoring Essence	Honey Flavoring Essence
+item	tobacconistmod:flavoring_essence_honeycookie	Honey Cookie Flavoring Essence	Honey Cookie Flavoring Essence
+item	tobacconistmod:flavoring_essence_kiwi	Kiwi Flavoring Essence	Kiwi Flavoring Essence
+item	tobacconistmod:flavoring_essence_lavender	Lavender Flavoring Essence	Lavender Flavoring Essence
+item	tobacconistmod:flavoring_essence_lemon	Lemon Flavoring Essence	Lemon Flavoring Essence
+item	tobacconistmod:flavoring_essence_lime	Lime Flavoring Essence	Lime Flavoring Essence
+item	tobacconistmod:flavoring_essence_lychee	Lychee Flavoring Essence	Lychee Flavoring Essence
+item	tobacconistmod:flavoring_essence_mango	Mango Flavoring Essence	Mango Flavoring Essence
+item	tobacconistmod:flavoring_essence_mangosteen	Mangosteen Flavoring Essence	Mangosteen Flavoring Essence
+item	tobacconistmod:flavoring_essence_marshmallow	Marshmallow Flavoring Essence	Marshmallow Flavoring Essence
+item	tobacconistmod:flavoring_essence_melon	Melon Flavoring Essence	Melon Flavoring Essence
+item	tobacconistmod:flavoring_essence_melonpopsicle	Melon Popsicle Flavoring Essence	Melon Popsicle Flavoring Essence
+item	tobacconistmod:flavoring_essence_mint	Mint Flavoring Essence	Mint Flavoring Essence
+item	tobacconistmod:flavoring_essence_orange	Orange Flavoring Essence	Orange Flavoring Essence
+item	tobacconistmod:flavoring_essence_peach	Peach Flavoring Essence	Peach Flavoring Essence
+item	tobacconistmod:flavoring_essence_peanut	Peanut Flavoring Essence	Peanut Flavoring Essence
+item	tobacconistmod:flavoring_essence_pear	Pear Flavoring Essence	Pear Flavoring Essence
+item	tobacconistmod:flavoring_essence_persimmon	Persimmon Flavoring Essence	Persimmon Flavoring Essence
+item	tobacconistmod:flavoring_essence_pineapple	Pineapple Flavoring Essence	Pineapple Flavoring Essence
+item	tobacconistmod:flavoring_essence_plum	Plum Flavoring Essence	Plum Flavoring Essence
+item	tobacconistmod:flavoring_essence_pumpkin	Pumpkin Flavoring Essence	Pumpkin Flavoring Essence
+item	tobacconistmod:flavoring_essence_raspberry	Raspberry Flavoring Essence	Raspberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_royalapple	Royal Golden Apple Flavoring Essence	Royal Golden Apple Flavoring Essence
+item	tobacconistmod:flavoring_essence_strawberry	Strawberry Flavoring Essence	Strawberry Flavoring Essence
+item	tobacconistmod:flavoring_essence_sugar	Sugar Flavoring Essence	Sugar Flavoring Essence
+item	tobacconistmod:flavoring_essence_sweetberry	Sweet Berry Flavoring Essence	Sweet Berry Flavoring Essence
+item	tobacconistmod:flavoring_essence_sweetberry_cheesecake	Sweet Berry Cheesecake Flavoring Essence	Sweet Berry Cheesecake Flavoring Essence
+item	tobacconistmod:flavoring_essence_sweetberry_cookie	Sweet Berry Cookie Flavoring Essence	Sweet Berry Cookie Flavoring Essence
+item	tobacconistmod:flavoring_essence_tea	Tea Flavoring Essence	Tea Flavoring Essence
+item	tobacconistmod:flavoring_essence_two_apples	Double Apple Flavoring Essence	Double Apple Flavoring Essence
+item	tobacconistmod:flavoring_essence_two_goldenapples	Double Golden Apple Flavoring Essence	Double Golden Apple Flavoring Essence
+item	tobacconistmod:flavoring_essence_two_royalapples	Double Royal Apple Flavoring Essence	Double Royal Apple Flavoring Essence
+item	tobacconistmod:flavoring_essence_vanilla	Vanilla Flavoring Essence	Vanilla Flavoring Essence
+item	tobacconistmod:gem_encrusted_smoking_pipe	Gem-Encrusted Smoking Pipe	Инкрустированная курительная трубка
+item	tobacconistmod:gold_chaveta	Gold Chaveta	Золотая чавета
+item	tobacconistmod:gold_smoking_pipe	Gold Smoking Pipe	Золотая курительная трубка
+item	tobacconistmod:hookah_hose	Hookah Hose	Шланг для кальяна
+item	tobacconistmod:incomplete_cigar	Incomplete Cigar	Incomplete Cigar
+item	tobacconistmod:incomplete_cigarette	Incomplete Cigarette	Incomplete Cigarette
+item	tobacconistmod:iron_chaveta	Iron Chaveta	Железная чавета
+item	tobacconistmod:iron_smoking_pipe	Iron Smoking Pipe	Железная курительная трубка
+item	tobacconistmod:kiseru_smoking_pipe	Kiseru Smoking Pipe	Курительная трубка кисэру
+item	tobacconistmod:lapis_encrusted_smoking_pipe	Lapis-Encrusted Smoking Pipe	Лазуритовая курительная трубка
+item	tobacconistmod:netherite_chaveta	Netherite Chaveta	Незеритовая чавета
+item	tobacconistmod:netherite_smoking_pipe	Netherite Smoking Pipe	Незеритовая курительная трубка
+item	tobacconistmod:oriental_tobacco_seeds	Oriental Tobacco Seeds	Семена табака «Ориентал»
+item	tobacconistmod:rolling_paper	Rolling Paper	Папиросная бумага
+item	tobacconistmod:shade_tobacco_seeds	Shade Tobacco Seeds	Семена теневого табака
+item	tobacconistmod:shisha_tobacco	Shisha Tobacco	Табак для кальяна
+item	tobacconistmod:spoiled_tobacco	Spoiled Tobacco	Испорченный табак
+item	tobacconistmod:stone_chaveta	Stone Chaveta	Каменная чавета
+item	tobacconistmod:tobacco_box	Tobacco Box	Табакерка
+item	tobacconistmod:tobacco_guide	The Tobacconist's Manual	Руководство табачника
+item	tobacconistmod:tobacco_label	Label	Бирка
+item	tobacconistmod:tobacco_leaf_burley	Burley Tobacco Leaf	Табачный лист «Бёрли»
+item	tobacconistmod:tobacco_leaf_burley_dry	Burley Tobacco Leaf	Сушеный табачный лист «Бёрли»
+item	tobacconistmod:tobacco_leaf_dokha	Dokha Tobacco Leaf	Табачный лист «Доха»
+item	tobacconistmod:tobacco_leaf_dokha_dry	Dokha Tobacco Leaf	Сушеный табачный лист «Доха»
+item	tobacconistmod:tobacco_leaf_oriental	Oriental Tobacco Leaf	Табачный лист «Ориентал»
+item	tobacconistmod:tobacco_leaf_oriental_dry	Oriental Tobacco Leaf	Сушеный табачный лист «Ориентал»
+item	tobacconistmod:tobacco_leaf_shade	Shade Tobacco Leaf	Теневой табачный лист
+item	tobacconistmod:tobacco_leaf_shade_dry	Shade Tobacco Leaf	Сушеный теневой табачный лист
+item	tobacconistmod:tobacco_leaf_virginia	Virginia Tobacco Leaf	Табачный лист «Вирджиния»
+item	tobacconistmod:tobacco_leaf_virginia_dry	Virginia Tobacco Leaf	Сушеный табачный лист «Вирджиния»
+item	tobacconistmod:tobacco_leaf_wild	Wild Tobacco Leaf	Лист дикого табака
+item	tobacconistmod:tobacco_leaf_wild_dry	Wild Tobacco Leaf	Сушеный лист дикого табака
+item	tobacconistmod:tobacco_loose_burley	Loose Burley Tobacco	Рассыпной табак «Бёрли»
+item	tobacconistmod:tobacco_loose_dokha	Loose Dokha Tobacco	Рассыпной табак «Доха»
+item	tobacconistmod:tobacco_loose_oriental	Loose Oriental Tobacco	Рассыпной табак «Ориентал»
+item	tobacconistmod:tobacco_loose_shade	Loose Shade Tobacco	Рассыпной теневой табак
+item	tobacconistmod:tobacco_loose_virginia	Loose Virginia Tobacco	Рассыпной табак «Вирджиния»
+item	tobacconistmod:tobacco_loose_wild	Loose Wild Tobacco	Рассыпной дикий табак
+item	tobacconistmod:tobacco_pouch	Tobacco Pouch	Tobacco Pouch
+item	tobacconistmod:tobacconists_spectacles	Tobacconist's Spectacles	Очки табачника
+item	tobacconistmod:virginia_tobacco_seeds	Virginia Tobacco Seeds	Семена табака «Вирджиния»
+item	tobacconistmod:wild_tobacco_seeds	Wild Tobacco Seeds	Семена дикого табака
+item	tobacconistmod:wooden_smoking_pipe	Wooden Smoking Pipe	Деревянная курительная трубка

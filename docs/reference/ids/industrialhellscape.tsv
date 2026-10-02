@@ -1,0 +1,163 @@
+# industrialhellscape | файл industrialhellscape-0.3.6A-1-1.20.1.jar | лицензия в mods.toml: MIT
+type	id	en	ru
+block	industrialhellscape:amenity_furnishings	Amenity Furnishings	Бытовые удобства
+block	industrialhellscape:black_bolted_bracket	Black Bolted Bracket	Чёрный болтовой кронштейн
+block	industrialhellscape:black_office_chair	Black Office Chair	Чёрный офисный стул
+block	industrialhellscape:black_railing	Black Railing	Чёрные перила
+block	industrialhellscape:black_stair_railing	Black Stair Railing	Чёрные лестничные перила
+block	industrialhellscape:blue_rockrete	Blue Rockrete	Синий камнебетон
+block	industrialhellscape:blue_rockrete_pillar	Blue Rockrete Pillar	Колонна из синего камнебетона
+block	industrialhellscape:blue_rockrete_slab	Blue Rockrete Slab	Плита из синего камнебетона
+block	industrialhellscape:blue_rockrete_stairs	Blue Rockrete Stairs	Ступени из синего камнебетона
+block	industrialhellscape:body_pillow	Body Pillow	Длинная подушка
+block	industrialhellscape:brass_pipe_conduit	Brass Pipe Conduit	Латунные трубы
+block	industrialhellscape:brass_pipe_conduit_inner_corner	Brass Pipe Conduit Inner Corner	Латунные трубы: внутренний угол
+block	industrialhellscape:brass_pipe_conduit_outer_corner	Brass Pipe Conduit Outer Corner	Латунные трубы: внешний угол
+block	industrialhellscape:brass_pipe_conduit_planar_corner	Brass Pipe Conduit Planar Corner	Латунные трубы: плоский угол
+block	industrialhellscape:cassette_player	Cassette Player	Кассетный плеер
+block	industrialhellscape:catwalk_strut	Catwalk Strut	Распорка для платформы
+block	industrialhellscape:catwalk_strut_slab	Catwalk Strut Slab	Плита-распорка для платформы
+block	industrialhellscape:catwalk_strut_stairs	Catwalk Strut Stairs	Ступени-распорки для платформы
+block	industrialhellscape:cctv_camera	CCTV Camera	Камера наблюдения
+block	industrialhellscape:copper_pipe_conduit	Copper Pipe Conduit	Медные трубы
+block	industrialhellscape:copper_pipe_conduit_inner_corner	Copper Pipe Conduit Inner Corner	Медные трубы: внутренний угол
+block	industrialhellscape:copper_pipe_conduit_outer_corner	Copper Pipe Conduit Outer Corner	Медные трубы: внешний угол
+block	industrialhellscape:copper_pipe_conduit_planar_corner	Copper Pipe Conduit Planar Corner	Медные трубы: плоский угол
+block	industrialhellscape:desk	Classic Desk	Классический письменный стол
+block	industrialhellscape:desk_drawer	Classic Desk Drawer	Ящик классического стола
+block	industrialhellscape:directional_riveted_vesselplate	Directional Riveted Vesselplate	Направленная клёпаная плита
+block	industrialhellscape:duct	Duct	Воздуховод
+block	industrialhellscape:duct_vent	Duct Vent	Вентиляционная решётка
+block	industrialhellscape:encased_cables	Encased Cables	Кабели в оболочке
+block	industrialhellscape:fire_extinguisher	Fire Extinguisher	Огнетушитель
+block	industrialhellscape:floor_work_light	Floor Work Light	Напольный рабочий светильник
+block	industrialhellscape:fuel_drum	Fuel Drum	Топливная бочка
+block	industrialhellscape:grate	Grate	Решётка
+block	industrialhellscape:gray_bolted_bracket	Gray Bolted Bracket	Серый болтовой кронштейн
+block	industrialhellscape:gray_catwalk_strut	Gray Catwalk Strut	Серая распорка для платформы
+block	industrialhellscape:gray_catwalk_strut_slab	Gray Catwalk Strut Slab	Серая плита-распорка для платформы
+block	industrialhellscape:gray_catwalk_strut_stairs	Gray Catwalk Strut Stairs	Серые ступени-распорки для платформы
+block	industrialhellscape:gray_directional_riveted_vesselplate	Gray Directional Riveted Vesselplate	Серая направленная клёпаная плита
+block	industrialhellscape:gray_grate	Gray Grate	Серая решётка
+block	industrialhellscape:gray_pipe_conduit	Gray Pipe Conduit	Серые трубы
+block	industrialhellscape:gray_pipe_conduit_inner_corner	Gray Pipe Conduit Inner Corner	Серые трубы: внутренний угол
+block	industrialhellscape:gray_pipe_conduit_outer_corner	Gray Pipe Conduit Outer Corner	Серые трубы: внешний угол
+block	industrialhellscape:gray_pipe_conduit_planar_corner	Gray Pipe Conduit Planar Corner	Серые трубы: плоский угол
+block	industrialhellscape:gray_railing	Gray Railing	Серые перила
+block	industrialhellscape:gray_reinforced_vesselglass	Gray Reinforced Vesselglass	Серое усиленное стекло
+block	industrialhellscape:gray_riveted_vesselplate_panel	Gray Riveted Vesselplate Panel	Панель из серой клёпаной плиты
+block	industrialhellscape:gray_riveted_vesselplate_slab	Gray Riveted Vesselplate Slab	Плита из серой клёпаной плиты
+block	industrialhellscape:gray_riveted_vesselplate_stairs	Gray Riveted Vesselplate Stairs	Ступени из серой клёпаной плиты
+block	industrialhellscape:gray_rockrete	Gray Rockrete	Серый камнебетон
+block	industrialhellscape:gray_rockrete_pillar	Gray Rockrete Pillar	Колонна из серого камнебетона
+block	industrialhellscape:gray_rockrete_slab	Gray Rockrete Slab	Плита из серого камнебетона
+block	industrialhellscape:gray_rockrete_stairs	Gray Rockrete Stairs	Ступени из серого камнебетона
+block	industrialhellscape:gray_stair_railing	Gray Stair Railing	Серые лестничные перила
+block	industrialhellscape:gray_strut	Gray Strut	Серая распорка
+block	industrialhellscape:gray_strut_slab	Gray Strut Slab	Серая плита-распорка
+block	industrialhellscape:gray_strut_stairs	Gray Strut Stairs	Серые ступени-распорки
+block	industrialhellscape:gray_vesselglass	Gray Vesselglass	Серое стекло
+block	industrialhellscape:gray_vesselplate	Gray Vesselplate	Серая плита
+block	industrialhellscape:gray_vesselplate_door	Gray Vesselplate Door	Серая дверь из плит
+block	industrialhellscape:gray_vesselplate_pillar	Gray Vesselplate Pillar	Колонна из серой плиты
+block	industrialhellscape:gray_vesselplate_sheeting	Vesselplate Sheet Panel	Листовая панель серой плиты
+block	industrialhellscape:gray_vesselplate_sheeting_slab	Gray Vesselplate Sheeting Slab	Плита из серой листовой плиты
+block	industrialhellscape:gray_vesselplate_sheeting_stairs	Gray Vesselplate Sheeting Stairs	Ступени из серой листовой плиты
+block	industrialhellscape:gray_vesselplate_trapdoor	Gray Vesselplate Trapdoor	Серый люк из плит
+block	industrialhellscape:green_rockrete	Green Rockrete	Зелёный камнебетон
+block	industrialhellscape:green_rockrete_pillar	Green Rockrete Pillar	Колонна из зелёного камнебетона
+block	industrialhellscape:green_rockrete_slab	Green Rockrete Slab	Плита из зелёного камнебетона
+block	industrialhellscape:green_rockrete_stairs	Green Rockrete Stairs	Ступени из зелёного камнебетона
+block	industrialhellscape:grimy_restroom_tile	Grimy Restroom Tile	Грязная плитка для санузла
+block	industrialhellscape:hazard_stripe_red	Hazard Stripe Red	Красная предупредительная полоса
+block	industrialhellscape:hazard_stripe_yellow	Hazard Stripe Yellow	Жёлтая предупредительная полоса
+block	industrialhellscape:hygiene_furnishings	Hygiene Furnishings	Гигиенические принадлежности
+block	industrialhellscape:ihea_furniture_kit	IHEA Furniture Kit	Набор мебели IHEA
+block	industrialhellscape:industrial_furnishings	Industrial Furnishings	Промышленные принадлежности
+block	industrialhellscape:iv_dripstand	IV Dripstand	Стойка для капельницы
+block	industrialhellscape:large_locker	Large Locker	Большой шкаф
+block	industrialhellscape:locker_box	Locker Box	Ящик-шкаф
+block	industrialhellscape:medical_bed	Medical Bed	Медицинская койка
+block	industrialhellscape:metal_desk	Metal Desk	Металлический стол
+block	industrialhellscape:metal_desk_drawer	Metal Desk Drawer	Ящик металлического стола
+block	industrialhellscape:metal_desk_drawer_2	Metal Desk Drawer 2	Ящик металлического стола 2
+block	industrialhellscape:metalworks	Metalworks	Металлоконструкции
+block	industrialhellscape:office_chair	Office Chair	Офисный стул
+block	industrialhellscape:office_desk	Office Desk	Офисный стол
+block	industrialhellscape:office_desk_drawer	Office Desk Drawer	Ящик офисного стола
+block	industrialhellscape:operating_table	Operating Table	Операционный стол
+block	industrialhellscape:pipeworks	Pipeworks	Трубопроводы
+block	industrialhellscape:prototype_machine	Prototype Machine	Прототип машины
+block	industrialhellscape:red_rockrete	Red Rockrete	Красный камнебетон
+block	industrialhellscape:red_rockrete_pillar	Red Rockrete Pillar	Колонна из красного камнебетона
+block	industrialhellscape:red_rockrete_slab	Red Rockrete Slab	Плита из красного камнебетона
+block	industrialhellscape:red_rockrete_stairs	Red Rockrete Stairs	Ступени из красного камнебетона
+block	industrialhellscape:red_wall_medkit	Red Wall Medkit	Красная настенная аптечка
+block	industrialhellscape:reinforced_vesselglass	Reinforced Vesselglass	Усиленное стекло
+block	industrialhellscape:retro_computer	Retro Computer	Ретро-компьютер
+block	industrialhellscape:retro_computer_2	Retro Computer 2	Ретро-компьютер
+block	industrialhellscape:riveted_vesselplate_panel	Riveted Vesselplate Panel	Панель из клёпаной плиты
+block	industrialhellscape:riveted_vesselplate_slab	Riveted Vesselplate Slab	Плита из клёпаной плиты
+block	industrialhellscape:riveted_vesselplate_stairs	Riveted Vesselplate Stairs	Ступени из клёпаной плиты
+block	industrialhellscape:rusty_bolted_bracket	Rusty Bolted Bracket	Ржавый болтовой кронштейн
+block	industrialhellscape:rusty_catwalk_strut	Rusty Catwalk Strut	Ржавая распорка для платформы
+block	industrialhellscape:rusty_catwalk_strut_slab	Rusty Catwalk Strut Slab	Ржавая плита-распорка для платформы
+block	industrialhellscape:rusty_catwalk_strut_stairs	Rusty Catwalk Strut Stairs	Ржавые ступени-распорки для платформы
+block	industrialhellscape:rusty_directional_riveted_vesselplate	Rusty Directional Riveted Vesselplate	Ржавая направленная клёпаная плита
+block	industrialhellscape:rusty_duct	Rusty Duct	Ржавый воздуховод
+block	industrialhellscape:rusty_duct_vent	Rusty Duct Vent	Ржавая вентиляционная решётка
+block	industrialhellscape:rusty_grate	Rusty Grate	Ржавая решётка
+block	industrialhellscape:rusty_railing	Rusty Railing	Ржавые перила
+block	industrialhellscape:rusty_riveted_vesselplate_panel	Rusty Riveted Vesselplate Panel	Панель из ржавой клёпаной плиты
+block	industrialhellscape:rusty_riveted_vesselplate_slab	Rusty Riveted Vesselplate Slab	Плита из ржавой клёпаной плиты
+block	industrialhellscape:rusty_riveted_vesselplate_stairs	Rusty Riveted Vesselplate Stairs	Ступени из ржавой клёпаной плиты
+block	industrialhellscape:rusty_stair_railing	Rusty Stair Railing	Ржавые лестничные перила
+block	industrialhellscape:rusty_strut	Rusty Strut	Ржавая распорка
+block	industrialhellscape:rusty_strut_slab	Rusty Strut Slab	Ржавая плита-распорка
+block	industrialhellscape:rusty_strut_stairs	Rusty Strut Stairs	Ржавые ступени-распорки
+block	industrialhellscape:rusty_vesselplate_pillar	Rusty Vesselplate Pillar	Ржавая колонна из плит
+block	industrialhellscape:rusty_vesselplate_sheeting	Rusty Vesselplate Sheeting	Ржавая листовая плита
+block	industrialhellscape:rusty_vesselplate_sheeting_slab	Rusty Vesselplate Sheeting	Плита из ржавой листовой плиты
+block	industrialhellscape:rusty_vesselplate_sheeting_stairs	Rusty Vesselplate Sheeting	Ступени из ржавой листовой плиты
+block	industrialhellscape:safety_furnishings	Safety Furnishings	Предметы безопасности
+block	industrialhellscape:sink	Sink	Раковина
+block	industrialhellscape:smoke_alarm	Smoke Alarm	Дымовой извещатель
+block	industrialhellscape:smooth_gray_vesselplate_slab	Smooth Gray Vesselplate Slab	Плита из гладкой серой плиты
+block	industrialhellscape:smooth_gray_vesselplate_stairs	Smooth Gray Vesselplate Stairs	Ступени из гладкой серой плиты
+block	industrialhellscape:smooth_gray_vesselplate_tile	Smooth Gray Vesselplate Tile	Гладкая серая плитка
+block	industrialhellscape:smooth_rusty_vesselplate_slab	Smooth Rusty Vesselplate Slab	Плита из гладкой ржавой плиты
+block	industrialhellscape:smooth_rusty_vesselplate_stairs	Smooth Rusty Vesselplate Stairs	Ступени из гладкой ржавой плиты
+block	industrialhellscape:smooth_rusty_vesselplate_tile	Smooth Rusty Vesselplate Tile	Гладкая ржавая плитка
+block	industrialhellscape:smooth_vesselplate_slab	Smooth Vesselplate Slab	Плита из гладкой плиты
+block	industrialhellscape:smooth_vesselplate_stairs	Smooth Vesselplate Stairs	Ступени из гладкой плиты
+block	industrialhellscape:smooth_vesselplate_tile	Smooth Vesselplate Tile	Гладкая плитка
+block	industrialhellscape:strut	Strut	Распорка
+block	industrialhellscape:strut_slab	Strut Slab	Плита-распорка
+block	industrialhellscape:strut_stairs	Strut Stairs	Ступени-распорки
+block	industrialhellscape:technology_furnishings	Technology Furnishings	Технологические принадлежности
+block	industrialhellscape:toilet	Toilet	Унитаз
+block	industrialhellscape:urinal	Urinal	Писсуар
+block	industrialhellscape:vesselglass	Vesselglass	Весселстекло
+block	industrialhellscape:vesselplate	Vesselplate	Весселплита
+block	industrialhellscape:vesselplate_door	Vesselplate Door	Дверь из плит
+block	industrialhellscape:vesselplate_pillar	Vesselplate Pillar	Колонна из плит
+block	industrialhellscape:vesselplate_sheeting	Vesselplate Sheet Panel	Листовая панель плит
+block	industrialhellscape:vesselplate_sheeting_slab	Vesselplate Sheeting Slab	Плита из листовой плиты
+block	industrialhellscape:vesselplate_sheeting_stairs	Vesselplate Sheeting Stairs	Ступени из листовой плиты
+block	industrialhellscape:vesselplate_trapdoor	Vesselplate Trapdoor	Люк из плит
+block	industrialhellscape:vitals_monitor	Vitals Monitor	Монитор жизненных показателей
+block	industrialhellscape:white_wall_medkit	White Wall Medkit	Белая настенная аптечка
+block	industrialhellscape:work_light_stand	Work Light Stand	Стойка рабочего света
+block	industrialhellscape:yellow_railing	Yellow Railing	Жёлтые перила
+block	industrialhellscape:yellow_rockrete	Yellow Rockrete	Жёлтый камнебетон
+block	industrialhellscape:yellow_rockrete_pillar	Yellow Rockrete Pillar	Колонна из жёлтого камнебетона
+block	industrialhellscape:yellow_rockrete_slab	Yellow Rockrete Slab	Плита из жёлтого камнебетона
+block	industrialhellscape:yellow_rockrete_stairs	Yellow Rockrete Stairs	Ступени из жёлтого камнебетона
+block	industrialhellscape:yellow_stair_railing	Yellow Stair Railing	Жёлтые лестничные перила
+item	industrialhellscape:aspic	Aspic	Аспик
+item	industrialhellscape:floppy_disk	Floppy Disk	Дискета
+item	industrialhellscape:floppy_diskette	Floppy Diskette	Мини-дискета
+item	industrialhellscape:inhell_haven_device	HAVEN Tool	HAVEN-инструмент
+item	industrialhellscape:job_application	Job Application	Трудовая анкета
+item	industrialhellscape:retro_cassette	Retro Cassette	Ретро-кассета
+item	industrialhellscape:vaporwave_cassette	Vaporwave Cassette	Синтвэйв-кассета

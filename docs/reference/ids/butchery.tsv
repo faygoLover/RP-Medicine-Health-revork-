@@ -1,0 +1,783 @@
+# butchery | файл butchery-5.1-forge-1.20.1.jar | лицензия в mods.toml: All Rights Reserved
+type	id	en	ru
+block	butchery:acacia_butcher_display	Butcher Display	Витрина мясника
+block	butchery:acacia_butchers_table	Acacia Butchers Table	Стол мясника из акации
+block	butchery:acacia_counter	Counter	Прилавок
+block	butchery:all_black_cat_carcass	Cat Carcass	Туша кота
+block	butchery:all_black_cat_head	Cat Head	Голова кота
+block	butchery:all_black_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:axolotl_skeleton	Axolotl Skeleton	Скелет аксолотля
+block	butchery:basin	Basin	Таз
+block	butchery:bat_carcass	Bat Carcass	Туша летучей мыши
+block	butchery:bat_head	Bat Head	Голова летучей мыши
+block	butchery:bat_head_mount	Bat Head Mount	Голова летучей мыши на стене
+block	butchery:bat_skeleton	Bat Skeleton	Скелет летучей мыши
+block	butchery:bee_carcass	Bee Carcass	Туша пчелы
+block	butchery:bee_head	Bee Head	Голова пчелы
+block	butchery:birch_butcher_display	Butcher Display	Витрина мясника
+block	butchery:birch_butchers_table	Birch Butchers Table	Стол мясника из березы
+block	butchery:birch_counter	Counter	Прилавок
+block	butchery:black_cat_carcass	Cat Carcass	Туша кота
+block	butchery:black_cat_head	Cat Head	Голова кота
+block	butchery:black_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:black_horse_head	Horse Head	Голова лошади
+block	butchery:black_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:blood	Blood	Кровь
+block	butchery:blood_grate	Blood Grate	Решетка для крови
+block	butchery:blood_puddle	Blood	Кровь
+block	butchery:blood_splatter	Blood Splatter	Кровяные брызги
+block	butchery:blue_axolotl_carcass	Axolotl Carcass	Туша аксолотля
+block	butchery:blue_axolotl_head	Axolotl Head	Голова аксолотля
+block	butchery:blue_axolotl_head_mount	Axolotl Head Mount	Голова аксолотля на стене
+block	butchery:bone_barrel	Barrel of Bones	Бочка костей
+block	butchery:brain	Brain	Мозг
+block	butchery:british_shorthair_cat_carcass	Cat Carcass	Туша кота
+block	butchery:brown_axolotl_carcass	Axolotl Carcass	Туша аксолотля
+block	butchery:brown_axolotl_head	Axolotl Head	Голова аксолотля
+block	butchery:brown_axolotl_head_mount	Axolotl Head Mount	Голова аксолотля на стене
+block	butchery:brown_horse_head	Horse Head	Голова лошади
+block	butchery:brown_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:brown_llama_carcass	Llama Carcass	Туша ламы
+block	butchery:brown_llama_head	Llama Head	Голова ламы
+block	butchery:brown_llama_head_mount	Llama Head Mount	Голова ламы на стене
+block	butchery:brown_mooshroom_carcass	Mooshroom Carcass	Туша коричневого мухомора
+block	butchery:brown_mooshroom_head	Mooshroom Head	Голова коричневого мухомора
+block	butchery:brown_mooshroom_head_mount	Mooshroom Head Mount	Голова мухомора на стене
+block	butchery:butcher_statue	Butcher Statue	Статуя мясника
+block	butchery:calico_cat_carcass	Cat Carcass	Туша кота
+block	butchery:calico_cat_head	Cat Head	Голова кота
+block	butchery:calico_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:camel_carcass	Camel Carcass	Туша верблюда
+block	butchery:camel_head	Camel Head	Голова верблюда
+block	butchery:camel_head_mount	Camel Head Mount	Голова верблюда на стене
+block	butchery:camel_skeleton	Camel Skeleton	Скелет верблюда
+block	butchery:canopy_black	Canopy	Навес
+block	butchery:canopy_blue	Canopy	Навес
+block	butchery:canopy_brown	Canopy	Навес
+block	butchery:canopy_cyan	Canopy	Навес
+block	butchery:canopy_gray	Canopy	Навес
+block	butchery:canopy_green	Canopy	Навес
+block	butchery:canopy_light_blue	Canopy	Навес
+block	butchery:canopy_light_gray	Canopy	Навес
+block	butchery:canopy_lime	Canopy	Навес
+block	butchery:canopy_magenta	Canopy	Навес
+block	butchery:canopy_orange	Canopy	Навес
+block	butchery:canopy_pink	Canopy	Навес
+block	butchery:canopy_purple	Canopy	Навес
+block	butchery:canopy_red	Canopy	Навес
+block	butchery:canopy_yellow	Canopy	Навес
+block	butchery:cash_register_block	Cash Register	Кассовый аппарат
+block	butchery:cat_carcass	Cat Carcass	Туша кота
+block	butchery:cat_skeleton	Cat Skeleton	Скелет кота
+block	butchery:cave_spider_carcass	Cave Spider Carcass	Туша пещерного паука
+block	butchery:cave_spider_head	Cave Spider Head	Голова пещерного паука
+block	butchery:cave_spider_head_mount	Cave Spider Head Mount	Голова пещерного паука на стене
+block	butchery:chestnut_horse_head	Horse Head	Голова лошади
+block	butchery:chestnut_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:chicken_carcass	Chicken Carcass	Туша курицы
+block	butchery:chicken_head	Chicken Head	Голова курицы
+block	butchery:chicken_head_mount	Chicken Head Mount	Голова курицы на стене
+block	butchery:chicken_skeleton	Chicken Skeleton	Скелет курицы
+block	butchery:cling_film	Cling Film	Пищевая пленка
+block	butchery:cod_barrel	Barrel of Cod	Бочка трески
+block	butchery:cod_carcass	Cod Carcass	Туша трески
+block	butchery:cooked_blood_sausages	Cooked Blood Sausages	Приготовленные кровяные колбасы
+block	butchery:cooked_sausages	Cooked Sausages	Приготовленные колбасы
+block	butchery:cow_carcass	Cow Carcass	Туша коровы
+block	butchery:cow_head	Cow Head	Голова коровы
+block	butchery:cow_head_mount	Cow Head Mount	Голова коровы на стене
+block	butchery:cow_skeleton	Cow Skeleton	Скелет коровы
+block	butchery:creamy_horse_head	Horse Head	Голова лошади
+block	butchery:creamy_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:creamy_llama_carcass	Llama Carcass	Туша ламы
+block	butchery:creamy_llama_head	Llama Head	Голова ламы
+block	butchery:creamy_llama_head_mount	Llama Head Mount	Голова ламы на стене
+block	butchery:creeper_carcass	Creeper Carcass	Туша крипера
+block	butchery:creeper_head_mount	Creeper Head Mount	Голова крипера на стене
+block	butchery:creeper_skeleton	Creeper Skeleton	Скелет крипера
+block	butchery:crimson_butcher_display	Butcher Display	Витрина мясника
+block	butchery:crimson_butchers_table	Crimson Butchers Table	Малиновый стол мясника
+block	butchery:crimson_counter	Counter	Прилавок
+block	butchery:cyan_axolotl_carcass	Axolotl Carcass	Туша аксолотля
+block	butchery:cyan_axolotl_head	Axolotl Head	Голова аксолотля
+block	butchery:cyan_axolotl_head_mount	Axolotl Head Mount	Голова аксолотля на стене
+block	butchery:dark_brown_horse_head	Horse Head	Голова лошади
+block	butchery:dark_brown_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:dark_oak_butcher_display	Butcher Display	Витрина мясника
+block	butchery:dark_oak_butchers_table	Dark Oak Butchers Table	Стол мясника из темного дуба
+block	butchery:dark_oak_counter	Counter	Прилавок
+block	butchery:deepslate_sulfur_ore	Deepslate Sulfur Ore	Руда серы в глубоком сланце
+block	butchery:diorite_brick_slab	Diorite Brick Slab	Плита из кирпича диорита
+block	butchery:diorite_brick_stairs	Diorite Brick Stairs	Ступени из кирпича диорита
+block	butchery:diorite_brick_wall	Diorite Bricks	Стена из кирпича диорита
+block	butchery:diorite_bricks	Diorite Bricks	Кирпич диорита
+block	butchery:dolphin_carcass	Dolphin Carcass	Туша дельфина
+block	butchery:dolphin_head	Dolphin Head	Голова дельфина
+block	butchery:dolphin_head_mount	Dolphin Head Mount	Голова дельфина на стене
+block	butchery:dolphin_skeleton	Dolphin Skeleton	Скелет дельфина
+block	butchery:donkey_carcass	Donkey Carcass	Туша осла
+block	butchery:donkey_head	Donkey Head	Голова осла
+block	butchery:donkey_head_mount	Donkey Head Mount	Голова осла на стене
+block	butchery:donkey_skeleton	Donkey Skeleton	Скелет осла
+block	butchery:dragon_scale_block	Dragon Scale Block	Блок драконьей чешуи
+block	butchery:drained_all_black_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_bat_carcass	Drained Bat Carcass	Осушенная туша летучей мыши
+block	butchery:drained_black_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_blue_axolotl_carcass	Axolotl Carcass	Осушенная туша аксолотля
+block	butchery:drained_british_shorthair_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_brown_axolotl_carcass	Axolotl Carcass	Осушенная туша аксолотля
+block	butchery:drained_brown_llama_carcass	Drained Llama Carcass	Осушенная туша ламы
+block	butchery:drained_brown_mooshroom_carcass	Drained Mooshroom Carcass	Осушенная туша коричневого мухомора
+block	butchery:drained_calico_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_camel_carcass	Drained Camel Carcass	Осушенная туша верблюда
+block	butchery:drained_chicken_carcass	Drained Chicken Carcass	Осушенная туша курицы
+block	butchery:drained_cow_carcass	Drained Cow Carcass	Осушенная туша коровы
+block	butchery:drained_creamy_llama_carcass	Drained Llama Carcass	Осушенная туша ламы
+block	butchery:drained_creeper_carcass	Drained Creeper Carcass	Осушенная туша крипера
+block	butchery:drained_cyan_axolotl_carcass	Axolotl Carcass	Осушенная туша аксолотля
+block	butchery:drained_dolphin_carcass	Drained Dolphin Carcass	Осушенная туша дельфина
+block	butchery:drained_donkey_carcass	Drained Donkey Carcass	Осушенная туша осла
+block	butchery:drained_drowned_corpse	Drained Drowned Corpse	Осушенный труп утопленника
+block	butchery:drained_enderman_carcass	Drained Enderman Carcass	Осушенная туша эндермена
+block	butchery:drained_evoker_corpse	Drained Evoker Carcass	Осушенный труп чаровника
+block	butchery:drained_fox_carcass	Drained Fox Carcass	Осушенная туша лисы
+block	butchery:drained_goat_carcass	Drained Goat Carcass	Осушенная туша козла
+block	butchery:drained_gold_axolotl_carcass	Axolotl Carcass	Осушенная туша аксолотля
+block	butchery:drained_gray_frog_carcass	Drained Frog Carcass	Осушенная туша серой лягушки
+block	butchery:drained_gray_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_gray_llama_carcass	Drained Llama Carcass	Осушенная туша ламы
+block	butchery:drained_green_frog_carcass	Drained Frog Carcass	Осушенная туша зеленой лягушки
+block	butchery:drained_guardian_carcass	Drained Guardian Carcass	Осушенная туша стража
+block	butchery:drained_hoglin_carcass	Drained Hoglin Carcass	Осушенная туша хоглина
+block	butchery:drained_husk_corpse	Drained Husk Corpse	Осушенный труп засохшего зомби
+block	butchery:drained_jellie_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_mule_carcass	Drained Mule Carcass	Осушенная туша мула
+block	butchery:drained_ocelot_carcass	Drained Ocelot Carcass	Осушенная туша оцелота
+block	butchery:drained_orange_frog_carcass	Drained Frog Carcass	Осушенная туша оранжевой лягушки
+block	butchery:drained_panda_carcass	Drained Panda Carcass	Осушенная туша панды
+block	butchery:drained_persian_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_phantom_carcass	Drained Phantom Carcass	Осушенная туша фантома
+block	butchery:drained_pig_carcass	Drained Pig Carcass	Осушенная туша свиньи
+block	butchery:drained_piglin_brute_corpse	Drained Piglin Brute Carcass	Осушенная туша жестокого пиглина
+block	butchery:drained_piglin_corpse	Drained Piglin Corpse	Осушенный труп пиглина
+block	butchery:drained_pillager_corpse	Drained Pillager Carcass	Осушенная туша грабителя
+block	butchery:drained_pink_axolotl_carcass	Axolotl Carcass	Туша аксолотля
+block	butchery:drained_polar_bear_carcass	Drained Polar Bear Carcass	Осушенная туша белого медведя
+block	butchery:drained_rabbit_carcass	Drained Rabbit Carcass	Осушенная туша кролика
+block	butchery:drained_ragdoll_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_red_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_red_mooshroom_carcass	Drained Mooshroom Carcass	Осушенная туша красного мухомора
+block	butchery:drained_regular_black_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_regular_brown_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_regular_chestnut_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_regular_creamy_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_regular_dark_brown_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_sheep_carcass	Drained Sheep Carcass	Осушенная туша овцы
+block	butchery:drained_siamese_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_sniffer_carcass_block	Drained Sniffer Carcass	Осушенная туша обнюхивателя
+block	butchery:drained_snowfox_carcass	Drained Fox Carcass	Осушенная туша снежной лисы
+block	butchery:drained_strider_carcass	Drained Strider Carcass	Осушенная туша эндермена лавы
+block	butchery:drained_tabby_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_turtle_carcass	Drained Turtle Carcass	Осушенная туша черепахи
+block	butchery:drained_villager	Drained Villager Carcass	Осушенная туша жителя
+block	butchery:drained_vindicator_corpse	Drained Vindicator Carcass	Осушенная туша опустошителя
+block	butchery:drained_white_cat_carcass	Drained Cat Carcass	Осушенная туша кота
+block	butchery:drained_white_horse_carcass	Drained Horse Carcass	Осушенная туша лошади
+block	butchery:drained_white_llama_carcass	Drained Llama Carcass	Осушенная туша ламы
+block	butchery:drained_witch_corpse	Drained Witch Corpse	Осушенный труп ведьмы
+block	butchery:drained_wolf_carcass	Drained Wolf Carcass	Осушенная туша волка
+block	butchery:drained_zoglin_carcass	Drained Zoglin Carcass	Осушенная туша золина
+block	butchery:drained_zombie_corpse	Drained Zombie Corpse	Осушенный труп зомби
+block	butchery:drained_zombie_horse_carcass	Drained Zombie Horse Carcass	Осушенная туша зомби-лошади
+block	butchery:drained_zombie_villager	Drained Zombie Villager Carcass	Осушенная туша зомбированного жителя
+block	butchery:drained_zombified_piglin_corpse	Drained Zombified Piglin Corpse	Осушенная туша зомбифицированного пиглина
+block	butchery:drainedplayercorpse	Drained Player Corpse	Осушенный труп игрока
+block	butchery:drowned_corpse	Drowned Corpse	Труп утопленника
+block	butchery:drowned_head	Drowned Head	Голова утопленника
+block	butchery:drowned_head_mount	Drowned Head Mount	Голова утопленника на стене
+block	butchery:elder_guardian_carcass	§6Elder Guardian Carcass	§6Туша древнего стража
+block	butchery:empty_dragon_trimmed_head_mount	Trimmed Dragon Head Mount	Украшенное крепление для головы
+block	butchery:empty_head_mount	Empty Head Mount	Пустое крепление для головы
+block	butchery:empty_turtle_shell	Empty Turtle Shell	Пустой панцирь черепахи
+block	butchery:empty_warden_trimmed_head_mount	Trimmed Warden Head Mount	Украшенное крепление для головы
+block	butchery:ender_dragon_carcass	§6Ender Dragon Carcass	§5Туша Дракона края
+block	butchery:ender_dragon_head_mount	Ender Dragon Head Mount	Голова дракона края на стене
+block	butchery:enderman_carcass	Enderman Carcass	Туша эндермена
+block	butchery:enderman_head	Enderman Head	Голова эндермена
+block	butchery:enderman_head_mount	Enderman Head Mount	Голова эндермена на стене
+block	butchery:endermite_carcass	Endermite Carcass	Туша эндермита
+block	butchery:endermite_head	Endermite Head	Голова эндермита
+block	butchery:endermite_head_mount	Endermite Head Mount	Голова эндермита на стене
+block	butchery:evoker_corpse	Evoker Corpse	Труп чаровника
+block	butchery:evoker_head	Evoker Head	Голова чаровника
+block	butchery:evoker_head_mount	Evoker Head Mount	Голова чаровника на стене
+block	butchery:fish_skeleton	Fish Skeleton	Скелет рыбы
+block	butchery:floorstanding_sign	Floorstanding Sign	Напольный знак
+block	butchery:fox_carcass	Fox Carcass	Туша лисы
+block	butchery:fox_head	Fox Head	Голова лисы
+block	butchery:fox_head_mount	Fox Head Mount	Голова лисы на стене
+block	butchery:fox_skeleton	Fox Skeleton	Скелет лисы
+block	butchery:freezer	Freezer	Морозильная камера
+block	butchery:glow_squid_carcass	Glow Squid Carcass	Туша светящегося кальмара
+block	butchery:glow_squid_head	Glow Squid Head	Голова светящегося кальмара
+block	butchery:goat_carcass	Goat Carcass	Туша козла
+block	butchery:goat_head	Goat Head	Голова козла
+block	butchery:goat_head_mount	Goat Head Mount	Голова козла на стене
+block	butchery:goat_rug	Goat Rug	Коврик козла
+block	butchery:goat_skeleton	Goat Skeleton	Скелет козла
+block	butchery:gold_axolotl_carcass	Axolotl Carcass	Туша аксолотля
+block	butchery:gold_axolotl_head	Axolotl Head	Голова аксолотля
+block	butchery:gold_axolotl_head_mount	Axolotl Head Mount	Голова аксолотля на стене
+block	butchery:gray_frog_carcass	Frog Carcass	Туша серой лягушки
+block	butchery:gray_horse_head	Horse Head	Голова лошади
+block	butchery:gray_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:gray_llama_carcass	Llama Carcass	Туша ламы
+block	butchery:gray_llama_head	Llama Head	Голова ламы
+block	butchery:gray_llama_head_mount	Llama Head Mount	Голова ламы на стене
+block	butchery:green_frog_carcass	Frog Carcass	Туша зеленой лягушки
+block	butchery:guardian_carcass	Guardian Carcass	Туша стража
+block	butchery:hanging_drained_enderman_carcass	Drained Enderman Carcass	Осушенная туша эндермена
+block	butchery:hanging_enderman_carcass	Enderman Carcass	Туша эндермена
+block	butchery:hoglin_carcass	Hoglin Carcass	Туша хоглина
+block	butchery:hoglin_head	Hoglin Head	Голова хоглина
+block	butchery:hoglin_head_mount	Hoglin Head Mount	Голова хоглина на стене
+block	butchery:hoglin_skeleton	Hoglin Skeleton	Скелет хоглина
+block	butchery:hook	Hook	Крюк
+block	butchery:husk_corpse	Husk Corpse	Труп засохшего зомби
+block	butchery:husk_head	Husk Head	Голова засохшего зомби
+block	butchery:husk_head_mount	Husk Head Mount	Голова засохшего зомби на стене
+block	butchery:infected_blood	Infected Blood	Зараженная кровь
+block	butchery:iron_golem	Iron Golem	Железный голем
+block	butchery:iron_golem_arms	Iron Golem Arms	Руки железного голема
+block	butchery:iron_golem_body	Iron Golem Body	Тело железного голема
+block	butchery:iron_golem_head	Iron Golem Head	Голова железного голема
+block	butchery:iron_golem_head_mount	Iron Golem Head Mount	Голова железного голема на стене
+block	butchery:iron_golem_legs	Iron Golem Legs	Ноги железного голема
+block	butchery:jar	Jar	Банка
+block	butchery:jellie_cat_carcass	Cat Carcass	Туша кота
+block	butchery:jellie_cat_head	Cat Head	Голова кота
+block	butchery:jellie_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:jungle_butcher_display	Butcher Display	Витрина мясника
+block	butchery:jungle_butchers_table	Jungle Butchers Table	Стол мясника из джунглей
+block	butchery:jungle_counter	Counter	Прилавок
+block	butchery:large_empty_head_mount	Large Empty Head Mount	Большое пустое крепление для головы
+block	butchery:llama_skeleton	Llama Skeleton	Скелет ламы
+block	butchery:magma_cube_carcass	Magma Carcass	Туша магма куба
+block	butchery:mangrove_butchers_table	Mangrove Butchers Table	Стол мясника из мангры
+block	butchery:meat_grinder	Meat Grinder	Мясорубка
+block	butchery:medium_magma_cube_carcass	Magma Carcass	Туша магма куба
+block	butchery:medium_slime_carcass	Slime Carcass	Туша слизня
+block	butchery:metal_butchers_table	Metal Butchers Table	Металлический стол мясника
+block	butchery:metal_tray	Metal Tray	Металлический поднос
+block	butchery:mooshroom_skeleton	Mooshroom Skeleton	Скелет мухомора
+block	butchery:mule_carcass	Mule Carcass	Туша мула
+block	butchery:mule_head	Mule Head	Голова мула
+block	butchery:mule_head_mount	Mule Head Mount	Голова мула на стене
+block	butchery:mule_skeleton	Mule Skeleton	Скелет мула
+block	butchery:oak_butcher_display	Butcher Display	Витрина мясника
+block	butchery:oak_butchers_table	Oak Butchers Table	Стол мясника из дуба
+block	butchery:oak_counter	Counter	Прилавок
+block	butchery:ocelot_carcass	Ocelot Carcass	Туша оцелота
+block	butchery:ocelot_head	Ocelot Head	Голова оцелота
+block	butchery:ocelot_head_mount	Ocelot Head Mount	Голова оцелота на стене
+block	butchery:ocelot_skeleton	Ocelot Skeleton	Скелет оцелота
+block	butchery:orange_frog_carcass	Frog Carcass	Туша оранжевой лягушки
+block	butchery:panda_carcass	Panda Carcass	Туша панды
+block	butchery:panda_head	Panda Head	Голова панды
+block	butchery:panda_head_mount	Panda Head Mount	Голова панды на стене
+block	butchery:panda_rug	Panda Rug	Коврик панды
+block	butchery:panda_skeleton	Panda Skeleton	Скелет панды
+block	butchery:persian_cat_carcass	Cat Carcass	Туша кота
+block	butchery:persian_cat_head	Cat Head	Голова кота
+block	butchery:persian_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:pestle_and_mortar	Pestle & Mortar	Ступка и пестик
+block	butchery:phantom_carcass	Phantom Carcass	Туша фантома
+block	butchery:phantom_head	Phantom Head	Голова фантома
+block	butchery:phantom_head_mount	Phantom Head Mount	Голова фантома на стене
+block	butchery:phantom_skeleton	Phantom Skeleton	Скелет фантома
+block	butchery:photos	Photos	Фотографии
+block	butchery:pig_carcass	Pig Carcass	Туша свиньи
+block	butchery:pig_head	Pig Head	Голова свиньи
+block	butchery:pig_head_mount	Pig Head Mount	Голова свиньи на стене
+block	butchery:pig_skeleton	Pig Skeleton	Скелет свиньи
+block	butchery:piglin_brute_corpse	Piglin Brute Corpse	Туша жестокого пиглина
+block	butchery:piglin_brute_head	Piglin Brute Head	Голова жестокого пиглина
+block	butchery:piglin_brute_head_mount	Piglin Brute Head Mount	Голова жестокого пиглина на стене
+block	butchery:piglin_corpse	Piglin Corpse	Труп пиглина
+block	butchery:piglin_head_mount	Piglin Head Mount	Голова пиглина на стене
+block	butchery:piglin_skeleton	Piglin Skeleton	Скелет пиглина
+block	butchery:pillager_corpse	Pillager Corpse	Труп грабителя
+block	butchery:pillager_head	Pillager Head	Голова грабителя
+block	butchery:pillager_head_mount	Pillager Head Mount	Голова грабителя на стене
+block	butchery:pink_axolotl_carcass	Axolotl Carcass	Туша аксолотля
+block	butchery:pink_axolotl_head	Axolotl Head	Голова аксолотля
+block	butchery:pink_axolotl_head_mount	Axolotl Head Mount	Голова аксолотля на стене
+block	butchery:plastic_sheet	Plastic Sheet	Пластиковый лист
+block	butchery:plastic_sheet_corner	Plastic Sheet Corner	Угол пластикового листа
+block	butchery:playercorpse	Player Corpse	Труп игрока
+block	butchery:polar_bear_carcass	Polar Bear Carcass	Туша белого медведя
+block	butchery:polar_bear_head	Polarbear Head	Голова белого медведя
+block	butchery:polarbear_head_mount	Polar Bear Head Mount	Голова белого медведя на стене
+block	butchery:polarbear_rug	Polarbear Rug	Ковер белого медведя
+block	butchery:polarbear_skeleton	Polar Bear Skeleton	Скелет белого медведя
+block	butchery:pufferfish	Pufferfish Carcass	Туша иглобрюха
+block	butchery:rabbit_carcass	Rabbit Carcass	Туша кролика
+block	butchery:rabbit_head	Rabbit Head	Голова кролика
+block	butchery:rabbit_head_mount	Rabbit Head Mount	Голова кролика на стене
+block	butchery:ragdoll_cat_carcass	Cat Carcass	Туша кота
+block	butchery:ragdoll_cat_head	Cat Head	Голова кота
+block	butchery:ragdoll_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:ravager	Ravager Carcass	
+block	butchery:ravager_head	Ravager Head	
+block	butchery:ravager_head_mount	Ravager Head Mount	
+block	butchery:raw_blood_sausages	Raw Blood Sausages	Сырые кровяные колбасы
+block	butchery:raw_sausages	Raw Sausages	Сырые колбасы
+block	butchery:red_cat_carcass	Cat Carcass	Туша кота
+block	butchery:red_cat_head	Cat Head	Голова кота
+block	butchery:red_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:red_mooshroom_carcass	Mooshroom Carcass	Туша красного мухомора
+block	butchery:red_mooshroom_head	Mooshroom Head	Голова красного мухомора
+block	butchery:red_mooshroom_head_mount	Mooshroom Head Mount	Голова мухомора на стене
+block	butchery:regular_black_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:regular_brown_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:regular_chestnut_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:regular_creamy_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:regular_dark_brown_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:regular_gray_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:regular_white_horse_carcass	Horse Carcass	Туша лошади
+block	butchery:repaired_iron_golem_arms	Iron Golem Arms	Руки железного голема
+block	butchery:repaired_iron_golem_body	Iron Golem Body	Тело железного голема
+block	butchery:repaired_iron_golem_head	Iron Golem Head	Голова железного голема
+block	butchery:repaired_iron_golem_head_mount	Iron Golem Head Mount	Голова железного голема на стене
+block	butchery:repaired_iron_golem_legs	Iron Golem Legs	Ноги железного голема
+block	butchery:repaired_irongolem	Iron Golem	Железный голем
+block	butchery:rope	Hanging Rope	Висящая веревка
+block	butchery:salmon_barrel	Barrel of Salmon	Бочка лосося
+block	butchery:salmon_carcass	Salmon Carcass	Туша лосося
+block	butchery:salt_block	Salt	Соль
+block	butchery:salt_formation_base	Salt Formation	Солевое образование
+block	butchery:salt_formation_frustum	Salt Formation	Солевое образование
+block	butchery:salt_formation_middle	Salt Formation	Солевое образование
+block	butchery:salt_formation_tip	Salt Formation	Солевое образование
+block	butchery:sand	Sand	Песок
+block	butchery:sheep_carcass	Sheep Carcass	Туша овцы
+block	butchery:sheep_head	Sheep Head	Голова овцы
+block	butchery:sheep_head_mount	Sheep Head Mount	Голова овцы на стене
+block	butchery:sheep_skeleton	Sheep skeleton	Скелет овцы
+block	butchery:shorthair_cat_head	Cat Head	Голова кота
+block	butchery:shorthair_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:shulker_carcass	Shulker Carcass	Туша шалкера
+block	butchery:siamese_cat_carcass	Cat Carcass	Туша кота
+block	butchery:siamese_cat_head	Cat Head	Голова кота
+block	butchery:siamese_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:silverfish_carcass	Silverfish Carcass	Туша чешуйницы
+block	butchery:silverfish_head	Silverfish Head	Голова чешуйницы
+block	butchery:silverfish_head_mount	Silverfish Head Mount	Голова чешуйницы на стене
+block	butchery:skeleton	Skeleton	Скелет
+block	butchery:skeleton_corpse	Skeleton Corpse	Туша скелета
+block	butchery:skeleton_head_mount	Skeleton Head Mount	Голова скелета на стене
+block	butchery:skeleton_horse_carcass	Skeleton Horse Carcass	Туша скелета лошади
+block	butchery:skeleton_horse_head	Skeleton Horse Head	Голова скелета лошади
+block	butchery:skeleton_horse_head_mount	Skeleton Horse Head Mount	Голова скелета лошади на стене
+block	butchery:skin_rack	Skin Rack	Сушилка для шкур
+block	butchery:small_empty_head_mount	Small Empty Head Mount	Маленькое пустое крепление для головы
+block	butchery:small_slime_carcass	Slime Carcass	Туша слизня
+block	butchery:sniffer_carcass_block	Sniffer Carcass	Туша обнюхивателя
+block	butchery:sniffer_head	Sniffer Head	Голова обнюхивателя
+block	butchery:snow_fox_carcass	Fox Carcass	Туша снежной лисы
+block	butchery:snow_fox_head	Fox Head	Голова снежной лисы
+block	butchery:snowy_fox_head_mount	Snowy Fox Head Mount	Голова снежной лисы на стене
+block	butchery:spider_carcass	Spider Carcass	Туша паука
+block	butchery:spider_head	Spider Head	Голова паука
+block	butchery:spider_head_mount	Spider Head Mount	Голова паука на стене
+block	butchery:spike_trap	Spike Trap	Колючий капкан
+block	butchery:spruce_butcher_display	Butcher Display	Витрина мясника
+block	butchery:spruce_butchers_table	Spruce Butchers Table	Стол мясника из ели
+block	butchery:spruce_counter	Counter	Прилавок
+block	butchery:squid_carcass	Squid Carcass	Туша кальмара
+block	butchery:squid_head	Squid Head	Голова кальмара
+block	butchery:stray_corpse	Stray Corpse	Туша бродяги
+block	butchery:stray_head	Stray Head	Голова бродяги
+block	butchery:stray_head_mount	Stray Head Mount	Голова бродяги на стене
+block	butchery:strider_carcass	Strider Carcass	Туша эндермена лавы
+block	butchery:sulfur_ore	Sulfur Ore	Руда серы
+block	butchery:tabby_cat_carcass	Cat Carcass	Туша кота
+block	butchery:tabby_cat_head	Cat Head	Голова кота
+block	butchery:tabby_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:taxidermy_table	Taxidermy Table	Стол таксидермии
+block	butchery:trimmed_ender_dragon_head_mount	Trimmed Ender Dragon Head Mount	Украшенная голова дракона края на стене
+block	butchery:trimmed_warden_head_mount	Trimmed Warden Head Mount	Украшенная голова смотрителя на стене
+block	butchery:turtle_carcass	Turtle Corpse	Туша черепахи
+block	butchery:turtle_head	Turtle Head	Голова черепахи
+block	butchery:turtle_head_mount	Turtle Head Mount	Голова черепахи на стене
+block	butchery:villager_corpse	Villager Corpse	Труп жителя
+block	butchery:villager_head	Villager Head	Голова жителя
+block	butchery:villager_head_mount	Villager Head Mount	Голова жителя на стене
+block	butchery:vindicator_corpse	Vindicator Corpse	Труп опустошителя
+block	butchery:vindicator_head	Vindicator Head	Голова опустошителя
+block	butchery:vindicator_head_mount	Vindicator Head Mount	Голова опустошителя на стене
+block	butchery:warden_carcass	§3Warden Carcass	§3Туша смотрителя
+block	butchery:warden_head	Warden Head	Голова смотрителя
+block	butchery:warden_head_mount	Warden Head Mount	Голова смотрителя на стене
+block	butchery:warped_butcher_display	Butcher Display	Витрина мясника
+block	butchery:warped_butchers_table	Warped Butchers Table	Искаженный стол мясника
+block	butchery:warped_counter	Counter	Прилавок
+block	butchery:white_cat_carcass	Cat Carcass	Туша кота
+block	butchery:white_cat_head	Cat Head	Голова кота
+block	butchery:white_cat_head_mount	Cat Head Mount	Голова кота на стене
+block	butchery:white_horse_head	Horse Head	Голова лошади
+block	butchery:white_horse_head_mount	Horse Head Mount	Голова лошади на стене
+block	butchery:white_llama_carcass	Llama Carcass	Туша ламы
+block	butchery:white_llama_head	Llama Head	Голова ламы
+block	butchery:white_llama_head_mount	Llama Head Mount	Голова ламы на стене
+block	butchery:witch_corpse	Witch Corpse	Труп ведьмы
+block	butchery:witch_head	Witch Head	Голова ведьмы
+block	butchery:witch_head_mount	Witch Head Mount	Голова ведьмы на стене
+block	butchery:wither_carcass	§8Wither Carcass	§8Туша Визера
+block	butchery:wither_skeleton_corpse	Wither Skeleton Corpse	Туша скелета Визера
+block	butchery:wither_skeleton_head_mount	Wither Skeleton Head Mount	Голова скелета Визера на стене
+block	butchery:wolf_carcass	Wolf Carcass	Туша волка
+block	butchery:wolf_head	Wolf Head	Голова волка
+block	butchery:wolf_head_mount	Wolf Head Mount	Голова волка на стене
+block	butchery:wolf_skeleton	Wolf Skeleton	Скелет волка
+block	butchery:wooden_spit_rotisserie	Wooden Spit Rotisserie	Деревянный вертел-ротиссерия
+block	butchery:zoglin_carcass	Zoglin Carcass	Туша золина
+block	butchery:zoglin_head	Zoglin Head	Голова золина
+block	butchery:zoglin_head_mount	Zoglin Head Mount	Голова золина на стене
+block	butchery:zombie_corpse	Zombie Corpse	Труп зомби
+block	butchery:zombie_head_mount	Zombie Head Mount	Голова зомби на стене
+block	butchery:zombie_horse_carcass	Zombie Carcass	Туша зомби-лошади
+block	butchery:zombie_horse_head	Zombie Horse Head	Голова зомби-лошади
+block	butchery:zombie_horse_head_mount	Zombie Horse Head Mount	Голова зомби-лошади на стене
+block	butchery:zombie_villager_corpse	Zombie Villager Corpse	Труп зомбированного жителя
+block	butchery:zombie_villager_head	Zombie Villager Head	Голова зомбированного жителя
+block	butchery:zombie_villager_head_mount	Zombie Villager Head Mount	Голова зомбированного жителя на стене
+block	butchery:zombified_piglin_corpse	Zombified Piglin Corpse	Туша зомбифицированного пиглина
+block	butchery:zombified_piglin_head	Zombified Piglin Head	Голова зомбифицированного пиглина
+block	butchery:zombified_piglin_head_mount	Zombified Piglin Head Mount	Голова зомбифицированного пиглина на стене
+item	butchery:all_black_cat_fur	All Black Cat Fur	Полностью черная кошачья шерсть
+item	butchery:animal_fat	Animal Fat	Животный жир
+item	butchery:bat_skin	Bat Skin	Шкура летучей мыши
+item	butchery:bat_wing	Bat Wing	Крыло летучей мыши
+item	butchery:bee_wings	Bee Wings	Пчелиные крылья
+item	butchery:bird_foot	Chicken Foot	
+item	butchery:black_cat_fur	Black Cat Fur	Черная кошачья шерсть
+item	butchery:black_horse_skin	Horse Skin	Шкура лошади
+item	butchery:blood_bucket	Bucket of Blood	Ведро крови
+item	butchery:bloody_butchers_apron_chestplate	Butchers Apron	Кровавый фартук мясника
+item	butchery:bone_cleaver	Bone Cleaver	Костяной топор
+item	butchery:bone_hacksaw	Bone Hacksaw	Костяная ножовка
+item	butchery:bone_hammer	Bone Hammer	Костяной молоток
+item	butchery:bone_skinning_knife	Bone Skinning Knife	Костяной нож для снятия шкур
+item	butchery:bottle_of_blood	Bottle of Blood	Бутылка крови
+item	butchery:bottle_of_infected_blood	Bottle of Infected Blood	Бутылка зараженной крови
+item	butchery:bottle_of_sulfuric_acid	Bottle of Sulfuric Acid	Бутылка серной кислоты
+item	butchery:broken_wishbone	Broken Wishbone	Сломанная кость желания
+item	butchery:brown_horse_skin	Horse Skin	Шкура лошади
+item	butchery:brown_llama_skin	Llama Skin	Шкура ламы
+item	butchery:brown_mooshroom_skin	Brown Mooshroom Skin	Шкура коричневого мухомора
+item	butchery:butchers_apron_chestplate	Butchers Apron	Фартук мясника
+item	butchery:butchers_papers	Butchers Papers	Оберточная бумага
+item	butchery:calamari	Calamari	Кальмары
+item	butchery:calico_cat_fur	Calico Cat Fur	Трехцветная кошачья шерсть
+item	butchery:camel_skin	Camel Skin	Шкура верблюда
+item	butchery:cash_register	Cash Register	Кассовый аппарат
+item	butchery:chestnut_horse_skin	Horse Skin	Шкура лошади
+item	butchery:coin	Coins	Монеты
+item	butchery:cooked_bat_meat	Cooked Bat Meat	Приготовленное мясо летучей мыши
+item	butchery:cooked_bee_back_meat	Raw Bee Back Meat	Сырое мясо спины пчелы
+item	butchery:cooked_beef_mince	Cooked Beef Mince	Приготовленный говяжий фарш
+item	butchery:cooked_blood_sausage	Cooked Blood Sausage	Приготовленная кровяная колбаса
+item	butchery:cooked_blue_axolotl_fillet	Cooked Axolotl Fillet	Приготовленное филе аксолотля
+item	butchery:cooked_brown_axolotl_fillet	Cooked Axolotl Fillet	Приготовленное филе аксолотля
+item	butchery:cooked_camel_meat	Cooked Camel Meat	Приготовленное верблюжье мясо
+item	butchery:cooked_cat_meat	Cooked Cat Meat	Приготовленное кошачье мясо
+item	butchery:cooked_cave_spider_leg	Cooked Cave Spider Leg	Приготовленная ножка пещерного паука
+item	butchery:cooked_chicken_leg	Cooked Chicken Leg	Приготовленная куриная ножка
+item	butchery:cooked_chicken_wing	Cooked Chicken Wing	Приготовленное куриное крыло
+item	butchery:cooked_chuck_steak	Cooked Chuck Steak	Приготовленный чак стейк
+item	butchery:cooked_cod_fillet	Cooked Cod Fillet	Приготовленное филе трески
+item	butchery:cooked_creeper_leg	Cooked Creeper Leg	Приготовленная ножка крипера
+item	butchery:cooked_creeper_steak	Cooked Creeper Steak	Приготовленный стейк крипера
+item	butchery:cooked_cyan_axolotl_fillet	Cooked Axolotl Fillet	Приготовленное филе аксолотля
+item	butchery:cooked_dolphin_meat	Cooked Dolphin Meat	Приготовленное дельфинье мясо
+item	butchery:cooked_donkey_steak	Cooked Donkey Steak	Приготовленный ослиный стейк
+item	butchery:cooked_dragon_meat	Dragon Meat	Драконье мясо
+item	butchery:cooked_elder_guardian_meat	Cooked Elder Guardian Meat	Приготовленное мясо древнего стража
+item	butchery:cooked_enderman_intestines	Cooked Enderman Intestines	Приготовленные кишки эндермена
+item	butchery:cooked_enderman_kidney	Cooked Enderman Kidney	Приготовленная почка эндермена
+item	butchery:cooked_enderman_liver	Cooked Enderman Liver	Приготовленная печень эндермена
+item	butchery:cooked_enderman_lungs	Cooked Enderman Lungs	Приготовленные легкие эндермена
+item	butchery:cooked_enderman_steak	Cooked Enderman Steak	Приготовленный стейк эндермена
+item	butchery:cooked_enderman_stomach	Cooked Enderman Stomach	Приготовленный желудок эндермена
+item	butchery:cooked_endermite_chunks	Cooked Endermite Chunks	Приготовленные куски эндермита
+item	butchery:cooked_evoker_meat	Cooked Evoker Meat	Приготовленное мясо чаровника
+item	butchery:cooked_fox_meat	Cooked Fox Meat	Приготовленное лисье мясо
+item	butchery:cooked_gold_axolotl_fillet	Cooked Axolotl Fillet	Приготовленное филе аксолотля
+item	butchery:cooked_gray_frog_leg	Cooked Gray Frog Leg	Приготовленная серая лягушачья ножка
+item	butchery:cooked_green_frog_leg	Cooked Green Frog Leg	Приготовленная зеленая лягушачья ножка
+item	butchery:cooked_guardian_meat	Cooked Guardian Meat	Приготовленное мясо стража
+item	butchery:cooked_ham	Cooked Ham	Приготовленный окорок
+item	butchery:cooked_heart	Cooked Heart	Приготовленное сердце
+item	butchery:cooked_hoglin_chunk	Cooked Hoglin Chunk	Приготовленный кусок хоглина
+item	butchery:cooked_horse_meat	Cooked Horse Meat	Приготовленное лошадиное мясо
+item	butchery:cooked_intestines	Cooked Intestines	Приготовленные кишки
+item	butchery:cooked_kidney	Cooked Kidney	Приготовленная почка
+item	butchery:cooked_lamb_loin	Cooked Lamb Loin	Приготовленная поясница ягненка
+item	butchery:cooked_lamb_mince	Cooked Lamb Mince	Приготовленный ягненок фарш
+item	butchery:cooked_lamb_rib	Cooked Lamb Rib	Приготовленное ребро ягненка
+item	butchery:cooked_lamb_shoulder	Cooked Lamb Shoulder	Приготовленная спинка ягненка
+item	butchery:cooked_lamb_sirloin	Cooked Lamb Sirloin	Приготовленная спинка ягненка
+item	butchery:cooked_leg_of_lamb	Cooked Leg Of Lamb	Приготовленная ножка ягненка
+item	butchery:cooked_liver	Cooked Liver	Приготовленная печень
+item	butchery:cooked_llama_steak	Cooked Llama Steak	Приготовленный ламный стейк
+item	butchery:cooked_lungs	Cooked Lungs	Легкие
+item	butchery:cooked_mule_steak	Cooked Mule Steak	Приготовленный ослиный стейк
+item	butchery:cooked_ocelot_meat	Cooked Ocelot Meat	Приготовленное мясо оцелота
+item	butchery:cooked_orange_frog_leg	Cooked Orange Frog Leg	Приготовленная оранжевая лягушачья ножка
+item	butchery:cooked_panda_steak	Cooked Panda Steak	Приготовленный панда стейк
+item	butchery:cooked_pillager_meat	Cooked Pillager Meat	Приготовленное мясо грабителя
+item	butchery:cooked_pink_axolotl_fillet	Cooked Axolotl Fillet	Приготовленное филе аксолотля
+item	butchery:cooked_polar_bear_meat	Raw Polar Bear Meat	Приготовленное мясо белого медведя
+item	butchery:cooked_pork_belly	Cooked Pork Belly	Приготовленная свиная грудинка
+item	butchery:cooked_pork_leg	Cooked Pork Leg	Приготовленная свиная ножка
+item	butchery:cooked_pork_loin	Cooked Pork Loin	Приготовленная свиная поясница
+item	butchery:cooked_pork_shoulder	Cooked Pork Shoulder	Приготовленная свиная лопатка
+item	butchery:cooked_pufferfish	Cooked Pufferfish	Приготовленный иглобрюх
+item	butchery:cooked_ravager_meat	Cooked Ravager Meat	
+item	butchery:cooked_ribeye_steak	Cooked Ribeye Steak	Приготовленный рибай стейк
+item	butchery:cooked_rump_steak	Cooked Rump Steak	Приготовленный огузок
+item	butchery:cooked_salmon	Cooked Salmon	Приготовленный лосось
+item	butchery:cooked_sausage	Cooked Sausage	Приготовленная колбаса
+item	butchery:cooked_shulker_meat	Cooked Shulker Meat	Приготовленное мясо шалкера
+item	butchery:cooked_silverfish_chunks	Cooked Silverfish Chunks	Приготовленные куски чешуйницы
+item	butchery:cooked_sirloin_steak	Cooked Sirloin Steak	Приготовленный спинной стейк
+item	butchery:cooked_sniffer_steak	Cooked Sniffer Steak	Приготовленный стейк обнюхивателя
+item	butchery:cooked_spider_leg	Cooked Spider Leg	Приготовленная паучья ножка
+item	butchery:cooked_stomach	Cooked Stomach	Приготовленный желудок
+item	butchery:cooked_strider_meat	Cooked Strider Meat	Приготовленное мясо эндермена лавы
+item	butchery:cooked_tbone_steak	Cooked T-bone Steak	Приготовленный Т-костный стейк
+item	butchery:cooked_turtle_meat	Cooked Turtle Meat	Приготовленное черепаховое мясо
+item	butchery:cooked_villager_steak	Cooked Villager Steak	Приготовленный стейк жителя
+item	butchery:cooked_vindicator_meat	Cooked Vindicator Meat	Приготовленное мясо опустошителя
+item	butchery:cooked_warden_meat	Cooked Warden Meat	Приготовленное мясо смотрителя
+item	butchery:cooked_witch_meat	Cooked Witch Meat	Приготовленное мясо ведьмы
+item	butchery:cooked_wolf_meat	Cooked Wolf Meat	Приготовленное волчье мясо
+item	butchery:cookedhumanmeat	Cooked Human Meat	Приготовленное человеческое мясо
+item	butchery:cookedintestines	Cooked Intestines	Приготовленные кишки
+item	butchery:cookedkidney	Cooked Kidney	Приготовленная почка
+item	butchery:cookedliver	Cooked Liver	Приготовленная печень
+item	butchery:cookedlungs	Lungs	Легкие
+item	butchery:cookedstomach	Cooked Stomach	Приготовленный желудок
+item	butchery:copper_cleaver	Copper Cleaver	Медный топор
+item	butchery:copper_hacksaw	Copper Hacksaw	Медная ножовка
+item	butchery:copper_hammer	Copper Hammer	Медный молоток
+item	butchery:copper_skinning_knife	Copper Skinning Knife	Медный нож для снятия шкур
+item	butchery:cow_skin	Cow Skin	Коровья шкура
+item	butchery:crackling	Crackling	Хрустящая шкура
+item	butchery:creamy_horse_skin	Horse Skin	Шкура лошади
+item	butchery:creamy_llama_skin	Llama Skin	Шкура ламы
+item	butchery:creeper_skin	Creeper Skin	Шкура крипера
+item	butchery:dark_brown_horse_skin	Horse Skin	Шкура лошади
+item	butchery:deep_smithing_template	Deep Smithing Template	Глубокий шаблон кузнечного дела
+item	butchery:diamond_cleaver	Diamond Cleaver	Алмазный топор
+item	butchery:diamond_hacksaw	Diamond Hacksaw	Алмазная ножовка
+item	butchery:diamond_hammer	Diamond Hammer	Алмазный молоток
+item	butchery:diamond_skinning_knife	Diamond Skinning Knife	Алмазный нож для снятия шкур
+item	butchery:dolphin_skin	Dolphin Skin	Шкура дельфина
+item	butchery:donkey_skin	Donkey Skin	Шкура осла
+item	butchery:dragon_bone	Dragon Bone	Кость дракона
+item	butchery:dragon_scale	Dragon Scales	Драконья чешуя
+item	butchery:dragon_scale_armor_boots	Dragon Scale Boots	Сапоги из драконьей чешуи
+item	butchery:dragon_scale_armor_chestplate	Dragon Scale Chestplate	Нагрудник из драконьей чешуи
+item	butchery:dragon_scale_armor_helmet	Dragon Scale Helmet	Шлем из драконьей чешуи
+item	butchery:dragon_scale_armor_leggings	Dragon Scale Leggings	Штаны из драконьей чешуи
+item	butchery:dragon_scale_ingot	Dragon Scale Ingot	Слиток драконьей чешуи
+item	butchery:dragon_smithing_template	Dragon Smithing Template	Шаблон драконьей чешуи
+item	butchery:drained_enderman	Drained Enderman Carcass	
+item	butchery:drained_sniffer_carcass	Drained Sniffer Carcass	Осушенная туша обнюхивателя
+item	butchery:elder_guardian_eye	Elder Guardian Eye	Глаз древнего стража
+item	butchery:elder_guardian_spike	Elder Guardian Spike	Шип древнего стража
+item	butchery:enderman	Enderman Carcass	
+item	butchery:enderman_heart	Raw Enderman Heart	Сырое сердце эндермена
+item	butchery:enderman_intestines	Raw Enderman Intestines	Сырые кишки эндермена
+item	butchery:enderman_kidney	Raw Enderman Kidney	Сырая почка эндермена
+item	butchery:enderman_liver	Raw Enderman Liver	Сырая печень эндермена
+item	butchery:enderman_lungs	Raw Enderman Lungs	Сырые легкие эндермена
+item	butchery:enderman_stomach	Raw Enderman Stomach	Сырой желудок эндермена
+item	butchery:evoker_robes_boots	Evoker Boots	Сапоги чаровника
+item	butchery:evoker_robes_chestplate	Evoker Robe Top	Мантия чаровника
+item	butchery:evoker_robes_helmet	Evoker Mask	Маска чаровника
+item	butchery:evoker_robes_leggings	Evoker Robe Bottom	Штаны чаровника
+item	butchery:eye	Eye	Глаз
+item	butchery:flesh	Flesh	Мясо
+item	butchery:fox_skin	Fox Skin	Лисья шкура
+item	butchery:frog_heart	Frog Heart	Лягушачье сердце
+item	butchery:fur_suit_boots	Fur Boots	Меховые сапоги
+item	butchery:fur_suit_chestplate	Fur Jacket	Меховая куртка
+item	butchery:fur_suit_helmet	Fur Hood	Меховой капюшон
+item	butchery:fur_suit_leggings	Fur Leggings	Меховые штаны
+item	butchery:goat_skin	Goat Skin	Козья шкура
+item	butchery:gold_cleaver	Gold Cleaver	Золотой топор
+item	butchery:gold_hacksaw	Gold Hacksaw	Золотая ножовка
+item	butchery:gold_hammer	Gold  Hammer	Золотой молоток
+item	butchery:gold_skinning_knife	Gold Skinning Knife	Золотой нож для снятия шкур
+item	butchery:gray_frog_balloon	Frog Balloon	Лягушачий воздушный шарик
+item	butchery:gray_horse_skin	Horse Skin	Шкура лошади
+item	butchery:gray_llama_skin	Llama Skin	Шкура ламы
+item	butchery:green_frog_balloon	Frog Balloon	Лягушачий воздушный шарик
+item	butchery:guardian_spike	Guardian Spike	Шип стража
+item	butchery:heart	Heart	Сердце
+item	butchery:hoglin_skin	Hoglin Skin	Шкура хоглина
+item	butchery:honey_stomach	Honey Stomach	Медовый желудок
+item	butchery:hoof	Hoof	Копыто
+item	butchery:icey_bone	Icey Bone	Ледяная кость
+item	butchery:icey_bone_meal	Icey Bone Meal	Ледяная костная мука
+item	butchery:infected_blood_bucket	Bucket of Infected Blood	Ведро зараженной крови
+item	butchery:intestines	Intestines	Кишки
+item	butchery:iron_cleaver	Iron Cleaver	Железный топор
+item	butchery:iron_hacksaw	Iron Hacksaw	Железная ножовка
+item	butchery:iron_hammer	Iron Hammer	Железный молоток
+item	butchery:iron_skinning_knife	Iron Skinning Knife	Железный нож для снятия шкур
+item	butchery:jellie_cat_fur	Jellie Cat Fur	Кошачья шерсть Джеллико
+item	butchery:kidney	Kidney	Почка
+item	butchery:liver	Liver	Печень
+item	butchery:lungs	Lungs	Легкие
+item	butchery:magic_wishbone	Magic Wishbone	Волшебная кость желания
+item	butchery:magma_chunks	Magma Chunks	Куски магмы
+item	butchery:meat_scraps	Meat Scraps	Обрезки мяса
+item	butchery:mule_skin	Mule Skin	Шкура мула
+item	butchery:netherite_cleaver	Netherite Cleaver	Адский топор
+item	butchery:netherite_hacksaw	Netherite Hacksaw	Адская ножовка
+item	butchery:netherite_hammer	Netherite Hammer	Адский молоток
+item	butchery:netherite_skinning_knife	Netherite Skinning Knife	Адский нож для снятия шкур
+item	butchery:ocelot_skin	Ocelot Skin	Шкура оцелота
+item	butchery:orange_frog_balloon	Frog Balloon	Лягушачий воздушный шарик
+item	butchery:panda_skin	Panda Skin	Панда шкура
+item	butchery:persian_cat_fur	Persian Cat Fur	Персидская кошачья шерсть
+item	butchery:pig_skin	Pig Skin	Свиная шкура
+item	butchery:piglin_brute_armor_chestplate	Piglin Brute Armor	Броня жестокого пиглина
+item	butchery:pillager_armor_boots	Pillager Boots	Сапоги грабителя
+item	butchery:pillager_armor_chestplate	Pillager Robe Top	Броня грабителя
+item	butchery:pillager_armor_helmet	Pillager Mask	Маска грабителя
+item	butchery:pillager_armor_leggings	Pillager Robe Bottom	Штаны грабителя
+item	butchery:poison_sac	Poison Sac	Ядовитый мешочек
+item	butchery:polar_bear_skin	Polar Bear Skin	Шкура белого медведя
+item	butchery:pufferfish_spike	Pufferfish Spike	Шип иглобрюха
+item	butchery:rag	Rag	Тряпка
+item	butchery:ragdoll_cat_fur	Ragdoll Cat Fur	Шерсть тряпичной куклы
+item	butchery:ravager_carcass	Ravager Carcass	
+item	butchery:raw_bat_meat	Raw Bat Meat	Сырое мясо летучей мыши
+item	butchery:raw_bee_back_meat	Raw Bee Back Meat	Сырое мясо спины пчелы
+item	butchery:raw_beef_mince	Raw Beef Mince	Сырой говяжий фарш
+item	butchery:raw_blood_sausage	Raw Blood Sausage	Сырая кровяная колбаса
+item	butchery:raw_blue_axolotl_fillet	Raw Axolotl Fillet	Сырое филе аксолотля
+item	butchery:raw_brown_axolotl_fillet	Raw Axolotl Fillet	Сырое филе аксолотля
+item	butchery:raw_camel_meat	Raw Camel Meat	Сырое верблюжье мясо
+item	butchery:raw_cat_meat	Raw Cat Meat	Сырое кошачье мясо
+item	butchery:raw_cave_spider_leg	Raw Cave Spider Leg	Сырая ножка пещерного паука
+item	butchery:raw_chicken_leg	Raw Chicken Leg	Сырая куриная ножка
+item	butchery:raw_chicken_wing	Raw Chicken Wing	Сырое куриное крыло
+item	butchery:raw_chuck_steak	Raw Chuck Steak	Сырой чак стейк
+item	butchery:raw_cod_fillet	Raw Cod Fillet	Сырое филе трески
+item	butchery:raw_creeper_leg	Raw Creeper Leg	Сырая ножка крипера
+item	butchery:raw_creeper_steak	Raw Creeper Steak	Сырой стейк крипера
+item	butchery:raw_cyan_axolotl_fillet	Raw Axolotl Fillet	Сырое филе аксолотля
+item	butchery:raw_dolphin_meat	Raw Dolphin Meat	Сырое дельфинье мясо
+item	butchery:raw_donkey_steak	Raw Donkey Steak	Сырой ослиный стейк
+item	butchery:raw_dragon_meat	Raw Dragon Meat	Сырое драконье мясо
+item	butchery:raw_elder_guardian_meat	Raw Elder Guardian Meat	Сырое мясо древнего стража
+item	butchery:raw_enderman_steak	Raw Enderman Steak	Сырой стейк эндермена
+item	butchery:raw_endermite_chunks	Raw Endermite Chunks	Сырые куски эндермита
+item	butchery:raw_evoker_meat	Raw Evoker Meat	Сырое мясо чаровника
+item	butchery:raw_fox_meat	Raw Fox Meat	Сырое лисье мясо
+item	butchery:raw_gold_axolotl_fillet	Raw Axolotl Fillet	Сырое филе аксолотля
+item	butchery:raw_gray_frog_leg	Raw Gray Frog Leg	Сырая серая лягушачья ножка
+item	butchery:raw_green_frog_leg	Raw Green Frog Leg	Сырая зеленая лягушачья ножка
+item	butchery:raw_guardian_meat	Raw Guardian Meat	Сырое мясо стража
+item	butchery:raw_ham	Raw Ham	Сырой окорок
+item	butchery:raw_hoglin_chunk	Raw Hoglin Chunk	Сырой кусок хоглина
+item	butchery:raw_horse_meat	Raw Horse Meat	Сырое лошадиное мясо
+item	butchery:raw_lamb_loin	Raw Lamb Loin	Сырая поясница ягненка
+item	butchery:raw_lamb_mince	Raw Lamb Mince	Сырой ягненок фарш
+item	butchery:raw_lamb_rib	Raw Lamb Rib	Сырое ребро ягненка
+item	butchery:raw_lamb_shoulder	Raw Lamb Shoulder	Сырая спинка ягненка
+item	butchery:raw_lamb_sirloin	Raw Lamb Sirloin	Сырая спинка ягненка
+item	butchery:raw_leg_of_lamb	Raw Leg Of Lamb	Сырая ножка ягненка
+item	butchery:raw_llama_steak	Raw Llama Steak	Сырой ламный стейк
+item	butchery:raw_mule_steak	Raw Mule Steak	Сырой ослиный стейк
+item	butchery:raw_ocelot_meat	Raw Ocelot Meat	Сырое мясо оцелота
+item	butchery:raw_orange_frog_leg	Raw Orange Frog Leg	Сырая оранжевая лягушачья ножка
+item	butchery:raw_panda_steak	Raw Panda Steak	Сырой панда стейк
+item	butchery:raw_pillager_meat	Raw Pillager Meat	Сырое мясо грабителя
+item	butchery:raw_pink_axolotl_fillet	Raw Axolotl Fillet	Сырое филе аксолотля
+item	butchery:raw_polar_bear_meat	Raw Polar Bear Meat	Сырое мясо белого медведя
+item	butchery:raw_pork_belly	Raw Pork Belly	Сырая свиная грудинка
+item	butchery:raw_pork_leg	Raw Pork Leg	Сырая свиная ножка
+item	butchery:raw_pork_loin	Raw Pork Loin	Сырая свиная поясница
+item	butchery:raw_pork_shoulder	Raw Pork Shoulder	Сырая свиная лопатка
+item	butchery:raw_pufferfish	Raw Pufferfish	Сырой иглобрюх
+item	butchery:raw_ravager_meat	Raw Ravager Meat	
+item	butchery:raw_ribeye_steak	Raw Ribeye Steak	Сырой рибай стейк
+item	butchery:raw_rump_steak	Raw Rump Steak	Сырой огузок
+item	butchery:raw_salmon	Raw Salmon	Сырой лосось
+item	butchery:raw_sausage	Raw Sausage	Сырая колбаса
+item	butchery:raw_shulker_meat	Raw Shulker Meat	Сырое мясо шалкера
+item	butchery:raw_silverfish_chunks	Raw Silverfish Chunks	Сырые куски чешуйницы
+item	butchery:raw_sirloin_steak	Raw Sirloin Steak	Сырой спинной стейк
+item	butchery:raw_sniffer_steak	Raw Sniffer Steak	Сырой стейк обнюхивателя
+item	butchery:raw_spider_leg	Raw Spider Leg	Сырая паучья ножка
+item	butchery:raw_strider_meat	Raw Strider Meat	Сырое мясо эндермена лавы
+item	butchery:raw_tbone_steak	Raw T-bone Steak	Сырой Т-костный стейк
+item	butchery:raw_turtle_meat	Raw Turtle Meat	Сырое черепаховое мясо
+item	butchery:raw_villager_steak	Raw Villager Steak	Сырой стейк жителя
+item	butchery:raw_vindicator_meat	Raw Vindicator Meat	Сырое мясо опустошителя
+item	butchery:raw_warden_meat	Raw Warden Meat	Сырое мясо смотрителя
+item	butchery:raw_witch_meat	Raw Witch Meat	Сырое мясо ведьмы
+item	butchery:raw_wolf_meat	Raw Wolf Meat	Сырое волчье мясо
+item	butchery:rawhumanmeat	Raw Human Meat	Сырое человеческое мясо
+item	butchery:red_cat_fur	Red Cat Fur	Рыжая кошачья шерсть
+item	butchery:red_mooshroom_skin	Red Mooshroom Skin	Шкура красного мухомора
+item	butchery:rotten_heart	Rotten Heart	Сгнившее сердце
+item	butchery:rotten_intestines	Rotten Intestines	Гнилые кишки
+item	butchery:rotten_kidney	Rotten Kidney	Гнилая почка
+item	butchery:rotten_liver	Rotten Liver	Гнилая печень
+item	butchery:rotten_lungs	Rotten Lungs	Гнилые легкие
+item	butchery:rotten_stomach	Rotten Stomach	Гнилый желудок
+item	butchery:salt	Salt	Соль
+item	butchery:sausage_attachment	Sausage Attachment	Насадка для колбасы
+item	butchery:sculk_bone	Sculk Bone	Кость скалка
+item	butchery:sculkbonemeal	Sculk Bone Meal	Костная мука скалка
+item	butchery:sheep_skin	Sheep Skin	Овечья шкура
+item	butchery:shorthair_cat_fur	British Shorthair Cat Fur	Шерсть британской короткошерстной кошки
+item	butchery:siamese_cat_fur	Siamese Cat Fur	Сиамская кошачья шерсть
+item	butchery:slime_chunks	Slime Chunks	Куски слизня
+item	butchery:sniffer_carcass	Sniffer Carcass	Туша обнюхивателя
+item	butchery:sniffer_fur	Sniffer Fur	Мех обнюхивателя
+item	butchery:snow_fox_skin	Fox Skin	Шкура снежной лисы
+item	butchery:spiked_dragon_bone	Spiked Dragon Bone	Шипованная кость дракона
+item	butchery:sponge	Sponge	Губка
+item	butchery:stomach	Stomach	Желудок
+item	butchery:stray_necklace_chestplate	Stray Necklace	Ожерелье бродяги
+item	butchery:sulfur	Sulfur	Сера
+item	butchery:tabby_cat_fur	Tabby Cat Fur	Полосатая кошачья шерсть
+item	butchery:tentacles	Tentacles	Щупальца
+item	butchery:turtle_shell_armor_boots	Turtle Shell Boots	Сапоги из черепашьего панциря
+item	butchery:turtle_shell_armor_chestplate	Turtle Shell Chestplate	Нагрудник из черепашьего панциря
+item	butchery:turtle_shell_armor_leggings	Turtle Shell Leggings	Штаны из черепашьего панциря
+item	butchery:turtle_shell_fragment	Turtle Shell Fragment	Фрагмент черепашьего панциря
+item	butchery:vindicatorarmor_boots	Vindicator Boots	Сапоги опустошителя
+item	butchery:vindicatorarmor_chestplate	Vindicator Robe Top	Броня опустошителя
+item	butchery:vindicatorarmor_helmet	Vindicator Mask	Маска опустошителя
+item	butchery:vindicatorarmor_leggings	Vindicator Robe Bottom	Штаны опустошителя
+item	butchery:white_cat_fur	White Cat Fur	Белая кошачья шерсть
+item	butchery:white_horse_skin	Horse Skin	Шкура лошади
+item	butchery:white_llama_skin	Llama Skin	Шкура ламы
+item	butchery:wishbone	Wishbone	Кость желания
+item	butchery:witches_clothes_chestplate	Witches Robes	Одежда ведьмы
+item	butchery:witches_clothes_helmet	Witches Hat	Шляпа ведьмы
+item	butchery:wither_bone	Wither Bone	Кость Визера
+item	butchery:wither_bone_meal	Wither Bone Meal	Костная мука Визера
+item	butchery:withered_heart	Withered Heart	Высохшее сердце
+item	butchery:wolf_pelt	Wolf Pelt	Волчья шкура
+item	butchery:zoglin_skin	Zoglin Skin	Шкура золина

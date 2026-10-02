@@ -33,3 +33,6 @@ run/
 !gradle/wrapper/gradle-wrapper.jar
 .idea/
 *.iml
+
+# Чужие моды, скачанные scripts/fetch_deps.sh
+external/

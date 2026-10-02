@@ -1,0 +1,41 @@
+# the_dirty_stuff | файл the_dirty_stuff-2.1-forge-1.20.1.jar | лицензия в mods.toml: All Rights Reserved
+type	id	en	ru
+block	the_dirty_stuff:tobacco_seeds	Tobacco Seeds	Семена табака
+block	the_dirty_stuff:workstation	Workstation	Рабочий стол
+item	the_dirty_stuff:black_light_cigarette	Black Light Cigarette	Чёрная лёгкая сигарета
+item	the_dirty_stuff:black_slim_cigar	Black Slim Cigar	Чёрная тонкая сигара
+item	the_dirty_stuff:blue_cigar	Blue Cigar	Синяя сигара
+item	the_dirty_stuff:blue_cigarette	Blue Cigarette	Синяя сигарета
+item	the_dirty_stuff:cigar	Cigar	Сигара
+item	the_dirty_stuff:cigarette	Cigarette	Сигарета
+item	the_dirty_stuff:dried_tobacco_leaf_package	Dried Tobacco Leaf Package	Пачка высушенных листьев табака
+item	the_dirty_stuff:dried_tobacco_leafs	Dried Tobacco Leafs	Высушенные листья табака
+item	the_dirty_stuff:dried_tobacco_leafs_package	Dried Tobacco Leafs Package	Пачка высушенных листьев табака
+item	the_dirty_stuff:light_blue_cigar	Light Blue Cigar	Светло-синяя сигара
+item	the_dirty_stuff:light_blue_cigarette	Light Blue Cigarette	Светло-синяя сигарета
+item	the_dirty_stuff:light_gray_cigar	Light Gray Cigar	Светло-серая сигара
+item	the_dirty_stuff:light_gray_cigarette	Light Gray Cigarette	Светло-серая сигарета
+item	the_dirty_stuff:light_gray_light_cigarette	Light Gray Light Cigarette	Светло-серая лёгкая сигарета
+item	the_dirty_stuff:light_gray_slim_cigar	Light Gray Slim Cigar	Светло-серая тонкая сигара
+item	the_dirty_stuff:light_gray_ultralight_cigarette	Light Gray Ultralight Cigarette	Светло-серая суперлёгкая сигарета
+item	the_dirty_stuff:light_gray_ultraslim_cigar	Light Gray Ultraslim Cigar	Светло-серая ультратонкая сигара
+item	the_dirty_stuff:magenta_cigar	Magenta Cigar	Сиреневая сигара
+item	the_dirty_stuff:magenta_cigarette	Magenta Cigarette	Сиреневая сигарета
+item	the_dirty_stuff:orange_cigar	Orange Cigar	Оранжевая сигара
+item	the_dirty_stuff:orange_cigarette	Orange Cigarette	Оранжевая сигарета
+item	the_dirty_stuff:orange_ultralight_cigarette	Orange Ultralight Cigarette	Оранжевая суперлёгкая сигарета
+item	the_dirty_stuff:orange_ultraslim_cigar	Orange Ultraslim Cigar	Оранжевая ультратонкая сигара
+item	the_dirty_stuff:pink_ultralight_cigarette	Pink Ultralight Cigarette	Розовая суперлёгкая сигарета
+item	the_dirty_stuff:pink_ultraslim_cigar	Pink Ultraslim Cigar	Розовая ультратонкая сигара
+item	the_dirty_stuff:red_cigar	Red Cigar	Красная сигара
+item	the_dirty_stuff:red_cigarette	Red Cigarette	Красная сигарета
+item	the_dirty_stuff:red_ultralight_cigarette	Red Ultralight Cigarette	Красная суперлёгкая сигарета
+item	the_dirty_stuff:red_ultraslim_cigar	Red Ultraslim Cigar	Красная ультратонкая сигара
+item	the_dirty_stuff:tobacco	Tobacco	Табак
+item	the_dirty_stuff:tobacco_leafs	Tobacco Leafs	Листья табака
+item	the_dirty_stuff:tobacco_leafs_package	Tobacco Package	Пачка листьев табака
+item	the_dirty_stuff:tobacco_package	Tobacco Package	Пачка табака
+item	the_dirty_stuff:white_light_cigarette	White Light Cigarette	Белая лёгкая сигарета
+item	the_dirty_stuff:white_slim_cigar	White Slim Cigar	Белая тонкая сигара
+item	the_dirty_stuff:yellow_cigar	Yellow Cigar	Жёлтая сигара
+item	the_dirty_stuff:yellow_cigarette	Yellow Cigarette	Жёлтая сигарета

@@ -1,0 +1,24 @@
+# furnitureexpanded | файл furnitureexpanded-forge-1.2+1.20.1.jar | лицензия в mods.toml: All rights reserved
+type	id	en	ru
+block	furnitureexpanded:alarm_clock	Alarm Clock	Будильник
+block	furnitureexpanded:bathroom_sink	Bathroom Sink	Раковина
+block	furnitureexpanded:bathtub	Bath Tub	Ванна
+block	furnitureexpanded:bedside_table	Bedside Table	Прикроватный столик
+block	furnitureexpanded:cardbox	Cardbox	Картонная коробка
+block	furnitureexpanded:clock_sign	Clock Sign	Вывеска с часами
+block	furnitureexpanded:file_cabinet	File Cabinet	Картотечный шкаф
+block	furnitureexpanded:mirror	Mirror	Зеркало
+block	furnitureexpanded:modern_bed	Modern Bed	Современная кровать
+block	furnitureexpanded:nightstand	Nightstand	Прикроватная тумба
+block	furnitureexpanded:paper_holder	Toilet Paper Holder	Держатель туалетной бумаги
+block	furnitureexpanded:shower_box	Shower Enclosure	Душевая кабина
+block	furnitureexpanded:shower_head	Shower Head	Душ
+block	furnitureexpanded:toilet	Toilet	Унитаз
+block	furnitureexpanded:towel_bar	Towel Bar	Вешалка для полотенец
+block	furnitureexpanded:trash_can	Trash Can	Мусорное ведро
+item	furnitureexpanded:basket	Basket	Корзина
+item	furnitureexpanded:bedsheet	Bedsheet [%s]	Простыня [%s]
+item	furnitureexpanded:bedsheet_template	Bedsheet Template	Выкройка простыни
+item	furnitureexpanded:saw	Saw	Пила
+item	furnitureexpanded:sawdust	Sawdust	Опилки
+item	furnitureexpanded:tape	Adhesive Tape	Клейкая лента

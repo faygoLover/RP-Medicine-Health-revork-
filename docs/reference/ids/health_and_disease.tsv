@@ -1,0 +1,87 @@
+# health_and_disease | файл health_and_disease-1.4.2-forge-1.20.1.jar | лицензия в mods.toml: MIT License
+type	id	en	ru
+block	health_and_disease:atomizing	Alcohol Atomizer	
+block	health_and_disease:canblock	Energy Can	
+block	health_and_disease:disease_information_board	Disease Information Board	
+block	health_and_disease:extractor	Extractor	
+block	health_and_disease:grinder	Grinder	
+block	health_and_disease:healthanalyzer	Health Analyzer	
+block	health_and_disease:implantchair	Implant Chair	
+block	health_and_disease:medicalanticollisionbox	Medical Anti-collision Box	
+block	health_and_disease:medicalbox	Medicalbox	
+block	health_and_disease:medicinetank	Medicine Tank	
+block	health_and_disease:p_antibiotic	protoplasm of antibiotic	
+block	health_and_disease:pathologicalexaminationtable	Pathological Examination Table	
+block	health_and_disease:plungpurifying	protoplasm of lung purifying	
+block	health_and_disease:pnerous	protoplasm of nerous sedative	
+block	health_and_disease:protoplasmblocker	protoplasm of blocker	
+block	health_and_disease:ptargetprotein	protoplasm of antibiotic	
+block	health_and_disease:purifybox	Purification Bin	
+block	health_and_disease:thermostaticholder	thermostatic holder	
+block	health_and_disease:thickener	Thickener	
+item	health_and_disease:alcohol	Alcohol	
+item	health_and_disease:bloodsamples	Blood Sample	
+item	health_and_disease:bloodtakingneedle	Blood Taking Needle	
+item	health_and_disease:bonefixationbands	Bone Fixation Band	
+item	health_and_disease:breathmask_helmet	Breathmask	
+item	health_and_disease:broadspectrumantibioticsinjection	Broad-spectrum Antibiotics Injection	
+item	health_and_disease:broadspectrumantibioticssyringe	Broad-spectrum Antibiotics Syringe	
+item	health_and_disease:can	Can	
+item	health_and_disease:coldresist	Cold Resistant Glycerol	
+item	health_and_disease:coldresistantglycerol	Cold Resistant Glycerol Capsule	
+item	health_and_disease:contaminated_broadspectrumantibioticssyringe	contaminated Broad-spectrum Antibiotics Syringe	
+item	health_and_disease:contaminatedfesterblockerspringe	Contaminated Fester Blocker Syringe	
+item	health_and_disease:contaminatedribavirinsyringes	Contaminated Ribavirin Syringe	
+item	health_and_disease:contaminatedsyringes	Contaminated Syringe	
+item	health_and_disease:dextromethorphan	Dextromethorphan Capsule	
+item	health_and_disease:dextromethorphanbottle	Dextromethorphan	
+item	health_and_disease:diseaseicon	Diseaseicon	
+item	health_and_disease:disinfectiontapes	Disinfection Tape	
+item	health_and_disease:dp	Dextromethorphan Powder	
+item	health_and_disease:emptyinjectionbottle	Empty Injection Bottle	
+item	health_and_disease:emptytube	Empty Tube	
+item	health_and_disease:energycan	Energy Can	
+item	health_and_disease:festerblockerinjection	Fester Blocker Injection	
+item	health_and_disease:festerblockerspringe	Fester Blocker Syringe	
+item	health_and_disease:h_1	H 1	
+item	health_and_disease:h_2	H 2	
+item	health_and_disease:h_3	H 3	
+item	health_and_disease:h_4	H 4	
+item	health_and_disease:h_5	H 5	
+item	health_and_disease:h_6	H 6	
+item	health_and_disease:h_7	H 7	
+item	health_and_disease:highdosesyringe	High-dose Syringe	
+item	health_and_disease:ibru	Ibuprofen Powder	
+item	health_and_disease:ibuprofen	Ibuprofen Capsule	
+item	health_and_disease:ibuprofenbottle	Ibuprofen	
+item	health_and_disease:lamivudine	lamivudine Capsule	
+item	health_and_disease:lamivudinebottles	Lamivudine	
+item	health_and_disease:lamivudinepowder	lamivudine Powder	
+item	health_and_disease:largetoolkit	Large Toolkit	
+item	health_and_disease:lmaobinhibitorbottle	Activity Inhibitor	
+item	health_and_disease:mao_binhibitor	Activity Inhibitor Capsule	
+item	health_and_disease:maobpowder	Activity Inhibitor Powder	
+item	health_and_disease:medibottle	Medicine Bottle	
+item	health_and_disease:neroussedative	Nerous Sedative	
+item	health_and_disease:openedenergycan	Opened Energy Can	
+item	health_and_disease:oralliquidbottle	Oral Liquid Bottle	
+item	health_and_disease:p_antibiotic_bucket	protoplasm of antibiotic Bucket	
+item	health_and_disease:plungpurifying_bucket	protoplasm of lung purifying Bucket	
+item	health_and_disease:pnerous_bucket	protoplasm of nerous sedative Bucket	
+item	health_and_disease:pneroussedative	Protoplasm of Nerous Sedative	
+item	health_and_disease:protoplasmblocker_bucket	protoplasm of blocker Bucket	
+item	health_and_disease:protoplasmof_antibiotic	protoplasm of Antibiotic	
+item	health_and_disease:protoplasmofblocker	protoplasm of blocker	
+item	health_and_disease:protoplasmoflungpurifying	protoplasm of lung purifying	
+item	health_and_disease:protoplasmoftargetprotein	protoplasm of target protein	
+item	health_and_disease:ptargetprotein_bucket	protoplasm of lung purifying Bucket	
+item	health_and_disease:radiationbottle	Radiation Bottle	
+item	health_and_disease:refreshingcandy	Sedative Candy Pill	
+item	health_and_disease:refreshingcandybottle	Sedative Candy	
+item	health_and_disease:ribavirininjection	Ribavirin Injection	
+item	health_and_disease:ribavirinsyringe	Ribavirin Syringe	
+item	health_and_disease:scorchedbamboo	Scorched Bamboo	
+item	health_and_disease:soulsproutpowder	Soul Sprout Oil Residue	
+item	health_and_disease:statedetector	Statedetector	
+item	health_and_disease:surgicalinstruments	Surgical Instrument	
+item	health_and_disease:targetagent	Targeting Agent	

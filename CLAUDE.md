@@ -12,8 +12,9 @@
 2. `docs/01_decisions.md` — все принятые решения. Пункты 1.8–1.12 новее и главнее пунктов 1.1–1.7 там, где расходятся.
 3. `docs/06_cloud_task.md` — задание и порядок работы для сессии, которая пишет первый этап.
 4. `docs/00_catalog.md` — справочник механик из Neurotrauma, Casualties Unknown, Tarkov, RimWorld и модов сборки. Большой; читать нужные разделы. Раздел 20 — Tactical Medicine, Health & Disease, Medicamod; раздел 21 — LSO, TaCZ, Zero Contact (события, классы, порядок расчёта урона).
-5. `docs/zc_request.md` — запрос разработчику Zero Contact на API. Ответа пока нет.
-6. `docs/02_questions.md`, `03_questions.md`, `04_questions.md` — история вопросов и ответов, уже учтена в `01_decisions.md`.
+5. `docs/dependencies.md` — все моды, с которыми работает RP Medicine: версии, лицензии, координаты Gradle, исходники. `scripts/fetch_deps.sh` скачивает их в `external/`. Списки предметов и блоков чужих модов — `docs/reference/ids/`.
+6. `docs/zc_request.md` — запрос разработчику Zero Contact на API. Ответа пока нет.
+7. `docs/02_questions.md`, `03_questions.md`, `04_questions.md` — история вопросов и ответов, уже учтена в `01_decisions.md`.
 
 ## Главные принципы
 - Ванильное здоровье скрыто и всегда полное. Урон превращается в травмы на девяти частях тела. Настоящая жизнь — мозг.

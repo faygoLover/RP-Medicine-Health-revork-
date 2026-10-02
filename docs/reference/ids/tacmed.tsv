@@ -1,0 +1,28 @@
+# tacmed | файл tacmed-1.1.0.jar | лицензия в mods.toml: MIT
+type	id	en	ru
+item	tacmed:adrenaline_rush	Adrenaline Rush	Adrenaline Rush
+item	tacmed:ambu_bag	Ambu Bag (BVM)	Мешок Амбу (BVM)
+item	tacmed:bandage	6-inch Bandage	Перевязочный бандаж
+item	tacmed:burn_care	BurnCare Gel	Противоожоговая повязка
+item	tacmed:chest_seal	Chest Seal	Окклюзионная повязка
+item	tacmed:cigarette	Cigarette	Сигарета
+item	tacmed:cigarette_pack	Pack of Cigarettes	Пачка сигарет
+item	tacmed:defibrillator	Defibrillator	Дефибриллятор
+item	tacmed:esmarch_tourniquet	Esmarch Tourniquet	Жгут Эсмарха
+item	tacmed:hemostatic	Combat Gauze	Боевая гемостатическая марля
+item	tacmed:ifak_pouch	IFAK Pouch	Медицинский подсумок IFAK
+item	tacmed:lighter	Lighter	Зажигалка
+item	tacmed:monster	Monster	Monster
+item	tacmed:needle_14g	Decompression Needle 14G	Декомпрессионная игла 14G
+item	tacmed:nefopam	Nefopam Injector	Нефопам
+item	tacmed:npa	Nasopharyngeal Airway (NPA)	Назофарингеальная трубка (NPA)
+item	tacmed:paramedic_backpack	Paramedic Backpack	Рюкзак парамедика
+item	tacmed:pill_pack	Pill Pack	Пилпак (таблетки)
+item	tacmed:promedol	Promedol Injector	Промедол
+item	tacmed:reanimation_pack	Reanimation Pack	Реанимапак
+item	tacmed:red_bull	Red Bull	Red Bull
+item	tacmed:saline	Saline	Физраствор
+item	tacmed:splint	Splint	Иммобилизационная шина
+item	tacmed:thermal_blanket	Thermal Blanket	Изотермическое одеяло
+item	tacmed:tourniquet	CAT-7 Tourniquet	Жгут-турникет
+item	tacmed:trauma_shears	Trauma Shears	Медицинские ножницы

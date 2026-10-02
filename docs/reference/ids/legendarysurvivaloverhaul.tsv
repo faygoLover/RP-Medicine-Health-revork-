@@ -1,0 +1,75 @@
+# legendarysurvivaloverhaul | файл legendarysurvivaloverhaul-1.20.1-2.4.2.jar | лицензия в mods.toml: GNU General Public License v3.1
+type	id	en	ru
+block	legendarysurvivaloverhaul:cooler	Ice Box	Ледник
+block	legendarysurvivaloverhaul:heater	Boiler	Бойлер
+block	legendarysurvivaloverhaul:heater_top	Boiler	Бойлер
+block	legendarysurvivaloverhaul:ice_fern_crop	Ice Fern Crop	Ледопапоротник
+block	legendarysurvivaloverhaul:ice_fern_gold	Gold Ice Fern Crop	Золотой ледопапоротник
+block	legendarysurvivaloverhaul:sewing_table	Sewing Table	Стол для шитья
+block	legendarysurvivaloverhaul:sun_fern_crop	Sun Fern Crop	Солнцепапоротник
+block	legendarysurvivaloverhaul:sun_fern_gold	Gold Sun Fern Crop	Золотой солнцепапоротник
+block	legendarysurvivaloverhaul:water_plant_crop	Water Plant Crop	Водное растение
+item	legendarysurvivaloverhaul:apple_juice	Apple Juice	Яблочный сок
+item	legendarysurvivaloverhaul:bandage	Bandage	Бинт
+item	legendarysurvivaloverhaul:beetroot_juice	Beetroot Juice	Свекольный сок
+item	legendarysurvivaloverhaul:cactus_juice	Cactus Juice	Кактусовый сок
+item	legendarysurvivaloverhaul:canteen	Canteen	Фляга
+item	legendarysurvivaloverhaul:canteen_empty	Empty Canteen	Пустая фляга
+item	legendarysurvivaloverhaul:canteen_purified	Purified Canteen	Фляга с очищенной водой
+item	legendarysurvivaloverhaul:carrot_juice	Carrot Juice	Морковный сок
+item	legendarysurvivaloverhaul:chorus_fruit_juice	Chorus Fruit Juice	Сок хоруса
+item	legendarysurvivaloverhaul:cold_resistance_ring	Cold Resistance Ring	Кольцо холодостойкости
+item	legendarysurvivaloverhaul:cold_string	Cold String	Холодная нить
+item	legendarysurvivaloverhaul:cooling_coat_1	Common Cooling Coat	Обычная охлаждающая подкладка
+item	legendarysurvivaloverhaul:cooling_coat_2	Rare Cooling Coat	Редкая охлаждающая подкладка
+item	legendarysurvivaloverhaul:cooling_coat_3	Epic Cooling Coat	Эпическая охлаждающая подкладка
+item	legendarysurvivaloverhaul:desert_boots	Desert Sandals	Пустынные сандалии
+item	legendarysurvivaloverhaul:desert_chestplate	Desert Shirt	Пустынная рубашка
+item	legendarysurvivaloverhaul:desert_helmet	Desert Cap	Пустынная кепка
+item	legendarysurvivaloverhaul:desert_leggings	Desert Tunic	Пустынная туника
+item	legendarysurvivaloverhaul:first_aid_supplies	First Aid Supplies	Средства первой помощи
+item	legendarysurvivaloverhaul:glistering_melon_juice	Glistering Melon Juice	Сок из сверкающего арбуза
+item	legendarysurvivaloverhaul:glow_berries_juice	Glow Berries Juice	Сок из светящихся ягод
+item	legendarysurvivaloverhaul:golden_apple_juice	Golden Apple Juice	Сок из золотого яблока
+item	legendarysurvivaloverhaul:golden_carrot_juice	Golden Carrot Juice	Сок из золотой моркови
+item	legendarysurvivaloverhaul:healing_herbs	Healing Herbs	Целебные травы
+item	legendarysurvivaloverhaul:heart_container	Crystal Heart	Хрустальное сердце
+item	legendarysurvivaloverhaul:heart_fragment	Crystal Heart Fragment	Осколок хрустального сердца
+item	legendarysurvivaloverhaul:heat_resistance_ring	Heat Resistance Ring	Кольцо теплостойкости
+item	legendarysurvivaloverhaul:heating_coat_1	Common Warming Coat	Обычная согревающая подкладка
+item	legendarysurvivaloverhaul:heating_coat_2	Rare Warming Coat	Редкая согревающая подкладка
+item	legendarysurvivaloverhaul:heating_coat_3	Epic Warming Coat	Эпическая согревающая подкладка
+item	legendarysurvivaloverhaul:ice_fern_gold_leaf	Gold Ice Fern Leaf	Золотой лист ледопапоротника
+item	legendarysurvivaloverhaul:ice_fern_leaf	Ice Fern Leaf	Лист ледопапоротника
+item	legendarysurvivaloverhaul:ice_fern_seeds	Ice Fern Seeds	Семена ледопапоротника
+item	legendarysurvivaloverhaul:large_canteen	Large Canteen	Большая фляга
+item	legendarysurvivaloverhaul:large_canteen_empty	Empty Large Canteen	Пустая большая фляга
+item	legendarysurvivaloverhaul:large_canteen_purified	Purified Large Canteen	Большая фляга с очищенной водой
+item	legendarysurvivaloverhaul:medkit	Medkit	Аптечка
+item	legendarysurvivaloverhaul:melon_juice	Melon Juice	Арбузный сок
+item	legendarysurvivaloverhaul:morphine	Morphine	Морфин
+item	legendarysurvivaloverhaul:nether_chalice	Nether Chalice	Незерская чаша
+item	legendarysurvivaloverhaul:plaster	Plaster	Пластырь
+item	legendarysurvivaloverhaul:pumpkin_juice	Pumpkin Juice	Тыквенный сок
+item	legendarysurvivaloverhaul:purified_water_bottle	Purified Water Bottle	Бутылка очищенной воды
+item	legendarysurvivaloverhaul:seasonal_calendar	Seasonal Calendar	Сезонный календарь
+item	legendarysurvivaloverhaul:shield_container	Shield Container	Контейнер щита
+item	legendarysurvivaloverhaul:snow_boots	Snow Boots	Снежные ботинки
+item	legendarysurvivaloverhaul:snow_chestplate	Snow Tunic	Снежная туника
+item	legendarysurvivaloverhaul:snow_helmet	Snow Hat	Снежная шапка
+item	legendarysurvivaloverhaul:snow_leggings	Snow Pants	Снежные штаны
+item	legendarysurvivaloverhaul:sponge	Sponge	Губка
+item	legendarysurvivaloverhaul:sun_fern_gold_leaf	Gold Sun Fern Leaf	Золотой лист солнцепапоротника
+item	legendarysurvivaloverhaul:sun_fern_leaf	Sun Fern Leaf	Лист солнцепапоротника
+item	legendarysurvivaloverhaul:sun_fern_seeds	Sun Fern Seeds	Семена солнцепапоротника
+item	legendarysurvivaloverhaul:sweet_berries_juice	Sweet Berries Juice	Сок из сладких ягод
+item	legendarysurvivaloverhaul:thermal_coat_1	Common Thermal Coat	Обычная термоподкладка
+item	legendarysurvivaloverhaul:thermal_coat_2	Rare Thermal Coat	Редкая термоподкладка
+item	legendarysurvivaloverhaul:thermal_coat_3	Epic Thermal Coat	Эпическая термоподкладка
+item	legendarysurvivaloverhaul:thermal_resistance_ring	Thermal Resistance Ring	Кольцо термостойкости
+item	legendarysurvivaloverhaul:thermometer	Thermometer	Термометр
+item	legendarysurvivaloverhaul:tonic	Tonic	Тоник
+item	legendarysurvivaloverhaul:warm_string	Warm String	Тёплая нить
+item	legendarysurvivaloverhaul:water_plant_bag	Water Plant Bag	Мешок водного растения
+item	legendarysurvivaloverhaul:water_plant_seeds	Water Plant Seeds	Семена водного растения
+item	legendarysurvivaloverhaul:water_purifier	Water Purifier	Очиститель воды

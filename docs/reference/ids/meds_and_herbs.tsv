@@ -1,0 +1,228 @@
+# meds_and_herbs | файл meds_and_herbs-1.20.1-2.0.3.jar | лицензия в mods.toml: Academic Free License v3.0
+type	id	en	ru
+block	meds_and_herbs:aloe_0	Aloe Plant	Алоэ
+block	meds_and_herbs:aloe_1	Aloe Plant	Алоэ
+block	meds_and_herbs:aloe_2	Aloe Plant	Алоэ
+block	meds_and_herbs:aloe_3	Aloe Plant	Алоэ
+block	meds_and_herbs:aloe_4	Aloe Plant	Алоэ
+block	meds_and_herbs:aloe_5	Aloe Plant	Алоэ
+block	meds_and_herbs:aloe_plant	Aloe Plant	Алоэ
+block	meds_and_herbs:artemisia	Artemisia	Полынь
+block	meds_and_herbs:artemisia_1	Artemisia 1	Полынь 1
+block	meds_and_herbs:artemisia_2	Artemisia 2	Полынь 2
+block	meds_and_herbs:artemisia_3	Artemisia 3	Полынь 3
+block	meds_and_herbs:artemisia_4	Artemisia 4	Полынь 4
+block	meds_and_herbs:artemisia_5	Artemisia 5	Полынь 5
+block	meds_and_herbs:belladonna	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_1	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_2	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_3	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_4	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_5	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_6	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_7	Belladonna	Белладонна
+block	meds_and_herbs:belladonna_pie	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:belladonna_pie_0	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:belladonna_pie_1	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:belladonna_pie_2	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:belladonna_pie_3	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:belladonna_pie_4	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:belladonna_pie_5	Belladonna Pie	Пирог с белладонной
+block	meds_and_herbs:boiling_flask	§eBoiling Flask	§eКипящая колба
+block	meds_and_herbs:chamomile_1	Chamomile 1	Ромашка 1
+block	meds_and_herbs:chamomile_2	Chamomile 2	Ромашка 2
+block	meds_and_herbs:chamomile_3	Chamomile 3	Ромашка 3
+block	meds_and_herbs:chamomile_4	Chamomile 4	Ромашка 4
+block	meds_and_herbs:chamomile_5	Chamomile	Ромашка
+block	meds_and_herbs:cotton_0	Cotton 0	Хлопок 0
+block	meds_and_herbs:cotton_1	Cotton 1	Хлопок 1
+block	meds_and_herbs:cotton_2	Cotton 2	Хлопок 2
+block	meds_and_herbs:cotton_3	Cotton 3	Хлопок 3
+block	meds_and_herbs:cotton_4	Cotton_4	Хлопок 4
+block	meds_and_herbs:cotton_5	Cotton_5	Хлопок 5
+block	meds_and_herbs:cotton_6	Cotton_6	Хлопок 6
+block	meds_and_herbs:cotton_plant	Cotton Plant	Хлопковое растение
+block	meds_and_herbs:distillery_apparatus	§bDistillery Apparatus	§bДистилляционный аппарат
+block	meds_and_herbs:fermentation_barrel	§eFermentation Barrel	§eБочка для брожения
+block	meds_and_herbs:flower_pot_artemisia	Flower Pot Artemisia	Полынь в горшке
+block	meds_and_herbs:flower_pot_belladonna	Flower Pot Belladonna	Белладонна в горшке
+block	meds_and_herbs:flower_pot_chamomile	Flower Pot Chamomile	Ромашка в горшке
+block	meds_and_herbs:flower_pot_opium	Flower Pot Opium	Опиум в горшке
+block	meds_and_herbs:flower_pot_vinca	Flower Pot Vinca	Барвинок в горшке
+block	meds_and_herbs:flower_pot_wild_belladonna	Flower Pot Wild Belladonna	Дикая белладонна в горшке
+block	meds_and_herbs:flower_pot_wild_chamomile	Flower Pot Wild Chamomile	Дикая ромашка в горшке
+block	meds_and_herbs:flower_pot_wild_opium	Flower Pot Wild Opium	Дикий опиум в горшке
+block	meds_and_herbs:flower_pot_wild_vinca	Flower Pot Wild Vinca	Дикий барвинок в горшке
+block	meds_and_herbs:incubator	§bIncubator	§bИнкубатор
+block	meds_and_herbs:opium	Opium	Опиум
+block	meds_and_herbs:opium_1	Opium 1	Опиум 1
+block	meds_and_herbs:opium_2	Opium 2	Опиум 2
+block	meds_and_herbs:opium_3	Opium 3	Опиум 3
+block	meds_and_herbs:opium_4	Opium 4	Опиум 4
+block	meds_and_herbs:plantago	Plantago	Подорожник
+block	meds_and_herbs:sweet_clover	Sweet Clover	Донник
+block	meds_and_herbs:sweet_cloverstage_0	Sweet Cloverstage 0	Донник стадия 0
+block	meds_and_herbs:sweet_cloverstage_1	Sweet Cloverstage 1	Донник стадия 1
+block	meds_and_herbs:sweet_cloverstage_2	Sweet Cloverstage 2	Донник стадия 2
+block	meds_and_herbs:sweet_cloverstage_3	Sweet Cloverstage 2	Донник стадия 2
+block	meds_and_herbs:sweet_cloverstage_3top	Sweet Cloverstage 3	Донник стадия 3
+block	meds_and_herbs:sweet_cloverstage_4	Sweet Cloverstage 4	Донник стадия 4
+block	meds_and_herbs:sweet_cloverstage_4top	Sweet Cloverstage 4	Донник стадия 4
+block	meds_and_herbs:sweet_cloverstage_5	Sweet Cloverstage 5	Донник стадия 5
+block	meds_and_herbs:sweet_cloverstage_5top	Sweet Cloverstage 5	Донник стадия 5
+block	meds_and_herbs:vinca	Vinca	Барвинок
+block	meds_and_herbs:vinca_1	Vinca	Барвинок
+block	meds_and_herbs:vinca_2	Vinca	Барвинок
+block	meds_and_herbs:vinca_3	Vinca	Барвинок
+block	meds_and_herbs:vinca_4	Vinca	Барвинок
+block	meds_and_herbs:vinca_5	Vinca	Барвинок
+block	meds_and_herbs:vinca_6	Vinca	Барвинок
+block	meds_and_herbs:wild_belladonna	Wild Belladonna	Дикая белладонна
+block	meds_and_herbs:wild_chamomile	Wild Chamomile	Дикая ромашка
+block	meds_and_herbs:wild_opium	Wild Opium	Дикий опиум
+block	meds_and_herbs:wild_vinca	Wild Vinca	Дикий барвинок
+item	meds_and_herbs:alcohol_ethanol	Ethanol	Этанол
+item	meds_and_herbs:alcohol_methanol	Methanol	Метанол
+item	meds_and_herbs:aloe_fruits	Aloe Fruits	Плоды алоэ
+item	meds_and_herbs:aloe_juice	Aloe Juice	Сок алоэ
+item	meds_and_herbs:aloe_leaves	Aloe Leaves	Листья алоэ
+item	meds_and_herbs:aloe_seeds	Aloe Seeds	Семена алоэ
+item	meds_and_herbs:artemisia_leaves	Artemisia Leaves	Листья полыни
+item	meds_and_herbs:artemisia_seeds	Artemisia Seeds	Семена полыни
+item	meds_and_herbs:bark_acacia	Acacia Bark	Кора акации
+item	meds_and_herbs:bark_birch	Birch Bark	Берёзовая кора
+item	meds_and_herbs:bark_cherry	Cherry Bark	Кора вишни
+item	meds_and_herbs:bark_crimson	Crimson Bark	Багровая кора
+item	meds_and_herbs:bark_dark_oak	Dark Oak Bark	Кора тёмного дуба
+item	meds_and_herbs:bark_jungle	Jungle Bark	Кора тропического дерева
+item	meds_and_herbs:bark_mangrove	Mangrove Bark	Кора мангрового дерева
+item	meds_and_herbs:bark_mod	Bark	Кора
+item	meds_and_herbs:bark_oak	Oak Bark	Дубовая кора
+item	meds_and_herbs:bark_spruce	Spruce Bark	Еловая кора
+item	meds_and_herbs:bark_warped	Warped Bark	Искажённая кора
+item	meds_and_herbs:belladonna_berry	Belladonna Berry	Ягода белладонны
+item	meds_and_herbs:belladonna_leaves	Belladonna Leaves	Листья белладонны
+item	meds_and_herbs:belladonna_pie_item	Belladonna Cake	Пирог с белладонной
+item	meds_and_herbs:belladonna_poison	Belladonna Poison	Яд белладонны
+item	meds_and_herbs:beverage	Beverage	Напиток
+item	meds_and_herbs:beveragebucket	Beverage Bucket	Ведро напитка
+item	meds_and_herbs:boiling_flask_book	Boiling Flask Guide	Руководство по кипящей колбе
+item	meds_and_herbs:bottled_adrenaline_blood	Bottled Blood with Adrenaline	Кровь с адреналином в бутылке
+item	meds_and_herbs:bottled_blood	Bottled Blood	Кровь в бутылке
+item	meds_and_herbs:bottled_hpp_blood	Bottled Blood with HPP	Кровь с ВПЯ в бутылке
+item	meds_and_herbs:bottled_poison_blood	Bottled Blood with Poison	Кровь с ядом в бутылке
+item	meds_and_herbs:bottled_water	Bottled Water	Бутилированная вода
+item	meds_and_herbs:bouquet	Bouquet	Букет
+item	meds_and_herbs:chamomile_flowers	Chamomile Flowers	Цветки ромашки
+item	meds_and_herbs:chamomile_seeds	Chamomile Seeds	Семена ромашки
+item	meds_and_herbs:chocolate_cookie	Chocolate Cookie	Шоколадное печенье
+item	meds_and_herbs:chocolate_pellet	Chocolate Pellet	Шоколадная таблетка
+item	meds_and_herbs:chocolatebar	Chocolate Bar	Шоколадный батончик
+item	meds_and_herbs:cotton_fibers	Cotton Fibers	Хлопковые волокна
+item	meds_and_herbs:cotton_filter	Cotton Filter	Хлопковый фильтр
+item	meds_and_herbs:cotton_silk	Cotton Fabric	Хлопковая ткань
+item	meds_and_herbs:cotton_silk_aloe	Aloe Soaked Fabric	Ткань, пропитанная алоэ
+item	meds_and_herbs:cotton_silk_ethanol	Ethanol Fabric	Ткань, пропитанная этанолом
+item	meds_and_herbs:cotton_silk_honey	Honey Fabric	Ткань, пропитанная мёдом
+item	meds_and_herbs:cotton_silk_vinca	Vinca Fabric	Ткань, пропитанная барвинком
+item	meds_and_herbs:cotton_string	Cotton String	Хлопковая нить
+item	meds_and_herbs:distilled_leftovers	Leftovers	Остатки
+item	meds_and_herbs:distillery_book	Distillery Guide	Руководство по дистилляции
+item	meds_and_herbs:dressing	Dressing	Повязка
+item	meds_and_herbs:dressing_advanced	Advanced Dressing	Улучшенная повязка
+item	meds_and_herbs:dressing_alcohol	Ethanol Dressing	Повязка с этанолом
+item	meds_and_herbs:dressing_aloe	Aloe Dressing	Повязка с алоэ
+item	meds_and_herbs:dressing_cheap	Cheap Dressing	Дешёвая повязка
+item	meds_and_herbs:dressing_honey	Honey Dressing	Повязка с мёдом
+item	meds_and_herbs:dressing_plantago	Plantago Dressing	Повязка с подорожником
+item	meds_and_herbs:empty_bottle_clean	Empty Medical Bottle	Пустая медицинская бутылка
+item	meds_and_herbs:empty_bottle_dirty	Dirty Empty Medical Bottle	Грязная пустая медицинская бутылка
+item	meds_and_herbs:extract_artemisia	Novice Artemisia Extract	Начинающий экстракт полыни
+item	meds_and_herbs:extract_belladonna	Novice Belladonna Extract	Начинающий экстракт белладонны
+item	meds_and_herbs:extract_caffeine	Caffeine Extract	Экстракт кофеина
+item	meds_and_herbs:extract_chamomile	Novice Chamomile Extract	Начинающий экстракт ромашки
+item	meds_and_herbs:extract_glucose	Glucose	Глюкоза
+item	meds_and_herbs:extract_herbal	Herbal Extract	Травяной экстракт
+item	meds_and_herbs:extract_mushroom	Mushroom Extract	Грибной экстракт
+item	meds_and_herbs:extract_opium	Novice Opium Extract	Начинающий опиумный экстракт
+item	meds_and_herbs:extract_sweet_clover	Novice Sweet Clover Extract	Начинающий экстракт донника
+item	meds_and_herbs:extract_vinca	Novice Vinca Extract	Начинающий экстракт барвинка
+item	meds_and_herbs:flask	Flask	Колба
+item	meds_and_herbs:glass_tube	Glass Tube	Стеклянная трубка
+item	meds_and_herbs:grinder	Mortar and Pestle	Ступка и пестик
+item	meds_and_herbs:material_agar	Agar-Agar	Агар-агар
+item	meds_and_herbs:material_aloe	Aloe Extract	Экстракт алоэ
+item	meds_and_herbs:medicine_adrenaline	Adrenaline	Адреналин
+item	meds_and_herbs:medicine_antidote	Antidote	Противоядие
+item	meds_and_herbs:medicine_hpa	High Potency Antidote	Высококонцентрированное противоядие
+item	meds_and_herbs:medicine_mophine	Morphine	Морфин
+item	meds_and_herbs:medicine_penicillin	Penicillin	Пенициллин
+item	meds_and_herbs:medkit_advanced	Advanced Medkit	Улучшенная аптечка
+item	meds_and_herbs:medkit_expert	Expert Medkit	Экспертная аптечка
+item	meds_and_herbs:medkit_novice	Novice Medkit	Начинающая аптечка
+item	meds_and_herbs:opium_flowers	Opium Flower	Цветок опиума
+item	meds_and_herbs:opium_poppies	Opium Poppies	Опиумные маки
+item	meds_and_herbs:opium_seeds	Opium Seeds	Семена опиума
+item	meds_and_herbs:parasiteeggs	Parasite Eggs	Яйца паразитов
+item	meds_and_herbs:penicillium_coal_powder	Penicillium-Charcoal Mix	Смесь пенициллина и угля
+item	meds_and_herbs:penicillium_powder	Penicillium Powder	Порошок пенициллина
+item	meds_and_herbs:petridish	Petri Dish	Чашка Петри
+item	meds_and_herbs:petridish_agar	Petri Dish with Agar	Чашка Петри с агаром
+item	meds_and_herbs:petridish_moldy	Petri Dish with Mold	Чашка Петри с плесенью
+item	meds_and_herbs:petridish_penicillium	Petri Dish with Penicillium	Чашка Петри с пенициллином
+item	meds_and_herbs:plant_guide_book	Plant Guide Book	Книга о растениях
+item	meds_and_herbs:plantago_leaves	Plantago Leaves	Листья подорожника
+item	meds_and_herbs:plaster	Plaster	Пластырь
+item	meds_and_herbs:poison	Poison	Яд
+item	meds_and_herbs:poison_hpp	High Potency Poison	Сильнодействующий яд
+item	meds_and_herbs:powder_aloe	Aloe Powder	Порошок алоэ
+item	meds_and_herbs:powder_artemisia	Artemisia Powder	Порошок полыни
+item	meds_and_herbs:powder_belladonna	Belladonna Powder	Порошок белладонны
+item	meds_and_herbs:powder_chamomile	Chamomile Powder	Порошок ромашки
+item	meds_and_herbs:powder_charcoal	Charcoal Powder	Порошок угля
+item	meds_and_herbs:powder_cocoa	Cocoa Powder	Порошок какао
+item	meds_and_herbs:powder_herbal	Herbal Powder	Травяной порошок
+item	meds_and_herbs:powder_kelp	Kelp Powder	Порошок ламинарии
+item	meds_and_herbs:powder_opium	Opium Powder	Опиумный порошок
+item	meds_and_herbs:powder_shrooms	Shrooms Powder	Грибной порошок
+item	meds_and_herbs:powder_sugarcane	Sugarcane Powder	Порошок сахарного тростника
+item	meds_and_herbs:powder_sweet_clover	Sweet Clover Powder	Порошок донника
+item	meds_and_herbs:powder_vinca	Vinca Powder	Порошок барвинка
+item	meds_and_herbs:powder_wood	Wood Powder	Древесный порошок
+item	meds_and_herbs:quartz_flask	Quartz Flask	Кварцевая колба
+item	meds_and_herbs:raw_beverage_bucket	Unfiltered Beverage Bucket	Ведро нефильтрованного напитка
+item	meds_and_herbs:seeds_belladonna	Belladonna Seeds	Семена белладонны
+item	meds_and_herbs:seeds_sweet_clover	Sweet Clover Seeds	Семена донника
+item	meds_and_herbs:seeds_vinca	Vinca Seeds	Семена барвинка
+item	meds_and_herbs:seedscotton	Cotton Seeds	Семена хлопка
+item	meds_and_herbs:sewing_kit	Sewing Kit	Швейный набор
+item	meds_and_herbs:splint	Splint	Шина
+item	meds_and_herbs:sweet_clover_flowers	Sweet Clover Flowers	Цветки донника
+item	meds_and_herbs:syringe_adrenaline	Syringe with Adrenaline	Шприц с адреналином
+item	meds_and_herbs:syringe_antidote	Syringe with Antitode	Шприц с противоядием
+item	meds_and_herbs:syringe_artemisia	Syringe with Artemisia Extract	Шприц с экстрактом полыни
+item	meds_and_herbs:syringe_belladonna	Syringe with Belladonna Extract	Шприц с экстрактом белладонны
+item	meds_and_herbs:syringe_belladonna_poison	Syringe with Belladonna Poison	Шприц с ядом белладонны
+item	meds_and_herbs:syringe_blood	Syringe with Blood	Шприц с кровью
+item	meds_and_herbs:syringe_blood_adrenaline	Syringe with Adrenaline Blood	Шприц с кровью и адреналином
+item	meds_and_herbs:syringe_blood_hpp	Syringe with HPP Blood	Шприц с кровью и ВПЯ
+item	meds_and_herbs:syringe_blood_poison	Syringe with Poisoned Blood	Шприц с отравленной кровью
+item	meds_and_herbs:syringe_caffeine	Syringe with Caffeine	Шприц с кофеином
+item	meds_and_herbs:syringe_chamomile	Syringe with Chamomile Extract	Шприц с экстрактом ромашки
+item	meds_and_herbs:syringe_empty	Empty Syringe	Пустой шприц
+item	meds_and_herbs:syringe_ethanol	Syringe with Ethanol	Шприц с этанолом
+item	meds_and_herbs:syringe_glucose	Syringe with Glucose	Шприц с глюкозой
+item	meds_and_herbs:syringe_herbal	Syringe with Herbal Extract	Шприц с травяным экстрактом
+item	meds_and_herbs:syringe_hpa	Syringe with HPA	Шприц с ВПА
+item	meds_and_herbs:syringe_hpp	Syringe with HPP	Шприц с ВПЯ
+item	meds_and_herbs:syringe_methanol	Syringe with Methanol	Шприц с метанолом
+item	meds_and_herbs:syringe_morphine	Syringe with Morphine	Шприц с морфином
+item	meds_and_herbs:syringe_mushroom	Syringe with Mushroom Extract	Шприц с грибным экстрактом
+item	meds_and_herbs:syringe_opium	Syringe with Opium Extract	Шприц с опиумным экстрактом
+item	meds_and_herbs:syringe_penicillin	Syringe with Penicillin	Шприц с пенициллином
+item	meds_and_herbs:syringe_poison	Syringe with Poison	Шприц с ядом
+item	meds_and_herbs:syringe_sweet_clover	Syringe with Sweet Clover Extract	Шприц с экстрактом донника
+item	meds_and_herbs:syringe_vinca	Syringe with Vinca Extract	Шприц с экстрактом барвинка
+item	meds_and_herbs:unfiltered_beverage	Unfiltered Beverage	Нефильтрованный напиток
+item	meds_and_herbs:vinca_flowers	Vinca Flowers	Цветки барвинка
+item	meds_and_herbs:vinca_leaves	Vinca Leaves	Листья барвинка

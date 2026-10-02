@@ -1,0 +1,24 @@
+# multibeds | файл multibeds-forge-1.20.1-1.3.jar | лицензия в mods.toml: All rights reserved
+type	id	en	ru
+block	multibeds:bed_extras	Extra Bed Components	Дополнительные части кровати
+block	multibeds:classic	Classic Bed	Классическая кровать
+block	multibeds:cot	Cot	Раскладушка
+block	multibeds:crew	Crew Bed	Кровать для команды
+block	multibeds:custom	Custom Bed	Кровать на заказ
+block	multibeds:future	Futuristic Bed	Футуристичная кровать
+block	multibeds:hanger	Hammock Hanger	Крепление для гамака
+block	multibeds:ladder	Bunk Ladder	Лестница для двухъярусной кровати
+block	multibeds:modern	Modern Bed	Современная кровать
+block	multibeds:rustic	Rustic Bed	Деревенская кровать
+block	multibeds:slab	Slab Bed	Кровать-плита
+block	multibeds:vintage	Vintage Bed	Винтажная кровать
+item	multibeds:bed_kit	Build-A-Bed Kit	Набор "Собери кровать"
+item	multibeds:bedding_package	Bedding Package	Набор постельного белья
+item	multibeds:blanket	Blanket	Одеяло
+item	multibeds:embroidery_thread	Embroidery Thread	Нить для вышивки
+item	multibeds:feather_pile	Feather Pile	Груда перьев
+item	multibeds:ladder_tools	Bunk Ladder Tools	Инструменты для лестницы
+item	multibeds:padding	Padding	Наполнитель
+item	multibeds:pillow	Pillow Case	Наволочка
+item	multibeds:sheet	Sheet	Простыня
+item	multibeds:woolen_cloth	Woolen Cloth	Шерстяная ткань

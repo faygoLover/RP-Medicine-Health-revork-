@@ -1,0 +1,236 @@
+# cybernetic_system | файл cybernetic_system-1.4.1-forge-1.20.1.jar | лицензия в mods.toml: Not specified
+type	id	en	ru
+block	cybernetic_system:base_terminal	Base Terminal	Базовый Терминал
+block	cybernetic_system:base_terminal_black	Base Terminal	Базовый Терминал
+block	cybernetic_system:base_terminal_military	Base Terminal	Базовый Терминал
+block	cybernetic_system:black_energy_column	Black Energy Column	Черная энергетическая колонна
+block	cybernetic_system:black_metal_block	Black Metal Block	Блок черного металла
+block	cybernetic_system:black_metal_slab	Black Metal Slab	Плита из черного металла
+block	cybernetic_system:black_metal_stairs	Black Metal Stairs	Ступеньки из черного металла
+block	cybernetic_system:black_metal_wall	Black Metal Wall	Стена из черного металла
+block	cybernetic_system:blue_energy_glass	Blue Energy Glass	Синие Энерго-стекло
+block	cybernetic_system:computer	Computer	Компьютер
+block	cybernetic_system:copper_column	Copper Column	Медная колонна
+block	cybernetic_system:cut_titanium	Cut Titanium	Резной титан
+block	cybernetic_system:cut_titanium_slab	Cut Titanium Slab	Резная титановая плита
+block	cybernetic_system:cut_titanium_stairs	Cut Titanium Stairs	Резные титановые ступеньки
+block	cybernetic_system:deepslate_titanium_ore	Deepslate Titanium Ore	Титаноносная глубинный сланец
+block	cybernetic_system:deepslate_uranium_ore	Deepslate Uranium Ore	Ураноносный глубинный сланец
+block	cybernetic_system:dna_manufacturing_station	DNA Manufacturing Station	Станция изготовления ДНК
+block	cybernetic_system:dna_manufacturing_station_black	DNA Manufacturing Station	Станция изготовления ДНК
+block	cybernetic_system:dna_manufacturing_station_military	DNA Manufacturing Station	Станция изготовления ДНК
+block	cybernetic_system:energy_column	Energy Column	Энергетическая колонна
+block	cybernetic_system:energy_dynamite	Energy Dynamite	Энергетический динамит
+block	cybernetic_system:energy_dynamite_2	Energy Dynamite	Энергетический динамит
+block	cybernetic_system:energy_dynamite_3	Energy Dynamite	Энергетический динамит
+block	cybernetic_system:furniture_manufacturer	Furniture Manufacturer	Изготовитель мебели
+block	cybernetic_system:furniture_manufacturer_black	Furniture Manufacturer	Изготовитель мебели
+block	cybernetic_system:furniture_manufacturer_military	Furniture Manufacturer	Изготовитель мебели
+block	cybernetic_system:gc_2_b_fragment	GC2B Fragment	GC2B Фрагмент
+block	cybernetic_system:green_energy_glass	Green Energy Glass	Зеленое Энерго-стекло
+block	cybernetic_system:inactive_core	Inactive Core	Неактивное ядро 
+block	cybernetic_system:installation_teleport	Installation Teleport	Телепорт установки
+block	cybernetic_system:lamp_made_of_black_metal	Lamp Of Black Metal	Лампа из черного металла
+block	cybernetic_system:lc_2_armor_fragment	LC2 Armor Fragment	Фрагмент брони LC2
+block	cybernetic_system:manufacturing_base_station	Manufacturing Base Station	Базовая станция изготовления
+block	cybernetic_system:manufacturing_base_station_black	Manufacturing Base Station	Базовая станция изготовления
+block	cybernetic_system:manufacturing_base_station_military	Manufacturing Base Station	Базовая станция изготовления
+block	cybernetic_system:medium_container	Medium Container	Средний контейнер
+block	cybernetic_system:modern_chair	Modern Chair	Современный стул
+block	cybernetic_system:modern_table	Modern Table	Современный стол
+block	cybernetic_system:raw_titanium_block	Raw Titanium Block	Рудный Титановый блок
+block	cybernetic_system:red_energy_glass	Red Energy Glass	Красное Энерго-стекло
+block	cybernetic_system:reinforced_cut_titanium	Reinforced Cut Titanium	Усиленный резной титан
+block	cybernetic_system:reinforced_cut_titanium_slab	Reinforced Cut Titanium Slab	Усиленная титановая плита
+block	cybernetic_system:reinforced_cut_titanium_stairs	Reinforced Cut Titanium Stairs	Усиленные титановые ступеньки
+block	cybernetic_system:reinforced_energy_column	Reinforced Energy Column	Усиленная энергетическая колонна
+block	cybernetic_system:reinforced_titanium_lamp	Reinforced Titanium Lamp	Усиленная титановая лампа
+block	cybernetic_system:reinforced_titanium_wall	Reinforced Titanium Wall	Стена из усиленного титана
+block	cybernetic_system:sensor_door_blue	Sensor Door	Сенсорная Дверь
+block	cybernetic_system:sensor_door_blue_open	Sensor Door	Сенсорная Дверь
+block	cybernetic_system:sensor_door_green	Sensor Door	Сенсорная Дверь
+block	cybernetic_system:sensor_door_green_open	Sensor Door	Сенсорная Дверь
+block	cybernetic_system:sensor_door_red	Sensor Door	Сенсорная Дверь
+block	cybernetic_system:sensor_door_red_open	Sensor Door	Сенсорная Дверь
+block	cybernetic_system:server	Server	Сервер
+block	cybernetic_system:small_container	Small Container	Малый контейнер 
+block	cybernetic_system:soda_machine	Soda Machine	Автомат с газировкой
+block	cybernetic_system:solar_wireless_charging	Solar Wireless Charging	Солнечная станция зарядки
+block	cybernetic_system:station_cyborg	Station Cyborg	Станция киборга
+block	cybernetic_system:the_implant_manufacturing_station	The Implant Manufacturing Station	Станция Изготовления Имплантов
+block	cybernetic_system:the_implant_manufacturing_station_black	The Implant Manufacturing Station	Станция Изготовления Имплантов
+block	cybernetic_system:the_implant_manufacturing_station_military	The Implant Manufacturing Station	Станция Изготовления Имплантов
+block	cybernetic_system:titanium_block	Titanium Block	Титановый блок
+block	cybernetic_system:titanium_door	Titanium Door	Титановая дверь
+block	cybernetic_system:titanium_lamp	Titanium Lamp	Титановая лампа
+block	cybernetic_system:titanium_ore	Titanium Ore	Титановая руда
+block	cybernetic_system:titanium_pillar	Titanium Pillar	Титановая Колонна
+block	cybernetic_system:titanium_wall	Titanium Wall	Стена из титана
+block	cybernetic_system:transport_manufacturing_station	Transport Manufacturing Station	Станция изготовления транспорта
+block	cybernetic_system:transport_manufacturing_station_black	Transport Manufacturing Station	Станция изготовления транспорта
+block	cybernetic_system:transport_manufacturing_station_military	Transport Manufacturing Station	Станция изготовления транспорта
+block	cybernetic_system:vending_machine_for_issuing_orders	Vending machine for issuing orders	Торговый автомат для выдачи заказов
+item	cybernetic_system:ac_1_spawn_egg	AC1 Spawn Egg	Яйцо призыва AC1
+item	cybernetic_system:adrenaline	Adrenaline	Адреналин 
+item	cybernetic_system:at_3_item	AT3	AT3
+item	cybernetic_system:at_3_spawn_egg	AT3 Spawn Egg	AT3 Spawn Egg
+item	cybernetic_system:atomic_heart	Atomic Heart	Атомное Сердце
+item	cybernetic_system:automaton_spawn_egg	Automaton Spawn Egg	Яйцо призыва Автоматона
+item	cybernetic_system:bionic_eye	Bionic Eye	Бионический глаз
+item	cybernetic_system:bionic_muscle	Bionic Muscle	Бионический мускул
+item	cybernetic_system:bionic_palm	Bionic Palm	Бионическая ладонь
+item	cybernetic_system:bionic_skelet	Bionic Skelet	Бионический скелет
+item	cybernetic_system:black_glasses_helmet	Black glasses	Черные очки
+item	cybernetic_system:blue_card_for_door	Blue Card For Door	Голубая карта для двери
+item	cybernetic_system:blue_chip_food	Blue Chip	Синий чип
+item	cybernetic_system:blue_chip_interference	Blue Chip	Синий чип
+item	cybernetic_system:blue_chip_resistens	Blue Chip	Синий чип
+item	cybernetic_system:cb_1	CB1	CB1
+item	cybernetic_system:combat_automaton_l_1_spawn_egg	Combat Automaton-L1 Spawn Egg	Яйцо призыва Боевого автоматона- L1
+item	cybernetic_system:combat_automaton_ld_3_spawn_egg	Combat Automaton-LD3 Spawn Egg	Яйцо призыва Боевого автоматона- LD3
+item	cybernetic_system:combat_module	Combat Module	Боевой модуль
+item	cybernetic_system:copper_plate	Copper Plate	Медная пластина
+item	cybernetic_system:copper_wire	Copper Wire	Медная проволока
+item	cybernetic_system:core_4546	Core 4546	Ядро 4546
+item	cybernetic_system:core_of_the_4546_protocol_spawn_egg	Core Of The 4546 Protocol Spawn Egg	Яйцо призыва Ядра протокола 4546
+item	cybernetic_system:cubernetics_systems_item	Cubernetics Systems	Cubernetics Systems
+item	cybernetic_system:dg_2_item	DG2	DG2
+item	cybernetic_system:electric_baton	Electric Baton	Электрическая дубинка
+item	cybernetic_system:electro_core_blue	Electro Core	Электро ядро
+item	cybernetic_system:electro_core_green	Electro Core	Электро ядро
+item	cybernetic_system:electro_core_red	Electro Core	Электро ядро
+item	cybernetic_system:electro_core_yellow	Electro Core	Электро ядро
+item	cybernetic_system:energy_engine	Energy Engine	Энерго-Двигатель
+item	cybernetic_system:energy_katana	Energy Katana	Энергетическая Катана
+item	cybernetic_system:energy_katana_green	Energy Katana	Энергетическая Катана
+item	cybernetic_system:energy_katana_red	Energy Katana	Энергетическая Катана
+item	cybernetic_system:energy_katana_yellow	Energy Katana	Энергетическая Катана
+item	cybernetic_system:energy_module	Energy Module	Энергетический модуль
+item	cybernetic_system:energy_shield	Energy Shield	Энергитический Щит
+item	cybernetic_system:energy_wheel	Energy Wheel	Энерго-Колесо
+item	cybernetic_system:es_2_p	ES2P	ES2P
+item	cybernetic_system:first_aid_kit	First Aid Kit	Аптечка первой помощи
+item	cybernetic_system:flask_with_dna	Flask With DNA	Колба с ДНК
+item	cybernetic_system:gc_1	GC1	GC1
+item	cybernetic_system:gc_1_z	GC1Z	GC1Z
+item	cybernetic_system:gc_2_a	GC2A	GC2A
+item	cybernetic_system:gc_2_b	GC2B	GC2B
+item	cybernetic_system:gc_3	GC3	GC3
+item	cybernetic_system:gc_4_f	GC4F	GC4F
+item	cybernetic_system:gc_6	GC6	GC6
+item	cybernetic_system:gced	GCED	GCED
+item	cybernetic_system:golden_wire	Golden Wire	Золотая проволока
+item	cybernetic_system:green_card_for_door	Green Card For Door	Зеленая карта для двери
+item	cybernetic_system:green_chip_attack	Green Chip	Зеленый чип
+item	cybernetic_system:green_chip_fire_attack	Green Chip	Зеленый чип
+item	cybernetic_system:green_chip_speed_attack	Green Chip	Зеленый чип
+item	cybernetic_system:hacked_drone_spawn_egg	Hacked Drone Spawn Egg	Яйцо призыва Взломанного дрона
+item	cybernetic_system:hand_drill	Hand Drill LD1M	Ручная дрель LD1M
+item	cybernetic_system:handheld_scanner	Handheld Scanner	Портативный сканер
+item	cybernetic_system:identification_tablet	Identification Tablet	Индификационный планшет
+item	cybernetic_system:improved_dna_extractor	Improved DNA Extractor	Улучшенный извлекатель ДНК
+item	cybernetic_system:improved_heart	Improved Heart	Улучшенное Сердце
+item	cybernetic_system:iron_hammer	Iron Hammer	Железный молот
+item	cybernetic_system:iron_plate	Iron Plate	Железная пластина
+item	cybernetic_system:jp_2_boots	Ботинки JP 2	Ботинки JP 2
+item	cybernetic_system:jp_2_chestplate	JP2	JP2
+item	cybernetic_system:jp_2_helmet	Шлем JP 2	Шлем JP 2
+item	cybernetic_system:jp_2_leggings	Поножи JP 2	Поножи JP 2
+item	cybernetic_system:l_1_boots	L1 Boots	Ботинки L1 
+item	cybernetic_system:l_1_chestplate	L1 Chestplate	Нагрудник L1 
+item	cybernetic_system:l_1_helmet	L1 Helmet	Шлем L1 
+item	cybernetic_system:l_1_leggings	L1 Leggings	Поножи L1 
+item	cybernetic_system:lc_2_boots	LC2 Boots	Ботинки LC2
+item	cybernetic_system:lc_2_chestplate	LC2 Chestplate	Нагрудник LC2
+item	cybernetic_system:lc_2_helmet	LC2 Helmet	Шлем LC2
+item	cybernetic_system:lc_2_leggings	LC2 Leggings	Поножи LC2
+item	cybernetic_system:lg_3_boots	LG3 Boots	Ботинки LG3
+item	cybernetic_system:lg_3_chestplate	LG3 Chestplate	Нагрудник LG3
+item	cybernetic_system:lg_3_helmet	LG3 Helmet	Шлем LG3
+item	cybernetic_system:lg_3_jump_boots	Boots LG3	Ботинки LG3
+item	cybernetic_system:lg_3_leggings	LG3 Leggings	Поножи LG3
+item	cybernetic_system:lg_3_speed_boots	LG3 Boots	Ботинки LG3
+item	cybernetic_system:lg_3_underwater_chestplate	LG3 Chestplate	Нагрудник LG3
+item	cybernetic_system:lg_4_f_boots	Boots LG4F	Ботинки LG4F
+item	cybernetic_system:lg_4_f_chestplate	Chestplate LG4F	Нагрудник LG4F
+item	cybernetic_system:lg_4_f_helmet	Helmet LG4F	Шлем LG4F
+item	cybernetic_system:lg_4_f_leggings	Leggings LG4F	Поножи LG4F
+item	cybernetic_system:lg_5_m_boots	Boots LG5M	Ботинки LG5M
+item	cybernetic_system:lg_5_m_chestplate	Chestplate LG5M	Нагрудник LG5M
+item	cybernetic_system:lg_5_m_helmet	Helmet LG5M	Шлем LG5M
+item	cybernetic_system:lg_5_m_leggings	Leggings LG5M	Поножи LG5M
+item	cybernetic_system:lg_6_p_boots	Boots LG6P	Ботинки LG6P
+item	cybernetic_system:lg_6_p_chestplate	Chestplate LG6P	Нагрудник LG6P
+item	cybernetic_system:lg_6_p_helmet	Helmet LG6P	Шлем LG6P
+item	cybernetic_system:lg_6_p_leggings	Leggings LG6P	Поножи LG6P
+item	cybernetic_system:lg_7_r_boots	Boots LG7R	Ботинки LG7R
+item	cybernetic_system:lg_7_r_chestplate	Chestplate LG7R	Нагрудник LG7R
+item	cybernetic_system:lg_7_r_helmet	Helmet LG7R	Шлем LG7R
+item	cybernetic_system:lg_7_r_leggings	Leggings LG7R	Поножи LG7R
+item	cybernetic_system:lgm_boots	LGM Boots	Ботинки LGM 
+item	cybernetic_system:lgm_chestplate	LGM Chestplate	Нагрудник LGM 
+item	cybernetic_system:lgm_helmet	LGM Helmet	Шлем LGM 
+item	cybernetic_system:lgm_leggings	LGM Leggings	Поножи LGM 
+item	cybernetic_system:mad_scientist_spawn_egg	Mad Scientist Spawn Egg	Яйцо призыва Безумного ученого
+item	cybernetic_system:magazine_for_energy_weapons	Magazine For Energy Weapons	Магазин для Энергетического оружия
+item	cybernetic_system:mb_1_item	MB1	MB1
+item	cybernetic_system:mb_1_spawn_egg	MB1 Spawn Egg	MB1 Spawn Egg
+item	cybernetic_system:mb_2_hellhound_item	MB2	MB2
+item	cybernetic_system:mb_2_hellhound_spawn_egg	MB2 Hellhound Spawn Egg	MB2 Hellhound Spawn Egg
+item	cybernetic_system:mca_1_boots	MCA1 Boots	Ботинки MCA1
+item	cybernetic_system:mca_1_chestplate	MCA1 Chestplate	Нагрудник MCA1
+item	cybernetic_system:mca_1_helmet	MCA1 Helmet	Шлем MCA1
+item	cybernetic_system:mca_1_leggings	MCA1 Leggings	Поножи MCA1
+item	cybernetic_system:mca_2_pa_boots	MCA2PA Boots	Ботинки MCA2PA
+item	cybernetic_system:mca_2_pa_chestplate	MCA2PA Chestplate	Нагрудник MCA2PA
+item	cybernetic_system:mca_2_pa_helmet	MCA2PA Helmet	Шлем MCA2PA
+item	cybernetic_system:mca_2_pa_leggings	MCA2PA Leggings	Поножи MCA2PA
+item	cybernetic_system:mdg_1_spawn_egg	MDG1 Spawn Egg	Яйцо призыва MDG1
+item	cybernetic_system:medical_syringe	Medical Syringe	Медицинский шприц 
+item	cybernetic_system:memory_card_lg_4_f	Memory Card	Карта Памяти
+item	cybernetic_system:memory_card_lg_6_p	Memory Card	Карта Памяти
+item	cybernetic_system:memory_card_reset	Memory Card	Карта Памяти
+item	cybernetic_system:mgc_5	MGC5	MGC5
+item	cybernetic_system:miners_bionic_muscle	Miners Bionic Muscle	Бионический мускул шахтера
+item	cybernetic_system:mtf_black	MTF	MTF
+item	cybernetic_system:mtf_classic	MTF	MTF
+item	cybernetic_system:mtf_military	MTF	MTF
+item	cybernetic_system:nanomachines	Nanomachines	Наномашины
+item	cybernetic_system:nanomachines_of_luck	Nanomachines Of Luck	Наномашины удачи
+item	cybernetic_system:pill_with_nano_virus	Pill With Nano Virus	Пилюля с нано вирусом
+item	cybernetic_system:pill_with_nanomachines	Pill With Nanomachines	Пилюля с наномашинами
+item	cybernetic_system:plasma_core	Plasma Core	Плазменное ядро
+item	cybernetic_system:portable_charging	Portable Charging	Портативная зарядка
+item	cybernetic_system:power_hammer	Power Hammer	Силовой молот
+item	cybernetic_system:radioactive_energy_rod	Radioactive Energy Rod	Радиактивный энергетический стержень
+item	cybernetic_system:raw_titanium	Raw Titanium	Рудный титан
+item	cybernetic_system:red_card_for_door	Red Card For Door	Красная карта для двери
+item	cybernetic_system:red_chip_darkness	Red Chip	Красный чип
+item	cybernetic_system:red_chip_mg	Red Chip	Красный чип
+item	cybernetic_system:red_chip_night	Red Chip	Красный чип
+item	cybernetic_system:reinforced_plate	Reinforced Plate	Усилинная пластина
+item	cybernetic_system:sc_4_blue_spawn_egg	SC4 Spawn Egg	SC4 Spawn Egg
+item	cybernetic_system:sc_4_green_spawn_egg	SC4 Spawn Egg	SC4 Spawn Egg
+item	cybernetic_system:sc_4_item	SC4 	SC4 
+item	cybernetic_system:sc_4_item_blue	SC4 	SC4 
+item	cybernetic_system:sc_4_item_green	SC4 	SC4 
+item	cybernetic_system:sc_4_item_purple	SC4 	SC4 
+item	cybernetic_system:sc_4_purple_spawn_egg	SC4 Spawn Egg	SC4 Spawn Egg
+item	cybernetic_system:sc_4_spawn_egg	SC4 Spawn Egg	SC4 Spawn Egg
+item	cybernetic_system:social_card_medic	Social Card	Социальная карточка
+item	cybernetic_system:social_card_military	Social Card	Социальная карточка
+item	cybernetic_system:soda_absorption	Soda	Газировка
+item	cybernetic_system:soda_haste	Soda	Газировка
+item	cybernetic_system:soda_strenght	Soda	Газировка
+item	cybernetic_system:spatial_manipulator	Spatial Manipulator	Пространственный манипулятор
+item	cybernetic_system:special_chip_dna	Special Chip	Специальный чип
+item	cybernetic_system:the_dna_extractor	The DNA Extractor	Извлекатель ДНК
+item	cybernetic_system:titanium_ingot	Titanium Ingot	Титановый слиток
+item	cybernetic_system:titanium_plate	Titanium Plate	Титановая пластина
+item	cybernetic_system:tm_1_item	TM-1	TM-1
+item	cybernetic_system:universal_module	Universal Module	Универсальный модуль
+item	cybernetic_system:uranium	Uranium	Уран
+item	cybernetic_system:wrench	Wrench	Гаечный ключ
+item	cybernetic_system:yellow_chip_ability	Yellow Chip	Желтый чип
+item	cybernetic_system:yellow_chip_interface	Yellow Chip	Желтый чип
+item	cybernetic_system:yellow_chip_invisible	Yellow Chip	Желтый чип
