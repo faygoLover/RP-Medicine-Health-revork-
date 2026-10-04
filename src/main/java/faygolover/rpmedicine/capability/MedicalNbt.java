@@ -132,6 +132,7 @@ public final class MedicalNbt {
                 putIf(wt, "infV", w.infection);
                 putIf(wt, "imm", w.immuneProgress);
                 if (w.infectionRisk != 1.0) wt.putFloat("risk", (float) w.infectionRisk);
+                if (w.sutured) wt.putFloat("sut", (float) w.sutureQuality);
                 ws.add(wt);
             }
             if (!ws.isEmpty()) p.put("w", ws);
@@ -254,6 +255,8 @@ public final class MedicalNbt {
                 w.infection = wt.getFloat("infV");
                 w.immuneProgress = wt.getFloat("imm");
                 w.infectionRisk = wt.contains("risk") ? wt.getFloat("risk") : 1.0;
+                w.sutured = wt.contains("sut");
+                w.sutureQuality = w.sutured ? wt.getFloat("sut") : 1.0;
                 if (w.severity > 0 && ps.wounds.size() < 16) ps.wounds.add(w);
             }
             ps.fracture = BodyPartState.Fracture.byOrdinal(p.getByte("fr"));
