@@ -625,4 +625,20 @@ public final class HospitalGameTests {
         for (var ps : m.parts) t += ps.totalSeverity();
         return t;
     }
+
+    /** Швы сохраняются вместе с раной (выход из игры, перезапуск сервера). */
+    @GameTest(template = T, timeoutTicks = 20)
+    public static void suturesSurviveSave(GameTestHelper h) {
+        MedicalSettings s = MedicalSettings.get();
+        MedicalState m = new MedicalState(s);
+        var w = new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.CUT, 30);
+        w.sutured = true;
+        w.sutureQuality = 0.6;
+        m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.add(w);
+        MedicalState copy = new MedicalState(s);
+        faygolover.rpmedicine.capability.MedicalNbt.read(copy, faygolover.rpmedicine.capability.MedicalNbt.write(m), s);
+        var cw = copy.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.get(0);
+        h.assertTrue(cw.sutured && Math.abs(cw.sutureQuality - 0.6) < 1e-6, "швы и их качество сохранены");
+        h.succeed();
+    }
 }
