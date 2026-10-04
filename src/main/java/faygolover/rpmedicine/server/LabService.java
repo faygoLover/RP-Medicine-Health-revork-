@@ -122,6 +122,12 @@ public final class LabService {
         out.add(Component.translatable("rpmedicine.lab.leukocytes", String.format(java.util.Locale.ROOT, "%.1f", lab.leukocytes())));
         out.add(Component.translatable(lab.sepsis() ? "rpmedicine.lab.sepsis_yes" : "rpmedicine.lab.sepsis_no")
                 .withStyle(lab.sepsis() ? ChatFormatting.RED : ChatFormatting.WHITE));
+        // Органы (третий этап): выше нормы — красным.
+        out.add(Component.translatable("rpmedicine.lab.alt", (int) lab.alt()).withStyle(lab.alt() > 40 ? ChatFormatting.RED : ChatFormatting.WHITE));
+        out.add(Component.translatable("rpmedicine.lab.creatinine", (int) lab.creatinine())
+                .withStyle(lab.creatinine() > 110 ? ChatFormatting.RED : ChatFormatting.WHITE));
+        out.add(Component.translatable("rpmedicine.lab.troponin", (int) lab.troponin())
+                .withStyle(lab.troponin() > 14 ? ChatFormatting.RED : ChatFormatting.WHITE));
         // Пакет крови во второй руке — проверка совместимости.
         if (offhand.getItem() instanceof BloodBagItem) {
             BloodType bag = BloodBagItem.type(offhand);

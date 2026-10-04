@@ -150,6 +150,8 @@ ITEMS = [
     ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
     ("blood_draw_syringe", "blood_sample", 3, 2, True),
     ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
+    # третий этап
+    ("endotracheal_tube", "intubate", 6, 6, True),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -163,7 +165,8 @@ H = 3600
 DRUGS = {
     "paracetamol": {"form": "pill", "min_level": 0, "effects": [eff("analgesia", 12, 60, 30 * 60), eff("antipyretic", 0.7, 300, 4 * H)],
                     "dose": {"limit": 4, "window_hours": 24},
-                    "overdose": {"effects": [eff("pressure", -15, 600, 2 * H), eff("heart_rate", 15, 600, 2 * H)]}},
+                    "overdose": {"effects": [eff("pressure", -15, 600, 2 * H), eff("heart_rate", 15, 600, 2 * H),
+                                             eff("liver_toxicity", 30, 1800, H)]}},
     "ibuprofen": {"form": "pill", "min_level": 0,
                   "effects": [eff("analgesia", 18, 60, 40 * 60), eff("antipyretic", 0.6, 300, 4 * H), eff("concussion_relief", 1.0, 120, 2 * H)],
                   "dose": {"limit": 3, "window_hours": 24},
@@ -193,6 +196,19 @@ DRUGS = {
                  "overdose": {"effects": [eff("heart_rate", 50, 0, 30 * 60), eff("sedation", 20, 0, 30 * 60)]}},
     "antiseptic": {"form": "topical", "min_level": 0, "special": "antiseptic", "effects": []},
     "antibiotic_ointment": {"form": "topical", "min_level": 2, "special": "antibiotic_ointment", "effects": []},
+    # Третий этап: анестезия (п. 3).
+    "lidocaine": {"form": "injection", "min_level": 4, "effects": [eff("local_anesthesia", 1, 0, 20 * 60)],
+                  "dose": {"limit": 4, "window_hours": 2},
+                  "overdose": {"effects": [eff("heart_rate", -25, 0, 20 * 60), eff("pressure", -20, 0, 20 * 60)]}},
+    "ketamine": {"form": "injection", "min_level": 7, "effects": [eff("anesthesia", 1, 15, 5 * 60), eff("pressure", 10, 15, 5 * 60),
+                                                                   eff("heart_rate", 15, 15, 5 * 60)],
+                 "dose": {"limit": 3, "window_hours": 2},
+                 "overdose": {"effects": [eff("anesthesia", 1, 0, 20 * 60), eff("resp_depression", 0.4, 0, 20 * 60)], "arrest_chance": 0.05}},
+    "propofol": {"form": "injection", "min_level": 7, "effects": [eff("anesthesia", 1, 10, 10 * 60), eff("resp_depression", 0.6, 10, 10 * 60),
+                                                                   eff("pressure", -10, 10, 10 * 60)],
+                 "dose": {"limit": 3, "window_hours": 2},
+                 "overdose": {"effects": [eff("anesthesia", 1, 0, 30 * 60), eff("resp_depression", 0.9, 0, 30 * 60),
+                                          eff("pressure", -25, 0, 30 * 60)], "arrest_chance": 0.2}},
 }
 for name, d in DRUGS.items():
     obj = {"items": [f"rpmedicine:{name}"]}
@@ -360,6 +376,9 @@ ICONS = {
     "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)),
     "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
+    "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
+    "propofol": ("syringe", (240, 240, 240), (245, 245, 245)), "laryngoscope": ("strap", (170, 175, 185), (230, 200, 60)),
+    "endotracheal_tube": ("strap", (230, 235, 240), (120, 180, 220)),
 }
 for name, (shape, color, accent) in ICONS.items():
     # Текстуры из Tactical Medicine и Health & Disease кладёт scripts/foreign_assets.py — не затираем.

@@ -106,6 +106,7 @@ public final class MedCommand {
                 .then(scalar("pain_shock", 0, 1, (m, v) -> m.painShock = v >= 0.5))
                 .then(scalar("sepsis", 0, 100, (m, v) -> m.sepsis = v))
                 .then(scalar("temperature", 30, 43, (m, v) -> m.bodyTemp = v))
+                .then(organ())
                 .then(foreign("bullets", true))
                 .then(foreign("fragments", false))));
         root.then(op("time").then(Commands.literal("add").then(Commands.argument("targets", EntityArgument.players())
@@ -339,6 +340,27 @@ public final class MedCommand {
             c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.killed", t.getDisplayName()), true);
         }
         return n;
+    }
+
+    /** {@code set <цели> organ <орган> <0–100>} (третий этап). */
+    private static LiteralArgumentBuilder<CommandSourceStack> organ() {
+        LiteralArgumentBuilder<CommandSourceStack> lit = Commands.literal("organ");
+        for (faygolover.rpmedicine.core.Organ o : faygolover.rpmedicine.core.Organ.VALUES) {
+            lit.then(Commands.literal(o.id).then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 100)).executes(c -> {
+                double v = DoubleArgumentType.getDouble(c, "value");
+                int n = 0;
+                for (LivingEntity t : patients(c)) {
+                    MedicalState m = Medical.state(t);
+                    m.organsMissing &= ~o.bit();
+                    m.setOrgan(o, v);
+                    Medical.changed(t);
+                    n++;
+                    c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.set", t.getDisplayName(), "organ " + o.id, v), true);
+                }
+                return n;
+            })));
+        }
+        return lit;
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> scalar(String name, double min, double max, BiConsumer<MedicalState, Double> setter) {

@@ -354,6 +354,51 @@ public final class MedicalSettings {
     /** Лихорадка поднимает температуру LSO: единиц на 1 °C жара. */
     public double feverToLso = 2.0;
 
+    // ---------------- Органы (третий этап, п. 2) ----------------
+    public boolean organsEnabled = true;
+    /** Шанс задеть орган проникающей раной груди или живота: огнестрел, колотая, осколок. */
+    public double gunshotOrganChance = 0.4;
+    public double stabOrganChance = 0.25;
+    public double shrapnelOrganChance = 0.3;
+    /** Урон органу: от и до такой доли тяжести раны. */
+    public double organDamagePerSeverityMin = 0.5;
+    public double organDamagePerSeverityMax = 1.0;
+    /** Тупой удар или взрыв по груди и животу сильнее этого урона — ушиб органа, доля урона. */
+    public double bluntOrganMinDamage = 15.0;
+    public double bluntOrganFactor = 0.3;
+    /** Огнестрел в печень, почки, кишечник — рана сразу заражена (брюшная полость). */
+    public boolean abdominalGunshotInfects = true;
+    /** Ниже этого орган заживает сам, %; выше — только операцией. */
+    public double organSelfHealLimit = 50.0;
+    public double organHealPerHour = 2.0;
+    /** Системные причины (в сети), % в час: сепсис ≥ 30 — все органы; SpO2 ниже порога — сердце; давление ниже порога — почки. */
+    public double sepsisOrganPerHour = 2.0;
+    public double hypoxiaOrganSpo2 = 80.0;
+    public double hypoxiaHeartPerHour = 3.0;
+    public double lowPressureKidneys = 70.0;
+    public double lowPressureKidneysPerHour = 4.0;
+    /** Сердце ≥ 50: шанс фибрилляции в час при нагрузке (пульс выше 130 или кровопотеря больше 30 %); ≥ 80 — давление ниже. */
+    public double heartFibrillationPerHour = 3.0;
+    public double heartFailurePressure = 15.0;
+    /** Лёгкие ≥ 50 и ≥ 80: потолок SpO2 ниже на столько. */
+    public double lungsSpo2Penalty50 = 10.0;
+    public double lungsSpo2Penalty80 = 25.0;
+    /** Печень ≥ 50 и ≥ 80: кровотечение сильнее во столько раз; 100 — внутреннее кровотечение в живот не меньше, мл/мин. */
+    public double liverBleedFactor50 = 1.2;
+    public double liverBleedFactor80 = 1.5;
+    public double liverFailureInternalBleed = 20.0;
+    /** Почки ≥ 80 и 100: мозг теряет % в час. */
+    public double kidneyBrainPerHour80 = 1.0;
+    public double kidneyBrainPerHour100 = 5.0;
+    /** Нет печени или почек (изъяты): мозг теряет % в час — смерть за полчаса без пересадки. */
+    public double missingOrganBrainPerHour = 200.0;
+    /** Боль от органа: доля его повреждения добавляется к боли груди или живота. */
+    public double organPainFactor = 0.25;
+
+    // ---------------- Анестезия (третий этап, п. 3) ----------------
+    /** Местная анестезия: доля оставшейся боли части. */
+    public double localAnesthesiaPainFactor = 0.1;
+
     // ---------------- Ванилла (второй этап, п. 13) ----------------
     /** Отравление: тошнота держится ещё столько секунд после эффекта; рвота раз в столько секунд. */
     public double poisonNauseaSeconds = 10.0;

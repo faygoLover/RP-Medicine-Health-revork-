@@ -48,7 +48,10 @@ public enum TreatmentAction {
     REDUCE("reduce", Target.PART),
     TWEEZERS("tweezers", Target.PART),
     SUTURE("suture", Target.PART),
-    SCISSORS("scissors", Target.PART);
+    SCISSORS("scissors", Target.PART),
+    // Третий этап
+    /** Интубация: трубка (нужен ларингоскоп в инвентаре). */
+    INTUBATE("intubate", Target.BODY);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

@@ -45,6 +45,27 @@ public final class Drugs {
         return m.morphineSeconds > 0 || m.morphineOverdoseSeconds > 0 || m.opioidSeconds > 0;
     }
 
+    /** Препарат местной анестезии (укол в часть тела). */
+    public static boolean isLocal(Drug d) {
+        for (Drug.Dose dose : d.effects()) if (dose.effect() == DrugEffect.LOCAL_ANESTHESIA) return true;
+        return false;
+    }
+
+    /** Местная анестезия без указанной части: самая больная часть без анестезии. */
+    public static BodyPart localPart(MedicalState m, MedicalSettings s) {
+        BodyPart best = BodyPart.CHEST;
+        double bestPain = -1;
+        for (BodyPartState ps : m.parts) {
+            if (ps.localAnesthesiaSeconds > 0) continue;
+            double p = Physiology.partPain(m, ps, s) + ps.totalSeverity() * 0.01;
+            if (p > bestPain) {
+                bestPain = p;
+                best = ps.part;
+            }
+        }
+        return best;
+    }
+
     /** Часть тела для наружного средства, где оно нужнее всего (null — нигде). */
     public static BodyPart bestPart(MedicalState m, Drug d, MedicalSettings s) {
         BodyPart best = null;
@@ -94,7 +115,15 @@ public final class Drugs {
             }
             default -> { }
         }
-        for (Drug.Dose dose : d.effects()) m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * k);
+        for (Drug.Dose dose : d.effects()) {
+            // Местная анестезия — на часть тела, куда уколол (третий этап, п. 3).
+            if (dose.effect() == DrugEffect.LOCAL_ANESTHESIA) {
+                BodyPartState ps = m.part(part);
+                ps.localAnesthesiaSeconds = Math.max(ps.localAnesthesiaSeconds, dose.seconds() * k);
+                continue;
+            }
+            m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * k);
+        }
         if (d.opioid()) {
             double longest = 0;
             for (Drug.Dose dose : d.effects()) longest = Math.max(longest, dose.delay() + dose.seconds() * k);

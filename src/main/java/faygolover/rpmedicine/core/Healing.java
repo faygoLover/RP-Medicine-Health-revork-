@@ -61,6 +61,8 @@ public final class Healing {
                 }
             }
         }
+        // Органы ниже порога заживают сами (третий этап, п. 2.4).
+        Organs.heal(m, dt, s);
     }
 
     /**

@@ -31,6 +31,7 @@
     "rpmedicine:surgical_tweezers",
     "rpmedicine:suture_kit",
     "rpmedicine:scissors",
+    "rpmedicine:endotracheal_tube",
     "rpmedicine:paracetamol",
     "rpmedicine:ibuprofen",
     "rpmedicine:ketorolac",
@@ -43,6 +44,9 @@
     "rpmedicine:atropine",
     "rpmedicine:antiseptic",
     "rpmedicine:antibiotic_ointment",
+    "rpmedicine:lidocaine",
+    "rpmedicine:ketamine",
+    "rpmedicine:propofol",
     "rpmedicine:lancet",
     "rpmedicine:blood_sample",
     {

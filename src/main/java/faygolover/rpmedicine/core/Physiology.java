@@ -27,6 +27,7 @@ public final class Physiology {
         double hungerFactor = in.satiety < s.hungerThreshold ? s.hungerHealFactor : 1.0;
         if (in.online) Healing.advance(m, dt * in.healFactor * hungerFactor, s);
         Infections.tick(m, in, s, r);
+        Organs.tick(m, in, s);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
         tickCirculation(m, in, s, r, bleedPerMin);
@@ -60,9 +61,16 @@ public final class Physiology {
         m.deafSeconds = dec(m.deafSeconds, dt);
         if (in.online) m.postClinicalSeconds = dec(m.postClinicalSeconds, dt);
         if (m.cprSeconds <= 0) m.cprAccum = 0;
-        // Воздуховод выпадает, когда человек приходит в себя.
-        if (m.down == Down.NONE) m.airway = false;
-        if (m.morphineOverdoseSeconds <= 0 && m.respiratoryArrest && m.heart == Heart.NORMAL) m.respiratoryArrest = false;
+        // Воздуховод выпадает, когда человек приходит в себя; трубку в сознании не терпят — вынимают.
+        if (m.down == Down.NONE) {
+            m.airway = false;
+            m.intubated = false;
+        }
+        for (BodyPartState ps : m.parts) if (ps.localAnesthesiaSeconds > 0) ps.localAnesthesiaSeconds = dec(ps.localAnesthesiaSeconds, dt);
+        if (m.morphineOverdoseSeconds <= 0 && m.respiratoryArrest && m.heart == Heart.NORMAL && m.organ(Organ.LUNGS) < 100)
+            m.respiratoryArrest = false;
+        // Лёгкие 100 % — дыхания нет (третий этап).
+        if (m.organ(Organ.LUNGS) >= 100) m.respiratoryArrest = true;
     }
 
     /** Таймеры лекарств второго этапа: эффекты (сначала задержка, потом действие), опиаты, окна доз (в сети). */
@@ -208,6 +216,10 @@ public final class Physiology {
         double coag = clamp(m.effect(DrugEffect.COAGULATION), -1, 0.9);
         external *= 1 - coag;
         internal *= 1 - coag;
+        // Печень: кровь сворачивается хуже (третий этап).
+        double liver = Organs.liverBleedFactor(m, s);
+        external *= liver;
+        internal *= liver;
         double perMin = (external + internal) * s.bleedMultiplier * in.traits.bleedFactor(s) * perfusionBleedFactor(m, s);
         double lost = perMin * dt / 60.0;
         if (lost > 0) {
@@ -321,7 +333,12 @@ public final class Physiology {
             sum += dp;
             max = Math.max(max, dp);
         }
-        return Math.min(100, max + (sum - max) * s.otherPainFactor);
+        double op = Organs.pain(m, ps.part, s);
+        sum += op;
+        max = Math.max(max, op);
+        double total = Math.min(100, max + (sum - max) * s.otherPainFactor);
+        // Местная анестезия (третий этап): боль части почти не чувствуется.
+        return ps.localAnesthesiaSeconds > 0 ? total * s.localAnesthesiaPainFactor : total;
     }
 
     static double fracturePain(BodyPartState ps, MedicalSettings s) {
@@ -366,6 +383,8 @@ public final class Physiology {
         m.rawPain = raw;
         double suppress = analgesia(m, s) + (adrenalineActive(m) ? s.adrenalinePainSuppression : 0);
         m.pain = clamp(raw - suppress, 0, 100);
+        // Под наркозом боль не чувствуется, болевой шок не копится (третий этап).
+        if (m.effect(DrugEffect.ANESTHESIA) > 0) m.pain = 0;
 
         // Болевой шок копится при боли выше порога.
         double threshold = in.traits.shockThreshold(s);
@@ -427,7 +446,7 @@ public final class Physiology {
         boolean tensionArrest = m.pneumo == Pneumo.TENSION && m.tensionProgress >= 1.0;
 
         // Переходы состояния сердца.
-        if (m.heart != Heart.ARREST && (f <= 1 - s.arrestBloodLossFraction || tensionArrest)) {
+        if (m.heart != Heart.ARREST && (f <= 1 - s.arrestBloodLossFraction || tensionArrest || m.organ(Organ.HEART) >= 100)) {
             m.heart = Heart.ARREST;
             m.fibrillationSeconds = 0;
             r.add(Event.HEART_ARREST);
@@ -438,7 +457,10 @@ public final class Physiology {
             if (m.spo2 < 40) m.hypoxiaSeconds += dt;
             else m.hypoxiaSeconds = 0;
             boolean septicArrhythmia = m.sepsis >= 60 && rnd.nextDouble() < s.sepsisFibrillationPerHour * dt / 3600.0;
-            if (m.lowPressureSeconds >= s.fibrillationDelaySeconds || m.hypoxiaSeconds >= 30 || septicArrhythmia) {
+            // Повреждённое сердце (≥ 50) под нагрузкой срывается в фибрилляцию (третий этап).
+            boolean cardiac = m.organ(Organ.HEART) >= 50 && (m.heartRate > 130 || f < 0.7)
+                    && rnd.nextDouble() < s.heartFibrillationPerHour * dt / 3600.0;
+            if (m.lowPressureSeconds >= s.fibrillationDelaySeconds || m.hypoxiaSeconds >= 30 || septicArrhythmia || cardiac) {
                 m.heart = Heart.FIBRILLATION;
                 m.fibrillationSeconds = 0;
                 m.lowPressureSeconds = 0;
@@ -468,7 +490,7 @@ public final class Physiology {
 
         double target;
         if (m.heart == Heart.NORMAL) {
-            target = pressureFromVolume(fPressure, s);
+            target = pressureFromVolume(fPressure, s) - Organs.heartPressurePenalty(m, s);
             if (m.adrenalineSeconds > 0) target += 10;
             if (m.adrenalineInjectionSeconds > 0) target += s.adrenalineInjectionPressure;
             if (m.pain >= 60) target += 8;
@@ -510,6 +532,7 @@ public final class Physiology {
     public static boolean canRestartHeart(MedicalState m, MedicalSettings s) {
         if (m.bloodFraction(s) <= 1 - s.arrestBloodLossFraction + 0.05) return false;
         if (m.pneumo == Pneumo.TENSION) return false;
+        if (m.organ(Organ.HEART) >= 100) return false;
         for (BodyPartState ps : m.parts) {
             if (ps.arterial && !isUnderTourniquet(m, ps.part)) return false;
         }
@@ -525,7 +548,7 @@ public final class Physiology {
         // Сердце начинает с низкого давления, дальше выходит на свою кривую.
         m.pressure = Math.max(m.pressure, 50);
         m.heartRate = Math.max(m.heartRate, 110);
-        if (m.morphineOverdoseSeconds <= 0) m.respiratoryArrest = false;
+        if (m.morphineOverdoseSeconds <= 0 && m.organ(Organ.LUNGS) < 100) m.respiratoryArrest = false;
     }
 
     // ------------------------------------------------------------------ дыхание
@@ -534,12 +557,16 @@ public final class Physiology {
     public static double ventilation(MedicalState m, StepInput in) {
         if (in.suffocating) return 0;
         double v;
+        // Интубированного на операционном столе дышит аппарат (третий этап).
+        boolean machine = m.intubated && in.ventilator;
         if (m.respiratoryArrest || m.heart != Heart.NORMAL) {
-            v = m.ambuSeconds > 0 ? 0.9 : 0;
+            v = machine ? 1.0 : m.ambuSeconds > 0 ? (m.intubated ? 1.0 : 0.9) : 0;
+        } else if (machine) {
+            v = 1;
         } else {
             v = 1;
-            // Без сознания (не в обмороке) западает язык: воздуховод держит дыхание.
-            if ((m.down == Down.KNOCKDOWN || m.down == Down.CLINICAL) && !m.airway && m.ambuSeconds <= 0) v = 0.6;
+            // Без сознания (не в обмороке) западает язык: воздуховод или трубка держат дыхание.
+            if ((m.down == Down.KNOCKDOWN || m.down == Down.CLINICAL) && !m.airway && !m.intubated && m.ambuSeconds <= 0) v = 0.6;
             if (m.morphineOverdoseSeconds > 0 && m.ambuSeconds <= 0) v *= 0.6;
             if (m.ambuSeconds <= 0) v *= 1 - respiratoryDepression(m);
         }
@@ -566,6 +593,7 @@ public final class Physiology {
         double cap = m.oxygenCapacity(s);
         if (cap < 0.6) c -= (0.6 - cap) * 80;
         if (m.sepsis >= 60) c -= s.sepsisSpo2Penalty;
+        c -= Organs.lungsSpo2Penalty(m, s);
         return clamp(c, 0, 100);
     }
 
@@ -656,6 +684,7 @@ public final class Physiology {
         if (m.morphineOverdoseSeconds > 0) c = Math.min(c, 50);
         double sedation = m.effect(DrugEffect.SEDATION);
         if (sedation > 0) c = Math.min(c, 100 - sedation);
+        if (m.effect(DrugEffect.ANESTHESIA) > 0) c = 0;
         // Сепсис: от 30 % спутанность, 100 % — септический шок, человек падает.
         // Переохлаждение и перегрев туманят сознание.
         if (m.bodyTemp < 35) c = Math.min(c, 100 - (35 - m.bodyTemp) * 20);
@@ -699,7 +728,7 @@ public final class Physiology {
                 if (delivery < 0.6) m.brain -= s.hypoxiaBrainLossPerSecond * (0.6 - delivery) / 0.6 * 2 * dt;
             }
         }
-        if (m.down == Down.NONE && delivery >= 0.9 && in.online && m.brain < 100)
+        if (m.down == Down.NONE && delivery >= 0.9 && in.online && m.brain < 100 && !Organs.toxicBrain(m))
             m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * in.brainRecoveryFactor * dt);
 
         if (m.brain <= 0 && m.down != Down.CLINICAL) {

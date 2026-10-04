@@ -36,6 +36,7 @@ public final class MedicalNbt {
         t.putFloat("spo2", (float) m.spo2);
         if (m.respiratoryArrest) t.putBoolean("apnea", true);
         if (m.airway) t.putBoolean("airway", true);
+        if (m.intubated) t.putBoolean("intub", true);
         putIf(t, "adrenaline", m.adrenalineSeconds);
         putIf(t, "adrenalineInj", m.adrenalineInjectionSeconds);
         putIf(t, "painkiller", m.painkillerSeconds);
@@ -76,6 +77,15 @@ public final class MedicalNbt {
         putIf(t, "opioid", m.opioidSeconds);
         if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
         putIf(t, "pFood", m.pendingFoodLoss);
+        // Органы (третий этап): только если что-то повреждено или изъято.
+        boolean anyOrgan = m.organsMissing != 0;
+        for (double v : m.organs) anyOrgan |= v > 0;
+        if (anyOrgan) {
+            ListTag ol = new ListTag();
+            for (double v : m.organs) ol.add(net.minecraft.nbt.FloatTag.valueOf((float) v));
+            t.put("organs", ol);
+        }
+        if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
         putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
             CompoundTag doses = new CompoundTag();
@@ -122,6 +132,7 @@ public final class MedicalNbt {
                 putIf(wt, "infV", w.infection);
                 putIf(wt, "imm", w.immuneProgress);
                 if (w.infectionRisk != 1.0) wt.putFloat("risk", (float) w.infectionRisk);
+                if (w.sutured) wt.putFloat("sut", (float) w.sutureQuality);
                 ws.add(wt);
             }
             if (!ws.isEmpty()) p.put("w", ws);
@@ -143,6 +154,7 @@ public final class MedicalNbt {
             putIf(p, "isch", ps.ischemia);
             if (ps.occlusive) p.putBoolean("occl", true);
             if (ps.dislocated) p.putBoolean("disl", true);
+            if (ps.localAnesthesiaSeconds > 0) p.putFloat("local", (float) ps.localAnesthesiaSeconds);
             parts.add(p);
         }
         if (!parts.isEmpty()) t.put("parts", parts);
@@ -168,6 +180,7 @@ public final class MedicalNbt {
         if (t.contains("spo2")) m.spo2 = t.getFloat("spo2");
         m.respiratoryArrest = t.getBoolean("apnea");
         m.airway = t.getBoolean("airway");
+        m.intubated = t.getBoolean("intub");
         m.adrenalineSeconds = t.getFloat("adrenaline");
         m.adrenalineInjectionSeconds = t.getFloat("adrenalineInj");
         m.painkillerSeconds = t.getFloat("painkiller");
@@ -205,6 +218,10 @@ public final class MedicalNbt {
         m.opioidSeconds = t.getFloat("opioid");
         m.thirst = t.contains("thirst") ? t.getFloat("thirst") : 100;
         m.pendingFoodLoss = t.getFloat("pFood");
+        java.util.Arrays.fill(m.organs, 0);
+        ListTag ol = t.getList("organs", Tag.TAG_FLOAT);
+        for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
+        m.organsMissing = t.getByte("orgMiss") & 0xFF;
         m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");
         for (String k : doses.getAllKeys()) {
@@ -238,6 +255,8 @@ public final class MedicalNbt {
                 w.infection = wt.getFloat("infV");
                 w.immuneProgress = wt.getFloat("imm");
                 w.infectionRisk = wt.contains("risk") ? wt.getFloat("risk") : 1.0;
+                w.sutured = wt.contains("sut");
+                w.sutureQuality = w.sutured ? wt.getFloat("sut") : 1.0;
                 if (w.severity > 0 && ps.wounds.size() < 16) ps.wounds.add(w);
             }
             ps.fracture = BodyPartState.Fracture.byOrdinal(p.getByte("fr"));
@@ -254,6 +273,7 @@ public final class MedicalNbt {
             ps.ischemia = p.getFloat("isch");
             ps.occlusive = p.getBoolean("occl");
             ps.dislocated = p.getBoolean("disl");
+            ps.localAnesthesiaSeconds = p.getFloat("local");
         }
     }
 

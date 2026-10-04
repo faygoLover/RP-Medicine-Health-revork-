@@ -38,6 +38,8 @@ public final class MedcardHooks {
         if (rep.has(Injuries.Outcome.PNEUMOTHORAX)) MedcardService.propose(server, target, "pneumothorax", List.of(), "");
         if (rep.has(Injuries.Outcome.INTERNAL)) MedcardService.propose(server, target, "internal", List.of(part(p)), "");
         if (rep.has(Injuries.Outcome.DISLOCATION)) MedcardService.propose(server, target, "dislocation", List.of(part(p)), "");
+        // Третий этап: травма органа.
+        for (faygolover.rpmedicine.core.Organ o : rep.organs) MedcardService.propose(server, target, "organ", List.of("#" + o.translationKey()), "");
         for (Wound w : rep.wounds) {
             if (w.type == WoundType.GUNSHOT) MedcardService.propose(server, target, "gunshot", List.of(part(p)), "");
             else if (w.type == WoundType.SHRAPNEL) MedcardService.propose(server, target, "shrapnel", List.of(part(p)), "");

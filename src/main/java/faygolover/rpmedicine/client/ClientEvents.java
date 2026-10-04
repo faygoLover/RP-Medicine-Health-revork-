@@ -136,7 +136,9 @@ public final class ClientEvents {
         if (v.isDown() || !(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult bhr)
                 || bhr.getType() != HitResult.Type.BLOCK) return;
         var pos = bhr.getBlockPos();
-        if (!HospitalBlocks.is(mc.level.getBlockState(pos), HospitalFunction.MONITOR)) return;
+        var looked = mc.level.getBlockState(pos);
+        // Операционный стол — сам себе монитор (третий этап).
+        if (!HospitalBlocks.is(looked, HospitalFunction.MONITOR) && !HospitalBlocks.is(looked, HospitalFunction.OPERATING_TABLE)) return;
         if (mc.player.getEyePosition().distanceTo(net.minecraft.world.phys.Vec3.atCenterOf(pos)) > 8) return;
         Network.sendToServer(new MonitorRequestPacket(pos));
     }

@@ -40,7 +40,7 @@ import static faygolover.rpmedicine.gametest.MedicalGameTests.tickPatients;
 public final class HospitalGameTests {
     private HospitalGameTests() {}
 
-    /** Койка — белая шерсть, монитор — наблюдатель, стойка капельницы — железная решётка, кислород — котёл. */
+    /** Койка — белая шерсть, монитор — наблюдатель, стойка — железная решётка, кислород — котёл, операционный стол — гладкий камень. */
     static void testBlocks() {
         HospitalBlocks.set(Map.of(
                 HospitalFunction.BED, List.of("minecraft:white_wool"),
@@ -48,7 +48,8 @@ public final class HospitalGameTests {
                 HospitalFunction.IV_STAND, List.of("minecraft:iron_bars"),
                 HospitalFunction.LAB, List.of("minecraft:crafting_table"),
                 HospitalFunction.STERILIZER, List.of("minecraft:furnace"),
-                HospitalFunction.OXYGEN, List.of("minecraft:cauldron")), Map.of());
+                HospitalFunction.OXYGEN, List.of("minecraft:cauldron"),
+                HospitalFunction.OPERATING_TABLE, List.of("minecraft:smooth_stone")), Map.of());
     }
 
     private static MedicalData data(ServerPlayer p) {
@@ -624,5 +625,21 @@ public final class HospitalGameTests {
         double t = 0;
         for (var ps : m.parts) t += ps.totalSeverity();
         return t;
+    }
+
+    /** Швы сохраняются вместе с раной (выход из игры, перезапуск сервера). */
+    @GameTest(template = T, timeoutTicks = 20)
+    public static void suturesSurviveSave(GameTestHelper h) {
+        MedicalSettings s = MedicalSettings.get();
+        MedicalState m = new MedicalState(s);
+        var w = new faygolover.rpmedicine.core.Wound(faygolover.rpmedicine.core.WoundType.CUT, 30);
+        w.sutured = true;
+        w.sutureQuality = 0.6;
+        m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.add(w);
+        MedicalState copy = new MedicalState(s);
+        faygolover.rpmedicine.capability.MedicalNbt.read(copy, faygolover.rpmedicine.capability.MedicalNbt.write(m), s);
+        var cw = copy.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.get(0);
+        h.assertTrue(cw.sutured && Math.abs(cw.sutureQuality - 0.6) < 1e-6, "швы и их качество сохранены");
+        h.succeed();
     }
 }

@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:endotracheal_tube",
+  "action": "intubate",
+  "seconds": 6,
+  "min_level": 6,
+  "consume": true
+}

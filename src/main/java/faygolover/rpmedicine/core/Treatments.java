@@ -137,6 +137,7 @@ public final class Treatments {
                 return null;
             }
             case AMMONIA -> {
+                if (m.effect(DrugEffect.ANESTHESIA) > 0) return "under_anesthesia";
                 if (m.down == Down.FAINT) return null;
                 if (m.down == Down.KNOCKDOWN) return Physiology.lifeThreat(m, s) ? "ammonia_threat" : null;
                 if (m.down == Down.CLINICAL) return "ammonia_threat";
@@ -145,6 +146,10 @@ public final class Treatments {
             case AIRWAY -> {
                 if (m.down != Down.KNOCKDOWN && m.down != Down.CLINICAL) return "not_unconscious";
                 return m.airway ? "airway_already" : null;
+            }
+            case INTUBATE -> {
+                if (m.down == Down.NONE) return "not_unconscious";
+                return m.intubated ? "intubated_already" : null;
             }
             case AMBU -> {
                 if (m.respiratoryArrest || m.heart != Heart.NORMAL || m.down != Down.NONE && m.spo2 < 92) return null;
@@ -212,6 +217,8 @@ public final class Treatments {
     }
 
     public static BodyPart bestPart(MedicalState m, TreatmentAction a, MedicalSettings s, Extra extra) {
+        // Местная анестезия — в самую больную часть (третий этап).
+        if (a == TreatmentAction.DRUG && extra instanceof Drug d && Drugs.isLocal(d)) return Drugs.localPart(m, s);
         if (a.target != TreatmentAction.Target.PART) return BodyPart.CHEST;
         if (a == TreatmentAction.DRUG_TOPICAL) return extra instanceof Drug d ? Drugs.bestPart(m, d, s) : null;
         BodyPart best = null;
@@ -371,6 +378,16 @@ public final class Treatments {
                 if (error) return Result.failed("airway_failed");
                 m.airway = true;
                 return Result.ok("airway_placed");
+            }
+            case INTUBATE -> {
+                // Ошибка — трубка в пищевод: не дышит, пока не заметят (короткая гипоксия), трубка потрачена.
+                if (error) {
+                    m.spo2 = Math.max(0, m.spo2 - 10);
+                    return Result.failed("intubation_failed");
+                }
+                m.intubated = true;
+                m.airway = false;
+                return Result.ok("intubated");
             }
             case AMBU -> {
                 m.ambuSeconds = Math.max(m.ambuSeconds, error ? 0.8 : 1.5);

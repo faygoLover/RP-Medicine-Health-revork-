@@ -26,7 +26,13 @@ public enum DrugEffect {
     /** Свёртывание (как транексамовая кислота): сила 0–1 — доля снижения кровотечения. */
     COAGULATION("coagulation"),
     /** Быстрее проходит контузия: сила — множитель скорости. */
-    CONCUSSION_RELIEF("concussion_relief");
+    CONCUSSION_RELIEF("concussion_relief"),
+    /** Яд для печени (передозировка парацетамола): сила — % повреждения печени в час (третий этап). */
+    LIVER_TOXICITY("liver_toxicity"),
+    /** Общий наркоз: без сознания, боль не чувствуется (третий этап, п. 3). */
+    ANESTHESIA("anesthesia"),
+    /** Местная анестезия: не общий эффект — ставится на часть тела, куда сделан укол; сила — доля оставшейся боли. */
+    LOCAL_ANESTHESIA("local_anesthesia");
 
     public static final DrugEffect[] VALUES = values();
 
