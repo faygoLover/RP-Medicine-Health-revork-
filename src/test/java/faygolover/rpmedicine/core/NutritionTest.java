@@ -44,4 +44,29 @@ class NutritionTest {
         assertTrue(mods.staminaCap <= s.carbsLowStaminaCap + 1e-9, "мало углеводов — быстро устаёт");
         assertTrue(Nutrition.anyLow(m, s));
     }
+
+    @Test
+    void monotonyIsSoftAndFades() {
+        MedicalSettings s = settings();
+        s.nutritionEnabled = true;
+        MedicalState m = new MedicalState(s);
+        int meat = Nutrition.category("meat");
+        Nutrition.Food steak = new Nutrition.Food(0, 30, 10, 0, 1).withKcal();
+        for (int i = 0; i < s.monotonyThreshold; i++) assertFalse(Nutrition.eat(m, steak, meat, s), "первые порции — с аппетитом");
+        m.nutrients[Nutrition.PROTEIN] = 40; // не упираться в предел запаса
+        double before = m.nutrients[Nutrition.PROTEIN];
+        assertTrue(Nutrition.eat(m, steak, meat, s), "мясо приелось");
+        double gained = m.nutrients[Nutrition.PROTEIN] - before;
+        assertTrue(gained < 30 * s.proteinPerGram && gained >= 30 * s.proteinPerGram * s.monotonyUptakeMin - 1e-9, "усваивается хуже, но не ниже предела");
+        assertFalse(Nutrition.fedUp(m, Nutrition.category("grain"), s), "хлеб не приелся");
+        // Голодному не до вкуса.
+        m.nutrients[Nutrition.CARBS] = 1;
+        assertFalse(Nutrition.fedUp(m, meat, s), "при нехватке — ест что угодно");
+        m.nutrients[Nutrition.CARBS] = 60;
+        // Проходит со временем.
+        run(m, input(1), s, 3 * 3600);
+        assertFalse(Nutrition.fedUp(m, meat, s), "через несколько часов снова хочется мяса");
+        // Напитки и исключения не считаются.
+        assertFalse(Nutrition.eat(m, steak, -1, s));
+    }
 }

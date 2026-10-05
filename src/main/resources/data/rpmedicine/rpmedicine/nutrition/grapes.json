@@ -12,5 +12,6 @@
   "protein": 1,
   "fat": 0,
   "carbs": 17,
-  "vitamins": 8
+  "vitamins": 8,
+  "category": "fruit"
 }

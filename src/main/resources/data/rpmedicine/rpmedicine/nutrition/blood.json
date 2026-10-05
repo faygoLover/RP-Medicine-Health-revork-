@@ -5,5 +5,6 @@
   "protein": 8,
   "fat": 1,
   "carbs": 0,
-  "vitamins": 2
+  "vitamins": 2,
+  "exempt": true
 }

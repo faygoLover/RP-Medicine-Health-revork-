@@ -254,10 +254,16 @@ public final class InteractionHandler {
     public static void onUseTick(LivingEntityUseItemEvent.Tick event) {
         double factor;
         if (event.getEntity() instanceof Player cp && cp.level().isClientSide) {
-            factor = faygolover.rpmedicine.client.ClientInteraction.useTimeFactor(cp);
+            factor = faygolover.rpmedicine.client.ClientInteraction.useTimeFactor(cp, event.getItem());
         } else if (event.getEntity() instanceof ServerPlayer sp) {
             MedicalData d = Medical.data(sp);
             factor = d != null ? d.lastMods.useTimeFactor : 1.0;
+            // Приелось — ест без аппетита, дольше.
+            if (d != null && event.getItem().isEdible()) {
+                int cat = faygolover.rpmedicine.server.NutritionTable.category(sp.server, event.getItem().getItem());
+                if (faygolover.rpmedicine.core.Nutrition.fedUp(d.state, cat, faygolover.rpmedicine.core.MedicalSettings.get()))
+                    factor *= faygolover.rpmedicine.core.MedicalSettings.get().monotonyEatSlow;
+            }
         } else {
             return;
         }

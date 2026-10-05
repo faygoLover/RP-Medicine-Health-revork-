@@ -904,6 +904,19 @@ for k, ru, en in [("title", "Питание", "Nutrition"), ("protein", "Бел�
 t("key.rpmedicine.nutrition", "Питание", "Nutrition")
 t("rpmedicine.exam.malnourished", "Истощён: худой, слабый", "Malnourished: thin and weak")
 t("rpmedicine.exam.undernourished", "Недоедает: вялый, бледный", "Undernourished: sluggish and pale")
+# «Приелось».
+for k, ru, en, mru, men in [
+    ("meat", "мясо", "meat", "Опять мясо... кусок в горло не лезет.", "Meat again... you can barely swallow it."),
+    ("fish", "рыба", "fish", "Снова рыба. Уже воротит.", "Fish again. It's getting sickening."),
+    ("grain", "хлеб и каши", "bread and grains", "Опять каша да хлеб. Надоело.", "Porridge and bread again. You're sick of it."),
+    ("vegetables", "овощи", "vegetables", "Одни овощи... хочется чего-то другого.", "Only vegetables... you want something else."),
+    ("fruit", "фрукты", "fruit", "Фрукты уже приелись.", "You're tired of fruit."),
+    ("sweet", "сладкое", "sweets", "Приторно. От сладкого уже мутит.", "Too sweet. The sweets are making you queasy."),
+    ("dairy", "молочное и яйца", "dairy and eggs", "Опять молочное. Без аппетита.", "Dairy again. No appetite.")]:
+    t("rpmedicine.food_category." + k, ru, en)
+    t("rpmedicine.monotony." + k, mru, men)
+t("rpmedicine.nutrition.fed_up", "Приелось: %s", "Fed up with: %s")
+t("rpmedicine.exam.poor_appetite", "Плохой аппетит", "Poor appetite")
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

@@ -481,6 +481,13 @@ public final class ServerConfig {
         bind("balancedHealFactor", "Сбалансированное питание: множитель заживления.");
         bind("balancedImmunityFactor", "Сбалансированное питание: множитель иммунитета.");
         bind("sugarPerCarbGram", "Диабет: сахар за грамм углеводов.");
+        bind("monotonyEnabled", "«Приелось»: однообразная еда одного вида надоедает.");
+        bind("monotonyThreshold", "«Приелось»: с какого числа недавних порций одного вида.");
+        bind("monotonyDecayPerHour", "«Приелось»: сколько порций «забывается» в час в сети.");
+        bind("monotonyVarietyRelief", "«Приелось»: другой вид еды освежает остальные на столько порций.");
+        bind("monotonyUptakeStep", "«Приелось»: усвоение хуже на эту долю за порцию сверх порога.");
+        bind("monotonyUptakeMin", "«Приелось»: усвоение не хуже этой доли.");
+        bind("monotonyEatSlow", "«Приелось»: во сколько раз дольше есть.");
         bind("surgeryStepPain", "Хирургия: острая боль шага операции без обезболивания.");
         bind("surgeryStepPainSeconds", "Хирургия: сколько секунд держится боль шага.");
         bind("incisionSeverity", "Хирургия: тяжесть операционного разреза.");

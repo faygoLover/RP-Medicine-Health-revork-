@@ -229,7 +229,8 @@ public final class ModSetup {
         // Рецепты могли смениться — состав блюд пересчитать.
         if (e.getPlayer() == null) faygolover.rpmedicine.server.NutritionTable.invalidate();
         var server = e.getPlayerList().getServer();
-        var foods = new faygolover.rpmedicine.network.NutritionInfoPacket(faygolover.rpmedicine.server.NutritionTable.snapshot(server));
+        var foods = new faygolover.rpmedicine.network.NutritionInfoPacket(faygolover.rpmedicine.server.NutritionTable.snapshot(server),
+                faygolover.rpmedicine.server.NutritionTable.categories(server));
         if (e.getPlayer() != null) {
             Network.send(e.getPlayer(), foods);
             Network.send(e.getPlayer(), packet);

@@ -109,7 +109,12 @@ public final class VanillaEffects {
         var food = used.getFoodProperties(sp);
         var comp = food != null || faygolover.rpmedicine.data.NutritionRules.base(used.getItem()) != null
                 ? faygolover.rpmedicine.server.NutritionTable.get(sp.server, used.getItem()) : null;
-        if (comp != null) faygolover.rpmedicine.core.Nutrition.eat(m, comp, MedicalSettings.get());
+        if (comp != null) {
+            int cat = faygolover.rpmedicine.server.NutritionTable.category(sp.server, used.getItem());
+            if (faygolover.rpmedicine.core.Nutrition.eat(m, comp, cat, MedicalSettings.get()))
+                sp.displayClientMessage(Component.translatable("rpmedicine.monotony." + faygolover.rpmedicine.core.Nutrition.CATEGORIES[cat])
+                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+        }
         if (food != null && Medical.traits(sp).diabetic) {
             if (comp != null) faygolover.rpmedicine.core.Metabolism.eatCarbs(m, comp.carbs(), MedicalSettings.get());
             else faygolover.rpmedicine.core.Metabolism.eat(m, food.getNutrition(), MedicalSettings.get());

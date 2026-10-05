@@ -6,5 +6,6 @@
   "protein": 1,
   "fat": 0,
   "carbs": 9,
-  "vitamins": 6
+  "vitamins": 6,
+  "category": "vegetables"
 }

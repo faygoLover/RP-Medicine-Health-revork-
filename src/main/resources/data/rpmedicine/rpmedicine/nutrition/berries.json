@@ -8,5 +8,6 @@
   "protein": 0,
   "fat": 0,
   "carbs": 6,
-  "vitamins": 8
+  "vitamins": 8,
+  "category": "fruit"
 }

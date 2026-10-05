@@ -53,6 +53,17 @@ public class NutritionScreen extends Screen {
         }
         g.drawString(font, Component.translatable("rpmedicine.nutrition.kcal_recent", v.kcalRecent).withStyle(ChatFormatting.GRAY),
                 l + 10, t + H - 14, 0xFFFFFF, false);
+        if (v.fedUpMask != 0) {
+            net.minecraft.network.chat.MutableComponent list = Component.empty();
+            boolean first = true;
+            for (int i = 0; i < Nutrition.CATEGORIES.length; i++) {
+                if ((v.fedUpMask & (1 << i)) == 0) continue;
+                if (!first) list.append(", ");
+                list.append(Component.translatable("rpmedicine.food_category." + Nutrition.CATEGORIES[i]));
+                first = false;
+            }
+            g.drawString(font, Component.translatable("rpmedicine.nutrition.fed_up", list).withStyle(ChatFormatting.GOLD), l + 10, t + H - 26, 0xFFFFFF, false);
+        }
         super.render(g, mx, my, pt);
     }
 

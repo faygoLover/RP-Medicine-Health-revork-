@@ -7,5 +7,6 @@
   "protein": 11,
   "fat": 3,
   "carbs": 68,
-  "vitamins": 3
+  "vitamins": 3,
+  "category": "grain"
 }

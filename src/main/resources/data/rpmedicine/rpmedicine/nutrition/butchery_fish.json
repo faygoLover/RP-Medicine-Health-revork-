@@ -13,5 +13,6 @@
   "protein": 30,
   "fat": 5,
   "carbs": 0,
-  "vitamins": 3
+  "vitamins": 3,
+  "category": "fish"
 }

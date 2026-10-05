@@ -51,5 +51,6 @@
   "protein": 45,
   "fat": 25,
   "carbs": 0,
-  "vitamins": 2
+  "vitamins": 2,
+  "category": "meat"
 }

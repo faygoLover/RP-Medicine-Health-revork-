@@ -5,5 +5,6 @@
   "protein": 30,
   "fat": 6,
   "carbs": 4,
-  "vitamins": 25
+  "vitamins": 25,
+  "category": "meat"
 }

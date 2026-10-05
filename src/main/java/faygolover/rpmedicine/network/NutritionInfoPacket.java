@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /** Сервер → клиент: состав еды (ККАЛ, БЖУ, витамины) для подсказок. Шлётся при синхронизации датапаков. */
-public record NutritionInfoPacket(Map<ResourceLocation, Nutrition.Food> foods) {
+public record NutritionInfoPacket(Map<ResourceLocation, Nutrition.Food> foods, Map<ResourceLocation, Integer> categories) {
     public static void encode(NutritionInfoPacket p, FriendlyByteBuf buf) {
         buf.writeVarInt(p.foods.size());
         for (var e : p.foods.entrySet()) {
@@ -23,21 +23,29 @@ public record NutritionInfoPacket(Map<ResourceLocation, Nutrition.Food> foods) {
             buf.writeFloat((float) f.fat());
             buf.writeFloat((float) f.carbs());
             buf.writeFloat((float) f.vitamins());
+            buf.writeByte(p.categories.getOrDefault(e.getKey(), -1));
         }
     }
 
     public static NutritionInfoPacket decode(FriendlyByteBuf buf) {
         int n = Math.min(50000, buf.readVarInt());
         Map<ResourceLocation, Nutrition.Food> m = new HashMap<>(n);
-        for (int i = 0; i < n; i++)
-            m.put(buf.readResourceLocation(), new Nutrition.Food(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat()));
-        return new NutritionInfoPacket(m);
+        Map<ResourceLocation, Integer> c = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            ResourceLocation id = buf.readResourceLocation();
+            m.put(id, new Nutrition.Food(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat()));
+            int cat = buf.readByte();
+            if (cat >= 0) c.put(id, cat);
+        }
+        return new NutritionInfoPacket(m, c);
     }
 
     public static void handle(NutritionInfoPacket p, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             faygolover.rpmedicine.client.ClientState.FOODS.clear();
             faygolover.rpmedicine.client.ClientState.FOODS.putAll(p.foods);
+            faygolover.rpmedicine.client.ClientState.FOOD_CATEGORIES.clear();
+            faygolover.rpmedicine.client.ClientState.FOOD_CATEGORIES.putAll(p.categories);
         }));
         ctx.get().setPacketHandled(true);
     }

@@ -26,7 +26,8 @@ import java.util.Map;
 public final class NutritionRules {
     private NutritionRules() {}
 
-    public record Entry(Matcher<Item> items, Nutrition.Food food, int priority) {}
+    /** {@code category} — вид еды для «приелось» (−1 — не считается: напитки, исключения). */
+    public record Entry(Matcher<Item> items, Nutrition.Food food, int priority, int category) {}
 
     private static volatile List<Entry> entries = List.of();
 
@@ -39,7 +40,8 @@ public final class NutritionRules {
                     JsonObject o = f.getValue().getAsJsonObject();
                     Nutrition.Food food = new Nutrition.Food(GsonHelper.getAsDouble(o, "kcal", 0), GsonHelper.getAsDouble(o, "protein", 0),
                             GsonHelper.getAsDouble(o, "fat", 0), GsonHelper.getAsDouble(o, "carbs", 0), GsonHelper.getAsDouble(o, "vitamins", 0)).withKcal();
-                    out.add(new Entry(Matcher.parse(o.get("items"), Registries.ITEM), food, GsonHelper.getAsInt(o, "priority", 0)));
+                    int cat = GsonHelper.getAsBoolean(o, "exempt", false) ? -1 : Nutrition.category(GsonHelper.getAsString(o, "category", ""));
+                    out.add(new Entry(Matcher.parse(o.get("items"), Registries.ITEM), food, GsonHelper.getAsInt(o, "priority", 0), cat));
                 } catch (Exception ex) {
                     RpMedicine.LOGGER.error("RP Medicine: питание {}: {}", f.getKey(), ex.getMessage());
                 }
@@ -53,8 +55,13 @@ public final class NutritionRules {
 
     /** Состав базового ингредиента или null. */
     public static Nutrition.Food base(Item item) {
+        Entry e = entry(item);
+        return e != null ? e.food() : null;
+    }
+
+    public static Entry entry(Item item) {
         var holder = item.builtInRegistryHolder();
-        for (Entry e : entries) if (e.items().matches(holder)) return e.food();
+        for (Entry e : entries) if (e.items().matches(holder)) return e;
         return null;
     }
 }

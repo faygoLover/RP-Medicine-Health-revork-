@@ -15,5 +15,6 @@
   "fat": 0,
   "carbs": 0,
   "vitamins": 0,
+  "exempt": true,
   "kcal": 250
 }

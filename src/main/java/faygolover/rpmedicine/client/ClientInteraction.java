@@ -37,6 +37,15 @@ public final class ClientInteraction {
         return isSelf(p) ? Math.max(1.0, ClientState.self.useTimePct / 100.0) : 1.0;
     }
 
+    /** То же с едой: приелось — дольше (вид еды и приевшиеся виды — с сервера). */
+    public static double useTimeFactor(net.minecraft.world.entity.player.Player p, net.minecraft.world.item.ItemStack item) {
+        double f = useTimeFactor(p);
+        if (!isSelf(p) || !item.isEdible()) return f;
+        Integer cat = ClientState.FOOD_CATEGORIES.get(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(item.getItem()));
+        if (cat != null && (ClientState.self.fedUpMask & (1 << cat)) != 0) f *= ClientState.self.monotonyEatSlowPct / 100.0;
+        return f;
+    }
+
     /**
      * Запрет прыжка: если прыжок всё-таки случился (автопрыжок, лестница, рывок спринта), гасим и подъём,
      * и толчок вперёд — иначе со сломанной ногой оставался «микрорывок».

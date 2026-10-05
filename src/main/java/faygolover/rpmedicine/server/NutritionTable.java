@@ -32,6 +32,8 @@ public final class NutritionTable {
 
     private static final int MAX_DEPTH = 6;
     private static final Map<Item, Nutrition.Food> CACHE = new HashMap<>();
+    /** Вид еды (−1 — не считается). */
+    private static final Map<Item, Integer> CATEGORY = new HashMap<>();
     @Nullable
     private static Map<Item, List<Recipe<?>>> byResult;
     @Nullable
@@ -39,6 +41,7 @@ public final class NutritionTable {
 
     public static synchronized void invalidate() {
         CACHE.clear();
+        CATEGORY.clear();
         byResult = null;
     }
 
@@ -70,44 +73,68 @@ public final class NutritionTable {
     @Nullable
     private static Nutrition.Food resolve(Item item, int depth, Set<Item> path) {
         if (CACHE.containsKey(item)) return CACHE.get(item);
-        Nutrition.Food base = NutritionRules.base(item);
-        if (base != null) {
-            CACHE.put(item, base);
-            return base;
+        NutritionRules.Entry entry = NutritionRules.entry(item);
+        if (entry != null) {
+            CACHE.put(item, entry.food());
+            CATEGORY.put(item, entry.category());
+            return entry.food();
         }
         if (depth >= MAX_DEPTH || !path.add(item)) return null;
         Nutrition.Food found = null;
         List<Recipe<?>> recipes = byResult != null ? byResult.getOrDefault(item, List.of()) : List.of();
+        int foundCat = -1;
         for (Recipe<?> r : recipes) {
             Nutrition.Food sum = Nutrition.Food.ZERO;
             boolean any = false;
+            double[] byCat = new double[Nutrition.CATEGORIES.length];
             for (Ingredient ing : r.getIngredients()) {
-                Nutrition.Food part = ingredient(ing, depth, path);
-                if (part != null) {
-                    sum = sum.plus(part);
-                    any = true;
-                }
+                Item src = ingredientItem(ing, depth, path);
+                if (src == null) continue;
+                Nutrition.Food part = CACHE.get(src);
+                if (part == null) continue;
+                sum = sum.plus(part);
+                any = true;
+                int c = CATEGORY.getOrDefault(src, -1);
+                if (c >= 0) byCat[c] += Math.max(1, part.kcal());
             }
             if (!any || sum.isEmpty()) continue;
             int count = Math.max(1, r.getResultItem(access).getCount());
             found = sum.scale(1.0 / count);
+            // Вид блюда — вид ингредиента с наибольшими калориями.
+            double best = 0;
+            for (int c = 0; c < byCat.length; c++) if (byCat[c] > best) {
+                best = byCat[c];
+                foundCat = c;
+            }
             break;
         }
         path.remove(item);
-        if (found == null) found = estimate(item);
+        if (found == null) {
+            found = estimate(item);
+            FoodProperties fp = found != null ? item.getFoodProperties(new ItemStack(item), null) : null;
+            foundCat = fp != null && fp.isMeat() ? Nutrition.category("meat") : -1;
+        }
         // Промежуточные «нет» не кэшируем: на другом пути цикл может разрешиться.
-        if (found != null) CACHE.put(item, found);
+        if (found != null) {
+            CACHE.put(item, found);
+            CATEGORY.put(item, foundCat);
+        }
         return found;
     }
 
-    /** Состав ингредиента рецепта: первый вариант, у которого он известен. */
+    /** Ингредиент рецепта: первый вариант, у которого известен состав. */
     @Nullable
-    private static Nutrition.Food ingredient(Ingredient ing, int depth, Set<Item> path) {
+    private static Item ingredientItem(Ingredient ing, int depth, Set<Item> path) {
         for (ItemStack st : ing.getItems()) {
-            Nutrition.Food f = resolve(st.getItem(), depth + 1, path);
-            if (f != null) return f;
+            if (resolve(st.getItem(), depth + 1, path) != null) return st.getItem();
         }
         return null;
+    }
+
+    /** Вид еды предмета (−1 — не считается). */
+    public static synchronized int category(MinecraftServer server, Item item) {
+        if (get(server, item) == null) return -1;
+        return CATEGORY.getOrDefault(item, -1);
     }
 
     /** Еда без рецепта и записи — по сытости: ~90 ккал за единицу голода. */
@@ -128,6 +155,17 @@ public final class NutritionTable {
             if (!food) continue;
             Nutrition.Food f = get(server, item);
             if (f != null && !f.isEmpty()) out.put(ForgeRegistries.ITEMS.getKey(item), f);
+        }
+        return out;
+    }
+
+    /** Виды еды для клиента (только известные). */
+    public static Map<ResourceLocation, Integer> categories(MinecraftServer server) {
+        Map<ResourceLocation, Integer> out = new HashMap<>();
+        for (Item item : ForgeRegistries.ITEMS) {
+            if (!item.isEdible() && NutritionRules.base(item) == null) continue;
+            int c = category(server, item);
+            if (c >= 0) out.put(ForgeRegistries.ITEMS.getKey(item), c);
         }
         return out;
     }

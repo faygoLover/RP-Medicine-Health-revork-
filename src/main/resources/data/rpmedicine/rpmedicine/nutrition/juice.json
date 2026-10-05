@@ -13,5 +13,6 @@
   "protein": 0,
   "fat": 0,
   "carbs": 25,
-  "vitamins": 10
+  "vitamins": 10,
+  "exempt": true
 }

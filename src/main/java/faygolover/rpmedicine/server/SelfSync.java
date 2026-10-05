@@ -46,6 +46,8 @@ public final class SelfSync {
         v.balancedMin = (byte) ns.balancedMin;
         v.balancedMax = (byte) Math.min(120, ns.balancedMax);
         v.kcalRecent = (short) Math.min(30000, Math.round(m.kcalEaten));
+        v.fedUpMask = (byte) faygolover.rpmedicine.core.Nutrition.fedUpMask(m, ns);
+        v.monotonyEatSlowPct = (short) Math.round(ns.monotonyEatSlow * 100);
         v.cold = m.bodyTemp <= 35.5;
         v.nausea = m.nauseaSeconds > 0;
         v.concussion = m.concussion > 20;

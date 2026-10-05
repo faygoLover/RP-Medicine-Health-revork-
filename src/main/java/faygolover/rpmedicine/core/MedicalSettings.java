@@ -570,6 +570,15 @@ public final class MedicalSettings {
     public double fatHighSpeedPenalty = 0.05;
     public double balancedHealFactor = 1.15;
     public double balancedImmunityFactor = 1.1;
+    /** «Приелось»: включено; с какого числа недавних порций одного вида; тает в час; другой вид освежает на;
+     *  усвоение хуже на шаг за порцию сверх порога, но не ниже; есть дольше во сколько раз. */
+    public boolean monotonyEnabled = true;
+    public double monotonyThreshold = 5;
+    public double monotonyDecayPerHour = 2;
+    public double monotonyVarietyRelief = 0.5;
+    public double monotonyUptakeStep = 0.05;
+    public double monotonyUptakeMin = 0.8;
+    public double monotonyEatSlow = 1.3;
     /** Диабет: сахар за грамм углеводов. */
     public double sugarPerCarbGram = 0.06;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */

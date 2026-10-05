@@ -151,6 +151,8 @@ public final class MedicalState {
     /** Питание: запасы белков, жиров, углеводов, витаминов 0–120; калории, съеденные за последние часы. */
     public final double[] nutrients = {60, 60, 60, 60};
     public double kcalEaten;
+    /** «Приелось»: недавние порции по видам еды (тают со временем). */
+    public final double[] monotony = new double[Nutrition.CATEGORIES.length];
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -271,6 +273,7 @@ public final class MedicalState {
         seizureSeconds = 0;
         java.util.Arrays.fill(nutrients, 60);
         kcalEaten = 0;
+        java.util.Arrays.fill(monotony, 0);
         doses.clear();
         effects.clear();
     }
@@ -423,6 +426,7 @@ public final class MedicalState {
         seizureSeconds = o.seizureSeconds;
         System.arraycopy(o.nutrients, 0, nutrients, 0, nutrients.length);
         kcalEaten = o.kcalEaten;
+        System.arraycopy(o.monotony, 0, monotony, 0, monotony.length);
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;

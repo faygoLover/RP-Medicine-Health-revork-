@@ -703,6 +703,13 @@ public final class HospitalGameTests {
         var notch = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.ENCHANTED_GOLDEN_APPLE);
         h.assertTrue(notch != null && notch.kcal() > 0, "без рецепта — оценка по сытости");
         h.assertTrue(faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.STONE) == null, "камень — не еда");
+        // Виды для «приелось»: блюдо — вид основного по калориям ингредиента.
+        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.category(server, net.minecraft.world.item.Items.BREAD)
+                == faygolover.rpmedicine.core.Nutrition.category("grain"), "хлеб — зерно");
+        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.category(server, net.minecraft.world.item.Items.COOKED_BEEF)
+                == faygolover.rpmedicine.core.Nutrition.category("meat"), "стейк — мясо");
+        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.category(server, net.minecraft.world.item.Items.MUSHROOM_STEW)
+                == faygolover.rpmedicine.core.Nutrition.category("vegetables"), "грибной суп — овощи");
         h.succeed();
     }
 }

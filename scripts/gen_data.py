@@ -374,8 +374,23 @@ NUTRITION = {
     "coffee_milk": (ns("herbalbrews", "milk_coffee_block"), 0, 3, 3, 5, 0),
     "tea": ([f"herbalbrews:{t}_tea_block" for t in ["black", "green", "oolong", "yerba_mate", "hibiscus", "lavender", "rooibos"]], 0, 0, 0, 1, 3),
 }
+# Вид еды для «приелось»; напитки и пищевые добавки не надоедают (exempt).
+FOOD_CATEGORY = {
+    "grain_wheat": "grain", "grain_other": "grain", "corn": "grain", "potato": "vegetables", "potato_poison": "vegetables",
+    "carrot": "vegetables", "beetroot": "vegetables", "pumpkin": "vegetables", "tomato": "vegetables", "cabbage": "vegetables",
+    "onion": "vegetables", "mushroom": "vegetables", "kelp": "vegetables", "apple": "fruit", "melon": "fruit", "berries": "fruit",
+    "grapes": "fruit", "chorus": "fruit", "sugar": "sweet", "honey": "sweet", "cocoa": "sweet", "egg": "dairy", "milk": "dairy",
+    "butter": "dairy", "cheese": "dairy", "beef": "meat", "pork": "meat", "chicken": "meat", "mutton": "meat", "rabbit": "meat",
+    "fish": "fish", "fish_fat": "fish", "rotten": "meat", "spider_eye": "meat", "butchery_meat": "meat", "butchery_small": "meat",
+    "butchery_fish": "fish", "butchery_mince": "meat", "butchery_sausage": "meat", "butchery_organs": "meat", "butchery_liver": "meat",
+    "butchery_fat": "meat",
+}
 for name, (items, kcal, prot, fat, carbs, vit) in NUTRITION.items():
     obj = {"items": items, "protein": prot, "fat": fat, "carbs": carbs, "vitamins": vit}
+    if name in FOOD_CATEGORY:
+        obj["category"] = FOOD_CATEGORY[name]
+    else:
+        obj["exempt"] = True
     if kcal:
         obj["kcal"] = kcal
     write(f"{DATA}/rpmedicine/rpmedicine/nutrition/{name}.json", obj)

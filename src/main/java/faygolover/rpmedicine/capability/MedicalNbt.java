@@ -94,6 +94,8 @@ public final class MedicalNbt {
             net.minecraft.nbt.CompoundTag nu = new net.minecraft.nbt.CompoundTag();
             for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++) nu.putFloat(faygolover.rpmedicine.core.Nutrition.IDS[i], (float) m.nutrients[i]);
             putIf(nu, "kcal", m.kcalEaten);
+            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.CATEGORIES.length; i++)
+                putIf(nu, "mono_" + faygolover.rpmedicine.core.Nutrition.CATEGORIES[i], m.monotony[i]);
             t.put("nutr", nu);
         }
         boolean anySub = m.dependence != 0 || m.intoxication > 0;
@@ -266,6 +268,8 @@ public final class MedicalNbt {
             for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++)
                 if (nu.contains(faygolover.rpmedicine.core.Nutrition.IDS[i])) m.nutrients[i] = nu.getFloat(faygolover.rpmedicine.core.Nutrition.IDS[i]);
             m.kcalEaten = nu.getFloat("kcal");
+            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.CATEGORIES.length; i++)
+                m.monotony[i] = nu.getFloat("mono_" + faygolover.rpmedicine.core.Nutrition.CATEGORIES[i]);
         }
         if (t.contains("subst")) {
             var sub = t.getCompound("subst");
