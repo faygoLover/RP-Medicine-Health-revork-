@@ -157,4 +157,17 @@ class PlaytestFixesTest {
         run(b, fast, s, 10);
         assertTrue(500 - b.salineDripRemaining > 2 * (500 - a.salineDripRemaining), "со стойкой и койкой капает быстрее");
     }
+
+    @Test
+    void restrainedPatientIsHeldAndHurts() {
+        MedicalSettings s = settings();
+        MedicalState m = new MedicalState(s);
+        assertEquals("not_unconscious", Treatments.check(m, BodyPart.HEAD, TreatmentAction.AIRWAY, s), "в сознании и не зафиксирован — нельзя");
+        m.restrained = true;
+        assertNull(Treatments.check(m, BodyPart.HEAD, TreatmentAction.AIRWAY, s), "зафиксирован — можно");
+        GameplayEffects.Mods mods = GameplayEffects.compute(m, PatientTraits.NONE, s);
+        assertTrue(mods.armsDisabled && mods.noJump && mods.speed == 0, "зафиксированный не двигается и не действует руками");
+        Treatments.apply(m, BodyPart.HEAD, TreatmentAction.AIRWAY, false, new java.util.SplittableRandom(1), s);
+        assertTrue(m.acutePain >= s.restrainedProcedurePain, "воздуховод в сознании — больно");
+    }
 }

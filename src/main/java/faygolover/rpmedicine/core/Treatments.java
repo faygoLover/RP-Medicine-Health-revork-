@@ -158,13 +158,13 @@ public final class Treatments {
                 return "not_unconscious";
             }
             case AIRWAY -> {
-                // Без сознания любого вида: обморок, нокдаун, клиническая смерть, наркоз.
-                if (m.down == Down.NONE) return "not_unconscious";
+                // Без сознания любого вида: обморок, нокдаун, клиническая смерть, наркоз — или зафиксирован.
+                if (m.down == Down.NONE && !m.restrained) return "not_unconscious";
                 if (m.intubated) return "intubated_already";
                 return m.airway ? "airway_already" : null;
             }
             case INTUBATE -> {
-                if (m.down == Down.NONE) return "not_unconscious";
+                if (m.down == Down.NONE && !m.restrained) return "not_unconscious";
                 return m.intubated ? "intubated_already" : null;
             }
             case AMBU -> {
@@ -284,6 +284,13 @@ public final class Treatments {
             "nothing_to_dress", "no_heavy_bleeding", "tourniquet_not_needed", "no_fracture", "no_chest_wound", "no_tension",
             "already_active", "no_pain", "no_bleeding", "no_internal", "volume_ok", "saline_limit", "no_shockable",
             "no_dislocation", "no_foreign_body", "nothing_to_suture", "ammonia_threat", "occlusive_already", "splint_already");
+
+    /** Процедура в сознании на столе с фиксацией: без обезболивания — сильная острая боль. */
+    static void awakeProcedurePain(MedicalState m, MedicalSettings s) {
+        if (m.down != Down.NONE || !m.restrained) return;
+        m.acutePain = Math.max(m.acutePain, s.restrainedProcedurePain);
+        m.acutePainSeconds = Math.max(m.acutePainSeconds, 20);
+    }
 
     /** Применить, хотя проверка отказала: последствия ошибки. */
     public static Result applyForced(MedicalState m, BodyPart part, TreatmentAction a, RandomGenerator rnd, MedicalSettings s, Extra extra) {
@@ -454,11 +461,13 @@ public final class Treatments {
                 return Result.ok("ammonia_used");
             }
             case AIRWAY -> {
+                awakeProcedurePain(m, s);
                 if (error) return Result.failed("airway_failed");
                 m.airway = true;
                 return Result.ok("airway_placed");
             }
             case INTUBATE -> {
+                awakeProcedurePain(m, s);
                 // Ошибка — трубка в пищевод: не дышит, пока не заметят (короткая гипоксия), трубка потрачена.
                 if (error) {
                     m.spo2 = Math.max(0, m.spo2 - 10);

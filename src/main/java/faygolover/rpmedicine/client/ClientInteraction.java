@@ -30,7 +30,29 @@ public final class ClientInteraction {
             event.setCanceled(true);
             return;
         }
-        if (v.useTimePct > 100) event.setDuration((int) Math.ceil(event.getDuration() * v.useTimePct / 100.0));
+    }
+
+    /** Замедление использования своей рукой (для откатов тиков в {@code InteractionHandler.onUseTick}). */
+    public static double useTimeFactor(net.minecraft.world.entity.player.Player p) {
+        return isSelf(p) ? Math.max(1.0, ClientState.self.useTimePct / 100.0) : 1.0;
+    }
+
+    /**
+     * Запрет прыжка: если прыжок всё-таки случился (автопрыжок, лестница, рывок спринта), гасим и подъём,
+     * и толчок вперёд — иначе со сломанной ногой оставался «микрорывок».
+     */
+    public static void onJump(net.minecraft.world.entity.player.Player p) {
+        if (!isSelf(p) || !ClientState.self.noJump) return;
+        var v = p.getDeltaMovement();
+        double x = v.x;
+        double z = v.z;
+        if (p.isSprinting()) {
+            float yaw = p.getYRot() * ((float) Math.PI / 180F);
+            x += net.minecraft.util.Mth.sin(yaw) * 0.2F;
+            z -= net.minecraft.util.Mth.cos(yaw) * 0.2F;
+        }
+        p.setDeltaMovement(x, Math.min(0, v.y), z);
+        p.setSprinting(false);
     }
 
     /** Лежачий ли (для СЛР пустой рукой на клиенте). */

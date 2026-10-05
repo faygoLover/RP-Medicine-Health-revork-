@@ -267,6 +267,7 @@ HOSPITAL = {
     "beds": {"function": "bed", "blocks": ["industrialhellscape:medical_bed"] + [f"moa_decor_science:camah{c}" for c in MOA_COLORS]
              + ["multibeds:cot"]},
     "operating_tables": {"function": "operating_table", "blocks": ["industrialhellscape:operating_table"]},
+    "restraint_tables": {"function": "restraint_table", "blocks": ["health_and_disease:pathologicalexaminationtable", "butchery:metal_butchers_table"]},
     "monitors": {"function": "monitor", "blocks": ["industrialhellscape:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
     "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand"], "radius": 3},
     # Холодильник и лаборатория — предложение по справочнику id, ждёт подтверждения автора (07_spec_stage2.md, п. 16.13).

@@ -98,7 +98,7 @@ public final class HospitalBlocks {
 
     /** На блоке можно лежать (койка или операционный стол). */
     public static boolean isBed(BlockState state) {
-        return is(state, HospitalFunction.BED) || is(state, HospitalFunction.OPERATING_TABLE);
+        return is(state, HospitalFunction.BED) || is(state, HospitalFunction.OPERATING_TABLE) || is(state, HospitalFunction.RESTRAINT_TABLE);
     }
 
     /** Ближайший блок с функцией в кубе радиусом {@code r} вокруг точки, или null. */

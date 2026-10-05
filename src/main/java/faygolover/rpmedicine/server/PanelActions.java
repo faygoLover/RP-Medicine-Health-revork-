@@ -37,6 +37,7 @@ public final class PanelActions {
             case SEARCH -> SearchService.start(sp, target);
             case STOP_DRIP -> stopDrip(sp, target, m);
             case REMOVE_TUBE, REMOVE_AIRWAY -> removeAirway(sp, target, m, p.kind() == PanelActionPacket.Kind.REMOVE_TUBE);
+            case RESTRAIN -> restrain(sp, target, m);
             case REDUCE -> {
                 if (!sp.getMainHandItem().isEmpty()) {
                     sp.displayClientMessage(Component.translatable("rpmedicine.refuse.empty_hand").withStyle(ChatFormatting.YELLOW), true);
@@ -83,6 +84,22 @@ public final class PanelActions {
         else m.airway = false;
         Medical.changed(target);
         sp.displayClientMessage(Component.translatable(tube ? "rpmedicine.msg.extubated" : "rpmedicine.msg.airway_removed"), true);
+        ExamService.refreshFor(sp);
+    }
+
+    /** Зафиксировать или освободить: только чужого и только на столе с фиксацией; освободить можно всегда. */
+    private static void restrain(ServerPlayer sp, LivingEntity target, MedicalState m) {
+        if (target == sp) return;
+        if (!m.restrained && !faygolover.rpmedicine.hospital.HospitalService.onRestraintTable(target)) {
+            sp.displayClientMessage(Component.translatable("rpmedicine.refuse.not_on_restraint_table").withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        m.restrained = !m.restrained;
+        Medical.changed(target);
+        sp.displayClientMessage(Component.translatable(m.restrained ? "rpmedicine.msg.restrained" : "rpmedicine.msg.released"), true);
+        if (target instanceof ServerPlayer tp)
+            tp.displayClientMessage(Component.translatable(m.restrained ? "rpmedicine.msg.you_restrained" : "rpmedicine.msg.you_released")
+                    .withStyle(ChatFormatting.GOLD), true);
         ExamService.refreshFor(sp);
     }
 

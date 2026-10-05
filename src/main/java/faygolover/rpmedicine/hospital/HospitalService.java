@@ -129,6 +129,13 @@ public final class HospitalService {
         }
     }
 
+    /** Игрок лежит на столе с фиксацией. */
+    public static boolean onRestraintTable(LivingEntity e) {
+        if (!(e instanceof ServerPlayer sp)) return false;
+        MedicalData d = Medical.data(sp);
+        return d != null && d.bedPos != null && HospitalBlocks.is(sp.level().getBlockState(d.bedPos), HospitalFunction.RESTRAINT_TABLE);
+    }
+
     /** Встать с койки (или снять с неё). {@code standUp} — переставить рядом с койкой. */
     public static void leaveBed(ServerPlayer sp, boolean standUp) {
         MedicalData d = Medical.data(sp);
@@ -136,6 +143,10 @@ public final class HospitalService {
         BlockPos bed = d.bedPos;
         d.bedPos = null;
         d.monitorPos = null;
+        if (d.state.restrained) {
+            d.state.restrained = false;
+            Medical.changed(sp);
+        }
         if (standUp) {
             Vec3 out = standUpSpot(sp.serverLevel(), bed, sp);
             sp.teleportTo(out.x, out.y, out.z);
@@ -177,6 +188,11 @@ public final class HospitalService {
                 return;
             }
             if (!m.isDown() && sp.isShiftKeyDown()) {
+                if (m.restrained) {
+                    if ((now + sp.getId()) % 20 == 0)
+                        sp.displayClientMessage(Component.translatable("rpmedicine.bed.restrained").withStyle(ChatFormatting.YELLOW), true);
+                    return;
+                }
                 leaveBed(sp, true);
                 sp.displayClientMessage(Component.translatable("rpmedicine.bed.stood_up"), true);
                 return;
@@ -193,7 +209,8 @@ public final class HospitalService {
             d.monitorPos = bed != null ? HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.MONITOR, HospitalBlocks.radius(HospitalFunction.MONITOR)) : null;
             d.nearOxygen = bed != null && HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.OXYGEN, HospitalBlocks.radius(HospitalFunction.OXYGEN)) != null;
             // Операционный стол (третий этап): аппарат ИВЛ, кислород и монитор в самом столе.
-            d.onTable = bed != null && HospitalBlocks.is(sp.level().getBlockState(bed), HospitalFunction.OPERATING_TABLE);
+            d.onTable = bed != null && (HospitalBlocks.is(sp.level().getBlockState(bed), HospitalFunction.OPERATING_TABLE)
+                    || HospitalBlocks.is(sp.level().getBlockState(bed), HospitalFunction.RESTRAINT_TABLE));
             if (d.onTable && d.monitorPos == null) d.monitorPos = bed;
             d.nearIvStand = drip && HospitalBlocks.findNearest(sp.level(), sp.blockPosition(), HospitalFunction.IV_STAND,
                     HospitalBlocks.radius(HospitalFunction.IV_STAND)) != null;
@@ -276,7 +293,8 @@ public final class HospitalService {
         if (viewer.distanceToSqr(Vec3.atCenterOf(pos)) > sq(ServerConfig.MONITOR_VIEW_DISTANCE.get() + 1)) return;
         if (!viewer.level().isLoaded(pos)) return;
         var state = viewer.level().getBlockState(pos);
-        if (!HospitalBlocks.is(state, HospitalFunction.MONITOR) && !HospitalBlocks.is(state, HospitalFunction.OPERATING_TABLE)) return;
+        if (!HospitalBlocks.is(state, HospitalFunction.MONITOR) && !HospitalBlocks.is(state, HospitalFunction.OPERATING_TABLE)
+                && !HospitalBlocks.is(state, HospitalFunction.RESTRAINT_TABLE)) return;
         if (Medical.isDown(viewer)) return;
         if (Medical.medicineLevel(viewer) < ServerConfig.MONITOR_MIN_LEVEL.get()) {
             Network.send(viewer, MonitorPacket.locked(pos));

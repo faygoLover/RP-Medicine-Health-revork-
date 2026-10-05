@@ -37,6 +37,7 @@ public final class MedicalNbt {
         if (m.respiratoryArrest) t.putBoolean("apnea", true);
         if (m.airway) t.putBoolean("airway", true);
         if (m.intubated) t.putBoolean("intub", true);
+        if (m.restrained) t.putBoolean("restr", true);
         putIf(t, "adrenaline", m.adrenalineSeconds);
         putIf(t, "adrenalineInj", m.adrenalineInjectionSeconds);
         putIf(t, "painkiller", m.painkillerSeconds);
@@ -183,6 +184,7 @@ public final class MedicalNbt {
         m.respiratoryArrest = t.getBoolean("apnea");
         m.airway = t.getBoolean("airway");
         m.intubated = t.getBoolean("intub");
+        m.restrained = t.getBoolean("restr");
         m.adrenalineSeconds = t.getFloat("adrenaline");
         m.adrenalineInjectionSeconds = t.getFloat("adrenalineInj");
         m.painkillerSeconds = t.getFloat("painkiller");

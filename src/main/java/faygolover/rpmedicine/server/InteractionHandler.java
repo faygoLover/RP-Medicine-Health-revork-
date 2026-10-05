@@ -232,7 +232,6 @@ public final class InteractionHandler {
     /** Использование предметов: дольше при плохой руке; лук и арбалет — нельзя лежачему, несущему, без рук. */
     public static void onUseStart(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof Player cp && cp.level().isClientSide) {
-            // Та же длительность на клиенте: иначе рука опускается раньше, а жевание ещё слышно.
             faygolover.rpmedicine.client.ClientInteraction.onUseStart(event);
             return;
         }
@@ -241,16 +240,43 @@ public final class InteractionHandler {
             event.setCanceled(true);
             return;
         }
-        if (Medical.isDown(sp)) {
+        faygolover.rpmedicine.core.MedicalState ms = Medical.state(sp);
+        if (Medical.isDown(sp) || ms != null && ms.restrained) {
             event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Плохая рука: еда и питьё идут медленнее. Длительность не увеличиваем (анимация руки считает её от
+     * «родной» длительности предмета: при большей рука опускается, а жевание ещё идёт) — вместо этого
+     * часть тиков откатывается назад, одинаково на клиенте и сервере.
+     */
+    public static void onUseTick(LivingEntityUseItemEvent.Tick event) {
+        double factor;
+        if (event.getEntity() instanceof Player cp && cp.level().isClientSide) {
+            factor = faygolover.rpmedicine.client.ClientInteraction.useTimeFactor(cp);
+        } else if (event.getEntity() instanceof ServerPlayer sp) {
+            MedicalData d = Medical.data(sp);
+            factor = d != null ? d.lastMods.useTimeFactor : 1.0;
+        } else {
             return;
         }
-        MedicalData d = Medical.data(sp);
-        if (d != null && d.lastMods.useTimeFactor > 1.0)
-            event.setDuration((int) Math.ceil(event.getDuration() * d.lastMods.useTimeFactor));
+        if (slowTick(event.getEntity().tickCount, factor) && event.getDuration() < event.getItem().getUseDuration())
+            event.setDuration(event.getDuration() + 1);
+    }
+
+    /** Откатить ли этот тик: доля откатов 1 − 1/factor, равномерно по времени. */
+    static boolean slowTick(int tick, double factor) {
+        if (factor <= 1.0) return false;
+        double k = 1 - 1 / Math.min(factor, 10);
+        return Math.floor(tick * k) != Math.floor((tick - 1) * k);
     }
 
     public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (event.getEntity() instanceof Player cp && cp.level().isClientSide) {
+            faygolover.rpmedicine.client.ClientInteraction.onJump(cp);
+            return;
+        }
         if (event.getEntity() instanceof ServerPlayer sp) {
             MedicalData d = Medical.data(sp);
             if (d != null) d.jumps++;

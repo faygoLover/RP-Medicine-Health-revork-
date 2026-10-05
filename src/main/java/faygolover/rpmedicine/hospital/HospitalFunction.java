@@ -12,6 +12,11 @@ public enum HospitalFunction {
     BED("bed", 0),
     /** Операционный стол: на втором этапе — как койка. */
     OPERATING_TABLE("operating_table", 0),
+    /**
+     * Стол с фиксацией (решения, п. 1.13): как операционный, но медик может зафиксировать пациента в
+     * сознании — тот не встанет и не дёрнется; обезболивание не обязательно, боль остаётся.
+     */
+    RESTRAINT_TABLE("restraint_table", 0),
     /** Монитор показателей рядом с койкой. */
     MONITOR("monitor", 3),
     /** Стойка для капельницы: капельница идёт, пока пациент рядом. */
@@ -38,7 +43,7 @@ public enum HospitalFunction {
 
     /** На блоке можно лежать. */
     public boolean isBed() {
-        return this == BED || this == OPERATING_TABLE;
+        return this == BED || this == OPERATING_TABLE || this == RESTRAINT_TABLE;
     }
 
     public static Optional<HospitalFunction> byId(String id) {

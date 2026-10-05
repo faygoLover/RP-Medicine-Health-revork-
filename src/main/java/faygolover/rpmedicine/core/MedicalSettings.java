@@ -444,6 +444,8 @@ public final class MedicalSettings {
     public double totemBloodFraction = 0.6;
     /** Высота стонов и вскриков женского персонажа (пол — в медкарте). */
     public double femaleVoicePitch = 1.3;
+    /** Острая боль от процедуры в сознании на столе с фиксацией (воздуховод, интубация). */
+    public double restrainedProcedurePain = 70;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

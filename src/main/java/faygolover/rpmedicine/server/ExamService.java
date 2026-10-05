@@ -112,6 +112,9 @@ public final class ExamService {
         byte gen = 0;
         if (m.intubated) gen |= 1;
         if (m.airway) gen |= 2;
+        // Стол с фиксацией: 4 — можно зафиксировать, 8 — зафиксирован.
+        if (!self && faygolover.rpmedicine.hospital.HospitalService.onRestraintTable(target)) gen |= 4;
+        if (m.restrained) gen |= 8;
         return new ExamResultPacket(self ? -1 : target.getId(), self, target.getDisplayName(), view, removable, down,
                 bars, (byte) Math.round(overall), numbers, kd, gen);
     }

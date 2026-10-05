@@ -49,7 +49,8 @@ public final class HospitalGameTests {
                 HospitalFunction.LAB, List.of("minecraft:crafting_table"),
                 HospitalFunction.STERILIZER, List.of("minecraft:furnace"),
                 HospitalFunction.OXYGEN, List.of("minecraft:cauldron"),
-                HospitalFunction.OPERATING_TABLE, List.of("minecraft:smooth_stone")), Map.of());
+                HospitalFunction.OPERATING_TABLE, List.of("minecraft:smooth_stone"),
+                HospitalFunction.RESTRAINT_TABLE, List.of("minecraft:iron_block")), Map.of());
     }
 
     private static MedicalData data(ServerPlayer p) {
@@ -99,6 +100,37 @@ public final class HospitalGameTests {
         h.assertTrue(data(p).bedPos == null, "присел — встал");
         h.assertTrue(p.blockPosition().distManhattan(bed) <= 2 && !p.blockPosition().equals(bed), "стоит рядом с койкой");
         remove(h, p, other);
+        h.succeed();
+    }
+
+    /** Стол с фиксацией: медик фиксирует пациента в сознании, тот не встаёт и не действует руками; освободить — встаёт. */
+    @GameTest(template = T, timeoutTicks = 200)
+    public static void restraintTableHoldsPatient(GameTestHelper h) {
+        noDeath(false);
+        testBlocks();
+        BlockPos table = h.absolutePos(new BlockPos(2, 1, 2));
+        h.getLevel().setBlockAndUpdate(table, Blocks.IRON_BLOCK.defaultBlockState());
+        ServerPlayer p = player(h, 3.5, 2.5);
+        ServerPlayer medic = player(h, 1.5, 2.5);
+        h.assertTrue(HospitalService.onUseBlock(p, table), "лечь на стол");
+        h.assertTrue(HospitalService.onRestraintTable(p), "стол с фиксацией распознан");
+        var restrain = new faygolover.rpmedicine.network.PanelActionPacket(p.getId(), faygolover.rpmedicine.network.PanelActionPacket.Kind.RESTRAIN,
+                faygolover.rpmedicine.core.BodyPart.CHEST, -1);
+        faygolover.rpmedicine.server.PanelActions.handle(medic, restrain);
+        MedicalState m = state(p);
+        h.assertTrue(m.restrained, "зафиксирован");
+        HospitalService.tickPlayer(p, data(p));
+        h.assertTrue(data(p).onTable, "стол работает как операционный");
+        h.assertTrue(faygolover.rpmedicine.core.Treatments.check(m, faygolover.rpmedicine.core.BodyPart.HEAD,
+                faygolover.rpmedicine.core.TreatmentAction.AIRWAY, MedicalSettings.get()) == null, "зафиксированному в сознании воздуховод можно");
+        p.setShiftKeyDown(true);
+        HospitalService.tickPlayer(p, data(p));
+        h.assertTrue(table.equals(data(p).bedPos), "зафиксированный не встаёт");
+        faygolover.rpmedicine.server.PanelActions.handle(medic, restrain);
+        h.assertTrue(!m.restrained, "освобождён");
+        HospitalService.tickPlayer(p, data(p));
+        h.assertTrue(data(p).bedPos == null, "освобождённый встаёт");
+        remove(h, p, medic);
         h.succeed();
     }
 

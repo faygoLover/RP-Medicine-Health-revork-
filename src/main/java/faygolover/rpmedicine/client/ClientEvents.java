@@ -145,7 +145,8 @@ public final class ClientEvents {
         var pos = bhr.getBlockPos();
         var looked = mc.level.getBlockState(pos);
         // Операционный стол — сам себе монитор (третий этап).
-        if (!HospitalBlocks.is(looked, HospitalFunction.MONITOR) && !HospitalBlocks.is(looked, HospitalFunction.OPERATING_TABLE)) return;
+        if (!HospitalBlocks.is(looked, HospitalFunction.MONITOR) && !HospitalBlocks.is(looked, HospitalFunction.OPERATING_TABLE)
+                && !HospitalBlocks.is(looked, HospitalFunction.RESTRAINT_TABLE)) return;
         if (mc.player.getEyePosition().distanceTo(net.minecraft.world.phys.Vec3.atCenterOf(pos)) > 8) return;
         Network.sendToServer(new MonitorRequestPacket(pos));
     }

@@ -222,6 +222,7 @@ public final class TreatmentService {
     static String actorRefusal(ServerPlayer actor, LivingEntity target) {
         MedicalState own = Medical.state(actor);
         if (own != null && own.isDown()) return "rpmedicine.refuse.actor_down";
+        if (own != null && own.restrained) return "rpmedicine.refuse.actor_restrained";
         var d = Medical.data(actor);
         if (d != null && d.lastMods.armsDisabled) return "rpmedicine.refuse.arms_broken";
         if (actor != target && actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 0.5) return "rpmedicine.refuse.too_far";

@@ -45,6 +45,7 @@ public class MedicalPanelScreen extends Screen {
     private Button dripButton;
     private Button tubeButton;
     private Button airwayButton;
+    private Button restrainButton;
     /** Панель уже открывалась и отписалась от осмотра (вернулись после мини-игры) — подписаться снова. */
     private boolean unsubscribed;
 
@@ -132,6 +133,9 @@ public class MedicalPanelScreen extends Screen {
         airwayButton = addRenderableWidget(Button.builder(Component.translatable("rpmedicine.panel.remove_airway"), btn ->
                 Network.sendToServer(new PanelActionPacket(targetId, PanelActionPacket.Kind.REMOVE_AIRWAY, BodyPart.HEAD, -1)))
                 .bounds(generalX(), top() + 140, 100, 16).build());
+        restrainButton = addRenderableWidget(Button.builder(Component.translatable("rpmedicine.panel.restrain"), btn ->
+                Network.sendToServer(new PanelActionPacket(targetId, PanelActionPacket.Kind.RESTRAIN, BodyPart.CHEST, -1)))
+                .bounds(generalX(), top() + 158, 100, 16).build());
         if (ClientState.exam != null) onExam(ClientState.exam);
         updateButtons();
     }
@@ -144,6 +148,10 @@ public class MedicalPanelScreen extends Screen {
                 .anyMatch(l -> l.key().equals("drip_blood") || l.key().equals("drip_saline"));
         if (tubeButton != null) tubeButton.visible = exam != null && (exam.general() & 1) != 0;
         if (airwayButton != null) airwayButton.visible = exam != null && (exam.general() & 2) != 0;
+        if (restrainButton != null) {
+            restrainButton.visible = exam != null && (exam.general() & 12) != 0;
+            restrainButton.setMessage(Component.translatable(exam != null && (exam.general() & 8) != 0 ? "rpmedicine.panel.release" : "rpmedicine.panel.restrain"));
+        }
     }
 
     @Override

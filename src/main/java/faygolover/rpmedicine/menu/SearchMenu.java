@@ -22,6 +22,9 @@ import java.util.function.Predicate;
  * как у {@link Inventory}: 0–35 основной, 36–39 броня, 40 вторая рука.
  */
 public class SearchMenu extends AbstractContainerMenu {
+    /** Слоты брони цели слева направо: голова, грудь, ноги, ступни. */
+    private static final net.minecraft.world.entity.EquipmentSlot[] ARMOR = {net.minecraft.world.entity.EquipmentSlot.HEAD,
+            net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET};
     public static final int TARGET_SIZE = 41;
 
     private final Container target;
@@ -60,7 +63,20 @@ public class SearchMenu extends AbstractContainerMenu {
     private void layout(Inventory own, IItemHandlerModifiable curios) {
         int y = 18;
         // Броня (голова…ступни) и вторая рука.
-        for (int i = 0; i < 4; i++) addSlot(new Slot(target, 39 - i, 8 + i * 18, y));
+        for (int i = 0; i < 4; i++) {
+            net.minecraft.world.entity.EquipmentSlot es = ARMOR[i];
+            addSlot(new Slot(target, 39 - i, 8 + i * 18, y) {
+                @Override
+                public boolean mayPlace(net.minecraft.world.item.ItemStack st) {
+                    return net.minecraft.world.entity.Mob.getEquipmentSlotForItem(st) == es;
+                }
+
+                @Override
+                public int getMaxStackSize() {
+                    return 1;
+                }
+            });
+        }
         addSlot(new Slot(target, 40, 8 + 5 * 18, y));
         y += 22;
         for (int r = 0; r < 3; r++)

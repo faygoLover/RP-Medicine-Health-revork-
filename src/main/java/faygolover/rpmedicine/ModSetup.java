@@ -78,6 +78,7 @@ public final class ModSetup {
         bus.addListener(InteractionHandler::onToss);
         bus.addListener(InteractionHandler::onPickup);
         bus.addListener(InteractionHandler::onUseStart);
+        bus.addListener(InteractionHandler::onUseTick);
         bus.addListener(InteractionHandler::onJump);
         bus.addListener(faygolover.rpmedicine.server.BloodService::onContainerClose);
         bus.addListener(faygolover.rpmedicine.server.SurvivalService::onUseFinish);

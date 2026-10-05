@@ -668,6 +668,14 @@ for k, ru, en in [
     ("injure_btn", "Нанести", "Inflict"), ("heal_part_btn", "Лечить часть", "Heal part"), ("drug_btn", "Ввести", "Give"),
     ("severity", "Тяжесть %s", "Severity %s"), ("dose", "Доза %s", "Dose %s"), ("no_drugs", "нет препаратов", "no drugs")]:
     t("rpmedicine.gm." + k, ru, en)
+for k, ru, en in [
+    ("bed.restrained", "Вы зафиксированы — встать не получится", "You are restrained and cannot get up"),
+    ("refuse.not_on_restraint_table", "Зафиксировать можно только на столе с фиксацией", "Can only restrain on a restraint table"),
+    ("msg.restrained", "Пациент зафиксирован", "Patient restrained"), ("msg.released", "Пациент освобождён", "Patient released"),
+    ("msg.you_restrained", "Вас зафиксировали", "You have been restrained"), ("msg.you_released", "Вас освободили", "You have been released"),
+    ("refuse.actor_restrained", "Вы зафиксированы", "You are restrained"),
+    ("panel.restrain", "Зафиксировать", "Restrain"), ("panel.release", "Освободить", "Release")]:
+    t("rpmedicine." + k, ru, en)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

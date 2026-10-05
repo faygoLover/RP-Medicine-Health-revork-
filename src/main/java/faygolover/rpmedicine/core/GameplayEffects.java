@@ -48,7 +48,7 @@ public final class GameplayEffects {
 
     public static Mods compute(MedicalState m, PatientTraits traits, MedicalSettings s) {
         Mods r = new Mods();
-        if (m.down != Down.NONE) {
+        if (m.down != Down.NONE || m.restrained) {
             r.speed = 0;
             r.noSprint = true;
             r.noJump = true;

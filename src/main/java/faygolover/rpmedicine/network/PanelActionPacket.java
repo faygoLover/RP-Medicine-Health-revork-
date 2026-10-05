@@ -22,7 +22,9 @@ public record PanelActionPacket(int targetId, Kind kind, BodyPart part, int slot
         /** Вправить вывих пустой рукой (второй этап). */
         REDUCE,
         /** Извлечь интубационную трубку, убрать воздуховод. */
-        REMOVE_TUBE, REMOVE_AIRWAY
+        REMOVE_TUBE, REMOVE_AIRWAY,
+        /** Зафиксировать на столе с фиксацией или освободить. */
+        RESTRAIN
     }
 
     public static void encode(PanelActionPacket p, FriendlyByteBuf buf) {
