@@ -59,7 +59,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
     @Nullable
     private String skinSignature;
     private int selectedSlot;
-    private byte traitFlags;
+    private int traitFlags;
     private boolean changed;
     /** Когда тело последний раз ранили (правило «в бою — прогресс-бар»). */
     public long lastHurtTick = Long.MIN_VALUE / 2;
@@ -112,7 +112,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
 
     public PatientTraits traits() {
         return new PatientTraits((traitFlags & 1) != 0, (traitFlags & 2) != 0, (traitFlags & 4) != 0, (traitFlags & 8) != 0, (traitFlags & 16) != 0,
-                (traitFlags & 32) != 0, (traitFlags & 64) != 0, (traitFlags & 128) != 0);
+                (traitFlags & 32) != 0, (traitFlags & 64) != 0, (traitFlags & 128) != 0, (traitFlags & 256) != 0, (traitFlags & 512) != 0);
     }
 
     public void markChanged() {
@@ -141,9 +141,9 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
             skinSignature = p.getSignature();
         }
         selectedSlot = player.getInventory().selected;
-        traitFlags = (byte) ((traits.tough ? 1 : 0) | (traits.fragile ? 2 : 0) | (traits.brave ? 4 : 0)
+        traitFlags = ((traits.tough ? 1 : 0) | (traits.fragile ? 2 : 0) | (traits.brave ? 4 : 0)
                 | (traits.coward ? 8 : 0) | (traits.leftHanded ? 16 : 0) | (traits.diabetic ? 32 : 0) | (traits.smoker ? 64 : 0)
-                | (traits.alcoholic ? 128 : 0));
+                | (traits.alcoholic ? 128 : 0) | (traits.teetotaler ? 256 : 0) | (traits.caffeineAddict ? 512 : 0));
         setCustomName(Component.literal(ownerName));
         setCustomNameVisible(false);
         moveTo(player.getX(), player.getY(), player.getZ(), player.getYRot(), 0);
@@ -246,7 +246,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
         if (skinValue != null) tag.putString("Skin", skinValue);
         if (skinSignature != null) tag.putString("SkinSig", skinSignature);
         tag.putInt("Selected", selectedSlot);
-        tag.putByte("Traits", traitFlags);
+        tag.putInt("Traits", traitFlags);
         if (bedPos != null) tag.putLong("Bed", bedPos.asLong());
     }
 
@@ -261,7 +261,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
         skinValue = tag.contains("Skin") ? tag.getString("Skin") : null;
         skinSignature = tag.contains("SkinSig") ? tag.getString("SkinSig") : null;
         selectedSlot = tag.getInt("Selected");
-        traitFlags = tag.getByte("Traits");
+        traitFlags = tag.getInt("Traits");
         bedPos = tag.contains("Bed") ? net.minecraft.core.BlockPos.of(tag.getLong("Bed")) : null;
     }
 
@@ -324,7 +324,7 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
             buf.writeBoolean(skinSignature != null);
             if (skinSignature != null) buf.writeUtf(skinSignature, 32767);
         }
-        buf.writeByte(traitFlags);
+        buf.writeVarInt(traitFlags);
     }
 
     @Override
@@ -335,6 +335,6 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
             skinValue = buf.readUtf(32767);
             skinSignature = buf.readBoolean() ? buf.readUtf(32767) : null;
         }
-        traitFlags = buf.readByte();
+        traitFlags = buf.readVarInt();
     }
 }

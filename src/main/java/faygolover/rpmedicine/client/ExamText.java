@@ -20,6 +20,10 @@ public final class ExamText {
             case "consciousness", "skin", "breathing_rate" -> Component.translatable(k + "_" + arg(a, 0));
             case "pulse" -> Component.translatable(k + "_" + arg(a, 0) + (arg(a, 1) == 1 ? "_weak" : ""));
             case "hover_knockdown" -> Component.translatable(k, time(arg(a, 0)));
+            case "withdrawal" -> Component.translatable(k, Component.translatable(
+                    faygolover.rpmedicine.core.Substance.VALUES[Math.max(0, Math.min(faygolover.rpmedicine.core.Substance.VALUES.length - 1, arg(a, 0)))].translationKey()));
+            case "organ_rejection" -> Component.translatable(k, Component.translatable(
+                    faygolover.rpmedicine.core.Organ.VALUES[Math.max(0, Math.min(faygolover.rpmedicine.core.Organ.VALUES.length - 1, arg(a, 0)))].translationKey()));
             case "bleeding_kind" -> Component.translatable(k, Component.translatable("rpmedicine.exam.bleed_strength_" + arg(a, 0)),
                     Component.translatable("rpmedicine.exam.bleed_kind_" + arg(a, 1)));
             case "dressing_seeping" -> Component.translatable(k, Component.translatable("rpmedicine.exam.bleed_strength_" + arg(a, 0)));

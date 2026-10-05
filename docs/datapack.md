@@ -106,3 +106,18 @@
 - `rpmedicine:medical_items` (предметы) — что кладётся в подсумок и аптечку.
 - `rpmedicine:finishing_weapons` (предметы) — чем ещё можно добивать (оружие TaCZ уже там).
 - `rpmedicine:biting_mobs` (сущности) — чьи удары дают укус.
+
+## substances — вещества от чужих модов (третий этап, п. 9)
+`data/<ns>/rpmedicine/substances/<имя>.json`:
+```json
+{"substance": "alcohol", "amount": 1.5,
+ "items": ["vinery:red_wine"],
+ "right_click": ["the_dirty_stuff:cigarette"],
+ "effects": ["tobacconistmod:nicotine"],
+ "cooldown_seconds": 30}
+```
+- `substance`: `opioid`, `benzo`, `alcohol`, `nicotine`, `caffeine`, `stimulant`; `amount` — «стандартных доз» за раз.
+- `items` — доза, когда предмет допит или съеден; `right_click` — по ПКМ предметом (курение, которое не «допивается»); `effects` — когда мод накладывает этот эффект. `cooldown_seconds` — не чаще (затяжки, обновления эффекта).
+- В `drugs` поле `"substance": {"id": "benzo", "amount": 1.0}` — вещество препарата нашего мода; `"opioid": true` — опиат.
+- По умолчанию: Brewery (пиво 1, виски и Dark Brew 2), Vinery (вина 1,5, сидр и медовуха 1), Tobacconist (эффект «никотин» 0,4 раз в 30 с), The Dirty Stuff (сигареты и сигары по ПКМ, 1 раз в минуту), Herbal Brews (кофе 1, чай 0,5).
+

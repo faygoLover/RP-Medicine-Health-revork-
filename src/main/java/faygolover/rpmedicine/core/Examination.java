@@ -179,6 +179,14 @@ public final class Examination {
 
     static List<Line> general(MedicalState m, int lvl, boolean self, MedicalSettings s) {
         List<Line> out = new ArrayList<>();
+        // Алкоголь и ломка (п. 9).
+        if (m.intoxication > 10) out.add(new Line(m.intoxication > 40 ? "drunk" : "smells_alcohol"));
+        for (Substance x : Substance.VALUES) {
+            if (!Substances.withdrawal(m, x, s)) continue;
+            out.add(lvl >= 3 ? new Line("withdrawal", new int[]{x.ordinal()}) : new Line("withdrawal_signs"));
+            break;
+        }
+        if (m.seizureSeconds > 0) out.add(new Line("seizure"));
         // Сахар (диабет): холодный пот при низком, запах ацетона при высоком.
         if (m.bloodSugar < s.sugarLow) out.add(new Line("cold_sweat"));
         if (m.bloodSugar > s.sugarHigh && lvl >= 3) out.add(new Line("acetone_breath"));

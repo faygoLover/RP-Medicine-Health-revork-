@@ -90,6 +90,19 @@ public final class MedicalNbt {
         }
         if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
         if (m.organRejection != 0) t.putByte("orgRej", (byte) m.organRejection);
+        boolean anySub = m.dependence != 0 || m.intoxication > 0;
+        for (double v : m.tolerance) if (v > 0) anySub = true;
+        if (anySub) {
+            net.minecraft.nbt.CompoundTag sub = new net.minecraft.nbt.CompoundTag();
+            for (var x : faygolover.rpmedicine.core.Substance.VALUES) {
+                putIf(sub, "tol_" + x.id, m.tolerance[x.ordinal()]);
+                putIf(sub, "since_" + x.id, m.sinceDose[x.ordinal()]);
+            }
+            if (m.dependence != 0) sub.putInt("dep", m.dependence);
+            putIf(sub, "intox", m.intoxication);
+            putIf(sub, "seiz", m.seizureSeconds);
+            t.put("subst", sub);
+        }
         if (Math.abs(m.bloodSugar - faygolover.rpmedicine.core.Metabolism.NORMAL_SUGAR) > 0.01) t.putFloat("sugar", (float) m.bloodSugar);
         putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
@@ -242,6 +255,16 @@ public final class MedicalNbt {
         for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
         m.organsMissing = t.getByte("orgMiss") & 0xFF;
         m.organRejection = t.getByte("orgRej") & 0xFF;
+        if (t.contains("subst")) {
+            var sub = t.getCompound("subst");
+            for (var x : faygolover.rpmedicine.core.Substance.VALUES) {
+                m.tolerance[x.ordinal()] = sub.getFloat("tol_" + x.id);
+                m.sinceDose[x.ordinal()] = sub.getFloat("since_" + x.id);
+            }
+            m.dependence = sub.getInt("dep");
+            m.intoxication = sub.getFloat("intox");
+            m.seizureSeconds = sub.getFloat("seiz");
+        }
         if (t.contains("sugar")) m.bloodSugar = t.getFloat("sugar");
         m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");

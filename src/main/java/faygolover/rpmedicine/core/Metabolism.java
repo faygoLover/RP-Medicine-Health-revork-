@@ -28,7 +28,6 @@ public final class Metabolism {
             m.brain = Math.max(0, m.brain - s.hypoglycemiaBrainPerHour * hours);
         // Высокий сахар — жажда и тошнота.
         if (m.bloodSugar > s.sugarHigh) {
-            m.nauseaSeconds = Math.max(m.nauseaSeconds, 20);
             m.thirst = Math.max(0, m.thirst - s.hyperglycemiaThirstPerHour * hours);
         }
     }

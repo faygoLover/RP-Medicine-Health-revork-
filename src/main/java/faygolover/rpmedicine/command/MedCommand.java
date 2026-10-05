@@ -122,6 +122,8 @@ public final class MedCommand {
                 }))
                 .then(scalar("sepsis", 0, 100, (m, v) -> m.sepsis = v))
                 .then(scalar("sugar", 1, 35, (m, v) -> m.bloodSugar = v))
+                .then(scalar("intoxication", 0, 100, (m, v) -> m.intoxication = v))
+                .then(tolerance())
                 .then(scalar("temperature", 30, 43, (m, v) -> m.bodyTemp = v))
                 .then(organ())
                 .then(foreign("bullets", true))
@@ -357,6 +359,28 @@ public final class MedCommand {
             c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.killed", t.getDisplayName()), true);
         }
         return n;
+    }
+
+    /** {@code set <цели> tolerance <вещество> <0–100>}: 0 снимает и зависимость (третий этап, п. 11). */
+    private static LiteralArgumentBuilder<CommandSourceStack> tolerance() {
+        LiteralArgumentBuilder<CommandSourceStack> lit = Commands.literal("tolerance");
+        for (faygolover.rpmedicine.core.Substance x : faygolover.rpmedicine.core.Substance.VALUES) {
+            lit.then(Commands.literal(x.id).then(Commands.argument("value", DoubleArgumentType.doubleArg(0, 100)).executes(c -> {
+                double v = DoubleArgumentType.getDouble(c, "value");
+                int n = 0;
+                for (LivingEntity t : patients(c)) {
+                    MedicalState m = Medical.state(t);
+                    m.tolerance[x.ordinal()] = v;
+                    if (v <= 0) m.dependence &= ~x.bit();
+                    m.sinceDose[x.ordinal()] = 0;
+                    Medical.changed(t);
+                    n++;
+                    c.getSource().sendSuccess(() -> Component.translatable("rpmedicine.cmd.set", t.getDisplayName(), "tolerance " + x.id, v), true);
+                }
+                return n;
+            })));
+        }
+        return lit;
     }
 
     /** {@code set <цели> organ <орган> <0–100>} (третий этап). */

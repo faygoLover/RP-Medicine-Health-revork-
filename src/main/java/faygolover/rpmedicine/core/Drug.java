@@ -14,7 +14,14 @@ import java.util.Optional;
  * @param opioid            опиат: вместе с седацией угнетает дыхание, снимается налоксоном
  */
 public record Drug(String id, Form form, List<Dose> effects, int doseLimit, double doseWindowSeconds, List<Dose> overdose,
-                   double overdoseArrestChance, boolean opioid, Special special) implements Treatments.Extra {
+                   double overdoseArrestChance, boolean opioid, Special special, Substance substance, double substanceAmount) implements Treatments.Extra {
+
+    public Drug(String id, Form form, List<Dose> effects, int doseLimit, double doseWindowSeconds, List<Dose> overdose,
+                double overdoseArrestChance, boolean opioid, Special special) {
+        this(id, form, effects, doseLimit, doseWindowSeconds, overdose, overdoseArrestChance, opioid, special,
+                opioid ? Substance.OPIOID : null, opioid ? 1.0 : 0);
+    }
+
 
     /** Форма: таблетки (только в сознании), укол, капельница (пациент на месте), наружно (на часть тела). */
     public enum Form {

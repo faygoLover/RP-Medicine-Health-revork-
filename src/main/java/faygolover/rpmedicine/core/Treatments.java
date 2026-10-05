@@ -453,7 +453,8 @@ public final class Treatments {
             case MORPHINE -> {
                 boolean overdose = m.morphineSeconds > 0;
                 m.morphineDelay = m.morphineSeconds > 0 ? 0 : s.morphineDelaySeconds;
-                m.morphineSeconds = s.morphineMinutes * 60.0 * (error ? 0.5 : 1.0);
+                m.morphineSeconds = s.morphineMinutes * 60.0 * (error ? 0.5 : 1.0) * Substances.durationFactor(m, Substance.OPIOID);
+                Substances.dose(m, Substance.OPIOID, 1.0, PatientTraits.NONE, rnd, s);
                 if (overdose) {
                     m.morphineOverdoseSeconds = s.morphineMinutes * 30.0;
                     if (rnd.nextDouble() < s.morphineOverdoseArrestChance) m.respiratoryArrest = true;

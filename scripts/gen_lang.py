@@ -843,7 +843,7 @@ for k, ru, en in [("torso_only", "Только грудь или живот", "C
     ("organ_wrong_part", "Этот орган не отсюда", "This organ belongs elsewhere"), ("organ_present", "Орган на месте", "The organ is in place"),
     ("limb_wrong_part", "Это другая конечность", "That is a different limb"), ("limb_spoiled", "Конечность испорчена", "The limb has spoiled")]:
     t("rpmedicine.refuse." + k, ru, en)
-t("rpmedicine.exam.organ_rejection", "Признаки отторжения пересаженного органа", "Signs of transplant rejection")
+t("rpmedicine.exam.organ_rejection", "Признаки отторжения пересаженного органа: %s", "Signs of transplant rejection: %s")
 for k, ru, en in [("organ_removed", "Операция: изъят орган — %s", "Surgery: organ removed — %s"), ("organ_transplanted", "Операция: пересадка органа — %s", "Surgery: organ transplant — %s"),
     ("organ_transplanted_dead", "Операция: пересажен нежизнеспособный орган — %s", "Surgery: non-viable organ transplanted — %s"),
     ("limb_reattached", "Операция: пришита конечность — %s", "Surgery: limb reattached — %s")]:
@@ -879,6 +879,21 @@ for k, ru, en in [("tube_depth", "Глубина трубки", "Tube depth"), (
     ("cords_closed", "Связки сомкнуты", "The cords are closed")]:
     t("rpmedicine.minigame." + k, ru, en)
 t("rpmedicine.settings.show_missing_limbs", "Скрывать отнятые конечности", "Hide missing limbs")
+# Вещества (третий этап, п. 9).
+for k, ru, en in [("opioid", "опиаты", "opioids"), ("benzo", "успокоительные", "benzodiazepines"), ("alcohol", "алкоголь", "alcohol"),
+    ("nicotine", "никотин", "nicotine"), ("caffeine", "кофеин", "caffeine"), ("stimulant", "стимуляторы", "stimulants")]:
+    t("rpmedicine.substance." + k, ru, en)
+for k, ru, en in [("opioid", "Ломит всё тело. Нужна доза...", "Your whole body aches. You need a dose..."),
+    ("benzo", "Тревога не отпускает, руки дрожат.", "Anxiety won't let go, your hands tremble."),
+    ("alcohol", "Трясёт. Хочется выпить.", "You're shaking. You want a drink."),
+    ("nicotine", "Тянет закурить.", "You crave a smoke."),
+    ("caffeine", "Голова раскалывается, нужен кофе.", "Splitting headache — you need coffee."),
+    ("stimulant", "Сил нет ни на что.", "No energy for anything.")]:
+    t("rpmedicine.craving." + k, ru, en)
+for k, ru, en in [("smells_alcohol", "Запах алкоголя", "Smells of alcohol"), ("drunk", "Пьян: шатается, речь невнятная", "Drunk: staggering, slurred speech"),
+    ("withdrawal_signs", "Пот, дрожь, беспокойство", "Sweating, tremor, restlessness"), ("withdrawal", "Абстиненция: %s", "Withdrawal: %s"),
+    ("seizure", "Судороги!", "Seizure!")]:
+    t("rpmedicine.exam." + k, ru, en)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

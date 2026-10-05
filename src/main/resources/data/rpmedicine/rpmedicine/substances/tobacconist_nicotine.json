@@ -1,0 +1,8 @@
+{
+  "substance": "nicotine",
+  "amount": 0.4,
+  "effects": [
+    "tobacconistmod:nicotine"
+  ],
+  "cooldown_seconds": 30
+}

@@ -141,6 +141,13 @@ public final class MedicalState {
     public int organRejection;
     /** Сахар крови, ммоль/л (имеет значение у диабетика; третий этап, п. 8). */
     public double bloodSugar = Metabolism.NORMAL_SUGAR;
+    /** Вещества (третий этап, п. 9): толерантность 0–100, зависимость (биты), секунд в сети с последней дозы. */
+    public final double[] tolerance = new double[Substance.VALUES.length];
+    public int dependence;
+    public final double[] sinceDose = new double[Substance.VALUES.length];
+    /** Опьянение 0–100; судороги (ломка алкоголя), секунд. */
+    public double intoxication;
+    public double seizureSeconds;
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -254,6 +261,11 @@ public final class MedicalState {
         organsMissing = 0;
         organRejection = 0;
         bloodSugar = Metabolism.NORMAL_SUGAR;
+        java.util.Arrays.fill(tolerance, 0);
+        java.util.Arrays.fill(sinceDose, 0);
+        dependence = 0;
+        intoxication = 0;
+        seizureSeconds = 0;
         doses.clear();
         effects.clear();
     }
@@ -399,6 +411,11 @@ public final class MedicalState {
         organsMissing = o.organsMissing;
         organRejection = o.organRejection;
         bloodSugar = o.bloodSugar;
+        System.arraycopy(o.tolerance, 0, tolerance, 0, tolerance.length);
+        System.arraycopy(o.sinceDose, 0, sinceDose, 0, sinceDose.length);
+        dependence = o.dependence;
+        intoxication = o.intoxication;
+        seizureSeconds = o.seizureSeconds;
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;

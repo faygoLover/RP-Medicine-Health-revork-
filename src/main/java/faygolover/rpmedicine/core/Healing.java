@@ -74,6 +74,7 @@ public final class Healing {
      * Идёт шагами по минуте, чтобы раны успевали закрываться.
      */
     public static void fastForward(MedicalState m, double seconds, MedicalSettings s) {
+        Substances.advance(m, seconds, s);
         double left = seconds;
         while (left > 0) {
             double dt = Math.min(60, left);

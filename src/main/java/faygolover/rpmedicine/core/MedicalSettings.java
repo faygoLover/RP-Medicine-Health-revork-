@@ -516,6 +516,30 @@ public final class MedicalSettings {
     public double smokerLungsFloor = 15;
     public double alcoholicLiverFloor = 20;
     public double smokerCoughsPerHour = 1;
+    /** Вещества (п. 9): включены; множители прироста толерантности и шанса зависимости; спад толерантности, %/ч;
+     *  ниже какой толерантности зависимость проходит; множитель задержки ломки; боль и замедление при ломке. */
+    public boolean substancesEnabled = true;
+    public double toleranceGainFactor = 1.0;
+    public double dependenceFactor = 1.0;
+    public double toleranceDecayPerHour = 2.0;
+    public double dependenceLossTolerance = 10.0;
+    public double withdrawalDelayFactor = 1.0;
+    public double withdrawalPain = 20.0;
+    public double withdrawalUseSlow = 1.3;
+    /** Алкоголь: опьянение за дозу, спад в час; сильное, «вырубило», рвота; судороги при ломке (шанс в час, секунд). */
+    public double alcoholIntoxicationPerDose = 18.0;
+    public double alcoholDecayPerHour = 12.0;
+    public double intoxicationHeavy = 70.0;
+    public double intoxicationPassOut = 90.0;
+    public double intoxicationVomit = 60.0;
+    public double alcoholSeizureChancePerHour = 0.2;
+    public double seizureSeconds = 20.0;
+    /** Никотин: лёгкое обезболивание за дозу. */
+    public double nicotineAnalgesia = 5.0;
+    /** Перки: стартовая толерантность (и зависимость) алкоголика, курильщика, кофеинозависимого. */
+    public double alcoholicTolerance = 60.0;
+    public double smokerNicotineTolerance = 30.0;
+    public double caffeineAddictTolerance = 30.0;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

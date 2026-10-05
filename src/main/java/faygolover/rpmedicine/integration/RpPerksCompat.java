@@ -70,7 +70,7 @@ public final class RpPerksCompat {
         boolean brave = p.hasPerk(Perk.BRAVE) || p.hasPerk(Perk.STRONG_WILLED);
         boolean coward = p.hasPerk(Perk.COWARD);
         return new PatientTraits(tough, fragile, brave, coward, left,
-                p.hasPerk(Perk.DIABETIC), p.hasPerk(Perk.SMOKER), p.hasPerk(Perk.ALCOHOLIC));
+                p.hasPerk(Perk.DIABETIC), p.hasPerk(Perk.SMOKER), p.hasPerk(Perk.ALCOHOLIC), p.hasPerk(Perk.TEETOTALER), p.hasPerk(Perk.CAFFEINE_ADDICTION));
     }
 
     private static PlayerPerks perks(Player player) {

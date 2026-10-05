@@ -127,6 +127,13 @@ public final class GameplayEffects {
             speed -= s.painLimpSpeedPenalty;
             r.staminaRegen *= 0.8;
         }
+        // Опьянение: шатает и качает прицел; ломка — тремор и всё медленнее (п. 9.2).
+        if (m.intoxication > 20) r.aimSway = Math.max(r.aimSway, Math.min(1.0, m.intoxication / 100.0));
+        if (m.intoxication > 40) speed -= 0.1;
+        if (Substances.anyWithdrawal(m, s)) {
+            r.useTimeFactor *= s.withdrawalUseSlow;
+            r.aimSway = Math.max(r.aimSway, 0.3);
+        }
         // Гипогликемия: слабость.
         if (m.bloodSugar < s.sugarLow) {
             speed -= s.dazedSpeedPenalty;

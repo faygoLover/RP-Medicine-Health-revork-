@@ -79,6 +79,10 @@ public final class ModSetup {
         bus.addListener(InteractionHandler::onPickup);
         bus.addListener(InteractionHandler::onUseStart);
         bus.addListener(InteractionHandler::onUseTick);
+        // Вещества от чужих модов (третий этап, п. 9).
+        bus.addListener(faygolover.rpmedicine.server.SubstanceService::onUseFinish);
+        bus.addListener(faygolover.rpmedicine.server.SubstanceService::onRightClick);
+        bus.addListener(faygolover.rpmedicine.server.SubstanceService::onEffectAdded);
         bus.addListener(InteractionHandler::onJump);
         bus.addListener(faygolover.rpmedicine.server.BloodService::onContainerClose);
         bus.addListener(faygolover.rpmedicine.server.SurvivalService::onUseFinish);
@@ -213,6 +217,7 @@ public final class ModSetup {
         e.addListener(MobRules.INSTANCE);
         e.addListener(HospitalBlocks.LOADER);
         e.addListener(faygolover.rpmedicine.data.DrugRules.LOADER);
+        e.addListener(faygolover.rpmedicine.data.SubstanceRules.LOADER);
         e.addListener(faygolover.rpmedicine.server.SurvivalService.DRINKS);
     }
 

@@ -4,6 +4,10 @@
   ],
   "form": "injection",
   "min_level": 5,
+  "substance": {
+    "id": "benzo",
+    "amount": 1.0
+  },
   "effects": [
     {
       "effect": "sedation",

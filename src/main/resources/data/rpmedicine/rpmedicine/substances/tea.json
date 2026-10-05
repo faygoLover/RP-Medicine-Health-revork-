@@ -1,0 +1,10 @@
+{
+  "substance": "caffeine",
+  "amount": 0.5,
+  "items": [
+    "herbalbrews:black_tea_block",
+    "herbalbrews:green_tea_block",
+    "herbalbrews:oolong_tea_block",
+    "herbalbrews:yerba_mate_tea_block"
+  ]
+}

@@ -21,6 +21,9 @@ public final class PatientTraits {
     public final boolean diabetic;
     public final boolean smoker;
     public final boolean alcoholic;
+    /** «Непьющий» — опьянение вдвое сильнее; «Зависимость от кофеина». */
+    public final boolean teetotaler;
+    public final boolean caffeineAddict;
 
     public PatientTraits(boolean tough, boolean fragile, boolean brave, boolean coward, boolean leftHanded) {
         this(tough, fragile, brave, coward, leftHanded, false, false, false);
@@ -28,6 +31,13 @@ public final class PatientTraits {
 
     public PatientTraits(boolean tough, boolean fragile, boolean brave, boolean coward, boolean leftHanded,
                          boolean diabetic, boolean smoker, boolean alcoholic) {
+        this(tough, fragile, brave, coward, leftHanded, diabetic, smoker, alcoholic, false, false);
+    }
+
+    public PatientTraits(boolean tough, boolean fragile, boolean brave, boolean coward, boolean leftHanded,
+                         boolean diabetic, boolean smoker, boolean alcoholic, boolean teetotaler, boolean caffeineAddict) {
+        this.teetotaler = teetotaler;
+        this.caffeineAddict = caffeineAddict;
         this.tough = tough;
         this.fragile = fragile;
         this.brave = brave;

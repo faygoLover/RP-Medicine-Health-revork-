@@ -81,6 +81,7 @@ public final class PatientTicker {
         // Голод, жажда, среда (второй этап, п. 12): своя жажда убывает и у здорового.
         SurvivalService.prepareStep(sp, d, in, in.sprintSeconds);
         VanillaEffects.prepareStep(sp, m, in.dt);
+        SubstanceService.tick(sp, m);
         boolean quiet = m.isQuiet(s) && d.distance < 0.01 && in.ambientTempShift == 0;
         if (!quiet) {
             long t0 = System.nanoTime();

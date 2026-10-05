@@ -29,8 +29,12 @@ public final class ChatHandler {
         Speech sp = Speech.of(m);
         if (sp == Speech.SILENCED) event.setCanceled(true);
         else if (!sp.canSpeak()) event.setMessage(Component.literal(DOTS));
-        else if (sp == Speech.BREATHLESS)
-            event.setMessage(Component.literal(Speech.breathless(event.getRawText(), Speech.breathlessness(m, faygolover.rpmedicine.core.MedicalSettings.get()), RANDOM.split())));
+        else {
+            String text = event.getRawText();
+            if (sp == Speech.BREATHLESS) text = Speech.breathless(text, Speech.breathlessness(m, faygolover.rpmedicine.core.MedicalSettings.get()), RANDOM.split());
+            text = faygolover.rpmedicine.core.Substances.slur(text, m.intoxication, RANDOM.split());
+            if (!text.equals(event.getRawText())) event.setMessage(Component.literal(text));
+        }
     }
 
     public static void onCommand(CommandEvent event) {

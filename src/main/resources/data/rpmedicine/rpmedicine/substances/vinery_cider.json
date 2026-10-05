@@ -1,0 +1,9 @@
+{
+  "substance": "alcohol",
+  "amount": 1.0,
+  "items": [
+    "vinery:apple_cider",
+    "vinery:kelp_cider",
+    "vinery:mead"
+  ]
+}

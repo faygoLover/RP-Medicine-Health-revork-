@@ -1,0 +1,26 @@
+{
+  "substance": "alcohol",
+  "amount": 1.5,
+  "items": [
+    "vinery:aegis_wine",
+    "vinery:apple_wine",
+    "vinery:bolvar_wine",
+    "vinery:bottle_mojang_noir",
+    "vinery:chenet_wine",
+    "vinery:cherry_wine",
+    "vinery:chorus_wine",
+    "vinery:clark_wine",
+    "vinery:cristel_wine",
+    "vinery:glowing_wine",
+    "vinery:jellie_wine",
+    "vinery:lilitu_wine",
+    "vinery:magnetic_wine",
+    "vinery:mellohi_wine",
+    "vinery:noir_wine",
+    "vinery:red_wine",
+    "vinery:solaris_wine",
+    "vinery:stal_wine",
+    "vinery:strad_wine",
+    "vinery:villagers_fright"
+  ]
+}

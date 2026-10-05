@@ -1,0 +1,8 @@
+{
+  "substance": "caffeine",
+  "amount": 1.0,
+  "items": [
+    "herbalbrews:coffee_block",
+    "herbalbrews:milk_coffee_block"
+  ]
+}

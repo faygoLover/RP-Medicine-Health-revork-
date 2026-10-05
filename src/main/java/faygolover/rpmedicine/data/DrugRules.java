@@ -96,7 +96,16 @@ public final class DrugRules {
         }
         String sp = GsonHelper.getAsString(o, "special", "none");
         Drug.Special special = Drug.Special.byId(sp).orElseThrow(() -> new IllegalArgumentException("неизвестное действие " + sp));
-        return new Drug(id, form, effects, limit, window, overdose, arrest, GsonHelper.getAsBoolean(o, "opioid", false), special);
+        boolean opioid = GsonHelper.getAsBoolean(o, "opioid", false);
+        faygolover.rpmedicine.core.Substance sub = opioid ? faygolover.rpmedicine.core.Substance.OPIOID : null;
+        double subAmount = opioid ? 1.0 : 0;
+        if (o.has("substance")) {
+            JsonObject so = GsonHelper.getAsJsonObject(o, "substance");
+            String sid = GsonHelper.getAsString(so, "id");
+            sub = faygolover.rpmedicine.core.Substance.byId(sid).orElseThrow(() -> new IllegalArgumentException("неизвестное вещество " + sid));
+            subAmount = GsonHelper.getAsDouble(so, "amount", 1.0);
+        }
+        return new Drug(id, form, effects, limit, window, overdose, arrest, opioid, special, sub, subAmount);
     }
 
     private static List<Drug.Dose> doses(JsonArray arr) {

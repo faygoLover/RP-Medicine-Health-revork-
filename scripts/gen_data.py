@@ -205,7 +205,7 @@ DRUGS = {
     "ceftriaxone": {"form": "injection", "min_level": 5, "effects": [eff("antibiotic", 13, 300, 12 * H)],
                     "dose": {"limit": 1, "window_hours": 12},
                     "overdose": {"effects": [eff("pressure", -15, 300, H), eff("heart_rate", 15, 300, H)]}},
-    "diazepam": {"form": "injection", "min_level": 5, "effects": [eff("sedation", 40, 60, 30 * 60), eff("heart_rate", -10, 60, 30 * 60)],
+    "diazepam": {"form": "injection", "min_level": 5, "substance": {"id": "benzo", "amount": 1.0}, "effects": [eff("sedation", 40, 60, 30 * 60), eff("heart_rate", -10, 60, 30 * 60)],
                  "dose": {"limit": 2, "window_hours": 8},
                  "overdose": {"effects": [eff("sedation", 70, 0, 40 * 60), eff("resp_depression", 0.3, 0, 40 * 60)], "arrest_chance": 0.05}},
     "norepinephrine": {"form": "drip", "min_level": 6, "effects": [eff("pressure", 30, 30, 20 * 60), eff("heart_rate", 10, 30, 20 * 60)],
@@ -268,6 +268,32 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
+# Вещества от модов сборки (третий этап, п. 9): допитое, ПКМ, наложенный эффект.
+WINES = ["aegis_wine", "apple_wine", "bolvar_wine", "bottle_mojang_noir", "chenet_wine", "cherry_wine", "chorus_wine", "clark_wine",
+         "cristel_wine", "glowing_wine", "jellie_wine", "lilitu_wine", "magnetic_wine", "mellohi_wine", "noir_wine", "red_wine",
+         "solaris_wine", "stal_wine", "strad_wine", "villagers_fright"]
+WHISKEY = ["whiskey_ak", "whiskey_carrasconlabel", "whiskey_cristelwalker", "whiskey_highland_hearth", "whiskey_jamesons_malt",
+           "whiskey_jojannik", "whiskey_lilitusinglemalt", "whiskey_maggoallan", "whiskey_smokey_reverie"]
+DIRTY = ["black_light_cigarette", "black_slim_cigar", "blue_cigar", "blue_cigarette", "cigar", "cigarette", "light_blue_cigar",
+         "light_blue_cigarette", "light_gray_cigar", "light_gray_cigarette", "light_gray_light_cigarette", "light_gray_slim_cigar",
+         "light_gray_ultralight_cigarette", "light_gray_ultraslim_cigar", "magenta_cigar", "magenta_cigarette", "orange_cigar",
+         "orange_cigarette", "orange_ultralight_cigarette", "orange_ultraslim_cigar", "pink_ultralight_cigarette", "pink_ultraslim_cigar",
+         "red_cigar", "red_cigarette", "red_ultralight_cigarette", "red_ultraslim_cigar", "white_light_cigarette", "white_slim_cigar",
+         "yellow_cigar", "yellow_cigarette"]
+SUBSTANCES = {
+    "brewery_beer": {"substance": "alcohol", "amount": 1.0,
+                     "items": [f"brewery:beer_{b}" for b in ["barley", "haley", "hops", "nettle", "oat", "wheat"]]},
+    "brewery_strong": {"substance": "alcohol", "amount": 2.0, "items": [f"brewery:{w}" for w in WHISKEY] + ["brewery:dark_brew"]},
+    "vinery_wine": {"substance": "alcohol", "amount": 1.5, "items": [f"vinery:{w}" for w in WINES]},
+    "vinery_cider": {"substance": "alcohol", "amount": 1.0, "items": ["vinery:apple_cider", "vinery:kelp_cider", "vinery:mead"]},
+    "tobacconist_nicotine": {"substance": "nicotine", "amount": 0.4, "effects": ["tobacconistmod:nicotine"], "cooldown_seconds": 30},
+    "dirty_stuff_tobacco": {"substance": "nicotine", "amount": 1.0, "right_click": [f"the_dirty_stuff:{c}" for c in DIRTY], "cooldown_seconds": 60},
+    "coffee": {"substance": "caffeine", "amount": 1.0, "items": ["herbalbrews:coffee_block", "herbalbrews:milk_coffee_block"]},
+    "tea": {"substance": "caffeine", "amount": 0.5, "items": [f"herbalbrews:{t}_tea_block" for t in ["black", "green", "oolong", "yerba_mate"]]},
+}
+for name, obj in SUBSTANCES.items():
+    write(f"{DATA}/rpmedicine/rpmedicine/substances/{name}.json", obj)
+
 medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb", "rpmedicine:organ_container", "rpmedicine:organ"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})

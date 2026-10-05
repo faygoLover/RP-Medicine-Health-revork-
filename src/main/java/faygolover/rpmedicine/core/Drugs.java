@@ -98,9 +98,13 @@ public final class Drugs {
     public static Treatments.Result apply(MedicalState m, BodyPart part, Drug d, boolean error, RandomGenerator rnd, MedicalSettings s, double amount) {
         double eff = effectiveDose(m, d, amount, s);
         double k = (error ? 0.5 : 1.0) * eff;
+        // Толерантность к веществу препарата: действует короче (п. 9.2), затем доза идёт в счёт.
+        double tolFactor = Substances.durationFactor(m, d.substance());
+        if (d.substance() != null) Substances.dose(m, d.substance(), d.substanceAmount() * amount, PatientTraits.NONE, rnd, s);
         switch (d.special()) {
             case GLUCOSE -> m.bloodSugar = Math.min(35, m.bloodSugar + MedicalSettings.get().glucoseTabletSugar * k);
             case OPIOID_ANTIDOTE -> {
+                Substances.precipitateOpioidWithdrawal(m, s);
                 m.morphineSeconds = 0;
                 m.morphineDelay = 0;
                 m.morphineOverdoseSeconds = 0;
@@ -139,7 +143,7 @@ public final class Drugs {
                 continue;
             }
             // Сила — по дозе, длительность растёт медленнее.
-            m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * Math.sqrt(k));
+            m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * Math.sqrt(k) * tolFactor);
         }
         if (d.opioid()) {
             double longest = 0;

@@ -156,6 +156,16 @@ public final class MedicalReports {
         for (faygolover.rpmedicine.core.Organ g : faygolover.rpmedicine.core.Organ.VALUES)
             if ((m.organRejection & g.bit()) != 0) x.add("отторжение", g.id, BAD);
         if (all || m.restrained) x.add("фиксация", m.restrained ? "да" : "нет", m.restrained ? MILD : OK);
+        if (all || m.intoxication > 0) x.add("опьянение", f("%.0f", m.intoxication), high(m.intoxication, 20, 50, 80));
+        if (m.seizureSeconds > 0) x.add("СУДОРОГИ", f("%.0f с", m.seizureSeconds), CRIT);
+        for (faygolover.rpmedicine.core.Substance sub : faygolover.rpmedicine.core.Substance.VALUES) {
+            double tol = m.tolerance[sub.ordinal()];
+            boolean dep = faygolover.rpmedicine.core.Substances.dependent(m, sub);
+            if (tol <= 0 && !dep) continue;
+            boolean wd = faygolover.rpmedicine.core.Substances.withdrawal(m, sub, s);
+            x.add(sub.id, f("толер. %.0f%%%s%s, %.1f ч без", tol, dep ? ", зависим." : "", wd ? ", ЛОМКА" : "", m.sinceDose[sub.ordinal()] / 3600),
+                    wd ? BAD : dep ? MOD : MILD);
+        }
         if (faygolover.rpmedicine.core.Organs.worst(m) > 0) {
             for (faygolover.rpmedicine.core.Organ g : faygolover.rpmedicine.core.Organ.VALUES) {
                 if (!m.hasOrgan(g)) x.add(g.id, "ИЗЪЯТ", CRIT);
