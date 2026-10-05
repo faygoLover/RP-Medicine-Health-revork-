@@ -82,11 +82,16 @@ public final class FinishService {
             if (actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 1.0) return "rpmedicine.action.target_lost";
             if (!ItemStack.isSameItem(actor.getMainHandItem(), weapon)) return "rpmedicine.action.item_changed";
             if (Medical.isDown(actor)) return "rpmedicine.action.interrupted";
+            // Замах: рука поднимается раз в полсекунды, пока идёт добивание.
+            if (ticks % 10 == 0) actor.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
             return null;
         }
 
         @Override
         public void complete() {
+            actor.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+            actor.level().playSound(null, target.getX(), target.getY(), target.getZ(),
+                    net.minecraft.sounds.SoundEvents.PLAYER_ATTACK_STRONG, net.minecraft.sounds.SoundSource.PLAYERS, 1.0f, 0.8f);
             DownedService.lethal(target, DownedService.FINISHED, actor);
         }
 

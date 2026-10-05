@@ -27,6 +27,15 @@ public final class SelfView {
     public final List<int[]> tourniquets = new ArrayList<>();
     public boolean analgesia;
     public boolean dyspnea;
+    // Значки HUD: то, что человек чувствует или видит на себе сам.
+    public boolean fever;
+    public boolean cold;
+    public boolean nausea;
+    public boolean concussion;
+    public boolean stabilized;
+    public boolean drip;
+    public boolean splint;
+    public boolean sedated;
 
     // Эффекты экрана и звука, 0–20.
     public byte vignette;
@@ -41,6 +50,8 @@ public final class SelfView {
     public short heartbeat;
     public boolean heavyBreathing;
     public byte sway;
+    /** Опиаты и диссоциация: сила «плывущих» цветов, 0–20. */
+    public byte high;
 
     // Ограничения, которые клиент применяет сам (предсказание движения).
     public boolean noSprint;
@@ -49,6 +60,12 @@ public final class SelfView {
     public boolean armsDisabled;
     public boolean carrying;
     public boolean carried;
+    /** Скорость ломания блоков, % (100 — обычная). */
+    public byte breakSpeedPct = 100;
+    /** Время использования предметов, % (100 — обычное): еда, питьё, лук — дольше при плохой руке. */
+    public short useTimePct = 100;
+    /** Свой уровень медицины (подсказки предметов). */
+    public byte medLevel;
 
     /** Ощущения: ключи {@code rpmedicine.exam.complaint_<k>}. */
     public final List<String> sensations = new ArrayList<>();
@@ -73,6 +90,7 @@ public final class SelfView {
         buf.writeByte(deaf);
         buf.writeShort(heartbeat);
         buf.writeByte(sway);
+        buf.writeByte(high);
         int flags = 0;
         if (fracture) flags |= 1;
         if (analgesia) flags |= 2;
@@ -84,7 +102,18 @@ public final class SelfView {
         if (armsDisabled) flags |= 128;
         if (carrying) flags |= 256;
         if (carried) flags |= 512;
+        if (fever) flags |= 1 << 10;
+        if (cold) flags |= 1 << 11;
+        if (nausea) flags |= 1 << 12;
+        if (concussion) flags |= 1 << 13;
+        if (stabilized) flags |= 1 << 14;
+        if (drip) flags |= 1 << 15;
+        if (splint) flags |= 1 << 16;
+        if (sedated) flags |= 1 << 17;
         buf.writeVarInt(flags);
+        buf.writeByte(breakSpeedPct);
+        buf.writeShort(useTimePct);
+        buf.writeByte(medLevel);
         buf.writeVarInt(sensations.size());
         for (String s : sensations) buf.writeUtf(s, 64);
     }
@@ -107,6 +136,7 @@ public final class SelfView {
         v.deaf = buf.readByte();
         v.heartbeat = buf.readShort();
         v.sway = buf.readByte();
+        v.high = buf.readByte();
         int flags = buf.readVarInt();
         v.fracture = (flags & 1) != 0;
         v.analgesia = (flags & 2) != 0;
@@ -118,6 +148,17 @@ public final class SelfView {
         v.armsDisabled = (flags & 128) != 0;
         v.carrying = (flags & 256) != 0;
         v.carried = (flags & 512) != 0;
+        v.fever = (flags & (1 << 10)) != 0;
+        v.cold = (flags & (1 << 11)) != 0;
+        v.nausea = (flags & (1 << 12)) != 0;
+        v.concussion = (flags & (1 << 13)) != 0;
+        v.stabilized = (flags & (1 << 14)) != 0;
+        v.drip = (flags & (1 << 15)) != 0;
+        v.splint = (flags & (1 << 16)) != 0;
+        v.sedated = (flags & (1 << 17)) != 0;
+        v.breakSpeedPct = buf.readByte();
+        v.useTimePct = buf.readShort();
+        v.medLevel = buf.readByte();
         int s = Math.min(32, buf.readVarInt());
         for (int i = 0; i < s; i++) v.sensations.add(buf.readUtf(64));
         return v;
@@ -136,8 +177,11 @@ public final class SelfView {
                 && bleed == v.bleed && pain == v.pain && fracture == v.fracture && analgesia == v.analgesia
                 && dyspnea == v.dyspnea && vignette == v.vignette && blur == v.blur && darken == v.darken
                 && tunnel == v.tunnel && gray == v.gray && ringing == v.ringing && deaf == v.deaf && heartbeat == v.heartbeat
-                && heavyBreathing == v.heavyBreathing && sway == v.sway && noSprint == v.noSprint && noJump == v.noJump
+                && heavyBreathing == v.heavyBreathing && sway == v.sway && high == v.high && noSprint == v.noSprint && noJump == v.noJump
                 && crawl == v.crawl && armsDisabled == v.armsDisabled && carrying == v.carrying && carried == v.carried
+                && breakSpeedPct == v.breakSpeedPct && useTimePct == v.useTimePct && medLevel == v.medLevel
+                && fever == v.fever && cold == v.cold && nausea == v.nausea && concussion == v.concussion
+                && stabilized == v.stabilized && drip == v.drip && splint == v.splint && sedated == v.sedated
                 && sensations.equals(v.sensations);
     }
 
@@ -145,7 +189,7 @@ public final class SelfView {
     public int hashCode() {
         int h = Objects.hash(down, knockdownSeconds, bleed, pain, fracture, analgesia, dyspnea, vignette, blur, darken,
                 tunnel, gray, ringing, deaf, heartbeat, heavyBreathing, sway, noSprint, noJump, crawl, armsDisabled, carrying,
-                carried, sensations);
+                carried, breakSpeedPct, useTimePct, fever, cold, nausea, concussion, stabilized, drip, splint, sedated, sensations);
         h = h * 31 + Arrays.hashCode(partColors);
         for (int[] t : tourniquets) h = h * 31 + Arrays.hashCode(t);
         return h;

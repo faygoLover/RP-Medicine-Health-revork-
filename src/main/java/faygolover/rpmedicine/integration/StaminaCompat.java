@@ -17,4 +17,8 @@ public final class StaminaCompat {
     public static void consume(ServerPlayer sp, float amount) {
         StaminaAPI.consume(sp, amount, CARRY);
     }
+
+    public static void add(ServerPlayer sp, float amount) {
+        StaminaAPI.add(sp, amount);
+    }
 }

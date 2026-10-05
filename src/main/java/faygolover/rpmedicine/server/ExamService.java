@@ -65,8 +65,7 @@ public final class ExamService {
     private static void sendExam(ServerPlayer viewer, LivingEntity target, Sub sub) {
         ExamResultPacket p = build(viewer, target);
         if (p == null) return;
-        if (sub.last instanceof ExamResultPacket old && old.view().equals(p.view()) && java.util.Arrays.equals(old.removable(), p.removable())
-                && old.downState() == p.downState()) return;
+        if (sub.last instanceof ExamResultPacket old && old.sameAs(p)) return;
         sub.last = p;
         Network.send(viewer, p);
     }
@@ -92,7 +91,29 @@ public final class ExamService {
         }
         // Заглушка — всегда лежачее тело (её можно обыскать, даже если обморок прошёл).
         byte down = (byte) (Medical.isDown(target) ? Math.max(1, m.down.ordinal()) : 0);
-        return new ExamResultPacket(self ? -1 : target.getId(), self, target.getDisplayName(), view, removable, down);
+        // Полоски частей: целостность ступенями по 5; общая — среднее, голова и грудь вдвое весомее.
+        byte[] bars = new byte[9];
+        double sum = 0, weight = 0;
+        for (BodyPartState ps : m.parts) {
+            double integ = ps.integrity();
+            bars[ps.part.ordinal()] = (byte) (Math.round(integ / 5.0) * 5);
+            double w = ps.part == faygolover.rpmedicine.core.BodyPart.HEAD || ps.part == faygolover.rpmedicine.core.BodyPart.CHEST ? 2 : 1;
+            sum += integ * w;
+            weight += w;
+        }
+        double overall = sum / weight * Math.min(1.0, m.bloodFraction(s) / 0.9);
+        boolean gm = viewer.hasPermissions(2) && viewer.isCreative();
+        boolean numbers = gm || level >= s.numbersMinLevel;
+        short kd = -1;
+        if ((self || level >= 2 || gm) && m.down == MedicalState.Down.KNOCKDOWN && !m.knockdownNoTimer && Physiology.lifeThreat(m, s)) {
+            double rate = Physiology.knockdownBrainRate(m, s, Medical.traits(target));
+            kd = (short) Math.min(Short.MAX_VALUE, Math.ceil(m.brain / Math.max(1e-6, rate)));
+        }
+        byte gen = 0;
+        if (m.intubated) gen |= 1;
+        if (m.airway) gen |= 2;
+        return new ExamResultPacket(self ? -1 : target.getId(), self, target.getDisplayName(), view, removable, down,
+                bars, (byte) Math.round(overall), numbers, kd, gen);
     }
 
     // ------------------------------------------------------------------ наведение

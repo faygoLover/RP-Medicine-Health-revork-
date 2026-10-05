@@ -67,14 +67,21 @@ public final class ClientEvents {
         if (tick % 5 == 0) updateHover(mc, v);
 
         if ((v.noSprint || v.isDown()) && p.isSprinting()) p.setSprinting(false);
-        // Поза: свой лежачий/ползущий, на койке и лежачие рядом.
-        Pose want = BedPose.CLIENT_ON_BED.contains(p.getId()) ? Pose.SLEEPING : (v.isDown() || v.crawl) ? Pose.SWIMMING : null;
-        if (p.getForcedPose() != want) p.setForcedPose(want);
+        // Поза: свой лежачий/ползущий, на койке и лежачие рядом. Лежачего рисует DownedPose — поза стоя.
+        Pose want = ClientHandlers.poseFor(p.getId(), v.crawl);
+        if (p.getForcedPose() != want) {
+            p.setForcedPose(want);
+            p.refreshDimensions();
+        }
         for (Player other : mc.level.players()) {
             if (other == p) continue;
             Pose op = ClientHandlers.poseFor(other.getId(), false);
-            if (other.getForcedPose() != op) other.setForcedPose(op);
+            if (other.getForcedPose() != op) {
+                other.setForcedPose(op);
+                other.refreshDimensions();
+            }
         }
+        faygolover.rpmedicine.client.render.DownedPose.tick(mc);
         if (tick % 10 == 0) updateMonitor(mc, v);
         if (mc.screen == null) AimSway.tick(p, v);
         ClientSounds.tick(mc, v);
@@ -170,6 +177,12 @@ public final class ClientEvents {
         return best;
     }
 
+    /** Каждый кадр: плавная сила постэффекта. */
+    @SubscribeEvent
+    public static void onRenderTick(TickEvent.RenderTickEvent e) {
+        if (e.phase == TickEvent.Phase.START) PostEffects.frame();
+    }
+
     @SubscribeEvent
     public static void onInput(MovementInputUpdateEvent e) {
         SelfView v = ClientState.self;
@@ -237,7 +250,8 @@ public final class ClientEvents {
         SelfView v = ClientState.self;
         if (Minecraft.getInstance().player == null) return;
         if (v.down == 3 && !(e.getNewScreen() instanceof ClinicalDeathScreen) && e.getNewScreen() != null
-                && !(e.getNewScreen() instanceof net.minecraft.client.gui.screens.PauseScreen)) {
+                && !(e.getNewScreen() instanceof net.minecraft.client.gui.screens.PauseScreen)
+                && !(e.getNewScreen() instanceof net.minecraft.client.gui.screens.ConfirmScreen)) {
             e.setCanceled(true);
             return;
         }
@@ -248,6 +262,11 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void onChatReceived(ClientChatReceivedEvent e) {
+        // Сообщения над панелью запоминаем: окна мода закрывают их и показывают у себя.
+        if (e instanceof ClientChatReceivedEvent.System sys && sys.isOverlay()) {
+            ClientState.lastOverlay = e.getMessage();
+            ClientState.lastOverlayTime = System.currentTimeMillis();
+        }
         // В клинической смерти чат не виден (п. 5.4 ТЗ).
         if (ClientState.self.down == 3) e.setCanceled(true);
     }
@@ -271,6 +290,7 @@ public final class ClientEvents {
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut e) {
         ClientState.reset();
         PostEffects.reset();
+        faygolover.rpmedicine.client.render.DownedPose.reset();
         lastHoverTarget = -1;
         finishTarget = -1;
     }

@@ -20,7 +20,9 @@ public record PanelActionPacket(int targetId, Kind kind, BodyPart part, int slot
         /** Остановить капельницу (второй этап). */
         STOP_DRIP,
         /** Вправить вывих пустой рукой (второй этап). */
-        REDUCE
+        REDUCE,
+        /** Извлечь интубационную трубку, убрать воздуховод. */
+        REMOVE_TUBE, REMOVE_AIRWAY
     }
 
     public static void encode(PanelActionPacket p, FriendlyByteBuf buf) {

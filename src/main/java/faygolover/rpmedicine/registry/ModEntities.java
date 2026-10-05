@@ -19,6 +19,14 @@ public final class ModEntities {
                     .clientTrackingRange(10)
                     .build("rpmedicine:body_stub"));
 
+    /** Лужа рвоты. */
+    public static final RegistryObject<EntityType<faygolover.rpmedicine.entity.VomitEntity>> VOMIT = ENTITIES.register("vomit",
+            () -> EntityType.Builder.<faygolover.rpmedicine.entity.VomitEntity>of(faygolover.rpmedicine.entity.VomitEntity::new, MobCategory.MISC)
+                    .sized(0.6f, 0.05f)
+                    .clientTrackingRange(6)
+                    .updateInterval(40)
+                    .build("rpmedicine:vomit"));
+
     public static void onAttributes(EntityAttributeCreationEvent event) {
         event.put(BODY_STUB.get(), BodyStubEntity.createAttributes().build());
     }

@@ -104,9 +104,15 @@ public final class Injuries {
                 rep.outcomes.add(Outcome.DRESSING_REOPENED);
             }
         }
-        Wound hit = mergeWound(ps, prof.wound, sev, s);
+        // Разрушенная часть больше не принимает урон: излишек уходит дальше (решения, п. 1.13).
+        double avail = ps.integrity();
+        double partSev = s.overflowEnabled ? Math.min(sev, Math.max(0, avail)) : sev;
+        double overflow = sev - partSev;
+        boolean wasIntact = avail > 0;
+        Wound hit = partSev > 0 ? mergeWound(ps, prof.wound, partSev, s) : null;
         if (hit != null) rep.wounds.add(hit);
         rep.outcomes.add(Outcome.WOUND);
+        if (overflow > 0) overflow(m, part, overflow, wasIntact, rep, rnd, s);
 
         // Перелом: рёбра в груди, кости рук, ног, стоп.
         if (s.fracturesEnabled && (part.isLimb() || part == BodyPart.CHEST) && !ps.hasFracture()) {
@@ -207,6 +213,41 @@ public final class Injuries {
             rep.outcomes.add(Outcome.PNEUMOTHORAX);
         }
         return rep;
+    }
+
+    /**
+     * Излишек урона по разрушенной части: голова — по мозгу, грудь — по сердцу и лёгким, остальное —
+     * ушибами на уцелевшие части с множителем (рука ×0,49, нога ×0,7, живот ×1,05).
+     */
+    static void overflow(MedicalState m, BodyPart part, double sev, boolean justDestroyed, Report rep, RandomGenerator rnd, MedicalSettings s) {
+        switch (part) {
+            case HEAD -> m.brain = Math.max(m.down == Down.CLINICAL ? 1 : 0.5, m.brain - sev * s.destroyedHeadBrainPerSeverity);
+            case CHEST -> {
+                if (s.organsEnabled) {
+                    Organ o = rnd.nextBoolean() ? Organ.LUNGS : Organ.HEART;
+                    if (m.hasOrgan(o)) {
+                        m.damageOrgan(o, sev * s.destroyedChestOrganPerSeverity);
+                        rep.outcomes.add(Outcome.ORGAN);
+                        if (!rep.organs.contains(o)) rep.organs.add(o);
+                    }
+                }
+            }
+            default -> {
+                double mult = part.isArm() ? s.overflowArm : part == BodyPart.ABDOMEN ? s.overflowAbdomen : s.overflowLeg;
+                List<BodyPartState> alive = new ArrayList<>();
+                for (BodyPartState o : m.parts) if (o.part != part && o.integrity() > 0) alive.add(o);
+                if (alive.isEmpty()) {
+                    m.brain = Math.max(0.5, m.brain - sev * mult * s.destroyedHeadBrainPerSeverity);
+                    return;
+                }
+                double each = sev * mult / alive.size();
+                for (BodyPartState o : alive) {
+                    Wound w = mergeWound(o, WoundType.BRUISE, Math.min(each, o.integrity()), s);
+                    if (w != null && !rep.wounds.contains(w)) rep.wounds.add(w);
+                    if (!rep.parts.contains(o.part)) rep.parts.add(o.part);
+                }
+            }
+        }
     }
 
     /** Случайный орган части тела (грудь: сердце или лёгкие, живот: печень, почки, кишечник). */

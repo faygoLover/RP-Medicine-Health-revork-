@@ -17,7 +17,7 @@ import java.util.UUID;
 
 /**
  * Переноска лежачего на плече (п. 5.2 ТЗ). Тело — пассажир несущего. Несущий идёт медленнее, не
- * бегает и не стреляет; сбросить — присесть.
+ * бегает и не стреляет. Поднять — Shift+ПКМ по лежачему, положить — Shift+ПКМ по блоку или по койке.
  */
 public final class CarryService {
     private CarryService() {}
@@ -85,6 +85,24 @@ public final class CarryService {
         Medical.changed(e);
     }
 
+    /** Положить тело на указанное место (Shift+ПКМ по блоку): блок рядом, место свободно. */
+    public static boolean dropAt(ServerPlayer carrier, net.minecraft.core.BlockPos pos) {
+        Entity e = CARRIED.get(carrier.getUUID());
+        if (e == null) return false;
+        Vec3 spot = new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        var level = carrier.level();
+        // На блок с полной коллизией не кладём; если место занято — уровень выше.
+        if (!level.getBlockState(pos).getCollisionShape(level, pos).isEmpty()) {
+            if (!level.getBlockState(pos.above()).getCollisionShape(level, pos.above()).isEmpty()) return false;
+            spot = spot.add(0, 1, 0);
+        }
+        if (carrier.position().distanceTo(spot) > ServerConfig.INTERACT_DISTANCE.get() + 1.0) return false;
+        dropCarried(carrier);
+        e.teleportTo(spot.x, spot.y, spot.z);
+        carrier.displayClientMessage(Component.translatable("rpmedicine.msg.put_down"), true);
+        return true;
+    }
+
     /** Сбросить игрока, если его несут (пришёл в себя, умер, вышел). */
     public static void dropIfCarried(Entity e) {
         if (e.getVehicle() instanceof ServerPlayer carrier && CARRIED.get(carrier.getUUID()) == e) dropCarried(carrier);
@@ -94,7 +112,7 @@ public final class CarryService {
     public static void tickCarrier(ServerPlayer carrier) {
         Entity e = CARRIED.get(carrier.getUUID());
         if (e == null) return;
-        if (e.isRemoved() || e.getVehicle() != carrier || carrier.isShiftKeyDown() || Medical.isDown(carrier)) {
+        if (e.isRemoved() || e.getVehicle() != carrier || Medical.isDown(carrier)) {
             dropCarried(carrier);
             return;
         }

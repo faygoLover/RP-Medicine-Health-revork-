@@ -51,7 +51,9 @@ public enum TreatmentAction {
     SCISSORS("scissors", Target.PART),
     // Третий этап
     /** Интубация: трубка (нужен ларингоскоп в инвентаре). */
-    INTUBATE("intubate", Target.BODY);
+    INTUBATE("intubate", Target.BODY),
+    /** Набор стабилизации: таймер нокдауна тает вдвое медленнее, один раз за нокдаун. */
+    STABILIZE("stabilize", Target.BODY);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

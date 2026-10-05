@@ -45,6 +45,8 @@ public final class MedicalNbt {
         putIf(t, "morphineDelay", m.morphineDelay);
         putIf(t, "morphineOd", m.morphineOverdoseSeconds);
         putIf(t, "txa", m.txaSeconds);
+        putIf(t, "stab", m.stabilizedSeconds);
+        if (m.stabilizationUsed) t.putBoolean("stabUsed", true);
         putIf(t, "shock", m.shockAccum);
         putIf(t, "shockLimit", m.shockLimit);
         if (m.painShock) t.putBoolean("painShock", true);
@@ -189,6 +191,8 @@ public final class MedicalNbt {
         m.morphineDelay = t.getFloat("morphineDelay");
         m.morphineOverdoseSeconds = t.getFloat("morphineOd");
         m.txaSeconds = t.getFloat("txa");
+        m.stabilizedSeconds = t.getFloat("stab");
+        m.stabilizationUsed = t.getBoolean("stabUsed");
         m.shockAccum = t.getFloat("shock");
         m.shockLimit = t.getFloat("shockLimit");
         m.painShock = t.getBoolean("painShock");

@@ -29,6 +29,17 @@ public final class ClientState {
     public static int progressTotal;
     public static int progressDone;
     public static long progressStart;
+    public static net.minecraft.world.item.ItemStack progressIcon = net.minecraft.world.item.ItemStack.EMPTY;
+    public static net.minecraft.network.chat.Component progressSubtitle = net.minecraft.network.chat.Component.empty();
+    // Лечение, которое применяют к самому игроку (видно и лежачему, и под наркозом).
+    public static String incomingLabel = "";
+    public static int incomingTotal;
+    public static long incomingStart;
+    public static net.minecraft.world.item.ItemStack incomingIcon = net.minecraft.world.item.ItemStack.EMPTY;
+    public static net.minecraft.network.chat.Component incomingSubtitle = net.minecraft.network.chat.Component.empty();
+    /** Последнее сообщение над панелью быстрого доступа: дублируется в окнах мода, которые его закрывают. */
+    public static net.minecraft.network.chat.Component lastOverlay;
+    public static long lastOverlayTime;
 
     /** Лежачие игроки рядом (id сущностей) — для позы на этом клиенте. */
     public static final Set<Integer> DOWNED = new HashSet<>();
@@ -44,6 +55,8 @@ public final class ClientState {
         hoverTarget = -1;
         hoverLines = List.of();
         progressTotal = 0;
+        incomingTotal = 0;
+        lastOverlay = null;
         DOWNED.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_ON_BED.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_BED_YAW.clear();
@@ -57,5 +70,15 @@ public final class ClientState {
 
     public static boolean progressActive() {
         return progressTotal != 0;
+    }
+
+    public static boolean incomingActive() {
+        return incomingTotal > 0 && (System.currentTimeMillis() - incomingStart) / 50f < incomingTotal + 20;
+    }
+
+    /** Свежее сообщение над панелью (до 4 секунд). */
+    @Nullable
+    public static net.minecraft.network.chat.Component recentOverlay() {
+        return lastOverlay != null && System.currentTimeMillis() - lastOverlayTime < 4000 ? lastOverlay : null;
     }
 }

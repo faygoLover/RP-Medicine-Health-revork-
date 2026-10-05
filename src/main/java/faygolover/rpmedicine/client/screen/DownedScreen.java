@@ -37,6 +37,19 @@ public class DownedScreen extends Screen {
     public void render(GuiGraphics g, int mx, int my, float pt) {
         renderBackground(g);
         g.drawCenteredString(font, title, width / 2, height / 2 - 30, 0xFFFFFF);
+        // Своё время до гибели: таймер нокдауна или «без сознания».
+        var v = ClientState.self;
+        net.minecraft.network.chat.Component sub = v.down == 2 && v.knockdownSeconds >= 0
+                ? net.minecraft.network.chat.Component.translatable("rpmedicine.hud.knockdown", faygolover.rpmedicine.client.ExamText.time(v.knockdownSeconds))
+                        .withStyle(net.minecraft.ChatFormatting.RED)
+                : net.minecraft.network.chat.Component.translatable("rpmedicine.hud.unconscious").withStyle(net.minecraft.ChatFormatting.GRAY);
+        g.drawCenteredString(font, sub, width / 2, height / 2 - 18, 0xFFFFFF);
+        if (faygolover.rpmedicine.client.ClientState.incomingActive()) {
+            g.pose().pushPose();
+            g.pose().translate(width / 2 - 50, height / 2 + 54, 0);
+            faygolover.rpmedicine.client.MedicalHud.drawElement(g, font, faygolover.rpmedicine.config.ClientConfig.HudElement.PROGRESS, v, false);
+            g.pose().popPose();
+        }
         super.render(g, mx, my, pt);
     }
 

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 /** Сетевой канал мода. Сервер → клиент: только изменения и только то, что клиенту положено видеть. */
 public final class Network {
-    private static final String PROTOCOL = "3";
+    private static final String PROTOCOL = "4";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(RpMedicine.MODID, "main"),
@@ -36,6 +36,7 @@ public final class Network {
         toClient(OpenHudEditorPacket.class, OpenHudEditorPacket::encode, OpenHudEditorPacket::decode, OpenHudEditorPacket::handle);
         toClient(EntityDownedPacket.class, EntityDownedPacket::encode, EntityDownedPacket::decode, EntityDownedPacket::handle);
         toClient(HospitalBlocksPacket.class, HospitalBlocksPacket::encode, HospitalBlocksPacket::decode, HospitalBlocksPacket::handle);
+        toClient(ItemInfoPacket.class, ItemInfoPacket::encode, ItemInfoPacket::decode, ItemInfoPacket::handle);
         toClient(MonitorPacket.class, MonitorPacket::encode, MonitorPacket::decode, MonitorPacket::handle);
         toClient(MinigameStartPacket.class, MinigameStartPacket::encode, MinigameStartPacket::decode, MinigameStartPacket::handle);
         toClient(MedcardDataPacket.class, MedcardDataPacket::encode, MedcardDataPacket::decode, MedcardDataPacket::handle);

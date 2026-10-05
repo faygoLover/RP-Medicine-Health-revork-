@@ -182,7 +182,7 @@ public final class MedicalSettings {
     public double concussionKnockoutMinSeconds = 5.0;
     public double concussionKnockoutMaxSeconds = 15.0;
     /** Попадание в голову сильнее этого урона убивает сразу (0 — выключено). */
-    public double instantDeathHeadDamage = 24.0;
+    public double instantDeathHeadDamage = 0.0;
     /** Любое попадание сильнее этого урона убивает сразу (0 — выключено). */
     public double instantDeathDamage = 60.0;
 
@@ -219,6 +219,35 @@ public final class MedicalSettings {
     public double armUseSlowOff = 1.25;
     public double armAttackPenaltyMain = 0.3;
     public double armAttackPenaltyOff = 0.1;
+    /** С какого уровня медицины на панели видны цифры состояния частей тела (ГМ видит всегда). */
+    public int numbersMinLevel = 4;
+    /** Урон по разрушенной части (целостность 0) переходит на остальное тело с множителем, как в Tarkov. */
+    public boolean overflowEnabled = true;
+    public double overflowArm = 0.49;
+    public double overflowLeg = 0.7;
+    public double overflowAbdomen = 1.05;
+    /** Урон по разрушенной голове бьёт по мозгу: на единицу тяжести. */
+    public double destroyedHeadBrainPerSeverity = 0.4;
+    /** Урон по разрушенной груди бьёт по сердцу и лёгким: на единицу тяжести. */
+    public double destroyedChestOrganPerSeverity = 0.5;
+    /** Часть считается разрушенной при целостности ниже. */
+    public double destroyedIntegrity = 5.0;
+    /** Разрушенная голова или грудь: сознание не выше (нокдаун). */
+    public double destroyedVitalConsciousness = 15.0;
+    /** Ограничения переломов снимает только сильное обезболивание (не меньше) или укол адреналина; свой адреналин после ранения — нет. */
+    public double fractureMaskAnalgesia = 45.0;
+    /** Под обезболиванием сломанная рука всё равно работает хуже: доля штрафа. */
+    public double maskedArmPenaltyShare = 0.5;
+    /** Боль ноги или стопы (после обезболивания), с которой нога хромает и бег недоступен. */
+    public double legPainLimpThreshold = 20.0;
+    /** С этой болью ноги нельзя прыгать. */
+    public double legPainNoJumpThreshold = 35.0;
+    /** Минус скорость за каждую больную ногу или стопу. */
+    public double legPainLimpPenalty = 0.15;
+    /** Скорость ломания блоков: плохая рабочая рука, плохая вторая, обе сломаны. */
+    public double armBreakSpeedMain = 0.5;
+    public double armBreakSpeedOff = 0.8;
+    public double armsDisabledBreakSpeed = 0.1;
 
     // ---------------- Госпиталь (второй этап) ----------------
     /** На больничной койке: заживление, восстановление крови и мозга быстрее во столько раз. */
@@ -259,15 +288,15 @@ public final class MedicalSettings {
     public double immunityBedFactor = 1.1;
     public double immunitySleepFactor = 1.1;
     /** Сепсис растёт от каждой раны с инфекцией 100 %, % в час. */
-    public double sepsisPerHourPerSource = 8.0;
+    public double sepsisPerHourPerSource = 25.0;
     /** Испорченная кровь: сепсис сразу и рост, % в час, столько часов. */
     public double spoiledBloodSepsis = 30.0;
     public double spoiledBloodSepsisPerHour = 10.0;
     public double spoiledBloodSepsisHours = 2.0;
     /** Сепсис спадает под антибиотиком силы 10, % в час (пропорционально силе). */
-    public double sepsisAntibioticDeclinePerHour = 5.0;
+    public double sepsisAntibioticDeclinePerHour = 50.0;
     /** Лёгкий сепсис (ниже 30 %) без источника и без антибиотика спадает сам, % в час. Тяжёлый — только под антибиотиком. */
-    public double sepsisNaturalDeclinePerHour = 1.0;
+    public double sepsisNaturalDeclinePerHour = 3.0;
     public double sepsisPressureDrop30 = 15.0;
     public double sepsisPressureDrop60 = 35.0;
     public double sepsisConsciousnessLimit = 80.0;
@@ -407,12 +436,22 @@ public final class MedicalSettings {
     public double vomitThirstLoss = 5.0;
     public double vomitLsoThirstLoss = 1.0;
     /** Мгновенный урон: острая боль за единицу урона и сколько секунд. */
-    public double instantDamagePainPerDamage = 5.0;
-    public double instantDamagePainSeconds = 10.0;
+    public double instantDamagePainPerDamage = 12.0;
+    public double instantDamagePainSeconds = 20.0;
     /** Золотое яблоко: адреналин, секунд. */
     public double goldenAppleAdrenalineSeconds = 60.0;
     /** Тотем бессмертия: кровь не ниже этой доли нормы. */
     public double totemBloodFraction = 0.6;
+    /** Набор стабилизации: во сколько раз медленнее тает таймер нокдауна и сколько секунд. */
+    public double stabilizationFactor = 0.5;
+    public double stabilizationSeconds = 300.0;
+    /** Тотем лечит каждую рану: доля тяжести = база + случайно до разброса + за уровень медицины. */
+    public double totemHealBase = 0.2;
+    public double totemHealRandom = 0.6;
+    public double totemHealPerLevel = 0.04;
+    /** Золотое яблоко: обезболивание (сила, секунды); зачарованное — вдвое сильнее и дольше. */
+    public double goldenAppleAnalgesia = 15.0;
+    public double goldenAppleAnalgesiaSeconds = 120.0;
     /** Взрыв: глухота от столько секунд (слабый) до столько (сильный); слабее этого урона — без глухоты. */
     public double explosionDeafMinSeconds = 30.0;
     public double explosionDeafMaxSeconds = 60.0;

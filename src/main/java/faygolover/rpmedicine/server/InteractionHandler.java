@@ -152,8 +152,16 @@ public final class InteractionHandler {
             event.setCancellationResult(InteractionResult.SUCCESS);
             return;
         }
-        // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
+        // Несёшь тело: Shift+ПКМ по блоку — положить туда; по койке — на койку.
         boolean carrying = !p.getPassengers().isEmpty();
+        if (carrying && p.isShiftKeyDown() && !HospitalBlocks.isBed(event.getLevel().getBlockState(event.getPos()))) {
+            if (!event.getLevel().isClientSide)
+                CarryService.dropAt((ServerPlayer) p, event.getPos().relative(event.getFace() != null ? event.getFace() : net.minecraft.core.Direction.UP));
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            return;
+        }
+        // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
         if (!carrying && (p.isShiftKeyDown() || !p.getMainHandItem().isEmpty())) return;
         if (!HospitalBlocks.isBed(event.getLevel().getBlockState(event.getPos()))) return;
         boolean handled = !event.getLevel().isClientSide
@@ -170,11 +178,36 @@ public final class InteractionHandler {
     }
 
     public static void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (Medical.isDown(event.getEntity())) event.setNewSpeed(0);
+        Player p = event.getEntity();
+        if (p.level().isClientSide) {
+            // Клиент предсказывает ломание сам — те же множители, иначе блок «отскакивает».
+            faygolover.rpmedicine.client.ClientInteraction.onBreakSpeed(event);
+            return;
+        }
+        if (Medical.isDown(p)) {
+            event.setNewSpeed(0);
+            return;
+        }
+        MedicalData d = p instanceof ServerPlayer sp ? Medical.data(sp) : null;
+        if (d != null && d.lastMods.breakSpeed < 1.0) event.setNewSpeed(event.getNewSpeed() * (float) d.lastMods.breakSpeed);
     }
 
     public static void onAttack(AttackEntityEvent event) {
-        if (Medical.isDown(event.getEntity())) event.setCanceled(true);
+        Player p = event.getEntity();
+        if (p.level().isClientSide) {
+            if (faygolover.rpmedicine.client.ClientInteraction.armsDisabled()) event.setCanceled(true);
+            return;
+        }
+        if (Medical.isDown(p)) {
+            event.setCanceled(true);
+            return;
+        }
+        MedicalData d = p instanceof ServerPlayer sp ? Medical.data(sp) : null;
+        // Обе руки сломаны: не ударить (п. 2.4 ТЗ).
+        if (d != null && d.lastMods.armsDisabled) {
+            event.setCanceled(true);
+            p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.arms_disabled"), true);
+        }
     }
 
     public static void onToss(ItemTossEvent event) {
@@ -193,6 +226,11 @@ public final class InteractionHandler {
 
     /** Использование предметов: дольше при плохой руке; лук и арбалет — нельзя лежачему, несущему, без рук. */
     public static void onUseStart(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof Player cp && cp.level().isClientSide) {
+            // Та же длительность на клиенте: иначе рука опускается раньше, а жевание ещё слышно.
+            faygolover.rpmedicine.client.ClientInteraction.onUseStart(event);
+            return;
+        }
         if (!(event.getEntity() instanceof ServerPlayer sp)) return;
         if (event.getItem().getItem() instanceof ProjectileWeaponItem && !canUseWeapons(sp)) {
             event.setCanceled(true);

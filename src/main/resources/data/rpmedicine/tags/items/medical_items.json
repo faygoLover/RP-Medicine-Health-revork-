@@ -13,6 +13,7 @@
     "rpmedicine:morphine",
     "rpmedicine:adrenaline",
     "rpmedicine:txa",
+    "rpmedicine:stabilization_kit",
     "rpmedicine:field_surgery_kit",
     "rpmedicine:saline",
     "rpmedicine:ammonia",
@@ -49,6 +50,7 @@
     "rpmedicine:propofol",
     "rpmedicine:lancet",
     "rpmedicine:blood_sample",
+    "rpmedicine:test_tube",
     {
       "id": "medicamod:adrenalin",
       "required": false

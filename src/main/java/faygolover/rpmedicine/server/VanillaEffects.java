@@ -83,9 +83,18 @@ public final class VanillaEffects {
         else if (s.ownThirstEnabled) m.thirst = Math.max(0, m.thirst - s.vomitThirstLoss);
         if (sp.isSleeping()) sp.stopSleepInBed(true, true);
         var look = sp.getLookAngle();
-        sp.serverLevel().sendParticles(ParticleTypes.ITEM_SLIME, sp.getX() + look.x * 0.5, sp.getEyeY() - 0.2, sp.getZ() + look.z * 0.5,
-                12, 0.1, 0.1, 0.1, 0.05);
-        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ModSounds.VOMIT.get(), SoundSource.PLAYERS, 0.8f, 0.6f);
+        // Брызги зелёно-жёлтого цвета и лужа, которая пару минут лежит на земле.
+        var color = new net.minecraft.core.particles.DustParticleOptions(new org.joml.Vector3f(0.62f, 0.66f, 0.18f), 1.4f);
+        sp.serverLevel().sendParticles(color, sp.getX() + look.x * 0.5, sp.getEyeY() - 0.25, sp.getZ() + look.z * 0.5,
+                24, 0.12, 0.08, 0.12, 0.02);
+        sp.serverLevel().sendParticles(ParticleTypes.ITEM_SLIME, sp.getX() + look.x * 0.5, sp.getEyeY() - 0.25, sp.getZ() + look.z * 0.5,
+                8, 0.1, 0.1, 0.1, 0.05);
+        var puddle = faygolover.rpmedicine.registry.ModEntities.VOMIT.get().create(sp.serverLevel());
+        if (puddle != null) {
+            puddle.moveTo(sp.getX() + look.x * 0.8, sp.getEyeY() - 0.4, sp.getZ() + look.z * 0.8, 0, 0);
+            sp.serverLevel().addFreshEntity(puddle);
+        }
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ModSounds.VOMIT.get(), SoundSource.VOICE, 0.9f, 1.0f);
         sp.displayClientMessage(Component.translatable("rpmedicine.msg.vomit").withStyle(ChatFormatting.DARK_GREEN), true);
         Medical.changed(sp);
     }
@@ -97,7 +106,16 @@ public final class VanillaEffects {
         if (!used.is(Items.GOLDEN_APPLE) && !used.is(Items.ENCHANTED_GOLDEN_APPLE)) return;
         MedicalState m = Medical.state(sp);
         if (m == null) return;
-        m.adrenalineSeconds = Math.max(m.adrenalineSeconds, MedicalSettings.get().goldenAppleAdrenalineSeconds);
+        MedicalSettings s = MedicalSettings.get();
+        boolean ench = used.is(Items.ENCHANTED_GOLDEN_APPLE);
+        // Ванильные золотые сердца и регенерация здесь не нужны: здоровье живёт в травмах.
+        sp.removeEffect(MobEffects.ABSORPTION);
+        sp.removeEffect(MobEffects.REGENERATION);
+        m.adrenalineSeconds = Math.max(m.adrenalineSeconds, s.goldenAppleAdrenalineSeconds * (ench ? 2 : 1));
+        m.addEffect(faygolover.rpmedicine.core.DrugEffect.ANALGESIA, s.goldenAppleAnalgesia * (ench ? 2 : 1), 0,
+                s.goldenAppleAnalgesiaSeconds * (ench ? 2 : 1));
+        Integrations.addStamina(sp, 200f * (ench ? 2 : 1));
+        sp.displayClientMessage(Component.translatable("rpmedicine.msg.golden_apple").withStyle(ChatFormatting.GOLD), true);
         Medical.changed(sp);
     }
 
@@ -121,6 +139,19 @@ public final class VanillaEffects {
         MedicalSettings s = MedicalSettings.get();
         boolean wasDown = Physiology.rescue(m, s, s.totemBloodFraction);
         for (BodyPartState ps : m.parts) ps.arterial = false;
+        // Каждая рана: бросок плюс медицина держащего — чем выше, тем сильнее лечится (решения, п. 1.13).
+        int level = Medical.medicineLevel(sp);
+        var rnd = sp.getRandom();
+        for (BodyPartState ps : m.parts) {
+            for (var w : ps.wounds) {
+                double share = Math.min(1, s.totemHealBase + rnd.nextDouble() * s.totemHealRandom + level * s.totemHealPerLevel);
+                w.severity = Math.max(0, w.severity * (1 - share));
+            }
+            ps.wounds.removeIf(w -> w.severity < 1);
+            if (ps.hasFracture() && rnd.nextDouble() < s.totemHealBase + level * s.totemHealPerLevel)
+                ps.fracture = BodyPartState.Fracture.NONE;
+            ps.internalBleed *= 0.3;
+        }
         sp.awardStat(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING));
         CriteriaTriggers.USED_TOTEM.trigger(sp, used);
         // Ванильная анимация и звук тотема у всех, кто видит.

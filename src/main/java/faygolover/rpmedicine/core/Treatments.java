@@ -125,12 +125,16 @@ public final class Treatments {
                 if (m.txaSeconds > 0) return "already_active";
                 return m.totalExternalBleed(s) + m.totalInternalBleed() > 0.5 ? null : "no_bleeding";
             }
+            case STABILIZE -> {
+                if (m.down != Down.KNOCKDOWN) return "not_knocked_down";
+                return m.stabilizationUsed ? "stabilization_used" : null;
+            }
             case SURGICAL_KIT -> {
                 if (!part.isTorso()) return "torso_only";
                 return ps.internalBleed > 0 ? null : "no_internal";
             }
             case SALINE -> {
-                if (m.salineDripRemaining > 0) return "already_dripping";
+                if (m.salineDripRemaining > 0 || m.bloodDripRemaining > 0) return "already_dripping";
                 double normal = m.normalBlood(s);
                 if (m.bloodVolume >= normal * 0.97) return "volume_ok";
                 if (m.saline >= normal * s.salineMaxFraction - 1) return "saline_limit";
@@ -144,7 +148,9 @@ public final class Treatments {
                 return "not_unconscious";
             }
             case AIRWAY -> {
-                if (m.down != Down.KNOCKDOWN && m.down != Down.CLINICAL) return "not_unconscious";
+                // Без сознания любого вида: обморок, нокдаун, клиническая смерть, наркоз.
+                if (m.down == Down.NONE) return "not_unconscious";
+                if (m.intubated) return "intubated_already";
                 return m.airway ? "airway_already" : null;
             }
             case INTUBATE -> {
@@ -203,8 +209,10 @@ public final class Treatments {
         for (BodyPartState ps : m.parts) {
             if (!ps.part.isDistalTo(limb)) continue;
             if (ps.arterial) return true;
-            for (Wound w : ps.wounds) if (w.bleed(s) > s.moderateBleedMax) return true;
-            if (ps.fracture == BodyPartState.Fracture.OPEN && !ps.anyDressing()) return true;
+            // Жгут накладывается и поверх повязки: смотрим на кровотечение раны без неё.
+            for (Wound w : ps.wounds) if (w.rawBleed(s) > s.moderateBleedMax && w.bleed(s) > 1) return true;
+            for (Wound w : ps.wounds) if (w.bleed(s) > s.slightBleedMax) return true;
+            if (ps.fracture == BodyPartState.Fracture.OPEN) return true;
         }
         return false;
     }
@@ -253,6 +261,60 @@ public final class Treatments {
             case TWEEZERS -> ps.bullets * 2 + ps.fragments;
             default -> bleed + 0.01 * ps.totalSeverity();
         };
+    }
+
+    // ------------------------------------------------------------------ применение вопреки отказу
+
+    /**
+     * Отказы, которые медик может продавить повторным применением (решения, п. 1.13): предмет
+     * тратится, эффекта нет или он вредит. Остальные отказы жёсткие: не та часть тела, пациент в
+     * сознании не даётся, нет нужного инструмента.
+     */
+    public static final java.util.Set<String> FORCEABLE = java.util.Set.of(
+            "nothing_to_dress", "no_heavy_bleeding", "tourniquet_not_needed", "no_fracture", "no_chest_wound", "no_tension",
+            "already_active", "no_pain", "no_bleeding", "no_internal", "volume_ok", "saline_limit", "no_shockable",
+            "no_dislocation", "no_foreign_body", "nothing_to_suture", "ammonia_threat", "occlusive_already", "splint_already");
+
+    /** Применить, хотя проверка отказала: последствия ошибки. */
+    public static Result applyForced(MedicalState m, BodyPart part, TreatmentAction a, RandomGenerator rnd, MedicalSettings s, Extra extra) {
+        BodyPartState ps = m.part(part);
+        switch (a) {
+            case NEEDLE -> {
+                // Игла в здоровую грудь — сама даёт пневмоторакс.
+                Injuries.mergeWound(ps, WoundType.STAB, 6, s);
+                if (m.pneumo == Pneumo.NONE) {
+                    m.pneumo = Pneumo.OPEN;
+                    m.pneumoTimer = Physiology.lerp(s.pneumoSealMinSeconds, s.pneumoSealMaxSeconds, rnd.nextDouble());
+                }
+                return Result.failed("forced_needle");
+            }
+            case DEFIBRILLATOR -> {
+                // Разряд по бьющемуся сердцу: может сорвать ритм; ожог кожи.
+                Injuries.mergeWound(m.part(BodyPart.CHEST), WoundType.BURN, 4, s);
+                if (m.heart == Heart.NORMAL && rnd.nextDouble() < 0.5) {
+                    m.heart = Heart.FIBRILLATION;
+                    m.fibrillationSeconds = 0;
+                    return Result.failed("forced_defib_fibrillation");
+                }
+                return Result.failed("forced_defib");
+            }
+            case TOURNIQUET, ESMARCH, SPLINT, OCCLUSIVE, PAINKILLER, MORPHINE, TXA, SALINE, AMMONIA -> {
+                // Эффект как обычно: жгут без нужды пережимает здоровую ногу, лишняя доза — передозировка.
+                if (a == TreatmentAction.PAINKILLER && m.painkillerSeconds > 0) m.nauseaSeconds = Math.max(m.nauseaSeconds, 120);
+                if ((a == TreatmentAction.TOURNIQUET || a == TreatmentAction.ESMARCH) && ps.hasTourniquet())
+                    return Result.failed("forced_wasted");
+                return apply(m, part, a, false, rnd, s, extra);
+            }
+            case SURGICAL_KIT -> {
+                // Полезли внутрь без нужды — сами наделали кровотечение.
+                ps.internalBleed = Math.max(ps.internalBleed, 10);
+                Injuries.mergeWound(ps, WoundType.CUT, 12, s);
+                return Result.failed("forced_surgery");
+            }
+            default -> {
+                return Result.failed("forced_wasted");
+            }
+        }
     }
 
     // ------------------------------------------------------------------ применение
@@ -358,6 +420,11 @@ public final class Treatments {
                 }
                 ps.internalBleed = 0;
                 return Result.ok("internal_stopped");
+            }
+            case STABILIZE -> {
+                m.stabilizationUsed = true;
+                m.stabilizedSeconds = s.stabilizationSeconds * (error ? 0.5 : 1.0);
+                return error ? Result.failed("stabilization_partial") : Result.ok("stabilized");
             }
             case SALINE -> {
                 double vol = s.salineVolume * (error ? 0.5 : 1.0);

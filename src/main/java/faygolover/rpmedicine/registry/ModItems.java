@@ -37,6 +37,7 @@ public final class ModItems {
     public static final RegistryObject<Item> MORPHINE = medical("morphine", 8);
     public static final RegistryObject<Item> ADRENALINE = medical("adrenaline", 8);
     public static final RegistryObject<Item> TXA = medical("txa", 8);
+    public static final RegistryObject<Item> STABILIZATION_KIT = medical("stabilization_kit", 4);
     public static final RegistryObject<Item> FIELD_SURGERY_KIT = medical("field_surgery_kit", 1);
     public static final RegistryObject<Item> SALINE = medical("saline", 4);
     public static final RegistryObject<Item> AMMONIA = medical("ammonia", 16);
@@ -69,6 +70,7 @@ public final class ModItems {
     public static final RegistryObject<Item> PORTABLE_SCANNER = tool("portable_scanner", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> HEMOANALYZER = tool("hemoanalyzer", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LANCET = medical("lancet", 32);
+    public static final RegistryObject<Item> TEST_TUBE = medical("test_tube", 16);
     public static final RegistryObject<Item> BLOOD_DRAW_SYRINGE = medical("blood_draw_syringe", 16);
     public static final RegistryObject<Item> BLOOD_SAMPLE = tool("blood_sample", () -> new faygolover.rpmedicine.item.BloodSampleItem(new Item.Properties().stacksTo(1)));
     // Пули, швы (второй этап, п. 8)

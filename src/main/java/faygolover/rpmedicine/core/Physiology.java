@@ -41,6 +41,8 @@ public final class Physiology {
     private static void tickTimers(MedicalState m, StepInput in, MedicalSettings s) {
         double dt = in.dt;
         m.adrenalineSeconds = dec(m.adrenalineSeconds, dt);
+        m.stabilizedSeconds = dec(m.stabilizedSeconds, dt);
+        if (m.down == Down.NONE) m.stabilizationUsed = false;
         m.adrenalineInjectionSeconds = dec(m.adrenalineInjectionSeconds, dt);
         if (m.painkillerDelay > 0) m.painkillerDelay = dec(m.painkillerDelay, dt);
         else m.painkillerSeconds = dec(m.painkillerSeconds, dt);
@@ -679,6 +681,9 @@ public final class Physiology {
         if (m.heart != Heart.NORMAL) c = 0;
         if (m.painShock) c = Math.min(c, 10);
         if (m.concussionKoSeconds > 0) c = Math.min(c, 10);
+        // Разрушенная голова или грудь — нокдаун (решения, п. 1.13).
+        if (m.part(BodyPart.HEAD).isDestroyed(s) || m.part(BodyPart.CHEST).isDestroyed(s))
+            c = Math.min(c, s.destroyedVitalConsciousness);
         c = Math.min(c, 100 - m.concussion * 0.6);
         c = Math.min(c, 50 + m.brain * 0.5);
         if (m.morphineOverdoseSeconds > 0) c = Math.min(c, 50);
@@ -709,7 +714,8 @@ public final class Physiology {
         double factor = traits.knockdownFactor(s);
         double slow = 100.0 / (s.knockdownMaxSeconds * factor);
         double fast = 100.0 / (s.knockdownMinSeconds * factor);
-        return lerp(slow, fast, clamp(severity, 0, 1));
+        double rate = lerp(slow, fast, clamp(severity, 0, 1));
+        return m.stabilizedSeconds > 0 ? rate * s.stabilizationFactor : rate;
     }
 
     private static void tickBrainAndConsciousness(MedicalState m, StepInput in, MedicalSettings s, StepResult r) {

@@ -46,6 +46,22 @@ public final class ActionManager {
         public boolean slowsActor() {
             return true;
         }
+
+        /** Предмет для иконки в окне прогресса. */
+        public net.minecraft.world.item.ItemStack icon() {
+            return net.minecraft.world.item.ItemStack.EMPTY;
+        }
+
+        /** Пациент (или цель) действия; null — без цели. Пациенту показывается прогресс лечения. */
+        @Nullable
+        public net.minecraft.world.entity.LivingEntity patient() {
+            return null;
+        }
+
+        /** Показывать ли пациенту прогресс (лечение — да, обыск и добивание — нет). */
+        public boolean showToPatient() {
+            return true;
+        }
     }
 
     private static final Map<UUID, TimedAction> ACTIONS = new HashMap<>();
@@ -63,7 +79,19 @@ public final class ActionManager {
         cancel(a.actor, null);
         ACTIONS.put(a.actor.getUUID(), a);
         setTreating(a.actor, a.slowsActor());
-        Network.send(a.actor, new ProgressPacket(a.label(), a.totalTicks, 0));
+        var patient = a.patient();
+        Component sub = patient == null ? Component.empty()
+                : patient == a.actor ? Component.translatable("rpmedicine.progress.self")
+                : Component.translatable("rpmedicine.progress.on", patient.getDisplayName());
+        Network.send(a.actor, new ProgressPacket(a.label(), a.totalTicks, 0, a.icon(), sub, false));
+        if (patient instanceof ServerPlayer tp && tp != a.actor && a.showToPatient())
+            Network.send(tp, new ProgressPacket(a.label(), a.totalTicks, 0, a.icon(),
+                    Component.translatable("rpmedicine.progress.by", a.actor.getDisplayName()), true));
+    }
+
+    private static void stopPatient(TimedAction a) {
+        if (a.patient() instanceof ServerPlayer tp && tp != a.actor && a.showToPatient() && !tp.isRemoved())
+            Network.send(tp, ProgressPacket.stopIncoming());
     }
 
     /** Отменить действие игрока; {@code reasonKey} — сообщение (null — молча). */
@@ -73,6 +101,7 @@ public final class ActionManager {
         a.onCancel();
         setTreating(sp, false);
         Network.send(sp, ProgressPacket.stop());
+        stopPatient(a);
         if (reasonKey != null) sp.displayClientMessage(Component.translatable(reasonKey), true);
     }
 
@@ -93,6 +122,7 @@ public final class ActionManager {
                 a.onCancel();
                 setTreating(a.actor, false);
                 Network.send(a.actor, ProgressPacket.stop());
+                stopPatient(a);
                 a.actor.displayClientMessage(Component.translatable(reason), true);
                 continue;
             }
@@ -100,6 +130,7 @@ public final class ActionManager {
                 it.remove();
                 setTreating(a.actor, false);
                 Network.send(a.actor, ProgressPacket.stop());
+                stopPatient(a);
                 a.complete();
             }
         }

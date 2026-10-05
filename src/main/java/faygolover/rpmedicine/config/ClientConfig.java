@@ -97,6 +97,10 @@ public final class ClientConfig {
     public static final ForgeConfigSpec.BooleanValue AIM_SWAY;
     public static final ForgeConfigSpec.BooleanValue LOOK_UP_WHEN_DOWNED;
     public static final ForgeConfigSpec.BooleanValue SENSATION_MESSAGES;
+    public static final ForgeConfigSpec.DoubleValue HEARTBEAT_VOLUME;
+    public static final ForgeConfigSpec.DoubleValue BREATHING_VOLUME;
+    public static final ForgeConfigSpec.DoubleValue RINGING_VOLUME;
+    public static final ForgeConfigSpec.DoubleValue EFFECT_STRENGTH;
 
     static {
         B.comment("RP Medicine — клиентский конфиг.").push("hud");
@@ -117,6 +121,13 @@ public final class ClientConfig {
         AIM_SWAY = B.comment("Дрожь и раскачка прицела.").define("aim_sway", true);
         LOOK_UP_WHEN_DOWNED = B.comment("Лежачий от первого лица смотрит в небо.").define("look_up_when_downed", true);
         SENSATION_MESSAGES = B.comment("Ощущения текстом над панелью быстрого доступа.").define("sensation_messages", true);
+        EFFECT_STRENGTH = B.comment("Сила эффектов экрана (0–1,5).").defineInRange("effect_strength", 1.0, 0.0, 1.5);
+        B.pop();
+
+        B.comment("Громкость звуков состояния (0 — выключено).").push("volume");
+        HEARTBEAT_VOLUME = B.comment("Стук сердца.").defineInRange("heartbeat", 0.6, 0.0, 1.0);
+        BREATHING_VOLUME = B.comment("Тяжёлое дыхание.").defineInRange("breathing", 0.6, 0.0, 1.0);
+        RINGING_VOLUME = B.comment("Звон в ушах.").defineInRange("ringing", 0.6, 0.0, 1.0);
         B.pop();
         SPEC = B.build();
     }

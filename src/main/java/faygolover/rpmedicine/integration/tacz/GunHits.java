@@ -95,8 +95,8 @@ public final class GunHits {
     private static BodyPart partFromBullet(LivingEntity target, Entity bullet) {
         Vec3 start = bullet.position();
         Vec3 motion = bullet.getDeltaMovement();
-        var hit = target.getBoundingBox().inflate(0.15).clip(start.subtract(motion), start.add(motion.scale(2)));
-        return HitResolver.locate(target, hit.orElse(target.getBoundingBox().getCenter()));
+        Vec3 hit = HitResolver.axisPoint(target, target.getBoundingBox().inflate(0.15), start.subtract(motion), start.add(motion.scale(2)));
+        return HitResolver.locate(target, hit != null ? hit : target.getBoundingBox().getCenter());
     }
 
     /** Урон пулей по пациенту: копим до конца тика. Возвращает true, если урон — от пули. */

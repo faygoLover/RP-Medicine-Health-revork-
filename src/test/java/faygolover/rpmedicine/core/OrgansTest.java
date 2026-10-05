@@ -33,6 +33,7 @@ class OrgansTest {
     @Test
     void bluntChestTraumaBruisesOrgan() {
         MedicalSettings s = settings();
+        s.overflowEnabled = false; // перенос урона с разрушенной груди проверяет отдельный тест
         MedicalState m = new MedicalState(s);
         InjuryProfile p = new InjuryProfile("t", WoundType.BRUISE, InjuryProfile.Location.HIT_POINT);
         Injuries.apply(m, p, 5, BodyPart.CHEST, 0, PatientTraits.NONE, new Random(1), s);

@@ -3,8 +3,7 @@
     "subtitle": "subtitles.rpmedicine.heartbeat",
     "sounds": [
       {
-        "name": "minecraft:block.note_block.basedrum",
-        "type": "event"
+        "name": "rpmedicine:bc/heartbeat"
       }
     ]
   },
@@ -12,13 +11,7 @@
     "subtitle": "subtitles.rpmedicine.heavy_breathing",
     "sounds": [
       {
-        "name": "rpmedicine:heavy_breathing_1"
-      },
-      {
-        "name": "rpmedicine:heavy_breathing_2"
-      },
-      {
-        "name": "rpmedicine:heavy_breathing_3"
+        "name": "rpmedicine:bc/heavy_breathing"
       }
     ]
   },
@@ -26,8 +19,7 @@
     "subtitle": "subtitles.rpmedicine.ear_ringing",
     "sounds": [
       {
-        "name": "minecraft:block.note_block.bell",
-        "type": "event"
+        "name": "rpmedicine:bc/ear_ring"
       }
     ]
   },
@@ -35,7 +27,13 @@
     "subtitle": "subtitles.rpmedicine.bandage",
     "sounds": [
       {
-        "name": "rpmedicine:bandage_1"
+        "name": "rpmedicine:bc/bandage_wrap_1"
+      },
+      {
+        "name": "rpmedicine:bc/bandage_wrap_2"
+      },
+      {
+        "name": "rpmedicine:bc/bandage_wrap_3"
       }
     ]
   },
@@ -43,8 +41,10 @@
     "subtitle": "subtitles.rpmedicine.injection",
     "sounds": [
       {
-        "name": "minecraft:ui.button.click",
-        "type": "event"
+        "name": "rpmedicine:bc/insulin_shot"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_inject"
       }
     ]
   },
@@ -69,7 +69,16 @@
     "subtitle": "subtitles.rpmedicine.bone_break",
     "sounds": [
       {
-        "name": "rpmedicine:bone_break_1"
+        "name": "rpmedicine:bc/fracture1"
+      },
+      {
+        "name": "rpmedicine:bc/fracture2"
+      },
+      {
+        "name": "rpmedicine:bc/fracture3"
+      },
+      {
+        "name": "rpmedicine:bc/fracture4"
       }
     ]
   },
@@ -77,7 +86,7 @@
     "subtitle": "subtitles.rpmedicine.pills",
     "sounds": [
       {
-        "name": "rpmedicine:pills_1"
+        "name": "rpmedicine:bc/pill_swallow"
       }
     ]
   },
@@ -85,8 +94,7 @@
     "subtitle": "subtitles.rpmedicine.monitor_alarm",
     "sounds": [
       {
-        "name": "minecraft:block.note_block.bit",
-        "type": "event"
+        "name": "rpmedicine:bc/alarm_beep"
       }
     ]
   },
@@ -94,8 +102,386 @@
     "subtitle": "subtitles.rpmedicine.vomit",
     "sounds": [
       {
-        "name": "minecraft:entity.player.burp",
-        "type": "event"
+        "name": "rpmedicine:bc/vomit_1"
+      },
+      {
+        "name": "rpmedicine:bc/vomit_2"
+      },
+      {
+        "name": "rpmedicine:bc/vomit_3"
+      },
+      {
+        "name": "rpmedicine:bc/vomit_4"
+      },
+      {
+        "name": "rpmedicine:bc/hbm_vomit"
+      }
+    ]
+  },
+  "heartbeat_fast": {
+    "subtitle": "subtitles.rpmedicine.heartbeat_fast",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/heartbeat_fast"
+      }
+    ]
+  },
+  "gasp": {
+    "subtitle": "subtitles.rpmedicine.gasp",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/breathe_gasp1"
+      },
+      {
+        "name": "rpmedicine:bc/breathe_gasp2"
+      },
+      {
+        "name": "rpmedicine:bc/breathe_gasp3"
+      },
+      {
+        "name": "rpmedicine:bc/breathe_gasp4"
+      }
+    ]
+  },
+  "cough": {
+    "subtitle": "subtitles.rpmedicine.cough",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/cough1"
+      },
+      {
+        "name": "rpmedicine:bc/cough2"
+      }
+    ]
+  },
+  "pain_groan": {
+    "subtitle": "subtitles.rpmedicine.pain_groan",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/cramp_groan_1"
+      },
+      {
+        "name": "rpmedicine:bc/cramp_groan_2"
+      },
+      {
+        "name": "rpmedicine:bc/cramp_groan_3"
+      },
+      {
+        "name": "rpmedicine:bc/cramp_groan_4"
+      }
+    ]
+  },
+  "pain_moan": {
+    "subtitle": "subtitles.rpmedicine.pain_moan",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/old_groan_1"
+      },
+      {
+        "name": "rpmedicine:bc/old_groan_2"
+      },
+      {
+        "name": "rpmedicine:bc/old_groan_3"
+      },
+      {
+        "name": "rpmedicine:bc/old_groan_4"
+      },
+      {
+        "name": "rpmedicine:bc/old_groan_5"
+      }
+    ]
+  },
+  "splint": {
+    "subtitle": "subtitles.rpmedicine.splint",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/splint_wrap"
+      }
+    ]
+  },
+  "eardrum_burst": {
+    "subtitle": "subtitles.rpmedicine.eardrum_burst",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/eardrum_burst"
+      }
+    ]
+  },
+  "flatline": {
+    "subtitle": "subtitles.rpmedicine.flatline",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/heart_flatline"
+      }
+    ]
+  },
+  "heart_stopping": {
+    "subtitle": "subtitles.rpmedicine.heart_stopping",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/heart_stopping"
+      }
+    ]
+  },
+  "scanner": {
+    "subtitle": "subtitles.rpmedicine.scanner",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/scanner_blip"
+      }
+    ]
+  },
+  "ammonia": {
+    "subtitle": "subtitles.rpmedicine.ammonia",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/sniffle_1"
+      },
+      {
+        "name": "rpmedicine:bc/sniffle_2"
+      },
+      {
+        "name": "rpmedicine:bc/sniffle_3"
+      }
+    ]
+  },
+  "wake_up": {
+    "subtitle": "subtitles.rpmedicine.wake_up",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/second_wind"
+      }
+    ]
+  },
+  "surgery_cut": {
+    "subtitle": "subtitles.rpmedicine.surgery_cut",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_cut_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_cut_2"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_cut_3"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_cut_4"
+      }
+    ]
+  },
+  "surgery_stitch": {
+    "subtitle": "subtitles.rpmedicine.surgery_stitch",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_stitch"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_thread_pull"
+      }
+    ]
+  },
+  "surgery_clamp": {
+    "subtitle": "subtitles.rpmedicine.surgery_clamp",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_clamp"
+      }
+    ]
+  },
+  "surgery_retract": {
+    "subtitle": "subtitles.rpmedicine.surgery_retract",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_retract_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_retract_2"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_retract_3"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_retract_4"
+      }
+    ]
+  },
+  "surgery_suction": {
+    "subtitle": "subtitles.rpmedicine.surgery_suction",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_suction_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_suction_2"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_suction_3"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_suction_4"
+      }
+    ]
+  },
+  "surgery_bleed": {
+    "subtitle": "subtitles.rpmedicine.surgery_bleed",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_bleed_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_bleed_2"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_bleed_3"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_bleed_4"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_bleed_5"
+      }
+    ]
+  },
+  "surgery_bone_set": {
+    "subtitle": "subtitles.rpmedicine.surgery_bone_set",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_bone_set"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_bone_move_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_bone_move_2"
+      }
+    ]
+  },
+  "surgery_vessel_cut": {
+    "subtitle": "subtitles.rpmedicine.surgery_vessel_cut",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_vessel_cut_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_vessel_cut_2"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_vessel_cut_3"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_vessel_cut_4"
+      }
+    ]
+  },
+  "surgery_cautery": {
+    "subtitle": "subtitles.rpmedicine.surgery_cautery",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_cautery_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_cautery_2"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_cautery_3"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_cautery_4"
+      }
+    ]
+  },
+  "surgery_error": {
+    "subtitle": "subtitles.rpmedicine.surgery_error",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_error"
+      }
+    ]
+  },
+  "surgery_trachea": {
+    "subtitle": "subtitles.rpmedicine.surgery_trachea",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/surgery_trachea_1"
+      },
+      {
+        "name": "rpmedicine:bc/surgery_trachea_2"
+      }
+    ]
+  },
+  "bone_saw": {
+    "subtitle": "subtitles.rpmedicine.bone_saw",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/bone_saw_1"
+      },
+      {
+        "name": "rpmedicine:bc/bone_saw_2"
+      },
+      {
+        "name": "rpmedicine:bc/bone_saw_3"
+      },
+      {
+        "name": "rpmedicine:bc/bone_saw_4"
+      },
+      {
+        "name": "rpmedicine:bc/bone_saw_5"
+      }
+    ]
+  },
+  "bone_drill": {
+    "subtitle": "subtitles.rpmedicine.bone_drill",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/bone_drill_1"
+      },
+      {
+        "name": "rpmedicine:bc/bone_drill_2"
+      },
+      {
+        "name": "rpmedicine:bc/bone_drill_3"
+      }
+    ]
+  },
+  "organ_move": {
+    "subtitle": "subtitles.rpmedicine.organ_move",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/organ_move_1"
+      },
+      {
+        "name": "rpmedicine:bc/organ_move_2"
+      },
+      {
+        "name": "rpmedicine:bc/organ_move_3"
+      },
+      {
+        "name": "rpmedicine:bc/organ_move_4"
+      }
+    ]
+  },
+  "minigame_ok": {
+    "subtitle": "subtitles.rpmedicine.minigame_ok",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/mark_done"
+      }
+    ]
+  },
+  "minigame_slip": {
+    "subtitle": "subtitles.rpmedicine.minigame_slip",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/item_slip"
+      }
+    ]
+  },
+  "body_fall": {
+    "subtitle": "subtitles.rpmedicine.body_fall",
+    "sounds": [
+      {
+        "name": "rpmedicine:bc/fall"
       }
     ]
   }

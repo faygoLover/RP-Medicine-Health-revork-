@@ -70,10 +70,20 @@ public final class ClientHandlers {
         // Сервер остановил действие, пока шла мини-игра (урон, ушли от пациента) — закрыть её.
         if (p.totalTicks() == 0 && Minecraft.getInstance().screen instanceof faygolover.rpmedicine.client.screen.MinigameScreen ms)
             ms.cancelledByServer();
+        if (p.incoming()) {
+            ClientState.incomingLabel = p.labelKey();
+            ClientState.incomingTotal = p.totalTicks();
+            ClientState.incomingStart = System.currentTimeMillis();
+            ClientState.incomingIcon = p.icon();
+            ClientState.incomingSubtitle = p.subtitle();
+            return;
+        }
         ClientState.progressLabel = p.labelKey();
         ClientState.progressTotal = p.totalTicks();
         ClientState.progressDone = p.doneTicks();
         ClientState.progressStart = System.currentTimeMillis();
+        ClientState.progressIcon = p.icon();
+        ClientState.progressSubtitle = p.subtitle();
     }
 
     public static void openHudEditor() {
@@ -99,10 +109,14 @@ public final class ClientHandlers {
         }
     }
 
-    /** Поза игрока на этом клиенте: на койке — на спине, лежачий и ползущий — горизонтально. */
+    /**
+     * Поза игрока на этом клиенте: на койке — сна; лежачий — стоя (модель кладёт на спину
+     * {@link faygolover.rpmedicine.client.render.DownedPose}); ползущий в сознании — горизонтально лицом вниз.
+     */
     public static Pose poseFor(int entityId, boolean crawl) {
         if (BedPose.CLIENT_ON_BED.contains(entityId)) return Pose.SLEEPING;
-        return ClientState.DOWNED.contains(entityId) || crawl ? Pose.SWIMMING : null;
+        if (ClientState.DOWNED.contains(entityId)) return Pose.STANDING;
+        return crawl ? Pose.SWIMMING : null;
     }
 
     public static void onMonitor(MonitorPacket p) {

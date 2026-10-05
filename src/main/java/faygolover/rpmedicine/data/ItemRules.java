@@ -113,4 +113,19 @@ public final class ItemRules {
     public static Map<ResourceLocation, Spec> all() {
         return specs;
     }
+
+    /** Сведения обо всех медицинских предметах (свои и аналоги) — для подсказок на клиенте. */
+    public static faygolover.rpmedicine.network.ItemInfoPacket infoPacket() {
+        java.util.List<faygolover.rpmedicine.network.ItemInfoPacket.Info> out = new java.util.ArrayList<>();
+        for (var e : ForgeRegistries.ITEMS.getEntries()) {
+            ItemStack st = new ItemStack(e.getValue());
+            Spec s = specFor(st);
+            if (s == null) continue;
+            ResourceLocation id = e.getKey().location();
+            ResourceLocation analog = aliases.get(id);
+            out.add(new faygolover.rpmedicine.network.ItemInfoPacket.Info(id, s.action().id, s.seconds(), s.minLevel(), s.consume(),
+                    analog, drugFor(st)));
+        }
+        return new faygolover.rpmedicine.network.ItemInfoPacket(out);
+    }
 }

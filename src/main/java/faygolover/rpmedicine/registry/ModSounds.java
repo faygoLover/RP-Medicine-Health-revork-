@@ -7,7 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-/** Звуки. Пока заглушки: в sounds.json указывают на ванильные файлы (п. 7.5 ТЗ). */
+/** Звуки: из BodyControl (VKM), Tactical Medicine, Health & Disease, остальное — ванильные заглушки (sounds.json). */
 public final class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, RpMedicine.MODID);
 
@@ -22,6 +22,35 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> PILLS = reg("pills");
     public static final RegistryObject<SoundEvent> MONITOR_ALARM = reg("monitor_alarm");
     public static final RegistryObject<SoundEvent> VOMIT = reg("vomit");
+    public static final RegistryObject<SoundEvent> HEARTBEAT_FAST = reg("heartbeat_fast");
+    public static final RegistryObject<SoundEvent> GASP = reg("gasp");
+    public static final RegistryObject<SoundEvent> COUGH = reg("cough");
+    public static final RegistryObject<SoundEvent> PAIN_GROAN = reg("pain_groan");
+    public static final RegistryObject<SoundEvent> PAIN_MOAN = reg("pain_moan");
+    public static final RegistryObject<SoundEvent> SPLINT = reg("splint");
+    public static final RegistryObject<SoundEvent> EARDRUM_BURST = reg("eardrum_burst");
+    public static final RegistryObject<SoundEvent> FLATLINE = reg("flatline");
+    public static final RegistryObject<SoundEvent> HEART_STOPPING = reg("heart_stopping");
+    public static final RegistryObject<SoundEvent> SCANNER = reg("scanner");
+    public static final RegistryObject<SoundEvent> AMMONIA = reg("ammonia");
+    public static final RegistryObject<SoundEvent> WAKE_UP = reg("wake_up");
+    public static final RegistryObject<SoundEvent> SURGERY_CUT = reg("surgery_cut");
+    public static final RegistryObject<SoundEvent> SURGERY_STITCH = reg("surgery_stitch");
+    public static final RegistryObject<SoundEvent> SURGERY_CLAMP = reg("surgery_clamp");
+    public static final RegistryObject<SoundEvent> SURGERY_RETRACT = reg("surgery_retract");
+    public static final RegistryObject<SoundEvent> SURGERY_SUCTION = reg("surgery_suction");
+    public static final RegistryObject<SoundEvent> SURGERY_BLEED = reg("surgery_bleed");
+    public static final RegistryObject<SoundEvent> SURGERY_BONE_SET = reg("surgery_bone_set");
+    public static final RegistryObject<SoundEvent> SURGERY_VESSEL_CUT = reg("surgery_vessel_cut");
+    public static final RegistryObject<SoundEvent> SURGERY_CAUTERY = reg("surgery_cautery");
+    public static final RegistryObject<SoundEvent> SURGERY_ERROR = reg("surgery_error");
+    public static final RegistryObject<SoundEvent> SURGERY_TRACHEA = reg("surgery_trachea");
+    public static final RegistryObject<SoundEvent> BONE_SAW = reg("bone_saw");
+    public static final RegistryObject<SoundEvent> BONE_DRILL = reg("bone_drill");
+    public static final RegistryObject<SoundEvent> ORGAN_MOVE = reg("organ_move");
+    public static final RegistryObject<SoundEvent> MINIGAME_OK = reg("minigame_ok");
+    public static final RegistryObject<SoundEvent> MINIGAME_SLIP = reg("minigame_slip");
+    public static final RegistryObject<SoundEvent> BODY_FALL = reg("body_fall");
 
     private static RegistryObject<SoundEvent> reg(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(RpMedicine.MODID, name)));

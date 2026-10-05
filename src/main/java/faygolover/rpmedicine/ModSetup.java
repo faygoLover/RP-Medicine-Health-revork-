@@ -211,8 +211,14 @@ public final class ModSetup {
     /** Клиенты получают списки функций госпиталя при входе и после /reload. */
     private static void onDatapackSync(net.minecraftforge.event.OnDatapackSyncEvent e) {
         var packet = new faygolover.rpmedicine.network.HospitalBlocksPacket(HospitalBlocks.entries(), HospitalBlocks.radii());
-        if (e.getPlayer() != null) Network.send(e.getPlayer(), packet);
-        else Network.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
+        var info = faygolover.rpmedicine.data.ItemRules.infoPacket();
+        if (e.getPlayer() != null) {
+            Network.send(e.getPlayer(), packet);
+            Network.send(e.getPlayer(), info);
+        } else {
+            Network.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
+            Network.CHANNEL.send(PacketDistributor.ALL.noArg(), info);
+        }
     }
 
     private static void onCommands(RegisterCommandsEvent e) {

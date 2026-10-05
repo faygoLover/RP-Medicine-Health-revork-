@@ -115,6 +115,9 @@ class InjuriesTest {
     @Test
     void instantDeathThresholds() {
         MedicalSettings s = settings();
+        // По умолчанию голова убивает не порогом урона, а разрушением (решения, п. 1.13).
+        assertFalse(Injuries.isInstantlyLethal(BodyPart.HEAD, 30, s));
+        s.instantDeathHeadDamage = 24;
         assertTrue(Injuries.isInstantlyLethal(BodyPart.HEAD, 30, s));
         assertFalse(Injuries.isInstantlyLethal(BodyPart.CHEST, 30, s));
         assertTrue(Injuries.isInstantlyLethal(BodyPart.CHEST, 80, s));

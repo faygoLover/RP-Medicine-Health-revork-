@@ -15,15 +15,61 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/** Полное состояние цифрами — для ГМа: команда {@code inspect} и ГМ-сканер. */
+/**
+ * Состояние цифрами — для ГМа: команда {@code inspect} и ГМ-сканер. Кратко — только отклонения от
+ * нормы; {@code full} — всё. Значения подсвечены по тяжести: зелёный — норма, жёлтый и оранжевый —
+ * отклонение, красный — опасно.
+ */
 public final class MedicalReports {
     private MedicalReports() {}
 
     public static void sendFull(Player viewer, LivingEntity target) {
-        for (Component c : full(target)) viewer.sendSystemMessage(c);
+        for (Component c : report(target, true)) viewer.sendSystemMessage(c);
     }
 
     public static List<Component> full(LivingEntity target) {
+        return report(target, true);
+    }
+
+    /** Строка «метка значение · метка значение …». */
+    private static final class Row {
+        final MutableComponent c;
+        boolean any;
+
+        Row(String title) {
+            c = Component.literal(title).withStyle(ChatFormatting.DARK_AQUA);
+        }
+
+        Row add(String label, String value, ChatFormatting color) {
+            c.append(Component.literal(any ? "  " : " ").withStyle(ChatFormatting.DARK_GRAY));
+            c.append(Component.literal(label + " ").withStyle(ChatFormatting.GRAY));
+            c.append(Component.literal(value).withStyle(color));
+            any = true;
+            return this;
+        }
+    }
+
+    private static final ChatFormatting OK = ChatFormatting.GREEN;
+    private static final ChatFormatting MILD = ChatFormatting.YELLOW;
+    private static final ChatFormatting MOD = ChatFormatting.GOLD;
+    private static final ChatFormatting BAD = ChatFormatting.RED;
+    private static final ChatFormatting CRIT = ChatFormatting.DARK_RED;
+
+    /** Цвет по отклонению вниз: значение ≥ a — норма, ≥ b — жёлтый, ≥ c — оранжевый, иначе красный. */
+    private static ChatFormatting low(double v, double a, double b, double c) {
+        return v >= a ? OK : v >= b ? MILD : v >= c ? MOD : BAD;
+    }
+
+    /** Цвет по отклонению вверх. */
+    private static ChatFormatting high(double v, double a, double b, double c) {
+        return v <= a ? OK : v <= b ? MILD : v <= c ? MOD : BAD;
+    }
+
+    private static String f(String fmt, Object... a) {
+        return String.format(Locale.ROOT, fmt, a);
+    }
+
+    public static List<Component> report(LivingEntity target, boolean all) {
         List<Component> out = new ArrayList<>();
         MedicalState m = Medical.state(target);
         if (m == null) {
@@ -31,86 +77,135 @@ public final class MedicalReports {
             return out;
         }
         MedicalSettings s = MedicalSettings.get();
-        out.add(Component.literal("== ").append(target.getDisplayName()).append(" ==").withStyle(ChatFormatting.GOLD));
-        out.add(line("Состояние: %s, сознание %.0f, мозг %.1f, сердце %s%s", m.down, m.consciousness, m.brain, m.heart,
-                m.respiratoryArrest ? ", дыхание остановлено" : ""));
-        out.add(line("Кровь %.0f/%.0f мл (%.0f%%), физраствор %.0f мл, капельница %.0f мл; кровотечение наруж. %.0f, внутр. %.0f мл/мин",
-                m.bloodVolume, m.normalBlood(s), m.bloodFraction(s) * 100, m.saline, m.salineDripRemaining,
-                m.totalExternalBleed(s), m.totalInternalBleed()));
-        out.add(line("Давление %.0f, пульс %.0f, дыхание %.0f, SpO2 %.0f (потолок %.0f), доставка O2 %.2f",
-                m.pressure, m.heartRate, m.respRate, m.spo2, Physiology.spo2Ceiling(m, s), Physiology.oxygenDelivery(m, s)));
-        out.add(line("Боль %.0f (без обезболивания %.0f), шок %.0f/%.0f%s, адреналин %.0f с, укол %.0f с",
-                m.pain, m.rawPain, m.shockAccum, m.shockLimit, m.painShock ? " ОБМОРОК" : "", m.adrenalineSeconds, m.adrenalineInjectionSeconds));
-        out.add(line("Обезболивающее %.0f с, морфин %.0f с%s, ТХК %.0f с, контузия %.0f, после клин. смерти %.0f мин",
-                m.painkillerSeconds, m.morphineSeconds, m.morphineOverdoseSeconds > 0 ? " (передозировка)" : "", m.txaSeconds,
-                m.concussion, m.postClinicalSeconds / 60));
-        out.add(line("Пневмоторакс %s%s, воздуховод %s, Амбу %.0f с, СЛР %.0f с, рост %.0f см, вес %.0f кг",
-                m.pneumo, m.pneumo == MedicalState.Pneumo.OPEN ? String.format(Locale.ROOT, " (до напряжённого %.0f с)", m.pneumoTimer)
-                        : m.pneumo == MedicalState.Pneumo.TENSION ? String.format(Locale.ROOT, " (%.0f%%)", m.tensionProgress * 100) : "",
-                m.airway ? "да" : "нет", m.ambuSeconds, m.cprSeconds, m.heightCm, m.weightKg));
-        // Второй этап: группа, капельницы, температура, сепсис, лекарства.
-        out.add(line("Группа %s, температура %.1f °C, сепсис %.0f%%%s%s",
-                m.bloodType != null ? m.bloodType.label : "не задана", m.bodyTemp, m.sepsis,
-                m.spoiledBloodSeconds > 0 ? ", испорченная кровь" : "",
-                m.transfusionReactionSeconds > 0 ? String.format(Locale.ROOT, ", РЕАКЦИЯ на кровь %.0f с", m.transfusionReactionSeconds) : ""));
-        if (m.bloodDripRemaining > 0)
-            out.add(line("Переливание: осталось %.0f мл, группа пакета %s%s", m.bloodDripRemaining,
-                    m.bloodDripType != null ? m.bloodDripType.label : "?", m.bloodDripSpoiled ? ", испорчен" : ""));
-        if (!m.effects.isEmpty()) {
-            StringBuilder eb = new StringBuilder("Лекарства:");
-            for (var e : m.effects.entrySet()) {
-                var a = e.getValue();
-                eb.append(String.format(Locale.ROOT, " %s %.2f (%s%.0f с)", e.getKey().id, a.strength,
-                        a.delay > 0 ? String.format(Locale.ROOT, "через %.0f с, ", a.delay) : "", a.seconds));
+        // Заголовок: имя и главное состояние.
+        MutableComponent head = Component.literal("━━ ").withStyle(ChatFormatting.DARK_GRAY).append(target.getDisplayName().copy().withStyle(ChatFormatting.GOLD));
+        switch (m.down) {
+            case FAINT -> head.append(Component.literal("  ◌ без сознания").withStyle(MOD));
+            case KNOCKDOWN -> {
+                head.append(Component.literal("  ▼ НОКДАУН").withStyle(BAD));
+                if (Physiology.lifeThreat(m, s) && !m.knockdownNoTimer) {
+                    double rate = Physiology.knockdownBrainRate(m, s, Medical.traits(target));
+                    int sec = (int) Math.ceil(m.brain / Math.max(1e-6, rate));
+                    head.append(Component.literal(f(" %d:%02d", sec / 60, sec % 60)).withStyle(BAD, ChatFormatting.BOLD));
+                }
             }
-            out.add(line("%s", eb));
+            case CLINICAL -> head.append(Component.literal("  ☠ КЛИНИЧЕСКАЯ СМЕРТЬ").withStyle(CRIT, ChatFormatting.BOLD));
+            default -> head.append(Component.literal("  ✔ в сознании").withStyle(OK));
         }
-        // Третий этап: органы.
+        if (m.heart != MedicalState.Heart.NORMAL) head.append(Component.literal("  ♥ " + (m.heart == MedicalState.Heart.ARREST ? "ОСТАНОВКА" : "ФИБРИЛЛЯЦИЯ")).withStyle(CRIT));
+        if (m.respiratoryArrest) head.append(Component.literal("  ✖ не дышит").withStyle(CRIT));
+        out.add(head);
+
+        // Жизненные показатели.
+        Row v = new Row("❤");
+        double blood = m.bloodFraction(s) * 100;
+        if (all || blood < 95) v.add("кровь", f("%.0f/%.0f мл (%.0f%%)", m.bloodVolume, m.normalBlood(s), blood), low(blood, 95, 85, 70));
+        double ext = m.totalExternalBleed(s), in = m.totalInternalBleed();
+        if (all || ext > 1) v.add("кровит", f("%.0f мл/мин", ext), high(ext, 1, 30, 150));
+        if (all || in > 0) v.add("внутр.", f("%.0f мл/мин", in), high(in, 0, 20, 60));
+        if (all || m.pressure < 100 || m.pressure > 145) v.add("АД", f("%.0f/%.0f", m.pressure, m.pressure * 0.65), m.pressure > 145 ? MILD : low(m.pressure, 100, 85, 70));
+        if (all || m.heartRate < 55 || m.heartRate > 100) v.add("пульс", f("%.0f", m.heartRate), m.heartRate < 55 ? MOD : high(m.heartRate, 100, 125, 150));
+        if (all || m.spo2 < 95) v.add("SpO₂", f("%.0f%% (потолок %.0f)", m.spo2, Physiology.spo2Ceiling(m, s)), low(m.spo2, 95, 90, 80));
+        if (all || m.respRate < 10 || m.respRate > 22) v.add("ЧД", f("%.0f", m.respRate), m.respRate < 10 ? BAD : high(m.respRate, 22, 26, 30));
+        if (v.any) out.add(v.c);
+
+        Row n = new Row("☊");
+        if (all || m.consciousness < 100) n.add("сознание", f("%.0f", m.consciousness), low(m.consciousness, 90, 60, 30));
+        if (all || m.brain < 100) n.add("мозг", f("%.1f", m.brain), low(m.brain, 95, 70, 40));
+        if (all || m.pain > 0 || m.rawPain > 0) n.add("боль", f("%.0f (без обезб. %.0f)", m.pain, m.rawPain), high(m.pain, 10, 30, 60));
+        if (all || m.painShock || m.shockAccum > 0) n.add("шок", m.painShock ? "ОБМОРОК" : f("%.0f/%.0f", m.shockAccum, m.shockLimit), m.painShock ? BAD : MILD);
+        if (all || m.concussion > 0) n.add("контузия", f("%.0f", m.concussion), high(m.concussion, 0, 30, 60));
+        if (all || m.postClinicalSeconds > 0) n.add("после клин. смерти", f("%.0f мин", m.postClinicalSeconds / 60), MOD);
+        if (n.any) out.add(n.c);
+
+        Row o = new Row("✚");
+        if (all || m.adrenalineSeconds > 0) o.add("адреналин", f("%.0f с", m.adrenalineSeconds), MILD);
+        if (all || m.adrenalineInjectionSeconds > 0) o.add("укол адр.", f("%.0f с", m.adrenalineInjectionSeconds), MILD);
+        if (all || m.painkillerSeconds > 0) o.add("таблетки", f("%.0f с", m.painkillerSeconds), OK);
+        if (all || m.morphineSeconds > 0) o.add("морфин", f("%.0f с%s", m.morphineSeconds, m.morphineOverdoseSeconds > 0 ? " ПЕРЕДОЗ" : ""), m.morphineOverdoseSeconds > 0 ? BAD : OK);
+        if (all || m.txaSeconds > 0) o.add("ТХК", f("%.0f с", m.txaSeconds), OK);
+        if (all || m.stabilizedSeconds > 0) o.add("стабилизация", f("%.0f с", m.stabilizedSeconds), OK);
+        if (all || m.saline > 0 || m.salineDripRemaining > 0) o.add("физраствор", f("%.0f мл (капает %.0f)", m.saline, m.salineDripRemaining), OK);
+        if (m.bloodDripRemaining > 0) o.add("переливание", f("%.0f мл, %s%s", m.bloodDripRemaining, m.bloodDripType != null ? m.bloodDripType.label : "?",
+                m.bloodDripSpoiled ? ", испорчен" : ""), m.bloodDripSpoiled ? BAD : OK);
+        if (all || m.airway) o.add("воздуховод", m.airway ? "да" : "нет", OK);
+        if (all || m.intubated) o.add("трубка", m.intubated ? "да" : "нет", OK);
+        if (all || m.ambuSeconds > 0) o.add("Амбу", f("%.0f с", m.ambuSeconds), OK);
+        if (all || m.cprSeconds > 0) o.add("СЛР", f("%.0f с", m.cprSeconds), OK);
+        for (var e : m.effects.entrySet()) {
+            var a = e.getValue();
+            o.add(e.getKey().id, f("%.2f %s%.0f с", a.strength, a.delay > 0 ? f("(через %.0f) ", a.delay) : "", a.seconds), ChatFormatting.AQUA);
+        }
+        if (o.any) out.add(o.c);
+
+        Row x = new Row("⚠");
+        if (all || m.pneumo != MedicalState.Pneumo.NONE) {
+            String pn = switch (m.pneumo) {
+                case NONE -> "нет";
+                case OPEN -> f("открытый (до напряжённого %.0f с)", m.pneumoTimer);
+                case TENSION -> f("НАПРЯЖЁННЫЙ %.0f%%", m.tensionProgress * 100);
+            };
+            x.add("пневмоторакс", pn, m.pneumo == MedicalState.Pneumo.TENSION ? CRIT : m.pneumo == MedicalState.Pneumo.OPEN ? BAD : OK);
+        }
+        if (all || Math.abs(m.bodyTemp - 36.7) > 0.8) x.add("t°", f("%.1f", m.bodyTemp), m.bodyTemp >= 38.5 || m.bodyTemp <= 35 ? BAD : MILD);
+        if (all || m.sepsis > 0) x.add("сепсис", f("%.0f%%", m.sepsis), high(m.sepsis, 0, 20, 50));
+        if (m.transfusionReactionSeconds > 0) x.add("РЕАКЦИЯ на кровь", f("%.0f с", m.transfusionReactionSeconds), CRIT);
+        if (m.spoiledBloodSeconds > 0) x.add("испорченная кровь", f("%.0f с", m.spoiledBloodSeconds), BAD);
         if (faygolover.rpmedicine.core.Organs.worst(m) > 0) {
-            StringBuilder ob = new StringBuilder("Органы:");
-            for (faygolover.rpmedicine.core.Organ o : faygolover.rpmedicine.core.Organ.VALUES) {
-                if (!m.hasOrgan(o)) ob.append(' ').append(o.id).append(" ИЗЪЯТ");
-                else if (m.organ(o) > 0) ob.append(String.format(Locale.ROOT, " %s %.0f%%", o.id, m.organ(o)));
+            for (faygolover.rpmedicine.core.Organ g : faygolover.rpmedicine.core.Organ.VALUES) {
+                if (!m.hasOrgan(g)) x.add(g.id, "ИЗЪЯТ", CRIT);
+                else if (m.organ(g) > 0) x.add(g.id, f("%.0f%%", m.organ(g)), high(m.organ(g), 10, 40, 70));
             }
-            out.add(line("%s", ob));
         }
-        if (m.down == MedicalState.Down.KNOCKDOWN && Physiology.lifeThreat(m, s) && !m.knockdownNoTimer) {
-            double rate = Physiology.knockdownBrainRate(m, s, Medical.traits(target));
-            out.add(line("Нокдаун: осталось ~%.0f с", m.brain / Math.max(1e-6, rate)));
+        if (x.any) out.add(x.c);
+
+        if (all) {
+            Row p = new Row("ℹ");
+            p.add("группа", m.bloodType != null ? m.bloodType.label : "не задана", ChatFormatting.WHITE);
+            p.add("рост", f("%.0f см", m.heightCm), ChatFormatting.WHITE);
+            p.add("вес", f("%.0f кг", m.weightKg), ChatFormatting.WHITE);
+            out.add(p.c);
         }
+
+        // Части тела: только повреждённые.
         for (BodyPartState ps : m.parts) {
             if (ps.isHealthy()) continue;
-            MutableComponent c = Component.translatable(ps.part.translationKey()).withStyle(ChatFormatting.AQUA);
-            StringBuilder sb = new StringBuilder();
-            sb.append(String.format(Locale.ROOT, ": целостность %.0f", ps.integrity()));
+            double integ = ps.integrity();
+            MutableComponent c = Component.literal(" ▪ ").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.translatable(ps.part.translationKey()).withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal(f(" %.0f", integ)).withStyle(integ <= 0 ? ChatFormatting.DARK_GRAY : low(integ, 80, 50, 25)));
             for (Wound w : ps.wounds) {
-                sb.append(String.format(Locale.ROOT, "; %s %.1f (кровь %.0f мл/мин%s%s)", w.type.id, w.severity, w.bleed(s),
-                        w.isDressed() ? ", " + w.dressing.id + (w.dressingQuality < 1 ? String.format(Locale.ROOT, " %.2f", w.dressingQuality) : "") : "",
-                        infection(w) + (w.sutured ? String.format(Locale.ROOT, ", швы %.2f", w.sutureQuality) : "")));
+                c.append(Component.literal(" │ ").withStyle(ChatFormatting.DARK_GRAY));
+                c.append(Component.literal(f("%s %.0f", w.type.id, w.severity)).withStyle(ChatFormatting.WHITE));
+                double b = w.bleed(s);
+                if (b > 0.5) c.append(Component.literal(f(" ●%.0f", b)).withStyle(high(b, 30, 150, 300)));
+                if (w.isDressed()) c.append(Component.literal(" ✚" + w.dressing.id + (w.dressingQuality < 1 ? f(" %.2f", w.dressingQuality) : ""))
+                        .withStyle(w.dressingQuality < 0.6 ? MOD : ChatFormatting.AQUA));
+                if (w.sutured) c.append(Component.literal(f(" швы %.2f", w.sutureQuality)).withStyle(ChatFormatting.AQUA));
+                String inf = infection(w);
+                if (!inf.isEmpty()) c.append(Component.literal(inf).withStyle(w.isInfected() ? BAD : ChatFormatting.GRAY));
             }
-            if (ps.hasFracture()) sb.append("; перелом ").append(ps.fracture).append(ps.splint ? " (шина)" : "")
-                    .append(String.format(Locale.ROOT, " %.0f%%", ps.fractureHeal * 100));
-            if (ps.arterial) sb.append("; АРТЕРИЯ");
-            if (ps.internalBleed > 0) sb.append(String.format(Locale.ROOT, "; внутреннее %.0f мл/мин", ps.internalBleed));
-            if (ps.bullets > 0) sb.append("; пуль ").append(ps.bullets);
-            if (ps.fragments > 0) sb.append("; осколков ").append(ps.fragments);
-            if (ps.hasTourniquet()) sb.append(String.format(Locale.ROOT, "; жгут %s %.1f мин", ps.tourniquet, ps.tourniquetSeconds / 60));
-            if (ps.ischemia > 0) sb.append(String.format(Locale.ROOT, "; ишемия %.0f", ps.ischemia));
-            if (ps.occlusive) sb.append("; наклейка");
-            out.add(c.append(Component.literal(sb.toString()).withStyle(ChatFormatting.WHITE)));
+            if (ps.hasFracture()) c.append(Component.literal(f(" │ перелом %s%s %.0f%%", ps.fracture, ps.splint ? " (шина)" : "", ps.fractureHeal * 100)).withStyle(MOD));
+            if (ps.dislocated) c.append(Component.literal(" │ вывих").withStyle(MOD));
+            if (ps.arterial) c.append(Component.literal(" │ АРТЕРИЯ").withStyle(CRIT, ChatFormatting.BOLD));
+            if (ps.internalBleed > 0) c.append(Component.literal(f(" │ внутр. %.0f мл/мин", ps.internalBleed)).withStyle(BAD));
+            if (ps.bullets > 0) c.append(Component.literal(" │ пуль " + ps.bullets).withStyle(MOD));
+            if (ps.fragments > 0) c.append(Component.literal(" │ осколков " + ps.fragments).withStyle(MOD));
+            if (ps.hasTourniquet()) c.append(Component.literal(f(" │ жгут %s %.1f мин", ps.tourniquet, ps.tourniquetSeconds / 60))
+                    .withStyle(ps.tourniquetSeconds >= 900 ? BAD : ChatFormatting.AQUA));
+            if (ps.ischemia > 0) c.append(Component.literal(f(" │ ишемия %.0f", ps.ischemia)).withStyle(BAD));
+            if (ps.occlusive) c.append(Component.literal(" │ наклейка").withStyle(ChatFormatting.AQUA));
+            out.add(c);
         }
+        if (!all) out.add(Component.literal("(всё — /rpmedicine inspect <цель> full)").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
         return out;
     }
 
     private static String infection(Wound w) {
         return switch (w.infectionStage) {
-            case PENDING -> String.format(Locale.ROOT, ", проверка заражения через %.0f мин", w.infectionTimer / 60);
-            case INFECTED -> String.format(Locale.ROOT, ", ИНФЕКЦИЯ %.0f%% / иммунитет %.0f%%", w.infection, w.immuneProgress);
+            case PENDING -> f(" (заражение через %.0f мин)", w.infectionTimer / 60);
+            case INFECTED -> f(" ИНФЕКЦИЯ %.0f%%/иммун. %.0f%%", w.infection, w.immuneProgress);
             default -> "";
         };
-    }
-
-    private static Component line(String fmt, Object... args) {
-        return Component.literal(String.format(Locale.ROOT, fmt, args)).withStyle(ChatFormatting.WHITE);
     }
 }

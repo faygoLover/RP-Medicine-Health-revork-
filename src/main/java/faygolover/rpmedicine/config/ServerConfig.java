@@ -60,7 +60,7 @@ public final class ServerConfig {
         bind("noDeathMode", "Режим «без смерти»: вместо смерти игрок попадает в клиническую смерть (п. 5.4 ТЗ). Настоящая смерть — «Сдаться», /kill, команда ГМа, пустота.");
         bindInt("stepTicks", "Шаг пересчёта физиологии, тики (20 тиков = 1 секунда).", 1, 100);
         SEARCH_SECONDS = B.comment("Обыск лежачего, секунды.").defineInRange("search_seconds", 10.0, 0.0, 600.0);
-        FINISH_SECONDS = B.comment("Добивание: сколько секунд держать клавишу.").defineInRange("finish_seconds", 5.0, 0.0, 600.0);
+        FINISH_SECONDS = B.comment("Добивание: сколько секунд держать клавишу.").defineInRange("finish_seconds", 2.0, 0.0, 600.0);
         ADMIN_CALL_COOLDOWN_SECONDS = B.comment("«Позвать администратора» не чаще, секунды.").defineInRange("admin_call_cooldown_seconds", 180.0, 0.0, 86400.0);
         KEEP_AFTER_DEATH = B.comment("Что сохранять после смерти. Возможные значения: brain, blood, fractures, wounds, post_clinical. По умолчанию — ничего (рост и вес сохраняются всегда).")
                 .defineListAllowEmpty(List.of("keep_after_death"), List::of, o -> o instanceof String);
@@ -92,8 +92,17 @@ public final class ServerConfig {
         bind("internalBleedDecayPerMinute", "Внутреннее кровотечение само спадает на эту долю в минуту.");
         bind("burnDegree2", "Ожог тяжелее этого — вторая степень.");
         bind("burnDegree3", "Ожог тяжелее этого — третья степень.");
-        bind("instantDeathHeadDamage", "Попадание в голову сильнее этого урона убивает сразу (0 — выключено).");
+        bind("instantDeathHeadDamage", "Попадание в голову сильнее этого урона убивает сразу (0 — выключено; по умолчанию нокдаун наступает, когда голова разрушена).");
         bind("instantDeathDamage", "Любое попадание сильнее этого урона убивает сразу (0 — выключено).");
+        bind("overflowEnabled", "Урон по разрушенной части (целостность 0) переходит на остальное тело, как в Tarkov.");
+        bind("numbersMinLevel", "С какого уровня медицины на панели видны цифры состояния частей тела (ГМ видит всегда).");
+        bind("overflowArm", "Множитель перехода урона с разрушенной руки.");
+        bind("overflowLeg", "… с разрушенной ноги или стопы.");
+        bind("overflowAbdomen", "… с разрушенного живота.");
+        bind("destroyedHeadBrainPerSeverity", "Урон по разрушенной голове: мозг на единицу тяжести.");
+        bind("destroyedChestOrganPerSeverity", "Урон по разрушенной груди: сердце и лёгкие на единицу тяжести.");
+        bind("destroyedVitalConsciousness", "Разрушенная голова или грудь: сознание не выше (нокдаун).");
+        bind("destroyedIntegrity", "Часть считается разрушенной при целостности ниже.");
         B.pop();
 
         B.comment("Повязки и жгуты (п. 6.2, 6.4).").push("dressings");
@@ -239,6 +248,14 @@ public final class ServerConfig {
         bind("armUseSlowOff", "Плохая вторая рука: использование предметов дольше во столько раз.");
         bind("armAttackPenaltyMain", "Плохая рабочая рука: удар слабее на долю.");
         bind("armAttackPenaltyOff", "Плохая вторая рука: удар слабее на долю.");
+        bind("fractureMaskAnalgesia", "Ограничения переломов снимает обезболивание не слабее этого (морфин) или укол адреналина; свой адреналин после ранения — нет.");
+        bind("maskedArmPenaltyShare", "Под обезболиванием сломанная рука всё равно хуже: доля штрафа (0–1).");
+        bind("legPainLimpThreshold", "Боль ноги или стопы (после обезболивания), с которой нога хромает и бег недоступен.");
+        bind("legPainNoJumpThreshold", "Боль ноги или стопы, с которой нельзя прыгать.");
+        bind("legPainLimpPenalty", "Минус скорость за каждую больную ногу или стопу.");
+        bind("armBreakSpeedMain", "Плохая рабочая рука: скорость ломания блоков (множитель).");
+        bind("armBreakSpeedOff", "Плохая вторая рука: скорость ломания блоков.");
+        bind("armsDisabledBreakSpeed", "Обе руки сломаны: скорость ломания блоков.");
         B.pop();
 
         B.comment("Место попадания по высоте, доля роста (п. 2.2).").push("hit_location");
@@ -252,7 +269,7 @@ public final class ServerConfig {
         B.comment("TaCZ и Zero Contact (п. 3.4). Пока в Zero Contact нет события с исходом, исход определяется сравнением урона до и после брони.").push("guns");
         ZC_PENETRATION_RATIO = B.comment("Урон после брони не меньше этой доли от урона до неё — пробитие; иначе пулю остановила плита.").defineInRange("penetration_ratio", 0.45, 0.0, 1.0);
         ZC_POWERFUL_ROUND_DAMAGE = B.comment("Пуля, остановленная плитой, при уроне до брони от этого значения даёт внутреннее кровотечение.").defineInRange("powerful_round_damage", 8.0, 0.0, 1000.0);
-        ZC_HELMET_CONCUSSION = B.comment("Пуля в шлем без пробития: контузия.").defineInRange("helmet_concussion", 60.0, 0.0, 100.0);
+        ZC_HELMET_CONCUSSION = B.comment("Пуля в шлем без пробития: контузия.").defineInRange("helmet_concussion", 25.0, 0.0, 100.0);
         B.pop();
 
         B.comment("Упрощённые травмы мобов (п. 12). Список мобов — в датапаке rpmedicine/mobs.").push("mobs");
@@ -407,6 +424,13 @@ public final class ServerConfig {
         bind("instantDamagePainSeconds", "Мгновенный урон: боль держится столько секунд.");
         bind("goldenAppleAdrenalineSeconds", "Золотое яблоко: адреналин, секунд.");
         bind("totemBloodFraction", "Тотем бессмертия: кровь не ниже этой доли нормы.");
+        bind("stabilizationFactor", "Набор стабилизации: таймер нокдауна тает во столько раз медленнее.");
+        bind("stabilizationSeconds", "Набор стабилизации: сколько секунд действует (один раз за нокдаун).");
+        bind("totemHealBase", "Тотем: каждая рана лечится на долю тяжести — база…");
+        bind("totemHealRandom", "… плюс случайно до этой доли…");
+        bind("totemHealPerLevel", "… плюс за каждый уровень медицины держащего.");
+        bind("goldenAppleAnalgesia", "Золотое яблоко: сила обезболивания (зачарованное — вдвое).");
+        bind("goldenAppleAnalgesiaSeconds", "Золотое яблоко: обезболивание, секунды (зачарованное — вдвое).");
         bind("explosionDeafMinSeconds", "Взрыв: глухота от столько секунд (при слабом уроне)…");
         bind("explosionDeafMaxSeconds", "… до столько (при сильном).");
         bind("explosionDeafMinDamage", "Взрыв слабее этого урона не оглушает.");

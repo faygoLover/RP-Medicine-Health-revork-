@@ -80,6 +80,8 @@ public final class DownedService {
 
     /** Упал: прервать всё, что делал, сообщить окружающим (для позы). */
     public static void onWentDown(ServerPlayer sp, MedicalState m) {
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.BODY_FALL.get(),
+                net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1.0f);
         sp.stopUsingItem();
         if (sp.containerMenu != sp.inventoryMenu) sp.closeContainer();
         ActionManager.cancel(sp, "rpmedicine.action.interrupted");
@@ -91,6 +93,8 @@ public final class DownedService {
     }
 
     public static void onWokeUp(ServerPlayer sp) {
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.WAKE_UP.get(),
+                net.minecraft.sounds.SoundSource.VOICE, 0.7f, 1.0f);
         CarryService.dropIfCarried(sp);
         broadcastDowned(sp, false);
         sp.displayClientMessage(Component.translatable("rpmedicine.msg.woke_up"), true);
@@ -200,7 +204,7 @@ public final class DownedService {
             return;
         }
         d.lastAdminCall = now;
-        String tp = String.format("/execute in %s run tp @s %.1f %.1f %.1f", sp.level().dimension().location(), sp.getX(), sp.getY(), sp.getZ());
+        String tp = String.format(java.util.Locale.ROOT, "/execute in %s run tp @s %.1f %.1f %.1f", sp.level().dimension().location(), sp.getX(), sp.getY(), sp.getZ());
         Component msg = Component.translatable("rpmedicine.msg.admin_call", sp.getDisplayName(),
                         sp.level().dimension().location().toString(), (int) sp.getX(), (int) sp.getY(), (int) sp.getZ())
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, tp)));

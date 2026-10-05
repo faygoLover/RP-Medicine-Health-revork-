@@ -66,31 +66,35 @@ public final class TreatmentService {
             return true;
         }
         BodyPart p = part;
+        boolean forced = false;
+        String why;
         if (p == null) {
             p = Treatments.bestPart(m, action, s, extra);
-            if (p == null) {
-                // Нигде не нужен: показать причину для самой подходящей части.
-                String why = Treatments.check(m, defaultPart(action), action, s, extra);
-                actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + (why != null ? why : "not_needed")).withStyle(ChatFormatting.YELLOW), true);
-                return true;
-            }
-        } else if (action.target == TreatmentAction.Target.PART) {
-            String why = Treatments.check(m, p, action, s, extra);
-            if (why != null) {
-                actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
-                return true;
-            }
+            why = p == null ? Treatments.check(m, defaultPart(action), action, s, extra) : null;
+            if (p == null && why == null) why = "not_needed";
+            if (p == null) p = defaultPart(action);
+        } else {
+            why = Treatments.check(m, p, action, s, extra);
         }
-        if (action.target != TreatmentAction.Target.PART) {
-            String why = Treatments.check(m, p, action, s, extra);
-            if (why != null) {
-                actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
+        if (why != null) {
+            // Отказ «не нужно» можно продавить повторным применением — с последствиями (решения, п. 1.13).
+            if (Treatments.FORCEABLE.contains(why) && confirmForce(actor, target, action)) {
+                forced = true;
+            } else {
+                var msg = Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW);
+                if (Treatments.FORCEABLE.contains(why))
+                    msg.append(Component.translatable("rpmedicine.refuse.force_hint").withStyle(ChatFormatting.GRAY));
+                actor.displayClientMessage(msg, true);
                 return true;
             }
         }
         if (action == TreatmentAction.INTUBATE && !actor.getAbilities().instabuild
                 && !actor.getInventory().contains(new ItemStack(faygolover.rpmedicine.registry.ModItems.LARYNGOSCOPE.get()))) {
             actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_laryngoscope").withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
+        if (action == TreatmentAction.BLOOD_SAMPLE && !hasItem(actor, faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get())) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_test_tube").withStyle(ChatFormatting.YELLOW), true);
             return true;
         }
         if (action == TreatmentAction.HEMOANALYZER && !hasLancet(actor)) {
@@ -103,7 +107,7 @@ public final class TreatmentService {
         double seconds = Skill.applySeconds(spec.seconds(), level, self, mods.useTimeFactor, s);
         boolean fromHand = part == null;
         // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
-        Minigames.Type mg = MinigameService.minigameFor(actor, target, m,
+        Minigames.Type mg = forced ? null : MinigameService.minigameFor(actor, target, m,
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
         if (mg != null) {
             final BodyPart part0 = p;
@@ -116,13 +120,46 @@ public final class TreatmentService {
             }, probe::checkItem);
             return true;
         }
-        ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand));
+        ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand)
+                .withForced(forced));
         return true;
+    }
+
+    private record ForcePending(int targetId, TreatmentAction action, long tick) {}
+    private static final Map<UUID, ForcePending> FORCE = new HashMap<>();
+
+    /** Второй раз подряд то же действие на того же пациента за 5 секунд — применить вопреки отказу. */
+    private static boolean confirmForce(ServerPlayer actor, LivingEntity target, TreatmentAction action) {
+        long now = actor.serverLevel().getGameTime();
+        ForcePending prev = FORCE.get(actor.getUUID());
+        if (prev != null && prev.targetId() == target.getId() && prev.action() == action && now - prev.tick() <= 100) {
+            FORCE.remove(actor.getUUID());
+            return true;
+        }
+        FORCE.put(actor.getUUID(), new ForcePending(target.getId(), action, now));
+        return false;
     }
 
     /** Гемоанализатор берёт каплю крови ланцетом — ланцет нужен в инвентаре. */
     static boolean hasLancet(ServerPlayer actor) {
         return actor.getAbilities().instabuild || actor.getInventory().contains(new ItemStack(faygolover.rpmedicine.registry.ModItems.LANCET.get()));
+    }
+
+    static boolean hasItem(ServerPlayer actor, net.minecraft.world.item.Item item) {
+        return actor.getAbilities().instabuild || actor.getInventory().contains(new ItemStack(item));
+    }
+
+    /** Потратить один предмет из инвентаря (в творческом — не тратится). */
+    static boolean consumeItem(ServerPlayer actor, net.minecraft.world.item.Item item) {
+        if (actor.getAbilities().instabuild) return true;
+        var inv = actor.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            if (inv.getItem(i).is(item)) {
+                inv.getItem(i).shrink(1);
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean consumeLancet(ServerPlayer actor) {
@@ -235,6 +272,11 @@ public final class TreatmentService {
         }
 
         @Override
+        public LivingEntity patient() {
+            return target;
+        }
+
+        @Override
         public String checkContinue() {
             if (target.isRemoved() || (target instanceof ServerPlayer tp && tp.isDeadOrDying())) return "rpmedicine.action.target_lost";
             if (actor != target && actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 1.0) return "rpmedicine.action.target_lost";
@@ -289,6 +331,14 @@ public final class TreatmentService {
             return this;
         }
 
+        /** Применение вопреки отказу проверки. */
+        private boolean forced;
+
+        TreatmentTimedAction withForced(boolean f) {
+            this.forced = f;
+            return this;
+        }
+
         /** Предмет на месте (для мини-игры, пока идёт). */
         String checkItem() {
             ItemStack now = actor.getInventory().getItem(slot);
@@ -320,6 +370,16 @@ public final class TreatmentService {
         }
 
         @Override
+        public ItemStack icon() {
+            return original;
+        }
+
+        @Override
+        public LivingEntity patient() {
+            return target;
+        }
+
+        @Override
         public String checkContinue() {
             if (target.isRemoved() || (target instanceof ServerPlayer tp && tp.isDeadOrDying())) return "rpmedicine.action.target_lost";
             if (actor != target && actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 1.0) return "rpmedicine.action.target_lost";
@@ -340,6 +400,16 @@ public final class TreatmentService {
             // Повторная проверка: за время применения состояние могло измениться.
             Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor);
             String why = Treatments.check(m, part, spec.action(), s, extra);
+            if (forced && why != null && Treatments.FORCEABLE.contains(why)) {
+                Treatments.Result fr = Treatments.applyForced(m, part, spec.action(), RANDOM.split(), s, extra);
+                faygolover.rpmedicine.stats.StatsService.treatment(actor, target, String.valueOf(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(original.getItem())),
+                        spec.action().id, part, fr.key, true);
+                if (fr.consumed && spec.consume()) consume();
+                Medical.changed(target);
+                sound(spec.action());
+                actor.displayClientMessage(resultMessage(fr, part), true);
+                return;
+            }
             if (why != null) {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
                 return;
@@ -361,7 +431,14 @@ public final class TreatmentService {
                     spec.action().id, part, r.key, error);
             if (r.consumed && spec.consume()) consume();
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
-            if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) LabService.giveSample(actor, target);
+            if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) {
+                // Пустая пробирка становится пробиркой с кровью.
+                if (!consumeItem(actor, faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get())) {
+                    actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_test_tube").withStyle(ChatFormatting.YELLOW), true);
+                    return;
+                }
+                LabService.giveSample(actor, target);
+            }
             // Предложения записей в медкарту (второй этап, п. 10).
             if (spec.action() == TreatmentAction.BLOOD_BAG && r.applied && extra instanceof Treatments.Bag bag)
                 MedcardHooks.transfusion(actor, target, bag.type());
@@ -390,15 +467,22 @@ public final class TreatmentService {
 
         private void sound(TreatmentAction a) {
             SoundEvent ev = switch (a) {
-                case BANDAGE, PRESSURE_DRESSING, HEMOSTATIC, OCCLUSIVE, SPLINT -> ModSounds.BANDAGE.get();
+                case BANDAGE, PRESSURE_DRESSING, HEMOSTATIC, OCCLUSIVE -> ModSounds.BANDAGE.get();
+                case SPLINT -> ModSounds.SPLINT.get();
+                case AIRWAY, INTUBATE -> ModSounds.SURGERY_TRACHEA.get();
                 case TOURNIQUET, ESMARCH -> ModSounds.TOURNIQUET.get();
                 case MORPHINE, ADRENALINE, TXA, NEEDLE, SALINE, BLOOD_BAG, BLOOD_COLLECT -> ModSounds.INJECTION.get();
                 case DRUG -> {
                     var d = ItemRules.drugFor(original);
                     yield d != null && d.form() == faygolover.rpmedicine.core.Drug.Form.PILL ? ModSounds.PILLS.get() : ModSounds.INJECTION.get();
                 }
-                case DRUG_TOPICAL, SUTURE -> ModSounds.BANDAGE.get();
-                case PAINKILLER, AMMONIA -> ModSounds.PILLS.get();
+                case DRUG_TOPICAL -> ModSounds.BANDAGE.get();
+                case SUTURE -> ModSounds.SURGERY_STITCH.get();
+                case PAINKILLER -> ModSounds.PILLS.get();
+                case AMMONIA -> ModSounds.AMMONIA.get();
+                case SURGICAL_KIT -> ModSounds.SURGERY_CAUTERY.get();
+                case TWEEZERS -> ModSounds.SURGERY_RETRACT.get();
+                case SCANNER -> ModSounds.SCANNER.get();
                 case DEFIBRILLATOR -> ModSounds.DEFIB_SHOCK.get();
                 default -> null;
             };

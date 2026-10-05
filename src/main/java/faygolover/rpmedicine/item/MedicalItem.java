@@ -20,7 +20,10 @@ public class MedicalItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(getDescriptionId() + ".desc").withStyle(net.minecraft.ChatFormatting.GRAY));
+        // Коротко: что это. Как действует — по Shift (ItemTooltips).
+        String what = getDescriptionId() + ".what";
+        tooltip.add(Component.translatable(net.minecraft.locale.Language.getInstance().has(what) ? what : getDescriptionId() + ".desc")
+                .withStyle(net.minecraft.ChatFormatting.GRAY));
         if (stack.isDamageableItem()) {
             int left = stack.getMaxDamage() - stack.getDamageValue();
             tooltip.add(Component.translatable("rpmedicine.tooltip.charges", left).withStyle(net.minecraft.ChatFormatting.DARK_GRAY));

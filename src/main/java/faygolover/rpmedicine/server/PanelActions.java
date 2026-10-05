@@ -36,6 +36,7 @@ public final class PanelActions {
             case REMOVE_OCCLUSIVE -> remove(sp, target, m, p, Treatments.Removal.OCCLUSIVE);
             case SEARCH -> SearchService.start(sp, target);
             case STOP_DRIP -> stopDrip(sp, target, m);
+            case REMOVE_TUBE, REMOVE_AIRWAY -> removeAirway(sp, target, m, p.kind() == PanelActionPacket.Kind.REMOVE_TUBE);
             case REDUCE -> {
                 if (!sp.getMainHandItem().isEmpty()) {
                     sp.displayClientMessage(Component.translatable("rpmedicine.refuse.empty_hand").withStyle(ChatFormatting.YELLOW), true);
@@ -63,6 +64,25 @@ public final class PanelActions {
         m.salineDripRate = 0;
         Medical.changed(target);
         sp.displayClientMessage(Component.translatable("rpmedicine.msg.drip_stopped"), true);
+        ExamService.refreshFor(sp);
+    }
+
+    /** Извлечь трубку или воздуховод: пустой рукой. */
+    private static void removeAirway(ServerPlayer sp, LivingEntity target, MedicalState m, boolean tube) {
+        String refuse = TreatmentService.actorRefusal(sp, target);
+        if (refuse != null) {
+            sp.displayClientMessage(Component.translatable(refuse).withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        if (!sp.getMainHandItem().isEmpty()) {
+            sp.displayClientMessage(Component.translatable("rpmedicine.refuse.empty_hand").withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        if (tube ? !m.intubated : !m.airway) return;
+        if (tube) m.intubated = false;
+        else m.airway = false;
+        Medical.changed(target);
+        sp.displayClientMessage(Component.translatable(tube ? "rpmedicine.msg.extubated" : "rpmedicine.msg.airway_removed"), true);
         ExamService.refreshFor(sp);
     }
 

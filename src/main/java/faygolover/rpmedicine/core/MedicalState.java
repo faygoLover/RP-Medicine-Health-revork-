@@ -80,6 +80,9 @@ public final class MedicalState {
     public double morphineDelay;
     public double morphineOverdoseSeconds;
     public double txaSeconds;
+    /** Набор стабилизации: сколько ещё действует; применён ли в этом нокдауне. */
+    public double stabilizedSeconds;
+    public boolean stabilizationUsed;
     public double shockAccum;
     public double shockLimit;
     public boolean painShock;
@@ -208,6 +211,8 @@ public final class MedicalState {
         morphineDelay = 0;
         morphineOverdoseSeconds = 0;
         txaSeconds = 0;
+        stabilizedSeconds = 0;
+        stabilizationUsed = false;
         shockAccum = 0;
         shockLimit = 0;
         painShock = false;
@@ -279,7 +284,7 @@ public final class MedicalState {
         if (bloodVolume < normalBlood(s) - 0.5 || saline > 0 || salineDripRemaining > 0) return false;
         if (brain < 100 || concussion > 0 || concussionKoSeconds > 0 || postClinicalSeconds > 0) return false;
         if (adrenalineSeconds > 0 || adrenalineInjectionSeconds > 0 || painkillerSeconds > 0 || morphineSeconds > 0
-                || morphineOverdoseSeconds > 0 || txaSeconds > 0 || ambuSeconds > 0 || cprSeconds > 0) return false;
+                || morphineOverdoseSeconds > 0 || txaSeconds > 0 || stabilizedSeconds > 0 || ambuSeconds > 0 || cprSeconds > 0) return false;
         if (pain > 0 || shockAccum > 0 || painShock || healBoostSeconds > 0) return false;
         if (bloodDripRemaining > 0 || transfusionReactionSeconds > 0) return false;
         if (opioidSeconds > 0 || !doses.isEmpty() || acutePainSeconds > 0) return false;
@@ -347,6 +352,8 @@ public final class MedicalState {
         morphineDelay = o.morphineDelay;
         morphineOverdoseSeconds = o.morphineOverdoseSeconds;
         txaSeconds = o.txaSeconds;
+        stabilizedSeconds = o.stabilizedSeconds;
+        stabilizationUsed = o.stabilizationUsed;
         shockAccum = o.shockAccum;
         shockLimit = o.shockLimit;
         painShock = o.painShock;

@@ -11,7 +11,21 @@ import net.minecraft.sounds.SoundSource;
 public final class Feedback {
     private Feedback() {}
 
+    private static final java.util.Map<java.util.UUID, Long> LAST_GROAN = new java.util.HashMap<>();
+
+    /** Стон от боли при ранении — не чаще раза в 3 секунды; громкость — ползунок «Голос» в настройках звука. */
+    private static void groan(ServerPlayer sp, Injuries.Report rep) {
+        if (rep.totalSeverity < 8 || Medical.isDown(sp)) return;
+        long now = sp.serverLevel().getGameTime();
+        Long last = LAST_GROAN.get(sp.getUUID());
+        if (last != null && now - last < 60) return;
+        LAST_GROAN.put(sp.getUUID(), now);
+        var ev = rep.totalSeverity >= 25 ? ModSounds.PAIN_GROAN.get() : ModSounds.PAIN_MOAN.get();
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ev, SoundSource.VOICE, 0.9f, 0.95f + sp.getRandom().nextFloat() * 0.1f);
+    }
+
     public static void onInjury(ServerPlayer sp, Injuries.Report rep) {
+        groan(sp, rep);
         if (rep.has(Injuries.Outcome.FRACTURE) || rep.has(Injuries.Outcome.OPEN_FRACTURE) || rep.has(Injuries.Outcome.RIB_FRACTURE)) {
             sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ModSounds.BONE_BREAK.get(), SoundSource.PLAYERS, 0.9f, 1.0f);
             sp.displayClientMessage(Component.translatable("rpmedicine.msg.something_cracked").withStyle(ChatFormatting.RED), true);

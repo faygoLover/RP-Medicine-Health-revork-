@@ -33,6 +33,7 @@ public final class Silhouette {
             case 1 -> 0xFFC9B84A;
             case 2 -> 0xFFD98634;
             case 3 -> 0xFFC8392E;
+            case 5 -> 0xFF4A4A4A;
             default -> blink && (System.currentTimeMillis() / 400) % 2 == 0 ? 0xFF5A0F0F : 0xFF8E1414;
         };
     }

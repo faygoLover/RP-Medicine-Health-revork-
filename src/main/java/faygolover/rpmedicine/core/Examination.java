@@ -59,6 +59,8 @@ public final class Examination {
 
     /** Цвет части 0–4 по тому, что видно глазами: целостность, кровь, перелом. */
     public static int partColor(MedicalState m, BodyPartState ps, MedicalSettings s) {
+        // 5 — часть разрушена (серая).
+        if (ps.isDestroyed(s)) return 5;
         int c = 0;
         double integ = ps.integrity();
         if (integ < 95) c = 1;
@@ -99,14 +101,29 @@ public final class Examination {
             if (w.type == WoundType.BURN && lvl >= 1) out.add(new Line("burn_degree", new int[]{w.burnDegree(s)}));
             // Признаки инфекции раны — с уровня 4 (второй этап, п. 3).
             if (w.isInfected() && lvl >= 4) out.add(new Line(w.infection >= 60 ? "wound_pus" : "wound_inflamed"));
-            if (w.isDressed()) out.add(new Line("dressing_" + w.dressing.id));
+            if (w.isDressed()) {
+                // Качество повязки видно с уровня 2; промокает ли — видно всем.
+                int q = lvl >= 2 ? (w.dressingQuality >= 0.85 ? 0 : w.dressingQuality >= 0.6 ? 1 : 2) : 0;
+                out.add(new Line("dressing_" + w.dressing.id + (q > 0 ? "_q" : ""), new int[]{q}));
+                double under = Physiology.isUnderTourniquet(m, ps.part) ? 0 : w.bleed(s);
+                int uc = bleedClass(under, s);
+                if (uc > 0) out.add(lvl <= 0 ? new Line("dressing_soaking") : new Line("dressing_seeping", new int[]{uc}));
+            }
             if (w.sutured) out.add(new Line(w.weakSuture() && lvl >= 3 ? "suture_weak" : "sutured"));
         }
         double bleed = Physiology.partExternalBleed(m, ps, s);
         int bc = bleedClass(bleed, s);
+        boolean arterial = ps.arterial && !Physiology.isUnderTourniquet(m, ps.part);
+        if (arterial) bc = 4;
         if (bc > 0) {
+            // Детализация по уровню: 0 — «кровит», 1–2 — сила, 3 — ещё и вид, 4+ — и мл/мин.
             if (lvl <= 0) out.add(new Line(bc >= 3 ? "bleeding_heavy" : "bleeding"));
-            else out.add(new Line(ps.arterial && !Physiology.isUnderTourniquet(m, ps.part) ? "bleeding_class_4" : "bleeding_class_" + bc));
+            else if (lvl <= 2) out.add(new Line("bleeding_class_" + bc));
+            else {
+                int kind = arterial ? 2 : bc >= 2 ? 1 : 0;
+                out.add(new Line("bleeding_kind", new int[]{bc, kind}));
+                if (lvl >= 4) out.add(new Line("bleeding_rate", new int[]{(int) Math.round(bleed)}));
+            }
         }
         if (ps.hasFracture()) {
             if (lvl <= 0) out.add(new Line("broken"));

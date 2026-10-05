@@ -29,7 +29,7 @@ public final class HitResolver {
         if (direct != null && direct != attacker) {
             Vec3 start = direct.position();
             Vec3 motion = direct.getDeltaMovement();
-            Vec3 hit = clip(box, start.subtract(motion), start.add(motion.scale(2)));
+            Vec3 hit = axisPoint(target, box, start.subtract(motion), start.add(motion.scale(2)));
             if (hit != null) return hit;
             if (box.contains(start)) return start;
             return closest(box, start);
@@ -37,13 +37,34 @@ public final class HitResolver {
         // Ближний бой: луч взгляда атакующего.
         if (attacker instanceof LivingEntity le) {
             Vec3 eye = le.getEyePosition();
-            Vec3 hit = clip(box, eye, eye.add(le.getLookAngle().scale(8)));
+            Vec3 hit = axisPoint(target, box, eye, eye.add(le.getLookAngle().scale(8)));
             if (hit != null) return hit;
             return closest(box, eye);
         }
         Vec3 pos = src.getSourcePosition();
         if (pos != null) return closest(box, pos);
         return null;
+    }
+
+    /**
+     * Точка на луче внутри хитбокса, ближайшая к оси тела. Точка входа в хитбокс не годится: хитбокс
+     * не поворачивается с телом, и у его угла выстрел в грудь выглядел бы попаданием в руку.
+     */
+    @Nullable
+    public static Vec3 axisPoint(LivingEntity target, AABB box, Vec3 from, Vec3 to) {
+        Vec3 in = clip(box, from, to);
+        if (in == null) return null;
+        Vec3 out = clip(box, to, from);
+        if (out == null) out = in;
+        Vec3 d = out.subtract(in);
+        double hx = d.x, hz = d.z;
+        double len2 = hx * hx + hz * hz;
+        double t = 0.5;
+        if (len2 > 1e-6) {
+            double cx = target.getX() - in.x, cz = target.getZ() - in.z;
+            t = clamp((cx * hx + cz * hz) / len2, 0, 1);
+        }
+        return in.add(d.scale(t));
     }
 
     @Nullable

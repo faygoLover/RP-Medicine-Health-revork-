@@ -96,4 +96,9 @@ public final class Integrations {
     public static void consumeStamina(ServerPlayer sp, float amount) {
         if (stamina) StaminaCompat.consume(sp, amount);
     }
+
+    /** Прибавить выносливость (стимулятор). */
+    public static void addStamina(ServerPlayer sp, float amount) {
+        if (stamina) StaminaCompat.add(sp, amount);
+    }
 }

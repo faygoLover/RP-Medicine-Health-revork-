@@ -71,6 +71,11 @@ public final class BodyPartState {
         return Math.max(0.0, 100.0 - totalSeverity() - ischemia);
     }
 
+    /** Часть разрушена: целостность почти ноль (заживление на доли процента её не «чинит»). */
+    public boolean isDestroyed(MedicalSettings s) {
+        return integrity() < s.destroyedIntegrity;
+    }
+
     public boolean hasFracture() {
         return fracture != Fracture.NONE;
     }

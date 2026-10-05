@@ -49,6 +49,7 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRenderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModEntities.BODY_STUB.get(), BodyStubRenderer::new);
+        e.registerEntityRenderer(ModEntities.VOMIT.get(), faygolover.rpmedicine.client.render.VomitRenderer::new);
     }
 
     @SubscribeEvent
@@ -57,5 +58,9 @@ public final class ClientSetup {
             MenuScreens.register(ModMenus.MEDICAL_CONTAINER.get(), MedicalContainerScreen::new);
             MenuScreens.register(ModMenus.SEARCH.get(), SearchScreen::new);
         });
+        // Кнопка «Настройки» в списке модов.
+        net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(
+                        (mc, parent) -> new faygolover.rpmedicine.client.screen.ClientSettingsScreen(parent)));
     }
 }

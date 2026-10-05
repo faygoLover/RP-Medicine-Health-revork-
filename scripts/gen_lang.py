@@ -149,7 +149,7 @@ for k, ru, en in [
  ("admin_cooldown", "Можно позвать снова через %s с", "You can call again in %s s"),
  ("admin_call", "[RP Medicine] %s в клинической смерти зовёт администратора: %s %s %s %s (нажмите, чтобы телепортироваться)", "[RP Medicine] %s is in clinical death and calls an admin: %s %s %s %s (click to teleport)"),
  ("admin_called", "Администраторы оповещены", "Admins notified"), ("treated_by", "%s: %s", "%s: %s"),
- ("carrying", "Вы несёте тело. Присядьте, чтобы сбросить.", "You are carrying a body. Sneak to drop it."),
+ ("carrying", "Вы несёте тело. Положить — Shift+ПКМ по блоку или по койке.", "You are carrying a body. Shift+right-click a block or a bed to put it down."),
  ("something_cracked", "Что-то хрустнуло…", "Something cracked…"), ("blood_spurts", "Кровь бьёт струёй!", "Blood is spurting!"),
  ("head_ringing", "В голове звенит", "Your head is ringing"),
  ("removed_dressing", "%s: повязка снята", "%s: dressing removed"), ("removed_tourniquet", "%s: жгут снят", "%s: tourniquet removed"),
@@ -257,7 +257,7 @@ items2.update({
  "portable_scanner": ("Портативный сканер", "Portable scanner", "На часть тела: внутреннее кровотечение, пули и осколки, перелом, вывих. Медицина 4+.", "On a body part: internal bleeding, bullets and fragments, fracture, dislocation. Medicine 4+."),
  "hemoanalyzer": ("Гемоанализатор", "Hemoanalyzer", "Капля крови (нужен ланцет): группа, гемоглобин, признаки инфекции и сепсиса. Медицина 4+.", "A drop of blood (needs a lancet): blood type, hemoglobin, signs of infection and sepsis. Medicine 4+."),
  "lancet": ("Ланцет", "Lancet", "Капля крови для гемоанализатора.", "A drop of blood for the hemoanalyzer."),
- "blood_draw_syringe": ("Шприц для забора крови", "Blood draw syringe", "Пробирка крови пациента для лаборатории. Медицина 2+.", "Fills a blood sample tube for the lab. Medicine 2+."),
+ "blood_draw_syringe": ("Шприц для забора крови", "Blood draw syringe", "Кровь пациента в пустую пробирку (нужна в инвентаре) — для лаборатории. Медицина 2+.", "Draws blood into an empty test tube (needed in the inventory) for the lab. Medicine 2+."),
  "blood_sample": ("Пробирка крови", "Blood sample", "На лабораторном столе — полный анализ за минуту.", "Full analysis at a lab table in a minute."),
 })
 items2.update({
@@ -513,6 +513,107 @@ t("rpmedicine.action.intubate", "Интубация", "Intubation")
 t("rpmedicine.lab.alt", "  АЛТ (печень): %s ед/л (норма до 40)", "  ALT (liver): %s U/L (normal under 40)")
 t("rpmedicine.lab.creatinine", "  Креатинин (почки): %s мкмоль/л (норма 60–110)", "  Creatinine (kidneys): %s µmol/L (normal 60–110)")
 t("rpmedicine.lab.troponin", "  Тропонин (сердце): %s нг/л (норма до 14)", "  Troponin (heart): %s ng/L (normal under 14)")
+
+# --- Пачка правок 05.10.2026 ---
+t("rpmedicine.msg.arms_disabled", "Обе руки сломаны — не ударить", "Both arms are broken — you can't strike")
+t("rpmedicine.msg.put_down", "Положили", "Put down")
+E = "rpmedicine.exam."
+for k, ru, en in [
+    ("bleeding_kind", "%s %s кровотечение", "%s %s bleeding"),
+    ("bleed_strength_1", "Слабое", "Light"), ("bleed_strength_2", "Среднее", "Moderate"),
+    ("bleed_strength_3", "Сильное", "Heavy"), ("bleed_strength_4", "Обильное", "Massive"),
+    ("bleed_kind_0", "капиллярное", "capillary"), ("bleed_kind_1", "венозное", "venous"), ("bleed_kind_2", "артериальное", "arterial"),
+    ("bleeding_rate", "  ≈ %s мл/мин", "  ≈ %s ml/min"),
+    ("dressing_seeping", "  под повязкой: %s", "  under the dressing: %s"),
+    ("dressing_soaking", "  повязка промокает", "  the dressing is soaking through"),
+    ("dressing_bandage_q", "  перевязано бинтом — %s", "  bandaged — %s"),
+    ("dressing_pressure_q", "  давящая повязка — %s", "  pressure dressing — %s"),
+    ("dressing_hemostatic_q", "  гемостатик — %s", "  hemostatic gauze — %s"),
+    ("dressing_quality_1", "наложено так себе", "so-so"), ("dressing_quality_2", "наложено плохо", "poorly applied")]:
+    t(E + k, ru, en)
+t("rpmedicine.refuse.force_hint", " — ещё раз, чтобы применить всё равно", " — again to apply anyway")
+for k, ru, en in [
+    ("forced_needle", "%s: игла в здоровую грудь — пневмоторакс", "%s: needle into a healthy chest — pneumothorax"),
+    ("forced_defib", "%s: разряд впустую, ожог кожи", "%s: wasted shock, skin burn"),
+    ("forced_defib_fibrillation", "%s: разряд по бьющемуся сердцу — фибрилляция!", "%s: shock on a beating heart — fibrillation!"),
+    ("forced_surgery", "%s: полезли внутрь без нужды — кровотечение", "%s: you cut in without need — bleeding"),
+    ("forced_wasted", "%s: потрачено без пользы", "%s: wasted")]:
+    t("rpmedicine.treat." + k, ru, en)
+t("rpmedicine.refuse.no_shockable", "Разряд не рекомендован: ритм не для дефибриллятора. При остановке сердца — СЛР и адреналин", "No shock advised: non-shockable rhythm. For cardiac arrest — CPR and adrenaline")
+for k, ru, en in [("heartbeat_fast", "Частое сердцебиение", "Racing heartbeat"), ("gasp", "Судорожный вдох", "Gasping"),
+    ("cough", "Кашель", "Coughing"), ("pain_groan", "Стон от боли", "Groan of pain"), ("pain_moan", "Стон", "Moaning"),
+    ("splint", "Накладывают шину", "Splint applied"), ("eardrum_burst", "Звон в ушах", "Eardrum ringing"),
+    ("flatline", "Писк монитора", "Flatline"), ("heart_stopping", "Сердце останавливается", "Heart stopping"),
+    ("scanner", "Сканер", "Scanner"), ("ammonia", "Нашатырь", "Smelling salts"), ("wake_up", "Приходит в себя", "Coming to"),
+    ("surgery_cut", "Разрез", "Incision"), ("surgery_stitch", "Шов", "Stitching"), ("surgery_clamp", "Зажим", "Clamp"),
+    ("surgery_retract", "Ретрактор", "Retractor"), ("surgery_suction", "Отсос", "Suction"), ("surgery_bleed", "Кровь", "Bleeding"),
+    ("surgery_bone_set", "Кость встала на место", "Bone set"), ("surgery_vessel_cut", "Сосуд пересечён", "Vessel cut"),
+    ("surgery_cautery", "Коагуляция", "Cautery"), ("surgery_error", "Ошибка хирурга", "Surgical error"),
+    ("surgery_trachea", "Интубация", "Intubation"), ("bone_saw", "Пила", "Bone saw"), ("bone_drill", "Дрель", "Bone drill"),
+    ("organ_move", "Орган", "Organ"), ("minigame_ok", "Готово", "Done"), ("minigame_slip", "Сорвалось", "Slipped"),
+    ("body_fall", "Падение тела", "Body falls")]:
+    t("subtitles.rpmedicine." + k, ru, en)
+t("rpmedicine.msg.golden_apple", "Прилив сил, боль притупилась", "A rush of energy, the pain dulls")
+t("item.rpmedicine.stabilization_kit", "Набор стабилизации", "Stabilization kit")
+t("item.rpmedicine.stabilization_kit.desc", "Кислород и противошоковый пакет: лежачий дольше держится до прихода медика. Один раз за нокдаун.", "Oxygen and an anti-shock pack: a downed patient holds on longer until a medic arrives. Once per knockdown.")
+t("rpmedicine.refuse.not_knocked_down", "Только для лежачего в нокдауне", "Only for a knocked-down patient")
+t("rpmedicine.refuse.stabilization_used", "Набор уже применён в этом нокдауне", "Already used in this knockdown")
+t("rpmedicine.treat.stabilized", "Состояние стабилизировано — время до гибели идёт медленнее", "Stabilized — time runs out slower")
+t("rpmedicine.treat.stabilization_partial", "Стабилизация вышла неполной", "Stabilization only partly worked")
+t("rpmedicine.action.stabilize", "Стабилизация", "Stabilization")
+t("item.rpmedicine.test_tube", "Пустая пробирка", "Empty test tube")
+t("item.rpmedicine.test_tube.desc", "Для забора крови шприцем: станет пробиркой крови.", "For drawing blood with a syringe: becomes a blood sample.")
+t("rpmedicine.refuse.need_test_tube", "Нужна пустая пробирка", "You need an empty test tube")
+for k, ru, en in [("self", "на себя", "on yourself"), ("on", "→ %s", "→ %s"), ("by", "Лечит: %s", "Treated by: %s")]:
+    t("rpmedicine.progress." + k, ru, en)
+t("rpmedicine.panel.remove_tube", "Извлечь трубку", "Extubate")
+t("rpmedicine.panel.remove_airway", "Убрать воздуховод", "Remove airway")
+t("rpmedicine.panel.overall", "Общее состояние", "Overall")
+t("rpmedicine.msg.extubated", "Трубка извлечена", "Extubated")
+t("rpmedicine.msg.airway_removed", "Воздуховод убран", "Airway removed")
+WHAT = {'adrenaline': ('Ампула адреналина со шприцем.', 'Adrenaline ampoule with a syringe.'), 'airway': ('Пластиковая трубка в рот или нос.', 'A plastic tube for the mouth or nose.'), 'ambu_bag': ('Дыхательный мешок с маской.', 'A breathing bag with a mask.'), 'ammonia': ('Ватка с нашатырным спиртом.', 'Cotton soaked in smelling salts.'), 'amoxicillin': ('Антибиотик в таблетках.', 'Antibiotic tablets.'), 'antibiotic_ointment': ('Тюбик мази с антибиотиком.', 'A tube of antibiotic ointment.'), 'antiseptic': ('Флакон антисептика.', 'A bottle of antiseptic.'), 'atropine': ('Ампула атропина.', 'Atropine ampoule.'), 'bandage': ('Стерильный бинт.', 'A sterile bandage roll.'), 'blood_bag': ('Пакет донорской крови.', 'A bag of donor blood.'), 'blood_draw_syringe': ('Шприц для забора крови.', 'A syringe for drawing blood.'), 'blood_sample': ('Пробирка с кровью.', 'A tube of blood.'), 'ceftriaxone': ('Флакон антибиотика для укола.', 'An injectable antibiotic vial.'), 'decompression_needle': ('Длинная толстая игла с катетером.', 'A long thick needle with a catheter.'), 'defibrillator': ('Автоматический наружный дефибриллятор.', 'Automated external defibrillator.'), 'diazepam': ('Ампула успокоительного.', 'Sedative ampoule.'), 'empty_blood_bag': ('Пустой пакет для крови.', 'An empty blood bag.'), 'endotracheal_tube': ('Трубка для интубации.', 'An intubation tube.'), 'esmarch': ('Резиновый жгут.', 'A rubber tourniquet.'), 'field_surgery_kit': ('Набор полевого хирурга.', "A field surgeon's kit."), 'first_aid_kit': ('Сумка для медикаментов.', 'A bag for medical supplies.'), 'gm_scanner': ('Инструмент ведущего.', "A game master's tool."), 'hemoanalyzer': ('Карманный анализатор крови.', 'A pocket blood analyzer.'), 'hemostatic_gauze': ('Марля с кровоостанавливающим средством.', 'Gauze with a clotting agent.'), 'ibuprofen': ('Таблетки ибупрофена.', 'Ibuprofen tablets.'), 'ketamine': ('Ампула кетамина.', 'Ketamine ampoule.'), 'ketorolac': ('Ампула кеторолака.', 'Ketorolac ampoule.'), 'lancet': ('Одноразовый ланцет.', 'A disposable lancet.'), 'laryngoscope': ('Ларингоскоп с клинком.', 'A laryngoscope with a blade.'), 'lidocaine': ('Ампула лидокаина.', 'Lidocaine ampoule.'), 'medcard': ('Медицинская карта.', 'A medical record.'), 'medical_pouch': ('Подсумок для медикаментов.', 'A pouch for medical supplies.'), 'morphine': ('Шприц-тюбик с морфином.', 'A morphine autoinjector.'), 'naloxone': ('Ампула налоксона.', 'Naloxone ampoule.'), 'norepinephrine': ('Флакон норадреналина для капельницы.', 'A norepinephrine vial for a drip.'), 'occlusive_dressing': ('Герметичная наклейка на рану груди.', 'An airtight chest seal.'), 'painkillers': ('Блистер обезболивающих таблеток.', 'A blister of painkiller tablets.'), 'paracetamol': ('Таблетки парацетамола.', 'Paracetamol tablets.'), 'portable_scanner': ('Портативный медицинский сканер.', 'A portable medical scanner.'), 'pressure_dressing': ('Индивидуальный перевязочный пакет.', 'A pressure dressing pack.'), 'propofol': ('Флакон пропофола.', 'Propofol vial.'), 'pulse_oximeter': ('Прищепка на палец.', 'A finger clip.'), 'saline': ('Пакет физраствора с системой.', 'A saline bag with a line.'), 'scissors': ('Медицинские ножницы.', 'Medical scissors.'), 'splint': ('Шина для конечности.', 'A limb splint.'), 'stabilization_kit': ('Кислородный баллончик и противошоковый пакет.', 'An oxygen can and an anti-shock pack.'), 'stethoscope': ('Стетоскоп.', 'A stethoscope.'), 'surgical_tweezers': ('Хирургический пинцет.', 'Surgical tweezers.'), 'suture_kit': ('Игла с хирургической нитью.', 'A needle with surgical thread.'), 'test_tube': ('Пустая пробирка.', 'An empty test tube.'), 'thermometer': ('Медицинский термометр.', 'A medical thermometer.'), 'tonometer': ('Тонометр с манжетой.', 'A blood pressure cuff.'), 'tourniquet': ('Турникет CAT.', 'A CAT tourniquet.'), 'tramadol': ('Таблетки трамадола.', 'Tramadol tablets.'), 'txa': ('Ампула транексамовой кислоты.', 'Tranexamic acid ampoule.')}
+for k, (ru, en) in WHAT.items():
+    t(f"item.rpmedicine.{k}.what", ru, en)
+for k, ru, en in [
+    ("tooltip.level", "Медицина: %s+", "Medicine: %s+"),
+    ("tooltip.anyone", "Может применить любой", "Anyone can use it"),
+    ("tooltip.shift", "Shift — подробнее", "Shift — details"),
+    ("tooltip.no_skill", "Как это действует — не разбираетесь (медицина 2+)", "You don't know how it works (medicine 2+)"),
+    ("tooltip.analog", "Аналог: %s", "Same as: %s"),
+    ("tooltip.time", "Время применения: %s с", "Time to apply: %s s"),
+    ("tooltip.effect", "• %s %s, %s", "• %s %s, %s"),
+    ("tooltip.after", "через %s", "after %s"),
+    ("tooltip.instant", "сразу", "at once"),
+    ("tooltip.for", "на %s", "for %s"),
+    ("tooltip.dose_limit", "Не больше %s доз за %s ч", "No more than %s doses per %s h"),
+    ("tooltip.overdose", "Передозировка:", "Overdose:"),
+    ("tooltip.arrest", "• шанс остановки дыхания %s%%", "• %s%% chance of respiratory arrest"),
+    ("tooltip.opioid", "Опиат: угнетает дыхание, снимается налоксоном", "Opioid: depresses breathing, reversed by naloxone"),
+    ("tooltip.form_pill", "Таблетки — только в сознании", "Tablets — conscious patients only"),
+    ("tooltip.form_injection", "Укол", "Injection"), ("tooltip.form_drip", "Капельница — пациент на месте", "Drip — the patient stays still"),
+    ("tooltip.form_topical", "Наружно, на часть тела", "Topical, on a body part")]:
+    t("rpmedicine." + k, ru, en)
+for k, ru, en in [("analgesia", "Обезболивание", "Pain relief"), ("antipyretic", "Жаропонижающее", "Fever reduction"),
+    ("antibiotic", "Антибиотик", "Antibiotic"), ("sedation", "Седация", "Sedation"), ("pressure", "Давление", "Blood pressure"),
+    ("heart_rate", "Пульс", "Heart rate"), ("resp_depression", "Угнетение дыхания", "Respiratory depression"),
+    ("coagulation", "Свёртывание", "Clotting"), ("concussion_relief", "Снятие контузии", "Concussion relief"),
+    ("liver_toxicity", "Яд для печени", "Liver toxicity"), ("anesthesia", "Наркоз", "Anesthesia"),
+    ("local_anesthesia", "Местная анестезия", "Local anesthesia")]:
+    t("rpmedicine.effect." + k, ru, en)
+t("rpmedicine.settings.title", "RP Medicine — настройки", "RP Medicine — settings")
+for k, ru, en in [("hide_vanilla_health", "Скрыть сердца", "Hide hearts"), ("pain_vignette", "Виньетка от боли", "Pain vignette"),
+    ("pain_blur", "Размытие от боли", "Pain blur"), ("low_pressure_darken", "Потемнение (давление)", "Low pressure darkening"),
+    ("blood_loss_tunnel", "Сужение обзора", "Tunnel vision"), ("dazed_gray", "Серость при оглушении", "Dazed greyness"),
+    ("muffled_sound", "Глухой звук", "Muffled sound"), ("concussion_ringing", "Звон в ушах", "Ear ringing"),
+    ("heartbeat", "Стук сердца", "Heartbeat"), ("heavy_breathing", "Тяжёлое дыхание", "Heavy breathing"),
+    ("aim_sway", "Дрожь прицела", "Aim sway"), ("look_up_when_downed", "Лёжа — взгляд в небо", "Look up when downed"),
+    ("sensation_messages", "Ощущения текстом", "Sensation messages"),
+    ("effect_strength", "Сила эффектов: %s", "Effect strength: %s"), ("heartbeat_volume", "Громкость сердца: %s", "Heartbeat volume: %s"),
+    ("breathing_volume", "Громкость дыхания: %s", "Breathing volume: %s"), ("ringing_volume", "Громкость звона: %s", "Ringing volume: %s"),
+    ("hud_editor", "Редактор HUD…", "HUD editor…")]:
+    t("rpmedicine.settings." + k, ru, en)
+t("entity.rpmedicine.vomit", "Рвота", "Vomit")
+# --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):

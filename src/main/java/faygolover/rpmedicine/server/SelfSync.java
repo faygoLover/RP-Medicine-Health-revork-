@@ -39,6 +39,14 @@ public final class SelfSync {
         v.pain = (byte) (m.pain >= 85 ? 3 : m.pain >= 60 ? 2 : m.pain >= 30 ? 1 : 0);
         v.analgesia = Physiology.analgesia(m, s) > 0;
         v.dyspnea = m.spo2 < 90 || m.respRate > 24 || m.pneumo != MedicalState.Pneumo.NONE;
+        v.fever = m.bodyTemp >= 37.8;
+        v.cold = m.bodyTemp <= 35.5;
+        v.nausea = m.nauseaSeconds > 0;
+        v.concussion = m.concussion > 20;
+        v.stabilized = m.stabilizedSeconds > 0;
+        v.drip = m.bloodDripRemaining > 0 || m.salineDripRemaining > 0;
+        for (BodyPartState ps : m.parts) if (ps.splint) v.splint = true;
+        v.sedated = m.effect(faygolover.rpmedicine.core.DrugEffect.SEDATION) > 0;
 
         double loss = 1 - m.bloodFraction(s);
         v.vignette = pct((m.pain - 50) / 50.0);
@@ -52,11 +60,20 @@ public final class SelfSync {
         v.heartbeat = (short) (!audible ? 0 : m.heartRate > 150 ? 3 : m.heartRate > 125 ? 2 : 1);
         v.heavyBreathing = m.respRate > 24 || m.spo2 < 90;
         v.sway = pct(mods.aimSway);
+        // Морфин и опиаты из датапака, седация — мир «плывёт».
+        double high = 0;
+        if (m.morphineSeconds > 0 && m.morphineDelay <= 0) high = Math.max(high, m.morphineOverdoseSeconds > 0 ? 1.0 : 0.6);
+        high = Math.max(high, Math.min(1.0, m.effect(faygolover.rpmedicine.core.DrugEffect.SEDATION) / 60.0));
+        if (m.effect(faygolover.rpmedicine.core.DrugEffect.ANALGESIA) >= 30) high = Math.max(high, 0.35);
+        v.high = pct(high);
 
         v.noSprint = mods.noSprint || d.carrying;
         v.noJump = mods.noJump || d.carrying;
         v.crawl = mods.crawl;
         v.armsDisabled = mods.armsDisabled;
+        v.breakSpeedPct = (byte) Math.round(Math.max(0, Math.min(1, mods.breakSpeed)) * 100);
+        v.useTimePct = (short) Math.round(Math.min(1000, mods.useTimeFactor * 100));
+        v.medLevel = (byte) Medical.medicineLevel(sp);
         v.carrying = d.carrying;
         v.carried = CarryService.isCarried(sp);
         if (!m.isDown()) v.sensations.addAll(Examination.complaints(m, s));

@@ -77,9 +77,13 @@ public final class MedCommand {
         root.then(op("profile").executes(MedCommand::profile));
         root.then(op("inspect").then(Commands.argument("target", EntityArgument.entity()).executes(c -> {
             LivingEntity t = patient(EntityArgument.getEntity(c, "target"));
-            for (Component line : MedicalReports.full(t)) c.getSource().sendSuccess(() -> line, false);
+            for (Component line : MedicalReports.report(t, false)) c.getSource().sendSuccess(() -> line, false);
             return 1;
-        })));
+        }).then(Commands.literal("full").executes(c -> {
+            LivingEntity t = patient(EntityArgument.getEntity(c, "target"));
+            for (Component line : MedicalReports.report(t, true)) c.getSource().sendSuccess(() -> line, false);
+            return 1;
+        }))));
         root.then(op("injure").then(Commands.argument("targets", EntityArgument.entities())
                 .then(Commands.argument("type", StringArgumentType.word()).suggests(TYPES)
                         .then(Commands.argument("part", StringArgumentType.word()).suggests(PARTS)
@@ -103,7 +107,14 @@ public final class MedCommand {
                 .then(scalar("brain", 0, 100, (m, v) -> m.brain = Math.max(m.down == MedicalState.Down.CLINICAL ? 1 : 0.5, v)))
                 .then(scalar("spo2", 0, 100, (m, v) -> m.spo2 = v))
                 .then(scalar("concussion", 0, 100, (m, v) -> m.concussion = v))
-                .then(scalar("pain_shock", 0, 1, (m, v) -> m.painShock = v >= 0.5))
+                .then(scalar("pain_shock", 0, 1, (m, v) -> {
+                    // Обморок от боли держится, пока болит: даём острую боль на полминуты.
+                    m.painShock = v >= 0.5;
+                    if (m.painShock) {
+                        m.acutePain = Math.max(m.acutePain, 95);
+                        m.acutePainSeconds = Math.max(m.acutePainSeconds, 30);
+                    }
+                }))
                 .then(scalar("sepsis", 0, 100, (m, v) -> m.sepsis = v))
                 .then(scalar("temperature", 30, 43, (m, v) -> m.bodyTemp = v))
                 .then(organ())

@@ -20,6 +20,11 @@ public final class ExamText {
             case "consciousness", "skin", "breathing_rate" -> Component.translatable(k + "_" + arg(a, 0));
             case "pulse" -> Component.translatable(k + "_" + arg(a, 0) + (arg(a, 1) == 1 ? "_weak" : ""));
             case "hover_knockdown" -> Component.translatable(k, time(arg(a, 0)));
+            case "bleeding_kind" -> Component.translatable(k, Component.translatable("rpmedicine.exam.bleed_strength_" + arg(a, 0)),
+                    Component.translatable("rpmedicine.exam.bleed_kind_" + arg(a, 1)));
+            case "dressing_seeping" -> Component.translatable(k, Component.translatable("rpmedicine.exam.bleed_strength_" + arg(a, 0)));
+            case "dressing_bandage_q", "dressing_pressure_q", "dressing_hemostatic_q" -> Component.translatable(k,
+                    Component.translatable("rpmedicine.exam.dressing_quality_" + arg(a, 0)));
             default -> {
                 Object[] args = new Object[a.length];
                 for (int i = 0; i < a.length; i++) args[i] = a[i];

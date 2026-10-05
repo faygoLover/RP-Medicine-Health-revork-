@@ -139,7 +139,7 @@ ITEMS = [
     ("esmarch", "esmarch", 4, 0, True), ("splint", "splint", 8, 1, True),
     ("occlusive_dressing", "occlusive", 4, 1, True), ("decompression_needle", "needle", 5, 3, True),
     ("painkillers", "painkiller", 2, 0, True), ("morphine", "morphine", 2, 1, True),
-    ("adrenaline", "adrenaline", 2, 2, True), ("txa", "txa", 2, 2, True),
+    ("adrenaline", "adrenaline", 2, 2, True), ("txa", "txa", 2, 2, True), ("stabilization_kit", "stabilize", 8, 2, True),
     ("field_surgery_kit", "surgical_kit", 15, 4, True), ("saline", "saline", 10, 2, True),
     ("ammonia", "ammonia", 1, 0, True), ("airway", "airway", 4, 2, True),
     ("ambu_bag", "ambu", 1, 2, False), ("defibrillator", "defibrillator", 6, 1, True),
@@ -248,7 +248,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -297,8 +297,56 @@ SOUNDS = {
     "pills": "minecraft:entity.generic.eat", "monitor_alarm": "minecraft:block.note_block.bit",
     "vomit": "minecraft:entity.player.burp",
 }
+# Звуки из BodyControl (VKM, MIT) и HBM's Nuclear Tech: копируются из docs/reference/родственные моды при генерации.
+REL = os.path.join(os.path.dirname(__file__), "..", "docs", "reference", "родственные моды")
+BC = os.path.join(REL, "BodyControl-1.0.0-alpha", "assets", "bodycontrol", "sounds")
+EXTRA = os.path.join(REL, "_звуки")
+BC_SOUNDS = {
+    "heartbeat": ["heartbeat"], "heartbeat_fast": ["heartbeat_fast"],
+    "heavy_breathing": ["heavy_breathing"], "gasp": ["breathe_gasp1", "breathe_gasp2", "breathe_gasp3", "breathe_gasp4"],
+    "cough": ["cough1", "cough2"], "pain_groan": ["cramp_groan_1", "cramp_groan_2", "cramp_groan_3", "cramp_groan_4"],
+    "pain_moan": ["old_groan_1", "old_groan_2", "old_groan_3", "old_groan_4", "old_groan_5"],
+    "bone_break": ["fracture1", "fracture2", "fracture3", "fracture4"],
+    "vomit": ["vomit_1", "vomit_2", "vomit_3", "vomit_4", "x:hbm_vomit"],
+    "pills": ["pill_swallow"], "injection": ["insulin_shot", "surgery_inject"],
+    "bandage": ["bandage_wrap_1", "bandage_wrap_2", "bandage_wrap_3"], "splint": ["splint_wrap"],
+    "monitor_alarm": ["alarm_beep"], "ear_ringing": ["ear_ring"], "eardrum_burst": ["eardrum_burst"],
+    "flatline": ["heart_flatline"], "heart_stopping": ["heart_stopping"], "scanner": ["scanner_blip"],
+    "ammonia": ["sniffle_1", "sniffle_2", "sniffle_3"], "wake_up": ["second_wind"],
+    "surgery_cut": ["surgery_cut_1", "surgery_cut_2", "surgery_cut_3", "surgery_cut_4"],
+    "surgery_stitch": ["surgery_stitch", "surgery_thread_pull"], "surgery_clamp": ["surgery_clamp"],
+    "surgery_retract": ["surgery_retract_1", "surgery_retract_2", "surgery_retract_3", "surgery_retract_4"],
+    "surgery_suction": ["surgery_suction_1", "surgery_suction_2", "surgery_suction_3", "surgery_suction_4"],
+    "surgery_bleed": ["surgery_bleed_1", "surgery_bleed_2", "surgery_bleed_3", "surgery_bleed_4", "surgery_bleed_5"],
+    "surgery_bone_set": ["surgery_bone_set", "surgery_bone_move_1", "surgery_bone_move_2"],
+    "surgery_vessel_cut": ["surgery_vessel_cut_1", "surgery_vessel_cut_2", "surgery_vessel_cut_3", "surgery_vessel_cut_4"],
+    "surgery_cautery": ["surgery_cautery_1", "surgery_cautery_2", "surgery_cautery_3", "surgery_cautery_4"],
+    "surgery_error": ["surgery_error"], "surgery_trachea": ["surgery_trachea_1", "surgery_trachea_2"],
+    "bone_saw": ["bone_saw_1", "bone_saw_2", "bone_saw_3", "bone_saw_4", "bone_saw_5"],
+    "bone_drill": ["bone_drill_1", "bone_drill_2", "bone_drill_3"], "organ_move": ["organ_move_1", "organ_move_2", "organ_move_3", "organ_move_4"],
+    "minigame_ok": ["mark_done"], "minigame_slip": ["item_slip"], "body_fall": ["fall"],
+}
+for k in BC_SOUNDS:
+    SOUNDS.setdefault(k, "minecraft:ui.button.click")
+import shutil
+def bc_entries(k):
+    out = []
+    os.makedirs(f"{ASSETS}/sounds/bc", exist_ok=True)
+    for name in BC_SOUNDS[k]:
+        src = os.path.join(EXTRA, name[2:] + ".ogg") if name.startswith("x:") else os.path.join(BC, name + ".ogg")
+        base = name[2:] if name.startswith("x:") else name
+        dst = f"{ASSETS}/sounds/bc/{base}.ogg"
+        if os.path.exists(src):
+            shutil.copyfile(src, dst)
+        if os.path.exists(dst):
+            out.append({"name": f"rpmedicine:bc/{base}"})
+    return out
 def sound_entries(k, v):
-    # Звук из Tactical Medicine или Health & Disease (файл в моде), иначе ссылка на ванильное событие.
+    # BodyControl → Tactical Medicine / Health & Disease → ссылка на ванильное событие.
+    if k in BC_SOUNDS:
+        e = bc_entries(k)
+        if e:
+            return e
     if k in foreign_assets.SOUNDS:
         return [{"name": f"rpmedicine:{foreign_assets.sound_file(k, i)}"} for i in range(len(foreign_assets.SOUNDS[k]))]
     return [{"name": v, "type": "event"}]
@@ -357,6 +405,7 @@ ICONS = {
     "occlusive_dressing": ("patch", (220, 220, 220), (60, 60, 60)), "decompression_needle": ("syringe", (200, 200, 210), (90, 90, 230)),
     "painkillers": ("pills", (240, 240, 240), (60, 160, 60)), "morphine": ("syringe", (220, 220, 220), (180, 40, 40)),
     "adrenaline": ("syringe", (230, 230, 200), (230, 160, 30)), "txa": ("syringe", (220, 230, 240), (60, 140, 200)),
+    "stabilization_kit": ("box", (40, 110, 160), (240, 240, 240)),
     "field_surgery_kit": ("box", (70, 90, 70), (230, 230, 230)), "saline": ("bag", (200, 225, 240), (120, 120, 140)),
     "ammonia": ("pills", (200, 230, 240), (40, 90, 160)), "airway": ("strap", (230, 170, 170), (230, 230, 230)),
     "ambu_bag": ("bag", (60, 80, 160), (230, 230, 230)), "defibrillator": ("device", (230, 200, 40), (60, 60, 60)),
@@ -373,16 +422,46 @@ ICONS = {
     "stethoscope": ("strap", (60, 60, 70), (200, 200, 210)), "thermometer": ("syringe", (240, 240, 240), (220, 40, 40)),
     "portable_scanner": ("device", (60, 90, 120), (120, 220, 240)), "hemoanalyzer": ("device", (230, 230, 230), (200, 40, 50)),
     "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
-    "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)),
+    "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)), "test_tube": ("pills", (230, 235, 245), (200, 210, 225)),
     "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
     "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
     "propofol": ("syringe", (240, 240, 240), (245, 245, 245)), "laryngoscope": ("strap", (170, 175, 185), (230, 200, 60)),
     "endotracheal_tube": ("strap", (230, 235, 240), (120, 180, 220)),
 }
+# Текстуры из родственных модов (docs/reference/родственные моды): инъекторы в стиле Tarkov из Tactical Aid
+# (17612), инструменты и приборы из BodyControl (VKM). Авторы — в docs/assets_credits.md.
+TA = "tactical_aid-1.20.1-v1.3.9/assets/tactical_aid/textures/item/"
+BCT = "BodyControl-1.0.0-alpha/assets/bodycontrol/textures/item/"
+REL_TEXTURES = {
+    "adrenaline": TA + "adrenaline.png", "txa": TA + "quickaction.png", "ketorolac": TA + "painless.png",
+    "naloxone": TA + "metabolize.png", "diazepam": TA + "relief.png", "atropine": TA + "aggressiveness.png",
+    "ceftriaxone": TA + "glucose.png", "norepinephrine": TA + "igu.png", "ketamine": TA + "narcotism.png",
+    "lidocaine": TA + "adrenaline_ii.png", "propofol": BCT + "emulsion_vial.png",
+    "blood_draw_syringe": BCT + "syringe.png", "surgical_tweezers": BCT + "tweezers.png", "test_tube": BCT + "microtube.png",
+    "portable_scanner": BCT + "advanced_scanner.png", "hemoanalyzer": BCT + "organ_scanner.png", "lancet": BCT + "surgical_needle.png",
+    "medcard": BCT + "tablet.png", "stabilization_kit": BCT + "medical_kit.png",
+}
+def rel_texture(name):
+    src = os.path.join(REL, REL_TEXTURES[name])
+    dst = f"{ASSETS}/textures/item/{name}.png"
+    if not os.path.exists(src):
+        return os.path.exists(dst)
+    from PIL import Image
+    im = Image.open(src).convert("RGBA")
+    w, h = im.size
+    if h > w:
+        im = im.crop((0, 0, w, w))
+    if w not in (16, 32, 64):
+        im = im.resize((32, 32), Image.LANCZOS)
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    im.save(dst)
+    return True
 for name, (shape, color, accent) in ICONS.items():
     # Текстуры из Tactical Medicine и Health & Disease кладёт scripts/foreign_assets.py — не затираем.
-    if name not in foreign_assets.TEXTURES:
+    if name in REL_TEXTURES and rel_texture(name):
+        pass
+    elif name not in foreign_assets.TEXTURES:
         png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))
     write(f"{ASSETS}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"rpmedicine:item/{name}"}})
 

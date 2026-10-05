@@ -24,6 +24,8 @@ public final class GameplayEffects {
         public double useTimeFactor = 1.0;
         /** Множитель урона в ближнем бою. */
         public double attackFactor = 1.0;
+        /** Множитель скорости ломания блоков. */
+        public double breakSpeed = 1.0;
         /** Раскачка прицела 0–1. */
         public double aimSway;
         /** Потолок выносливости 0–1 и множитель восстановления. */
@@ -35,7 +37,7 @@ public final class GameplayEffects {
 
         public boolean isDefault() {
             return speed == 1.0 && !noSprint && !noJump && !crawl && !mainArmBad && !offArmBad && !armsDisabled
-                    && useTimeFactor == 1.0 && attackFactor == 1.0 && aimSway == 0 && staminaCap == 1.0
+                    && useTimeFactor == 1.0 && attackFactor == 1.0 && breakSpeed == 1.0 && aimSway == 0 && staminaCap == 1.0
                     && staminaRegen == 1.0 && !dazed;
         }
     }
@@ -53,27 +55,41 @@ public final class GameplayEffects {
             r.armsDisabled = true;
             return r;
         }
-        boolean masked = Physiology.analgesia(m, s) >= s.painkillerStrength || Physiology.adrenalineActive(m);
+        // Снимают ограничения переломов только сильное обезболивание и укол адреналина. Свой адреналин после
+        // ранения лишь глушит боль: иначе травма первые полминуты вообще не ощущалась бы.
+        boolean masked = Physiology.analgesia(m, s) >= s.fractureMaskAnalgesia || m.adrenalineInjectionSeconds > 0;
         r.fractureMasked = masked;
+        double suppress = Physiology.analgesia(m, s) + (Physiology.adrenalineActive(m) ? s.adrenalinePainSuppression : 0);
 
         // Ноги: каждая плохая нога или стопа — минус скорость, бег и прыжок недоступны.
         int badLower = 0;
         int brokenLegs = 0;
         int dislocatedLower = 0;
+        int sorePartsLower = 0;
+        boolean soreNoJump = false;
         for (BodyPart p : new BodyPart[]{BodyPart.RIGHT_LEG, BodyPart.LEFT_LEG, BodyPart.RIGHT_FOOT, BodyPart.LEFT_FOOT}) {
             BodyPartState ps = m.part(p);
             boolean fracture = ps.hasFracture() && !masked;
             boolean weak = ps.integrity() < s.limbIntegrityThreshold;
             if (fracture || weak) badLower++;
             else if (ps.dislocated && !masked) dislocatedLower++;
+            else {
+                // Рана без перелома: нога болит — хромает (огнестрел, порез, ожог ноги).
+                double legPain = Physiology.partPain(m, ps, s) - suppress;
+                if (legPain >= s.legPainLimpThreshold) sorePartsLower++;
+                if (legPain >= s.legPainNoJumpThreshold) soreNoJump = true;
+            }
             if (p.kind == BodyPart.Kind.LEG && ps.hasFracture()) brokenLegs++;
         }
         // Вывих — как перелом, но слабее (второй этап, п. 7).
-        double speed = 1.0 - badLower * s.speedPenaltyPerLeg - dislocatedLower * s.dislocationSpeedPenalty;
+        double speed = 1.0 - badLower * s.speedPenaltyPerLeg - dislocatedLower * s.dislocationSpeedPenalty
+                - sorePartsLower * s.legPainLimpPenalty;
         if (badLower > 0 || dislocatedLower > 0) {
             r.noSprint = true;
             r.noJump = true;
         }
+        if (sorePartsLower > 0) r.noSprint = true;
+        if (soreNoJump) r.noJump = true;
         if (brokenLegs >= 2 && !masked) {
             r.crawl = true;
             speed = Math.min(speed, s.crawlSpeedFactor);
@@ -102,18 +118,27 @@ public final class GameplayEffects {
         BodyPart main = traits.workingArm();
         BodyPartState mainArm = m.part(main);
         BodyPartState offArm = m.part(main.mirror());
-        r.mainArmBad = ((mainArm.hasFracture() || mainArm.dislocated) && !masked) || mainArm.integrity() < s.limbIntegrityThreshold || mainArm.ischemia > 30;
-        r.offArmBad = ((offArm.hasFracture() || offArm.dislocated) && !masked) || offArm.integrity() < s.limbIntegrityThreshold || offArm.ischemia > 30;
+        // Под обезболиванием сломанная рука всё равно работает хуже — только мягче.
+        double mainShare = armShare(mainArm, masked, s);
+        double offShare = armShare(offArm, masked, s);
+        r.mainArmBad = mainShare > 0;
+        r.offArmBad = offShare > 0;
         r.armsDisabled = mainArm.hasFracture() && offArm.hasFracture() && !masked;
         if (r.mainArmBad) {
-            r.useTimeFactor *= s.armUseSlowMain;
-            r.attackFactor -= s.armAttackPenaltyMain;
-            r.aimSway = Math.max(r.aimSway, 0.5);
+            r.useTimeFactor *= 1 + (s.armUseSlowMain - 1) * mainShare;
+            r.attackFactor -= s.armAttackPenaltyMain * mainShare;
+            r.breakSpeed *= 1 - (1 - s.armBreakSpeedMain) * mainShare;
+            r.aimSway = Math.max(r.aimSway, 0.5 * mainShare);
         }
         if (r.offArmBad) {
-            r.useTimeFactor *= s.armUseSlowOff;
-            r.attackFactor -= s.armAttackPenaltyOff;
-            r.aimSway = Math.max(r.aimSway, 0.3);
+            r.useTimeFactor *= 1 + (s.armUseSlowOff - 1) * offShare;
+            r.attackFactor -= s.armAttackPenaltyOff * offShare;
+            r.breakSpeed *= 1 - (1 - s.armBreakSpeedOff) * offShare;
+            r.aimSway = Math.max(r.aimSway, 0.3 * offShare);
+        }
+        if (r.armsDisabled) {
+            r.breakSpeed = Math.min(r.breakSpeed, s.armsDisabledBreakSpeed);
+            r.attackFactor = Math.min(r.attackFactor, 0.2);
         }
         if (m.postClinicalSeconds > 0) r.aimSway = Math.max(r.aimSway, 0.4);
         r.attackFactor = Math.max(0.2, r.attackFactor);
@@ -129,5 +154,13 @@ public final class GameplayEffects {
         r.staminaCap = Math.max(0.1, Math.min(1.0, cap));
         if (m.postClinicalSeconds > 0) r.staminaRegen *= 0.6;
         return r;
+    }
+
+    /** Насколько рука плохая: 0 — здорова, 1 — полностью; под обезболиванием перелом и вывих — частично. */
+    private static double armShare(BodyPartState arm, boolean masked, MedicalSettings s) {
+        double share = 0;
+        if (arm.hasFracture() || arm.dislocated) share = masked ? s.maskedArmPenaltyShare : 1.0;
+        if (arm.integrity() < s.limbIntegrityThreshold || arm.ischemia > 30) share = 1.0;
+        return share;
     }
 }
