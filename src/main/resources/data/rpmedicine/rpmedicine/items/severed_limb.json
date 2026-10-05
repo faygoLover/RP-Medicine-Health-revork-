@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:severed_limb",
+  "action": "reattach",
+  "seconds": 25,
+  "min_level": 10,
+  "consume": true
+}

@@ -152,6 +152,9 @@ public final class Examination {
             else if (lvl >= 1) out.add(new Line("joint_deformed"));
             else out.add(new Line("broken"));
         }
+        // Отторжение пересаженного органа видно анализами и врачу опытному.
+        if (lvl >= 6) for (Organ o : Organ.VALUES)
+            if (o.part == ps.part && (m.organRejection & o.bit()) != 0) out.add(new Line("organ_rejection", new int[]{o.ordinal()}));
         if (ps.surgery != BodyPartState.SurgeryStage.NONE)
             out.add(new Line("surgery_" + ps.surgery.name().toLowerCase(java.util.Locale.ROOT), new int[]{(int) (ps.surgeryOpenSeconds / 60)}));
         if (ps.fixated && ps.hasFracture() && lvl >= 1) out.add(new Line("fixated"));

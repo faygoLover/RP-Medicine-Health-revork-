@@ -30,12 +30,13 @@ public record MinigameStartPacket(int session, Minigames.Type type, long seed, f
         buf.writeVarInt(s.flags());
         buf.writeByte(s.bullets());
         buf.writeByte(s.fragments());
+        buf.writeByte(s.organ());
     }
 
     public static MinigameStartPacket decode(FriendlyByteBuf buf) {
         return new MinigameStartPacket(buf.readVarInt(), Minigames.Type.byOrdinal(buf.readByte()), buf.readLong(), buf.readFloat(),
                 buf.readBoolean(), buf.readUtf(128),
-                new Minigames.Scene(buf.readByte(), buf.readByte(), buf.readLong(), buf.readVarInt(), buf.readByte(), buf.readByte()));
+                new Minigames.Scene(buf.readByte(), buf.readByte(), buf.readLong(), buf.readVarInt(), buf.readByte(), buf.readByte(), buf.readByte()));
     }
 
     public static void handle(MinigameStartPacket p, Supplier<NetworkEvent.Context> ctx) {

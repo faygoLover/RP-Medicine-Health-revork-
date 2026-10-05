@@ -61,6 +61,15 @@ public final class Treatments {
     /** Инструмент: стерилен ли (пинцет; нестерильный — выше шанс заражения раны). */
     public record Instrument(boolean sterile) implements Extra {}
 
+    /** Какой орган изъять (выбор медика). */
+    public record OrganPick(Organ organ) implements Extra {}
+
+    /** Орган в контейнере для пересадки: повреждение, группа донора, испорчен ли. */
+    public record DonorOrgan(Organ organ, double damage, BloodType donor, boolean spoiled) implements Extra {}
+
+    /** Отнятая конечность для пришивания: какая часть и свежая ли. */
+    public record Limb(BodyPart part, boolean fresh) implements Extra {}
+
     /** Протез в руках медика. */
     public record Prosthetic(BodyPartState.Prosthesis type) implements Extra {}
 
@@ -97,7 +106,7 @@ public final class Treatments {
         if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
             return drugOf(extra) != null ? Drugs.check(m, part, drugOf(extra), s) : "no_effect";
         BodyPartState ps = m.part(part);
-        if (Surgery.isSurgical(a)) return Surgery.check(m, part, a, s);
+        if (Surgery.isSurgical(a)) return Surgery.check(m, part, a, s, extra);
         if (a.target == TreatmentAction.Target.PART && ps.missing && !allowedOnStump(a)) return "part_missing";
         if (a == TreatmentAction.INSTALL_PROSTHESIS) {
             if (!ps.missing) return "not_missing";
@@ -382,6 +391,8 @@ public final class Treatments {
         }
         Bag bag = extra instanceof Bag b ? b : null;
         BodyPartState ps = m.part(part);
+        if (a == TreatmentAction.ORGAN_REMOVE || a == TreatmentAction.TRANSPLANT || a == TreatmentAction.REATTACH)
+            return Surgery.applyTransfer(m, part, a, error, rnd, s, extra, q);
         if (Surgery.isSurgical(a))
             return Surgery.apply(m, part, a, error, rnd, s, extra instanceof Surgery.Context c ? c : Surgery.Context.DEFAULT);
         if (a == TreatmentAction.SUTURE && Surgery.sutureOnOpen(ps)) return Surgery.suture(m, ps, error, q, rnd, s);

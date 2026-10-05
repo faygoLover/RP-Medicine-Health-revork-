@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:organ_container",
+  "action": "organ_remove",
+  "seconds": 15,
+  "min_level": 9,
+  "consume": true
+}

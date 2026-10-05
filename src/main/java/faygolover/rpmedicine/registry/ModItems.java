@@ -101,6 +101,10 @@ public final class ModItems {
             faygolover.rpmedicine.core.BodyPartState.Prosthesis.PEG_LEG, new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> PROSTHETIC_HOOK = tool("prosthetic_hook", () -> new faygolover.rpmedicine.item.ProstheticItem(
             faygolover.rpmedicine.core.BodyPartState.Prosthesis.HOOK, new Item.Properties().stacksTo(1)));
+    // Органы вне тела (п. 7)
+    public static final RegistryObject<Item> ORGAN_CONTAINER = medical("organ_container", 4);
+    public static final RegistryObject<Item> ORGAN = tool("organ", () -> new faygolover.rpmedicine.item.OrganItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> CYCLOSPORINE = medical("cyclosporine", 16);
     public static final RegistryObject<Item> SEVERED_LIMB = tool("severed_limb", () -> new faygolover.rpmedicine.item.SeveredLimbItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LARYNGOSCOPE = tool("laryngoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDOTRACHEAL_TUBE = medical("endotracheal_tube", 8);

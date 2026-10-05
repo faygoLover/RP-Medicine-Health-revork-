@@ -32,7 +32,9 @@ public enum DrugEffect {
     /** Общий наркоз: без сознания, боль не чувствуется (третий этап, п. 3). */
     ANESTHESIA("anesthesia"),
     /** Местная анестезия: не общий эффект — ставится на часть тела, куда сделан укол; сила — доля оставшейся боли. */
-    LOCAL_ANESTHESIA("local_anesthesia");
+    LOCAL_ANESTHESIA("local_anesthesia"),
+    /** Иммуносупрессия: останавливает отторжение пересаженного органа (третий этап, п. 7.1). */
+    IMMUNOSUPPRESSION("immunosuppression");
 
     public static final DrugEffect[] VALUES = values();
 

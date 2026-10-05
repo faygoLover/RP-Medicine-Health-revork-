@@ -137,6 +137,8 @@ public final class MedicalState {
     public final double[] organs = new double[Organ.COUNT];
     /** Изъятые органы: биты {@link Organ#bit()}. */
     public int organsMissing;
+    /** Пересаженные органы с несовместимой кровью: отторжение (биты {@link Organ#bit()}). */
+    public int organRejection;
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -248,6 +250,7 @@ public final class MedicalState {
         deafSeconds = 0;
         java.util.Arrays.fill(organs, 0);
         organsMissing = 0;
+        organRejection = 0;
         doses.clear();
         effects.clear();
     }
@@ -260,6 +263,7 @@ public final class MedicalState {
             if (o.part == p) {
                 organs[o.ordinal()] = 0;
                 organsMissing &= ~o.bit();
+                organRejection &= ~o.bit();
             }
         }
         if (p == BodyPart.CHEST) {
@@ -390,6 +394,7 @@ public final class MedicalState {
         deafSeconds = o.deafSeconds;
         System.arraycopy(o.organs, 0, organs, 0, Organ.COUNT);
         organsMissing = o.organsMissing;
+        organRejection = o.organRejection;
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;

@@ -178,4 +178,47 @@ public final class OperatingGameTests {
             });
         });
     }
+
+    /** Изъятие органа: выбор органа, контейнер с органом у хирурга; пересадка обратно возвращает пустой контейнер. */
+    @GameTest(template = T, timeoutTicks = 1200)
+    public static void organRemovalAndTransplant(GameTestHelper h) {
+        noDeath(true);
+        MedicalGameTests.noErrors();
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        faygolover.rpmedicine.server.Medical.data(medic).skillOverride = 10;
+        MedicalState m = state(patient);
+        m.down = MedicalState.Down.FAINT;
+        m.part(BodyPart.CHEST).surgery = faygolover.rpmedicine.core.BodyPartState.SurgeryStage.RETRACTED;
+        var inv = medic.getInventory();
+        inv.selected = 0;
+        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.ORGAN_CONTAINER.get(), 2));
+        // В груди два органа — сначала выбор, действия ещё нет.
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, BodyPart.CHEST);
+        h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) == null, "ждём выбора органа");
+        faygolover.rpmedicine.server.TreatmentService.onOrganChoice(medic, patient.getId(), 0, BodyPart.CHEST, "lungs");
+        h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) != null, "изъятие началось");
+        h.runAfterDelay(500, () -> {
+            h.assertTrue(!m.hasOrgan(Organ.LUNGS) && m.hasOrgan(Organ.HEART), "изъяты лёгкие");
+            int organSlot = -1;
+            for (int i = 0; i < inv.getContainerSize(); i++) if (inv.getItem(i).is(faygolover.rpmedicine.registry.ModItems.ORGAN.get())) organSlot = i;
+            h.assertTrue(organSlot >= 0 && faygolover.rpmedicine.item.OrganItem.organ(inv.getItem(organSlot)) == Organ.LUNGS, "лёгкие в контейнере у хирурга");
+            h.assertTrue(inv.getItem(0).getCount() == 1, "один контейнер потрачен");
+            var organ = inv.getItem(organSlot).copy();
+            inv.setItem(organSlot, net.minecraft.world.item.ItemStack.EMPTY);
+            inv.setItem(0, organ);
+            inv.setItem(1, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.ORGAN_CONTAINER.get()));
+            faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, BodyPart.CHEST);
+            h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) != null, "пересадка началась");
+            h.runAfterDelay(600, () -> {
+                h.assertTrue(m.hasOrgan(Organ.LUNGS), "лёгкие на месте");
+                int containers = 0;
+                for (int i = 0; i < inv.getContainerSize(); i++)
+                    if (inv.getItem(i).is(faygolover.rpmedicine.registry.ModItems.ORGAN_CONTAINER.get())) containers += inv.getItem(i).getCount();
+                h.assertTrue(containers == 2, "пустой контейнер вернулся, было " + containers);
+                remove(h, patient, medic);
+                h.succeed();
+            });
+        });
+    }
 }

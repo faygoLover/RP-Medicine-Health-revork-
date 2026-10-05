@@ -1,8 +1,10 @@
 package faygolover.rpmedicine.item;
 
 import faygolover.rpmedicine.core.BodyPart;
+import faygolover.rpmedicine.core.MedicalSettings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -12,10 +14,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Отнятая конечность (ТЗ третьего этапа, п. 6.1): часть тела, чья, когда отнята. Пришить обратно можно
- * в течение нескольких часов в холодильнике (шаг пересадки).
+ * Отнятая конечность (ТЗ третьего этапа, п. 6.1, 7.2): часть тела, чья, когда отнята. Пришить обратно
+ * можно, пока не испортилась: вне холодильника — час, в холодильнике — несколько часов.
  */
-public class SeveredLimbItem extends MedicalItem {
+public class SeveredLimbItem extends MedicalItem implements Perishable.Item {
     public SeveredLimbItem(Properties props) {
         super(props);
     }
@@ -26,13 +28,18 @@ public class SeveredLimbItem extends MedicalItem {
         t.putString("Part", part.id);
         t.putUUID("Owner", owner);
         t.putString("OwnerName", ownerName);
-        t.putLong("Taken", gameTime);
+        Perishable.start(st, gameTime);
         return st;
     }
 
     @Nullable
     public static BodyPart part(ItemStack st) {
         return st.hasTag() ? BodyPart.byId(st.getTag().getString("Part")).orElse(null) : null;
+    }
+
+    public static boolean spoiled(ItemStack st, long now) {
+        MedicalSettings s = MedicalSettings.get();
+        return Perishable.spoiled(st, now, s.organSpoilWarmHours, s.limbReattachHours);
     }
 
     @Override
@@ -42,9 +49,16 @@ public class SeveredLimbItem extends MedicalItem {
     }
 
     @Override
+    public void inventoryTick(ItemStack st, Level level, Entity entity, int slot, boolean selected) {
+        if (!level.isClientSide) Perishable.inventoryTick(st, level.getGameTime());
+    }
+
+    @Override
     public void appendHoverText(ItemStack st, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(st, level, tooltip, flag);
         if (st.hasTag() && st.getTag().contains("OwnerName"))
             tooltip.add(Component.translatable("rpmedicine.tooltip.limb_owner", st.getTag().getString("OwnerName")).withStyle(ChatFormatting.GRAY));
+        if (level != null && spoiled(st, level.getGameTime()))
+            tooltip.add(Component.translatable("rpmedicine.tooltip.organ_spoiled").withStyle(ChatFormatting.DARK_RED));
     }
 }

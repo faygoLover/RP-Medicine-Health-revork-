@@ -99,6 +99,12 @@ public class SurgeryMinigameScreen extends Screen {
     private int sawDir;
     private double sawTravel;
     private double lastSawX = Double.NaN;
+    /** Орган: где лежит, где его тащат; сосуды, которые нужно пересечь. */
+    private double organX;
+    private double organY;
+    private boolean organHeld;
+    private double[][] vessels;
+    private boolean[] vesselCut;
     private final List<double[]> drops = new ArrayList<>();
 
     public SurgeryMinigameScreen(MinigameStartPacket task, @Nullable Screen back) {
@@ -144,6 +150,8 @@ public class SurgeryMinigameScreen extends Screen {
             case VESSEL -> 12;
             case EXTRACT -> 15;
             case AMPUTATION -> 14;
+            case HARVEST -> 16;
+            case PLANT -> 18;
             default -> 10;
         };
     }
@@ -234,6 +242,26 @@ public class SurgeryMinigameScreen extends Screen {
             case DRILL -> zoneHalf = 0.07 + 0.06 * ease;
             case DRAIN -> zoneHalf = 0.08 + 0.06 * ease;
             case EXTRACT -> removed = new boolean[foreign.length];
+            case HARVEST -> {
+                double[] spot = organSpot();
+                organX = spot[0];
+                organY = spot[1];
+                vessels = new double[3][2];
+                for (int i = 0; i < 3; i++) {
+                    double a = Math.PI * (0.25 + i * 0.25) + rnd.nextDouble() * 0.2;
+                    vessels[i] = new double[]{spot[0] + Math.cos(a) * 18, spot[1] - Math.sin(a) * 14};
+                }
+                vesselCut = new boolean[3];
+            }
+            case PLANT -> {
+                organX = W - 28;
+                organY = 70;
+                double[] spot = organSpot();
+                path = new double[5][2];
+                for (int i = 0; i < path.length; i++)
+                    path[i] = new double[]{spot[0] - 20 + i * 10, spot[1] - 16 + (i == 0 || i == path.length - 1 ? 0 : (rnd.nextDouble() - 0.5) * 8)};
+                channel = 2.5 + 2.5 * ease;
+            }
             default -> { }
         }
         zoneCenter = 0.6;
@@ -313,6 +341,8 @@ public class SurgeryMinigameScreen extends Screen {
             case DRAIN -> drain(g, l, t, dt);
             case EXTRACT -> extract(g, l, t, tx, ty);
             case AMPUTATION -> saw(g, l, t, tx, ty, speed);
+            case HARVEST -> harvest(g, l, t, tx, ty);
+            case PLANT -> plant(g, l, t, tx, ty);
             default -> { }
         }
         // Капли крови.
@@ -848,6 +878,141 @@ public class SurgeryMinigameScreen extends Screen {
         if (strokes >= STROKES) finish(quality());
     }
 
+    // ------------------------------------------------------------------ органы
+
+    /** Где лежит орган сцены. */
+    private double[] organSpot() {
+        int o = scene.organ();
+        return switch (o) {
+            case 0 -> new double[]{160, CY};          // сердце
+            case 1 -> new double[]{X0 + 40, CY};      // лёгкие
+            case 2 -> new double[]{X0 + 38, CY - 14}; // печень
+            case 3 -> new double[]{X1 - 40, CY + 8};  // почки
+            default -> new double[]{168, CY};         // кишечник
+        };
+    }
+
+    private int organColor() {
+        return switch (scene.organ()) {
+            case 0 -> 0xFF7A1018;
+            case 1 -> 0xFFD07A80;
+            case 2 -> 0xFF6A2A1A;
+            case 3 -> 0xFF8A3A2A;
+            default -> 0xFFD89A90;
+        };
+    }
+
+    private void drawOrgan(GuiGraphics g, int l, int t, double x, double y) {
+        g.fill(l + (int) x - 12, t + (int) y - 9, l + (int) x + 12, t + (int) y + 9, organColor());
+        g.fill(l + (int) x - 10, t + (int) y - 7, l + (int) x - 4, t + (int) y - 4, 0x40FFFFFF);
+    }
+
+    private void tray(GuiGraphics g, int l, int t) {
+        g.fill(l + W - 46, t + 54, l + W - 10, t + 86, 0xFFB8BCC0);
+        g.fill(l + W - 44, t + 56, l + W - 12, t + 84, 0xFF5A8AA0);
+    }
+
+    /** Изъятие: пересечь три сосуда между толчками крови, затем вынуть орган в контейнер. */
+    private void harvest(GuiGraphics g, int l, int t, double tx, double ty) {
+        tray(g, l, t);
+        if (phase == 0) {
+            drawOrgan(g, l, t, organX, organY);
+            for (int i = 0; i < vessels.length; i++) {
+                double[] v = vessels[i];
+                if (vesselCut[i]) {
+                    g.fill(l + (int) v[0] - 2, t + (int) v[1] - 1, l + (int) v[0] + 2, t + (int) v[1] + 1, 0xFF3A0A0A);
+                    continue;
+                }
+                line(g, l + v[0], t + v[1], l + organX, t + organY, 0xFFC01818);
+                circle(g, l + v[0], t + v[1], 3, 0xFFFFD040);
+                if (spurting(i)) g.fill(l + (int) v[0] - 7, t + (int) v[1] - 7, l + (int) v[0] + 7, t + (int) v[1] + 7, 0xD0A01010);
+            }
+            return;
+        }
+        double x = organHeld ? tx : organX;
+        double y = organHeld ? ty : organY;
+        drawOrgan(g, l, t, x, y);
+    }
+
+    private void harvestPress() {
+        if (phase == 0) {
+            for (int i = 0; i < vessels.length; i++) {
+                if (vesselCut[i] || Math.hypot(toolX - vessels[i][0], toolY - vessels[i][1]) >= 4 + 3 * ease) continue;
+                if (spurting(i)) {
+                    error("rpmedicine.minigame.blood_hidden");
+                    return;
+                }
+                vesselCut[i] = true;
+                sound(ModSounds.SURGERY_VESSEL_CUT.get(), 1.0f);
+                for (boolean c : vesselCut) if (!c) return;
+                phase = 1;
+                return;
+            }
+            error("rpmedicine.minigame.missed");
+            return;
+        }
+        if (Math.hypot(toolX - organX, toolY - organY) < 12) organHeld = true;
+    }
+
+    private void harvestRelease() {
+        if (phase != 1 || !organHeld) return;
+        organHeld = false;
+        if (toolX > W - 48 && toolX < W - 8 && toolY > 52 && toolY < 88) {
+            sound(ModSounds.ORGAN_MOVE.get(), 1.0f);
+            finish(quality());
+        } else {
+            organX = toolX;
+            organY = toolY;
+        }
+    }
+
+    /** Пересадка: уложить орган на место, затем сшить сосуд по каналу. */
+    private void plant(GuiGraphics g, int l, int t, double tx, double ty) {
+        double[] spot = organSpot();
+        if (phase == 0) {
+            tray(g, l, t);
+            circle(g, l + spot[0], t + spot[1], 12, 0x80FFD040);
+            drawOrgan(g, l, t, organHeld ? tx : organX, organHeld ? ty : organY);
+            return;
+        }
+        drawOrgan(g, l, t, spot[0], spot[1]);
+        for (int i = 0; i + 1 < path.length; i++) line(g, l + path[i][0], t + path[i][1], l + path[i + 1][0], t + path[i + 1][1], 0x80E0E0E0);
+        for (int i = 0; i + 1 <= pathIndex && i + 1 < path.length && phase == 2; i++)
+            line(g, l + path[i][0], t + path[i][1], l + path[i + 1][0], t + path[i + 1][1], 0xFF2A2A8A);
+        double[] s0 = path[0];
+        double[] e = path[path.length - 1];
+        circle(g, l + s0[0], t + s0[1], 3, 0xFF40C040);
+        circle(g, l + e[0], t + e[1], 3, 0xFFE0E0E0);
+        if (phase == 1) {
+            if (mouseDown && Math.hypot(tx - s0[0], ty - s0[1]) < channel * 1.6) phase = 2;
+            return;
+        }
+        follow(tx, ty, "rpmedicine.minigame.wall");
+        if (pathIndex == path.length - 1 && Math.hypot(tx - e[0], ty - e[1]) < channel * 1.5) finish(quality());
+    }
+
+    private void plantPress() {
+        if (phase == 0 && Math.hypot(toolX - organX, toolY - organY) < 12) organHeld = true;
+    }
+
+    private void plantRelease() {
+        if (phase == 0 && organHeld) {
+            organHeld = false;
+            double[] spot = organSpot();
+            if (Math.hypot(toolX - spot[0], toolY - spot[1]) < 8 + 4 * ease) {
+                phase = 1;
+                sound(ModSounds.ORGAN_MOVE.get(), 1.0f);
+            } else {
+                organX = toolX;
+                organY = toolY;
+                error("rpmedicine.minigame.missed");
+            }
+        } else if (phase == 2) {
+            phase = 1;
+            error("rpmedicine.minigame.dropped");
+        }
+    }
+
     // ------------------------------------------------------------------ общее
 
     private void follow(double tx, double ty, String wallKey) {
@@ -925,6 +1090,8 @@ public class SurgeryMinigameScreen extends Screen {
             case CLOSE, ORGAN_SUTURE -> stitchIndex / (double) (stitches.length / 2);
             case DRILL -> hole / 4.0;
             case AMPUTATION -> strokes / (double) STROKES;
+            case HARVEST -> phase == 0 ? 0.3 : 0.6;
+            case PLANT -> phase == 0 ? 0 : path == null ? 0.5 : 0.4 + 0.6 * pathIndex / (double) (path.length - 1);
             case EXTRACT -> {
                 int c = 0;
                 for (boolean b : removed) if (b) c++;
@@ -948,6 +1115,8 @@ public class SurgeryMinigameScreen extends Screen {
             case DRILL -> drillClick();
             case DRAIN -> drainClick();
             case EXTRACT -> extractPress();
+            case HARVEST -> harvestPress();
+            case PLANT -> plantPress();
             default -> { }
         }
         return true;
@@ -961,6 +1130,8 @@ public class SurgeryMinigameScreen extends Screen {
             switch (type) {
                 case CLOSE, ORGAN_SUTURE -> stitchRelease();
                 case EXTRACT -> extractRelease();
+                case HARVEST -> harvestRelease();
+                case PLANT -> plantRelease();
                 case INCISION, VESSEL -> {
                     // Отпустил инструмент посреди шага — продолжить с того же места.
                     if (phase == 1 && !sent) {

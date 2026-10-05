@@ -159,6 +159,8 @@ ITEMS = [
     # ампутация и протезы (п. 6)
     ("bone_saw", "amputate", 12, 8, False), ("prosthetic_foot", "install_prosthesis", 8, 7, True),
     ("peg_leg", "install_prosthesis", 8, 7, True), ("prosthetic_hook", "install_prosthesis", 8, 7, True),
+    # органы и конечности вне тела (п. 7)
+    ("organ_container", "organ_remove", 15, 9, True), ("organ", "transplant", 20, 10, True), ("severed_limb", "reattach", 25, 10, True),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -186,6 +188,10 @@ DRUGS = {
                  "dose": {"limit": 2, "window_hours": 12},
                  "overdose": {"effects": [eff("resp_depression", 0.4, 0, 30 * 60), eff("sedation", 30, 0, 30 * 60)], "arrest_chance": 0.1}},
     "naloxone": {"form": "injection", "min_level": 4, "special": "opioid_antidote", "effects": []},
+    # Третий этап: иммуносупрессор против отторжения (п. 7.1) — курс раз в 12 часов.
+    "cyclosporine": {"form": "pill", "min_level": 4, "effects": [eff("immunosuppression", 1, 300, 12 * H)],
+                     "dose": {"limit": 1, "window_hours": 12},
+                     "overdose": {"effects": [eff("liver_toxicity", 15, 600, 2 * H)]}},
     "amoxicillin": {"form": "pill", "min_level": 4, "effects": [eff("antibiotic", 10, 600, 8 * H)],
                     "dose": {"limit": 1, "window_hours": 8},
                     "overdose": {"effects": [eff("pressure", -10, 300, H), eff("heart_rate", 10, 300, H)]}},
@@ -255,7 +261,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb", "rpmedicine:organ_container", "rpmedicine:organ"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -440,7 +446,9 @@ ICONS = {
     "surgical_gloves": ("patch", (150, 200, 230), (110, 160, 200)),
     "bone_saw": ("board", (200, 205, 215), (90, 90, 100)), "prosthetic_foot": ("box", (160, 130, 100), (90, 70, 50)),
     "peg_leg": ("board", (150, 110, 70), (110, 80, 50)), "prosthetic_hook": ("syringe", (190, 195, 200), (120, 125, 130)),
-    "severed_limb": ("roll", (210, 160, 130), (150, 30, 30)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
+    "severed_limb": ("roll", (210, 160, 130), (150, 30, 30)),
+    "organ_container": ("box", (90, 140, 170), (230, 240, 245)), "organ": ("box", (90, 140, 170), (160, 30, 40)),
+    "cyclosporine": ("pills", (240, 240, 230), (120, 80, 160)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
     "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
     "propofol": ("syringe", (240, 240, 240), (245, 245, 245)), "laryngoscope": ("strap", (170, 175, 185), (230, 200, 60)),
@@ -457,7 +465,8 @@ REL_TEXTURES = {
     "lidocaine": TA + "adrenaline_ii.png", "propofol": BCT + "emulsion_vial.png", "syringe": BCT + "insulin_syringe.png",
     "blood_draw_syringe": BCT + "syringe.png", "surgical_tweezers": BCT + "tweezers.png", "test_tube": BCT + "microtube.png",
     "portable_scanner": BCT + "advanced_scanner.png", "hemoanalyzer": BCT + "organ_scanner.png", "lancet": BCT + "surgical_needle.png",
-    "medcard": BCT + "tablet.png", "stabilization_kit": BCT + "medical_kit.png",
+    "medcard": BCT + "tablet.png", "organ_container": BCT + "cooler_bag.png", "organ": BCT + "donor_heart.png",
+    "cyclosporine": BCT + "immunosuppressant.png", "stabilization_kit": BCT + "medical_kit.png",
     "scalpel": BCT + "scalpel.png", "surgical_gloves": BCT + "gloves.png", "vascular_suture": BCT + "surgical_thread.png",
 }
 def rel_texture(name):

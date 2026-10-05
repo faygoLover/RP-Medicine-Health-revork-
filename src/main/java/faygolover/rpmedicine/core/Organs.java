@@ -17,7 +17,13 @@ public final class Organs {
             if (m.pressure < s.lowPressureKidneys && m.heart == MedicalState.Heart.NORMAL)
                 m.damageOrgan(Organ.KIDNEYS, s.lowPressureKidneysPerHour * hours);
             m.damageOrgan(Organ.LIVER, m.effect(DrugEffect.LIVER_TOXICITY) * hours);
+            // Отторжение: пока нет иммуносупрессии, пересаженный орган разрушается.
+            if (m.organRejection != 0 && m.effect(DrugEffect.IMMUNOSUPPRESSION) <= 0)
+                for (Organ o : Organ.VALUES) if ((m.organRejection & o.bit()) != 0) m.damageOrgan(o, s.rejectionPerHour * hours);
         }
+        // Нет сердца — остановка; нет лёгких — не дышит (третий этап, п. 7.1).
+        if (!m.hasOrgan(Organ.HEART) && m.heart == MedicalState.Heart.NORMAL) m.heart = MedicalState.Heart.ARREST;
+        if (!m.hasOrgan(Organ.LUNGS)) m.respiratoryArrest = true;
         // Печень 100 % — кровь в живот.
         if (m.organ(Organ.LIVER) >= 100) {
             BodyPartState abdomen = m.part(BodyPart.ABDOMEN);
@@ -41,7 +47,9 @@ public final class Organs {
         double amount = s.organHealPerHour * dt / 3600.0;
         for (Organ o : Organ.VALUES) {
             double v = m.organs[o.ordinal()];
-            if (v > 0 && v < s.organSelfHealLimit && m.hasOrgan(o)) m.organs[o.ordinal()] = Math.max(0, v - amount);
+            // Отторгаемый орган (без иммуносупрессора) сам не восстанавливается.
+            boolean rejecting = (m.organRejection & o.bit()) != 0 && m.effect(DrugEffect.IMMUNOSUPPRESSION) <= 0;
+            if (v > 0 && v < s.organSelfHealLimit && m.hasOrgan(o) && !rejecting) m.organs[o.ordinal()] = Math.max(0, v - amount);
         }
     }
 

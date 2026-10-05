@@ -54,6 +54,11 @@ public final class ClientHandlers {
         if (Minecraft.getInstance().screen instanceof faygolover.rpmedicine.client.screen.GmPanelScreen s) s.report(p);
     }
 
+    public static void onOrganChoice(faygolover.rpmedicine.network.OrganChoicePacket.Request p) {
+        Minecraft mc = Minecraft.getInstance();
+        mc.setScreen(new faygolover.rpmedicine.client.screen.OrganChoiceScreen(p, mc.screen));
+    }
+
     public static void onDoseRequest(faygolover.rpmedicine.network.DosePacket.Request p) {
         Minecraft mc = Minecraft.getInstance();
         mc.setScreen(new faygolover.rpmedicine.client.screen.DoseScreen(p, mc.screen));

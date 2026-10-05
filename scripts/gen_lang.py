@@ -818,6 +818,41 @@ t("rpmedicine.minigame.sawing", "Распил", "Sawing")
 for k, ru, en in [("amputated", "Операция: ампутация — %s", "Surgery: amputation — %s"), ("prosthesis_installed", "Установлен протез — %s", "Prosthesis fitted — %s")]:
     t("rpmedicine.medcard.entry.surgery_" + k, ru, en)
 t("rpmedicine.medcard.entry.traumatic_amputation", "Травматическая ампутация: %s", "Traumatic amputation: %s")
+# Органы и конечности вне тела (третий этап, п. 7).
+for k, ru, en, dru, den in [
+    ("organ_container", "Контейнер для органа", "Organ container", "Изъять орган раскрытой груди или живота (несколько — выбор). Медицина 9+.",
+     "Removes an organ from an opened chest or abdomen (several — choose). Medicine 9+."),
+    ("organ", "Орган в контейнере", "Organ in a container", "Пересадить на место отсутствующего органа. Несовместимая кровь — отторжение, нужен циклоспорин. Вне холодильника портится за час. Медицина 10+.",
+     "Transplant in place of a missing organ. Incompatible blood — rejection, needs cyclosporine. Spoils in an hour outside a fridge. Medicine 10+."),
+    ("cyclosporine", "Циклоспорин", "Cyclosporine", "Иммуносупрессор: останавливает отторжение пересаженного органа на 12 часов. Медицина 4+.",
+     "Immunosuppressant: stops rejection of a transplanted organ for 12 hours. Medicine 4+.")]:
+    t(f"item.rpmedicine.{k}", ru, en)
+    t(f"item.rpmedicine.{k}.desc", dru, den)
+for k, ru, en in [("organ_container", "Охлаждающий контейнер.", "A cooling container."), ("organ", "Донорский орган.", "A donor organ."),
+    ("cyclosporine", "Таблетки циклоспорина.", "Cyclosporine tablets.")]:
+    t(f"item.rpmedicine.{k}.what", ru, en)
+t("item.rpmedicine.organ.of", "Орган: %s", "Organ: %s")
+t("rpmedicine.tooltip.organ_donor", "Донор: %s, группа %s", "Donor: %s, blood type %s")
+t("rpmedicine.tooltip.organ_spoiled", "Испорчено", "Spoiled")
+t("rpmedicine.organ_choice.title", "Какой орган изъять?", "Which organ to remove?")
+for k, ru, en in [("organ_removed", "%s: орган изъят", "%s: organ removed"), ("organ_transplanted", "%s: орган пересажен", "%s: organ transplanted"),
+    ("organ_transplanted_dead", "%s: орган пересажен, но он мёртв", "%s: organ transplanted, but it is dead"),
+    ("limb_reattached", "%s: конечность пришита", "%s: limb reattached"), ("limb_reattached_poor", "%s: пришито наспех", "%s: reattached hastily")]:
+    t("rpmedicine.treat." + k, ru, en)
+for k, ru, en in [("torso_only", "Только грудь или живот", "Chest or abdomen only"), ("no_organ", "Органа здесь нет", "No organ here"),
+    ("organ_wrong_part", "Этот орган не отсюда", "This organ belongs elsewhere"), ("organ_present", "Орган на месте", "The organ is in place"),
+    ("limb_wrong_part", "Это другая конечность", "That is a different limb"), ("limb_spoiled", "Конечность испорчена", "The limb has spoiled")]:
+    t("rpmedicine.refuse." + k, ru, en)
+t("rpmedicine.exam.organ_rejection", "Признаки отторжения пересаженного органа", "Signs of transplant rejection")
+for k, ru, en in [("organ_removed", "Операция: изъят орган — %s", "Surgery: organ removed — %s"), ("organ_transplanted", "Операция: пересадка органа — %s", "Surgery: organ transplant — %s"),
+    ("organ_transplanted_dead", "Операция: пересажен нежизнеспособный орган — %s", "Surgery: non-viable organ transplanted — %s"),
+    ("limb_reattached", "Операция: пришита конечность — %s", "Surgery: limb reattached — %s")]:
+    t("rpmedicine.medcard.entry.surgery_" + k, ru, en)
+for k, ru, en, hru, hen in [
+    ("harvest", "Изъятие органа", "Organ removal", "Пересеките сосуды между толчками крови, затем перенесите орган в контейнер.", "Cut the vessels between spurts, then move the organ into the container."),
+    ("plant", "Пересадка", "Transplant", "Уложите орган на место, затем сшейте сосуд, не выходя из канала.", "Place the organ, then suture the vessel without leaving the channel.")]:
+    t("rpmedicine.minigame." + k, ru, en)
+    t("rpmedicine.minigame.hint_" + k, hru, hen)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

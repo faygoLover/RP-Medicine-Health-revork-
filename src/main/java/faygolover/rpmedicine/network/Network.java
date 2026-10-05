@@ -49,6 +49,8 @@ public final class Network {
         toServer(RhythmPacket.class, RhythmPacket::encode, RhythmPacket::decode, RhythmPacket::handle);
         toServer(GmEditPacket.class, GmEditPacket::encode, GmEditPacket::decode, GmEditPacket::handle);
         toServer(ClientPrefsPacket.class, ClientPrefsPacket::encode, ClientPrefsPacket::decode, ClientPrefsPacket::handle);
+        toServer(OrganChoicePacket.Choice.class, OrganChoicePacket.Choice::encode, OrganChoicePacket.Choice::decode, OrganChoicePacket.Choice::handle);
+        toClient(OrganChoicePacket.Request.class, OrganChoicePacket.Request::encode, OrganChoicePacket.Request::decode, OrganChoicePacket.Request::handle);
         toServer(DosePacket.Choice.class, DosePacket.Choice::encode, DosePacket.Choice::decode, DosePacket.Choice::handle);
         toClient(DosePacket.Request.class, DosePacket.Request::encode, DosePacket.Request::decode, DosePacket.Request::handle);
         toServer(HoverRequestPacket.class, HoverRequestPacket::encode, HoverRequestPacket::decode, HoverRequestPacket::handle);

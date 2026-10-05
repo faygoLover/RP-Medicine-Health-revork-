@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:organ",
+  "action": "transplant",
+  "seconds": 20,
+  "min_level": 10,
+  "consume": true
+}

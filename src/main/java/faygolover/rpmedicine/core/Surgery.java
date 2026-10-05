@@ -27,7 +27,8 @@ public final class Surgery {
     public static boolean isSurgical(TreatmentAction a) {
         return a == TreatmentAction.INCISE || a == TreatmentAction.CLAMP || a == TreatmentAction.RETRACT
                 || a == TreatmentAction.VESSEL_SUTURE || a == TreatmentAction.OSTEOSYNTHESIS || a == TreatmentAction.DRAIN
-                || a == TreatmentAction.AMPUTATE;
+                || a == TreatmentAction.AMPUTATE || a == TreatmentAction.ORGAN_REMOVE || a == TreatmentAction.TRANSPLANT
+                || a == TreatmentAction.REATTACH;
     }
 
     /** Пациент не дёргается: без сознания (в том числе наркоз), зафиксирован или местная анестезия этой части. */
@@ -48,8 +49,21 @@ public final class Surgery {
     // ------------------------------------------------------------------ проверка
 
     public static String check(MedicalState m, BodyPart part, TreatmentAction a, MedicalSettings s) {
+        return check(m, part, a, s, null);
+    }
+
+    public static String check(MedicalState m, BodyPart part, TreatmentAction a, MedicalSettings s, Treatments.Extra extra) {
         BodyPartState ps = m.part(part);
         SurgeryStage st = ps.surgery;
+        if (a == TreatmentAction.REATTACH) {
+            if (!ps.missing) return "not_missing";
+            if (ps.prosthesis != BodyPartState.Prosthesis.NONE) return "prosthesis_already";
+            if (extra instanceof Treatments.Limb l) {
+                if (l.part() != part) return "limb_wrong_part";
+                if (!l.fresh()) return "limb_spoiled";
+            }
+            return m.down != Down.NONE || m.restrained ? null : "patient_moves";
+        }
         if (ps.missing) return "part_missing";
         switch (a) {
             case INCISE -> {
@@ -77,6 +91,22 @@ public final class Surgery {
             case AMPUTATE -> {
                 if (!part.isLimb()) return "limb_only";
                 return st == SurgeryStage.RETRACTED ? null : "not_retracted";
+            }
+            case ORGAN_REMOVE -> {
+                if (!part.isTorso()) return "torso_only";
+                if (st != SurgeryStage.RETRACTED) return "not_retracted";
+                if (extra instanceof Treatments.OrganPick pick) return pick.organ().part == part && m.hasOrgan(pick.organ()) ? null : "no_organ";
+                for (Organ o : Organ.VALUES) if (o.part == part && m.hasOrgan(o)) return null;
+                return "no_organ";
+            }
+            case TRANSPLANT -> {
+                if (!part.isTorso()) return "torso_only";
+                if (st != SurgeryStage.RETRACTED) return "not_retracted";
+                if (extra instanceof Treatments.DonorOrgan d) {
+                    if (d.organ().part != part) return "organ_wrong_part";
+                    return m.hasOrgan(d.organ()) ? "organ_present" : null;
+                }
+                return null;
             }
             case DRAIN -> {
                 if (part != BodyPart.CHEST) return "chest_only";
@@ -145,6 +175,55 @@ public final class Surgery {
                 return Result.failed("no_effect");
             }
         }
+    }
+
+    /** Изъятие, пересадка, пришивание: содержимое предмета из {@code extra}. */
+    public static Result applyTransfer(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s,
+                                       Treatments.Extra extra, double quality) {
+        BodyPartState ps = m.part(part);
+        stepPain(m, ps, s);
+        if (error && a != TreatmentAction.REATTACH) return slip(m, ps, rnd, s);
+        switch (a) {
+            case ORGAN_REMOVE -> {
+                Organ o = extra instanceof Treatments.OrganPick p ? p.organ() : firstOrgan(m, part);
+                if (o == null) return Result.failed("no_organ");
+                m.organsMissing |= o.bit();
+                m.organRejection &= ~o.bit();
+                return Result.ok("organ_removed");
+            }
+            case TRANSPLANT -> {
+                if (!(extra instanceof Treatments.DonorOrgan d)) return Result.failed("no_effect");
+                Organ o = d.organ();
+                m.organsMissing &= ~o.bit();
+                m.organs[o.ordinal()] = d.spoiled() ? 100 : Physiology.clamp(d.damage(), 0, 100);
+                boolean reject = d.donor() != null && m.bloodType != null && !d.donor().canDonateTo(m.bloodType);
+                if (reject) m.organRejection |= o.bit();
+                else m.organRejection &= ~o.bit();
+                return Result.ok(d.spoiled() ? "organ_transplanted_dead" : "organ_transplanted");
+            }
+            case REATTACH -> {
+                ps.missing = false;
+                ps.prosthesis = BodyPartState.Prosthesis.NONE;
+                ps.wounds.clear();
+                Wound w = new Wound(WoundType.CUT, s.reattachSeverity);
+                w.surgical = true;
+                w.sutured = true;
+                w.sutureQuality = error ? 0.4 : 0.6 + 0.4 * quality;
+                w.infectionStage = Wound.Infection.CLEAN;
+                ps.wounds.add(w);
+                if (part.kind == BodyPart.Kind.LEG) m.part(part.pairedLowerLimb()).missing = false;
+                return error ? Result.failed("limb_reattached_poor") : Result.ok("limb_reattached");
+            }
+            default -> {
+                return Result.failed("no_effect");
+            }
+        }
+    }
+
+    /** Первый орган части, который ещё на месте. */
+    public static Organ firstOrgan(MedicalState m, BodyPart part) {
+        for (Organ o : Organ.VALUES) if (o.part == part && m.hasOrgan(o)) return o;
+        return null;
     }
 
     /**

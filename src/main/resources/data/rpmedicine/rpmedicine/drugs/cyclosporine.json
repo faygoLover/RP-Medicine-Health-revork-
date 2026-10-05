@@ -1,0 +1,29 @@
+{
+  "items": [
+    "rpmedicine:cyclosporine"
+  ],
+  "form": "pill",
+  "min_level": 4,
+  "effects": [
+    {
+      "effect": "immunosuppression",
+      "strength": 1,
+      "delay": 300,
+      "duration": 43200
+    }
+  ],
+  "dose": {
+    "limit": 1,
+    "window_hours": 12
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "liver_toxicity",
+        "strength": 15,
+        "delay": 600,
+        "duration": 7200
+      }
+    ]
+  }
+}

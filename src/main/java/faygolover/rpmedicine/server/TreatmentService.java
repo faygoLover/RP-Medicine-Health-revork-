@@ -46,6 +46,19 @@ public final class TreatmentService {
         return startWithItem(actor, target, slot, part, null);
     }
 
+    /** Выбранный медиком орган для изъятия (до конца действия). */
+    private static final java.util.Map<java.util.UUID, faygolover.rpmedicine.core.Organ> ORGAN_PICKS = new java.util.HashMap<>();
+
+    /** Ответ на выбор органа: пусто — отмена. */
+    public static void onOrganChoice(ServerPlayer actor, int targetId, int slot, BodyPart part, String organ) {
+        var o = faygolover.rpmedicine.core.Organ.byId(organ).orElse(null);
+        if (o == null || o.part != part || slot < 0 || slot >= actor.getInventory().getContainerSize()) return;
+        net.minecraft.world.entity.Entity e = targetId < 0 ? actor : actor.level().getEntity(targetId);
+        if (!(e instanceof LivingEntity target) || !Medical.isPatient(target)) return;
+        ORGAN_PICKS.put(actor.getUUID(), o);
+        startWithItem(actor, target, slot, part, null);
+    }
+
     /** Ответ на выбор дозы шприцем: 0 — отмена. */
     public static void onDoseChoice(ServerPlayer actor, int targetId, int slot, @Nullable BodyPart part, float dose) {
         if (dose <= 0 || slot < 0 || slot >= actor.getInventory().getContainerSize()) return;
@@ -91,6 +104,23 @@ public final class TreatmentService {
         BodyPart p = part;
         boolean forced = false;
         String why;
+        // Изъятие: в части несколько органов — медик выбирает, какой (п. 7.1).
+        if (action == TreatmentAction.ORGAN_REMOVE && !(extra instanceof Treatments.OrganPick)) {
+            BodyPart cand = p != null ? p : Treatments.bestPart(m, action, s, extra);
+            if (cand != null) {
+                java.util.List<String> present = new java.util.ArrayList<>();
+                for (var o : faygolover.rpmedicine.core.Organ.VALUES) if (o.part == cand && m.hasOrgan(o)) present.add(o.id);
+                if (present.size() > 1) {
+                    faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.OrganChoicePacket.Request(
+                            target == actor ? -1 : target.getId(), slot, cand.ordinal(), present));
+                    return true;
+                }
+                if (present.size() == 1) {
+                    ORGAN_PICKS.put(actor.getUUID(), faygolover.rpmedicine.core.Organ.byId(present.get(0)).orElseThrow());
+                    extra = extraFor(stack, actor, target, action);
+                }
+            }
+        }
         if (p == null) {
             p = Treatments.bestPart(m, action, s, extra);
             why = p == null ? Treatments.check(m, defaultPart(action), action, s, extra) : null;
@@ -136,6 +166,8 @@ public final class TreatmentService {
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
         Minigames.Scene scene = surgical != null ? Minigames.Scene.of(m, p, target.getUUID().getLeastSignificantBits() ^ p.ordinal() * 0x9E3779B97F4A7C15L)
                 : Minigames.Scene.NONE;
+        if (extra instanceof Treatments.OrganPick op) scene = scene.withOrgan(op.organ());
+        if (extra instanceof Treatments.DonorOrgan dn) scene = scene.withOrgan(dn.organ());
         if (mg != null) {
             final BodyPart part0 = p;
             final ItemStack copy = stack.copy();
@@ -206,6 +238,21 @@ public final class TreatmentService {
     @Nullable
     /** То же для действия: шаги хирургии несут обстановку операции (место, стерильность, экипировка). */
     static Treatments.Extra extraFor(ItemStack stack, ServerPlayer actor, LivingEntity target, TreatmentAction a) {
+        long now = actor.level().getGameTime();
+        switch (a) {
+            case ORGAN_REMOVE -> {
+                var o = ORGAN_PICKS.get(actor.getUUID());
+                return o != null ? new Treatments.OrganPick(o) : null;
+            }
+            case TRANSPLANT -> {
+                return faygolover.rpmedicine.item.OrganItem.donorOrgan(stack, now);
+            }
+            case REATTACH -> {
+                BodyPart lp = faygolover.rpmedicine.item.SeveredLimbItem.part(stack);
+                return lp != null ? new Treatments.Limb(lp, !faygolover.rpmedicine.item.SeveredLimbItem.spoiled(stack, now)) : null;
+            }
+            default -> { }
+        }
         if (faygolover.rpmedicine.core.Surgery.isSurgical(a)) return SurgeryService.context(actor, target, stack);
         return extraFor(stack, actor);
     }
@@ -489,7 +536,21 @@ public final class TreatmentService {
                 actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_osteosynthesis_kit").withStyle(ChatFormatting.YELLOW), true);
                 return;
             }
+            // Изъятие: повреждение органа до того, как он покинет тело.
+            faygolover.rpmedicine.core.Organ taken = spec.action() == TreatmentAction.ORGAN_REMOVE
+                    ? (extra instanceof Treatments.OrganPick op ? op.organ() : faygolover.rpmedicine.core.Surgery.firstOrgan(m, part)) : null;
+            double takenDamage = taken != null ? m.organ(taken) : 0;
             Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra, quality >= 0 ? quality : 1.0);
+            if (spec.action() == TreatmentAction.ORGAN_REMOVE) ORGAN_PICKS.remove(actor.getUUID());
+            if (r.applied && r.key.equals("organ_removed") && taken != null) {
+                ItemStack organ = faygolover.rpmedicine.item.OrganItem.create(faygolover.rpmedicine.registry.ModItems.ORGAN.get(), taken, takenDamage,
+                        m.bloodType, target.getName().getString(), actor.level().getGameTime());
+                if (!actor.getInventory().add(organ)) actor.drop(organ, false);
+            }
+            if (r.applied && spec.action() == TreatmentAction.TRANSPLANT) {
+                ItemStack empty = new ItemStack(faygolover.rpmedicine.registry.ModItems.ORGAN_CONTAINER.get());
+                if (!actor.getInventory().add(empty)) actor.drop(empty, false);
+            }
             faygolover.rpmedicine.stats.StatsService.treatment(actor, target, String.valueOf(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(original.getItem())),
                     spec.action().id, part, r.key, error);
             if (r.consumed && spec.consume()) consume();

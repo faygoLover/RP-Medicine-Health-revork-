@@ -494,6 +494,13 @@ public final class MedicalSettings {
     /** Протезы (п. 6.2): потеря скорости. */
     public double prostheticFootSpeedPenalty = 0.15;
     public double pegLegSpeedPenalty = 0.30;
+    /** Органы вне тела (п. 7): порча вне холодильника, ч; в холодильнике, сут; конечность пришить — в течение, ч; отторжение, %/ч. */
+    public double organSpoilWarmHours = 1;
+    public double organSpoilFridgeDays = 3;
+    public double limbReattachHours = 6;
+    public double rejectionPerHour = 10;
+    /** Шов пришитой конечности. */
+    public double reattachSeverity = 30;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

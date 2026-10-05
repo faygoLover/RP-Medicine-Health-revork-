@@ -46,7 +46,11 @@ public final class Minigames {
         /** Пули и осколки из раскрытой раны — пинцетом на лоток. */
         EXTRACT(1.0),
         /** Ампутация: пилить ровными движениями, не выходя из распила. */
-        AMPUTATION(2.6);
+        AMPUTATION(2.6),
+        /** Изъятие органа: пересечь сосуды между толчками крови и вынуть орган в контейнер. */
+        HARVEST(2.4),
+        /** Пересадка: уложить орган на место и сшить сосуд. */
+        PLANT(2.6);
 
         public static final Type[] VALUES = values();
 
@@ -97,8 +101,8 @@ public final class Minigames {
      * Что видно на сцене операции: часть тела, стадия до шага, постоянный сид сцены (разрез и точки
      * кровотечения на тех же местах во всех шагах), признаки и число инородных тел.
      */
-    public record Scene(int part, int stage, long seed, int flags, int bullets, int fragments) {
-        public static final Scene NONE = new Scene(-1, 0, 0, 0, 0, 0);
+    public record Scene(int part, int stage, long seed, int flags, int bullets, int fragments, int organ) {
+        public static final Scene NONE = new Scene(-1, 0, 0, 0, 0, 0, -1);
         public static final int ARTERIAL = 1, FRACTURE = 2, INTERNAL = 4, ORGAN = 8, PNEUMO = 16, FIXATED = 32;
 
         public boolean has(int flag) {
@@ -114,7 +118,11 @@ public final class Minigames {
             for (Organ o : Organ.VALUES) if (o.part == part && m.organs[o.ordinal()] > 0) f |= ORGAN;
             if (m.pneumo != MedicalState.Pneumo.NONE) f |= PNEUMO;
             if (ps.fixated) f |= FIXATED;
-            return new Scene(part.ordinal(), ps.surgery.ordinal(), seed, f, ps.bullets, ps.fragments);
+            return new Scene(part.ordinal(), ps.surgery.ordinal(), seed, f, ps.bullets, ps.fragments, -1);
+        }
+
+        public Scene withOrgan(Organ o) {
+            return new Scene(part, stage, seed, flags, bullets, fragments, o == null ? -1 : o.ordinal());
         }
     }
 
@@ -131,6 +139,9 @@ public final class Minigames {
             case OSTEOSYNTHESIS -> Type.DRILL;
             case DRAIN -> Type.DRAIN;
             case AMPUTATE -> Type.AMPUTATION;
+            case ORGAN_REMOVE -> Type.HARVEST;
+            case TRANSPLANT -> Type.PLANT;
+            case REATTACH -> Type.CLOSE;
             case TWEEZERS -> ps.surgery == BodyPartState.SurgeryStage.RETRACTED && ps.hasForeignBodies() ? Type.EXTRACT : null;
             case SUTURE -> {
                 if (ps.surgery == BodyPartState.SurgeryStage.NONE) yield null;

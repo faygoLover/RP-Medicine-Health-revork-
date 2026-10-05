@@ -70,7 +70,13 @@ public enum TreatmentAction {
     /** Пила: ампутация раскрытой конечности (третий этап, п. 6.1). */
     AMPUTATE("amputate", Target.PART),
     /** Протез на зажившую культю (п. 6.2). */
-    INSTALL_PROSTHESIS("install_prosthesis", Target.PART);
+    INSTALL_PROSTHESIS("install_prosthesis", Target.PART),
+    /** Изъять орган раскрытой груди или живота в контейнер (п. 7.1). */
+    ORGAN_REMOVE("organ_remove", Target.PART),
+    /** Пересадить орган из контейнера. */
+    TRANSPLANT("transplant", Target.PART),
+    /** Пришить отнятую конечность. */
+    REATTACH("reattach", Target.PART);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

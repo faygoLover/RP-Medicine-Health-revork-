@@ -54,6 +54,7 @@ public final class BloodService {
             for (int i = 0; i < c.getContainerSize(); i++) {
                 ItemStack st = c.getItem(i);
                 if (st.getItem() instanceof BloodBagItem) BloodBagItem.setCold(st, fridge, now);
+                if (st.getItem() instanceof faygolover.rpmedicine.item.Perishable.Item) faygolover.rpmedicine.item.Perishable.setCold(st, fridge, now);
             }
         }
     }

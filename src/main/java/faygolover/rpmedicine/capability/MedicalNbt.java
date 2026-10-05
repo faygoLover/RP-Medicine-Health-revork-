@@ -81,7 +81,7 @@ public final class MedicalNbt {
         if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
         putIf(t, "pFood", m.pendingFoodLoss);
         // Органы (третий этап): только если что-то повреждено или изъято.
-        boolean anyOrgan = m.organsMissing != 0;
+        boolean anyOrgan = m.organsMissing != 0 || m.organRejection != 0;
         for (double v : m.organs) anyOrgan |= v > 0;
         if (anyOrgan) {
             ListTag ol = new ListTag();
@@ -89,6 +89,7 @@ public final class MedicalNbt {
             t.put("organs", ol);
         }
         if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
+        if (m.organRejection != 0) t.putByte("orgRej", (byte) m.organRejection);
         putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
             CompoundTag doses = new CompoundTag();
@@ -239,6 +240,7 @@ public final class MedicalNbt {
         ListTag ol = t.getList("organs", Tag.TAG_FLOAT);
         for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
         m.organsMissing = t.getByte("orgMiss") & 0xFF;
+        m.organRejection = t.getByte("orgRej") & 0xFF;
         m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");
         for (String k : doses.getAllKeys()) {
