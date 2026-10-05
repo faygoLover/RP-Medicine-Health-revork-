@@ -39,6 +39,10 @@
     "rpmedicine:vascular_suture",
     "rpmedicine:surgical_drill",
     "rpmedicine:chest_drain",
+    "rpmedicine:bone_saw",
+    "rpmedicine:prosthetic_foot",
+    "rpmedicine:peg_leg",
+    "rpmedicine:prosthetic_hook",
     "rpmedicine:paracetamol",
     "rpmedicine:ibuprofen",
     "rpmedicine:ketorolac",
@@ -62,6 +66,7 @@
     "rpmedicine:surgical_mask",
     "rpmedicine:surgical_gloves",
     "rpmedicine:laryngoscope",
+    "rpmedicine:severed_limb",
     {
       "id": "medicamod:adrenalin",
       "required": false

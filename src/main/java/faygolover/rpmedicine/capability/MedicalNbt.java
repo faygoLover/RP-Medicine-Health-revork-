@@ -166,6 +166,9 @@ public final class MedicalNbt {
                 p.putFloat("surgDirt", (float) ps.surgeryContamination);
             }
             if (ps.fixated) p.putBoolean("fix", true);
+            putIf(p, "necro", ps.necrosis);
+            if (ps.missing) p.putBoolean("miss", true);
+            if (ps.prosthesis != BodyPartState.Prosthesis.NONE) p.putByte("prost", (byte) ps.prosthesis.ordinal());
             parts.add(p);
         }
         if (!parts.isEmpty()) t.put("parts", parts);
@@ -294,6 +297,9 @@ public final class MedicalNbt {
             ps.surgeryCheckSeconds = p.getFloat("surgChk");
             ps.surgeryContamination = p.contains("surgDirt") ? p.getFloat("surgDirt") : 1.0;
             ps.fixated = p.getBoolean("fix");
+            ps.necrosis = p.getFloat("necro");
+            ps.missing = p.getBoolean("miss");
+            ps.prosthesis = BodyPartState.Prosthesis.byOrdinal(p.getByte("prost"));
         }
     }
 

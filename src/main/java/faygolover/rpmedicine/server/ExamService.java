@@ -87,6 +87,7 @@ public final class ExamService {
             if (ps.occlusive) b |= 8;
             // Вправить вывих (второй этап): кнопка — тем, кто умеет (уровень 2+).
             if (ps.dislocated && level >= 2) b |= 16;
+            if (ps.prosthesis != faygolover.rpmedicine.core.BodyPartState.Prosthesis.NONE) b |= 32;
             removable[ps.part.ordinal()] = (byte) b;
         }
         // Заглушка — всегда лежачее тело (её можно обыскать, даже если обморок прошёл).

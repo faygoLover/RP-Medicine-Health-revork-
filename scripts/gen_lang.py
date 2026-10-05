@@ -781,6 +781,43 @@ for k, ru, en in [("tissue_cut", "Задеты ткани", "Tissue damaged"), (
     ("drill_slip", "Сверло соскочило", "The drill slipped"), ("rib_hit", "Попали в ребро", "Hit a rib"),
     ("sutured", "Ушито", "Sutured"), ("drilling", "Сверление", "Drilling"), ("draining", "Дренирование", "Draining")]:
     t("rpmedicine.minigame." + k, ru, en)
+# Некроз, ампутация, протезы (третий этап, п. 5–6).
+for k, ru, en, dru, den in [
+    ("bone_saw", "Хирургическая пила", "Bone saw", "Ампутация раскрытой конечности: рука, нога (со стопой), стопа. Культя под швами. Медицина 8+.",
+     "Amputates an opened limb: arm, leg (with the foot), foot. The stump is sutured. Medicine 8+."),
+    ("prosthetic_foot", "Протез стопы", "Prosthetic foot", "На зажившую культю стопы: ходьба медленнее. Медицина 7+.", "On a healed foot stump: slower walking. Medicine 7+."),
+    ("peg_leg", "Деревянная нога", "Peg leg", "На зажившую культю ноги: заметно медленнее, бега нет. Медицина 7+.", "On a healed leg stump: much slower, no sprinting. Medicine 7+."),
+    ("prosthetic_hook", "Крюк", "Hook", "На зажившую культю руки: рука работает вдвое хуже, но держит. Медицина 7+.", "On a healed arm stump: the arm works at half strength but holds. Medicine 7+."),
+    ("severed_limb", "Конечность", "Severed limb", "Отнятая часть тела. Портится; в холодильнике дольше.", "A severed body part. Spoils; lasts longer in a fridge.")]:
+    t(f"item.rpmedicine.{k}", ru, en)
+    t(f"item.rpmedicine.{k}.desc", dru, den)
+t("item.rpmedicine.severed_limb.of", "Конечность: %s", "Severed limb: %s")
+t("rpmedicine.tooltip.limb_owner", "Чья: %s", "Whose: %s")
+for k, ru, en in [("bone_saw", "Пила для костей.", "A bone saw."), ("prosthetic_foot", "Протез стопы.", "A prosthetic foot."),
+    ("peg_leg", "Деревянная нога.", "A wooden leg."), ("prosthetic_hook", "Протез-крюк.", "A hook prosthesis."), ("severed_limb", "Отнятая конечность.", "A severed limb.")]:
+    t(f"item.rpmedicine.{k}.what", ru, en)
+for k, ru, en in [("amputated", "%s: ампутация, культя зашита", "%s: amputated, stump sutured"),
+    ("prosthesis_installed", "%s: протез установлен", "%s: prosthesis fitted"), ("prosthesis_poor", "%s: протез не сел", "%s: the prosthesis didn't fit")]:
+    t("rpmedicine.treat." + k, ru, en)
+for k, ru, en in [("part_missing", "Этой части нет", "This part is missing"), ("limb_only", "Только рука, нога или стопа", "Arm, leg or foot only"),
+    ("not_missing", "Часть на месте — протез не нужен", "The part is there — no prosthesis needed"),
+    ("prosthesis_already", "Протез уже стоит", "A prosthesis is already fitted"), ("prosthesis_wrong_part", "Этот протез не для этой части", "This prosthesis is for another part"),
+    ("stump_not_healed", "Культя ещё не зажила", "The stump has not healed yet")]:
+    t("rpmedicine.refuse." + k, ru, en)
+for k, ru, en in [("stump", "Культя (свежая)", "Stump (fresh)"), ("stump_healed", "Культя зажила", "Healed stump"),
+    ("prosthesis_foot", "  протез стопы", "  prosthetic foot"), ("prosthesis_peg_leg", "  деревянная нога", "  peg leg"), ("prosthesis_hook", "  крюк", "  hook"),
+    ("necrosis", "Некроз тканей", "Tissue necrosis"), ("skin_black", "Кожа тёмная, холодная, не чувствует", "Skin dark, cold, numb"),
+    ("necrosis_reversible", "Некроз %s%% — ещё обратим: антибиотик и убрать причину", "Necrosis %s%% — still reversible: antibiotics, remove the cause"),
+    ("necrosis_irreversible", "Некроз %s%% — необратим, нужна ампутация", "Necrosis %s%% — irreversible, needs amputation")]:
+    t("rpmedicine.exam." + k, ru, en)
+t("rpmedicine.panel.remove_prosthesis", "Снять протез", "Remove prosthesis")
+t("rpmedicine.msg.prosthesis_removed", "Протез снят", "Prosthesis removed")
+t("rpmedicine.minigame.amputation", "Ампутация", "Amputation")
+t("rpmedicine.minigame.hint_amputation", "Пилите ровными движениями влево-вправо, не выходя из полосы распила.", "Saw with steady left-right strokes, staying in the cut line.")
+t("rpmedicine.minigame.sawing", "Распил", "Sawing")
+for k, ru, en in [("amputated", "Операция: ампутация — %s", "Surgery: amputation — %s"), ("prosthesis_installed", "Установлен протез — %s", "Prosthesis fitted — %s")]:
+    t("rpmedicine.medcard.entry.surgery_" + k, ru, en)
+t("rpmedicine.medcard.entry.traumatic_amputation", "Травматическая ампутация: %s", "Traumatic amputation: %s")
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

@@ -474,6 +474,26 @@ public final class MedicalSettings {
     public double surgeryNonSterileFactor = 1.5;
     public double surgeryNoMaskFactor = 1.3;
     public double surgeryNoGlovesFactor = 1.3;
+    /** Некроз (третий этап, п. 5): с какого процента необратим, рост с причиной и без, выздоровление на антибиотике, %/ч. */
+    public double necrosisIrreversible = 15;
+    public double necrosisGrowthPerHour = 30;
+    public double necrosisSelfGrowthPerHour = 5;
+    public double necrosisRecoveryPerHour = 20;
+    /** Тяжёлый сепсис: с какого уровня и шанс в час начать отмирать стопе или руке. */
+    public double necrosisSepsisThreshold = 60;
+    public double necrosisSepsisChancePerHour = 0.01;
+    /** Необратимый некроз — источник сепсиса, %/ч за часть. */
+    public double necrosisSepsisPerHour = 4;
+    /** Ампутация (п. 6.1): культя под швами; травматическая — урон по сломанной конечности, шанс, боль. */
+    public double stumpSeverity = 20;
+    public boolean traumaticAmputation = true;
+    public double traumaticAmputationDamage = 30;
+    public double traumaticAmputationChance = 0.3;
+    public double traumaticStumpSeverity = 60;
+    public double traumaticAmputationPain = 90;
+    /** Протезы (п. 6.2): потеря скорости. */
+    public double prostheticFootSpeedPenalty = 0.15;
+    public double pegLegSpeedPenalty = 0.30;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

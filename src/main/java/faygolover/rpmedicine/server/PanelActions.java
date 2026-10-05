@@ -38,6 +38,7 @@ public final class PanelActions {
             case STOP_DRIP -> stopDrip(sp, target, m);
             case REMOVE_TUBE, REMOVE_AIRWAY -> removeAirway(sp, target, m, p.kind() == PanelActionPacket.Kind.REMOVE_TUBE);
             case RESTRAIN -> restrain(sp, target, m);
+            case REMOVE_PROSTHESIS -> removeProsthesis(sp, target, m, p.part());
             case REDUCE -> {
                 if (!sp.getMainHandItem().isEmpty()) {
                     sp.displayClientMessage(Component.translatable("rpmedicine.refuse.empty_hand").withStyle(ChatFormatting.YELLOW), true);
@@ -100,6 +101,21 @@ public final class PanelActions {
         if (target instanceof ServerPlayer tp)
             tp.displayClientMessage(Component.translatable(m.restrained ? "rpmedicine.msg.you_restrained" : "rpmedicine.msg.you_released")
                     .withStyle(ChatFormatting.GOLD), true);
+        ExamService.refreshFor(sp);
+    }
+
+    private static void removeProsthesis(ServerPlayer sp, LivingEntity target, MedicalState m, faygolover.rpmedicine.core.BodyPart part) {
+        var ps = m.part(part);
+        if (ps.prosthesis == faygolover.rpmedicine.core.BodyPartState.Prosthesis.NONE) return;
+        var item = switch (ps.prosthesis) {
+            case FOOT -> faygolover.rpmedicine.registry.ModItems.PROSTHETIC_FOOT.get();
+            case PEG_LEG -> faygolover.rpmedicine.registry.ModItems.PEG_LEG.get();
+            default -> faygolover.rpmedicine.registry.ModItems.PROSTHETIC_HOOK.get();
+        };
+        ps.prosthesis = faygolover.rpmedicine.core.BodyPartState.Prosthesis.NONE;
+        if (!sp.getInventory().add(new net.minecraft.world.item.ItemStack(item))) sp.drop(new net.minecraft.world.item.ItemStack(item), false);
+        Medical.changed(target);
+        sp.displayClientMessage(Component.translatable("rpmedicine.msg.prosthesis_removed"), true);
         ExamService.refreshFor(sp);
     }
 

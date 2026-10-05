@@ -61,6 +61,17 @@ public final class Treatments {
     /** Инструмент: стерилен ли (пинцет; нестерильный — выше шанс заражения раны). */
     public record Instrument(boolean sterile) implements Extra {}
 
+    /** Протез в руках медика. */
+    public record Prosthetic(BodyPartState.Prosthesis type) implements Extra {}
+
+    /** На культе можно только это: перевязать, зашить, жгут, мазь, протез, сканер. */
+    private static boolean allowedOnStump(TreatmentAction a) {
+        return switch (a) {
+            case BANDAGE, PRESSURE_DRESSING, HEMOSTATIC, SUTURE, SCISSORS, DRUG_TOPICAL, TOURNIQUET, ESMARCH, INSTALL_PROSTHESIS, SCANNER -> true;
+            default -> false;
+        };
+    }
+
     /** Препарат с выбранной дозой (шприц и ампула, медицина 4+): 1 — стандартная доза инъектора. */
     public record Dosed(Drug drug, double dose) implements Extra {}
 
@@ -87,6 +98,13 @@ public final class Treatments {
             return drugOf(extra) != null ? Drugs.check(m, part, drugOf(extra), s) : "no_effect";
         BodyPartState ps = m.part(part);
         if (Surgery.isSurgical(a)) return Surgery.check(m, part, a, s);
+        if (a.target == TreatmentAction.Target.PART && ps.missing && !allowedOnStump(a)) return "part_missing";
+        if (a == TreatmentAction.INSTALL_PROSTHESIS) {
+            if (!ps.missing) return "not_missing";
+            if (ps.prosthesis != BodyPartState.Prosthesis.NONE) return "prosthesis_already";
+            if (extra instanceof Prosthetic pr && !Limbs.fits(pr.type(), part)) return "prosthesis_wrong_part";
+            return Limbs.stumpHealed(ps) ? null : "stump_not_healed";
+        }
         switch (a) {
             case BANDAGE, PRESSURE_DRESSING -> {
                 for (Wound w : ps.wounds) if (!w.isDressed() && w.type != WoundType.BRUISE) return null;
@@ -245,7 +263,7 @@ public final class Treatments {
         BodyPart best = null;
         double bestScore = 0;
         for (BodyPart p : BodyPart.VALUES) {
-            if (check(m, p, a, s) != null) continue;
+            if (check(m, p, a, s, extra) != null) continue;
             double score = partScore(m, m.part(p), a, s);
             if (best == null || score > bestScore) {
                 best = p;
@@ -367,6 +385,12 @@ public final class Treatments {
         if (Surgery.isSurgical(a))
             return Surgery.apply(m, part, a, error, rnd, s, extra instanceof Surgery.Context c ? c : Surgery.Context.DEFAULT);
         if (a == TreatmentAction.SUTURE && Surgery.sutureOnOpen(ps)) return Surgery.suture(m, ps, error, q, rnd, s);
+        if (a == TreatmentAction.INSTALL_PROSTHESIS) {
+            if (!(extra instanceof Prosthetic pr)) return Result.failed("no_effect");
+            if (error) return Result.failed("prosthesis_poor");
+            ps.prosthesis = pr.type();
+            return Result.ok("prosthesis_installed");
+        }
         if (a == TreatmentAction.TWEEZERS && ps.surgery == BodyPartState.SurgeryStage.RETRACTED && ps.hasForeignBodies())
             return Surgery.extractAll(m, ps, s);
         switch (a) {

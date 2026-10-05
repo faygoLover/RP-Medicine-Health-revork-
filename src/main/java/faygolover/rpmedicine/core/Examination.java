@@ -59,8 +59,8 @@ public final class Examination {
 
     /** Цвет части 0–4 по тому, что видно глазами: целостность, кровь, перелом. */
     public static int partColor(MedicalState m, BodyPartState ps, MedicalSettings s) {
-        // 5 — часть разрушена (серая).
-        if (ps.isDestroyed(s)) return 5;
+        // 5 — часть разрушена или её нет (серая).
+        if (ps.isDestroyed(s) || ps.missing && Limbs.stumpHealed(ps)) return 5;
         int c = 0;
         double integ = ps.integrity();
         if (integ < 95) c = 1;
@@ -90,6 +90,16 @@ public final class Examination {
 
     static List<Line> partLines(MedicalState m, BodyPartState ps, int lvl, boolean self, MedicalSettings s) {
         List<Line> out = new ArrayList<>();
+        if (ps.missing) {
+            out.add(new Line(Limbs.stumpHealed(ps) ? "stump_healed" : "stump"));
+            if (ps.prosthesis != BodyPartState.Prosthesis.NONE)
+                out.add(new Line("prosthesis_" + ps.prosthesis.name().toLowerCase(java.util.Locale.ROOT)));
+        }
+        if (ps.necrosis > 0 && !ps.missing) {
+            if (lvl >= 4) out.add(new Line(Limbs.irreversible(ps, s) ? "necrosis_irreversible" : "necrosis_reversible", new int[]{(int) ps.necrosis}));
+            else if (lvl >= 2) out.add(new Line("necrosis"));
+            else out.add(new Line("skin_black"));
+        }
         for (Wound w : ps.wounds) {
             if (lvl <= 0) {
                 out.add(new Line("wound"));

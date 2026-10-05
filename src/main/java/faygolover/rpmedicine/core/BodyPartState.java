@@ -22,6 +22,15 @@ public final class BodyPartState {
         }
     }
 
+    /** Протез на месте отсутствующей части (третий этап, п. 6.2). Порядок — в сохранении. */
+    public enum Prosthesis {
+        NONE, FOOT, PEG_LEG, HOOK;
+
+        public static Prosthesis byOrdinal(int i) {
+            return i >= 0 && i < values().length ? values()[i] : NONE;
+        }
+    }
+
     public enum Tourniquet {
         NONE, CAT, ESMARCH;
 
@@ -74,6 +83,11 @@ public final class BodyPartState {
     public double surgeryContamination = 1.0;
     /** Перелом зафиксирован остеосинтезом: заживает быстрее, шина не нужна. */
     public boolean fixated;
+    /** Некроз 0–100 (третий этап, п. 5). */
+    public double necrosis;
+    /** Части нет (ампутация); протез на её месте. */
+    public boolean missing;
+    public Prosthesis prosthesis = Prosthesis.NONE;
 
     public BodyPartState(BodyPart part) {
         this.part = part;
@@ -87,7 +101,7 @@ public final class BodyPartState {
 
     /** Целостность 0–100: 100 минус сумма тяжести ран и ишемия. */
     public double integrity() {
-        return Math.max(0.0, 100.0 - totalSeverity() - ischemia);
+        return Math.max(0.0, 100.0 - totalSeverity() - ischemia - necrosis);
     }
 
     /** Часть разрушена: целостность почти ноль (заживление на доли процента её не «чинит»). */
@@ -111,7 +125,7 @@ public final class BodyPartState {
     public boolean isHealthy() {
         return wounds.isEmpty() && fracture == Fracture.NONE && bullets == 0 && fragments == 0 && !arterial
                 && internalBleed <= 0 && tourniquet == Tourniquet.NONE && ischemia <= 0 && !occlusive && !splint && !dislocated
-                && localAnesthesiaSeconds <= 0 && surgery == SurgeryStage.NONE && !fixated;
+                && localAnesthesiaSeconds <= 0 && surgery == SurgeryStage.NONE && !fixated && necrosis <= 0 && !missing;
     }
 
     public boolean anyDressing() {
@@ -141,6 +155,9 @@ public final class BodyPartState {
         surgeryCheckSeconds = 0;
         surgeryContamination = 1.0;
         fixated = false;
+        necrosis = 0;
+        missing = false;
+        prosthesis = Prosthesis.NONE;
     }
 
     public void copyFrom(BodyPartState o) {
@@ -166,5 +183,8 @@ public final class BodyPartState {
         surgeryCheckSeconds = o.surgeryCheckSeconds;
         surgeryContamination = o.surgeryContamination;
         fixated = o.fixated;
+        necrosis = o.necrosis;
+        missing = o.missing;
+        prosthesis = o.prosthesis;
     }
 }

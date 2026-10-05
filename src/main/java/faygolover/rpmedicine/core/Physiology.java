@@ -28,6 +28,7 @@ public final class Physiology {
         if (in.online) Healing.advance(m, dt * in.healFactor * hungerFactor, s);
         Infections.tick(m, in, s, r);
         Surgery.tick(m, in, s);
+        Limbs.tickNecrosis(m, in, s);
         Organs.tick(m, in, s);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
@@ -337,6 +338,9 @@ public final class Physiology {
             sum += dp;
             max = Math.max(max, dp);
         }
+        double np = Limbs.necrosisPain(ps);
+        sum += np;
+        max = Math.max(max, np);
         double op = Organs.pain(m, ps.part, s);
         sum += op;
         max = Math.max(max, op);

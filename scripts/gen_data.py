@@ -156,6 +156,9 @@ ITEMS = [
     ("scalpel", "incise", 5, 7, False), ("hemostat", "clamp", 3, 7, False), ("retractor", "retract", 3, 7, False),
     ("vascular_suture", "vessel_suture", 12, 8, True), ("surgical_drill", "osteosynthesis", 15, 8, False),
     ("chest_drain", "drain", 10, 7, True),
+    # ампутация и протезы (п. 6)
+    ("bone_saw", "amputate", 12, 8, False), ("prosthetic_foot", "install_prosthesis", 8, 7, True),
+    ("peg_leg", "install_prosthesis", 8, 7, True), ("prosthetic_hook", "install_prosthesis", 8, 7, True),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -252,7 +255,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -434,7 +437,10 @@ ICONS = {
     "retractor": ("board", (200, 205, 215), (120, 125, 140)), "surgical_drill": ("device", (200, 200, 205), (60, 60, 70)),
     "osteosynthesis_kit": ("box", (180, 185, 195), (90, 90, 100)), "vascular_suture": ("box", (230, 230, 235), (200, 40, 40)),
     "chest_drain": ("bag", (220, 225, 230), (120, 160, 200)), "surgical_mask": ("patch", (140, 190, 210), (240, 240, 240)),
-    "surgical_gloves": ("patch", (150, 200, 230), (110, 160, 200)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
+    "surgical_gloves": ("patch", (150, 200, 230), (110, 160, 200)),
+    "bone_saw": ("board", (200, 205, 215), (90, 90, 100)), "prosthetic_foot": ("box", (160, 130, 100), (90, 70, 50)),
+    "peg_leg": ("board", (150, 110, 70), (110, 80, 50)), "prosthetic_hook": ("syringe", (190, 195, 200), (120, 125, 130)),
+    "severed_limb": ("roll", (210, 160, 130), (150, 30, 30)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
     "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
     "propofol": ("syringe", (240, 240, 240), (245, 245, 245)), "laryngoscope": ("strap", (170, 175, 185), (230, 200, 60)),

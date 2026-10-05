@@ -106,6 +106,7 @@ public final class DamageHandler {
             if (target.isInWater()) for (var w : rep.wounds) w.infectionRisk = Math.max(w.infectionRisk, s.dirtyWaterInfectionFactor);
             if (target instanceof ServerPlayer sp) Feedback.onInjury(sp, rep);
             MedcardHooks.injury(target, rep, part, killer, prof.wound);
+            for (BodyPart a : rep.amputated) LimbDrops.drop(target, a);
             faygolover.rpmedicine.stats.StatsService.injury(target, prof.id, part, killer, rep.totalSeverity);
         }
         Medical.changed(target);

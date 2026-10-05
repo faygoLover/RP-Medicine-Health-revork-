@@ -44,7 +44,9 @@ public final class Minigames {
         /** Дренаж: попасть в межрёберный промежуток и ввести трубку. */
         DRAIN(1.8),
         /** Пули и осколки из раскрытой раны — пинцетом на лоток. */
-        EXTRACT(1.0);
+        EXTRACT(1.0),
+        /** Ампутация: пилить ровными движениями, не выходя из распила. */
+        AMPUTATION(2.6);
 
         public static final Type[] VALUES = values();
 
@@ -128,6 +130,7 @@ public final class Minigames {
             case VESSEL_SUTURE -> Type.VESSEL;
             case OSTEOSYNTHESIS -> Type.DRILL;
             case DRAIN -> Type.DRAIN;
+            case AMPUTATE -> Type.AMPUTATION;
             case TWEEZERS -> ps.surgery == BodyPartState.SurgeryStage.RETRACTED && ps.hasForeignBodies() ? Type.EXTRACT : null;
             case SUTURE -> {
                 if (ps.surgery == BodyPartState.SurgeryStage.NONE) yield null;

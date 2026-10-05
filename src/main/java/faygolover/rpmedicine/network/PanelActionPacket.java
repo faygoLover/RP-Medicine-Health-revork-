@@ -24,7 +24,9 @@ public record PanelActionPacket(int targetId, Kind kind, BodyPart part, int slot
         /** Извлечь интубационную трубку, убрать воздуховод. */
         REMOVE_TUBE, REMOVE_AIRWAY,
         /** Зафиксировать на столе с фиксацией или освободить. */
-        RESTRAIN
+        RESTRAIN,
+        /** Снять протез (уровень 0), он возвращается в инвентарь. */
+        REMOVE_PROSTHESIS
     }
 
     public static void encode(PanelActionPacket p, FriendlyByteBuf buf) {

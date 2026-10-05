@@ -110,9 +110,10 @@ public class MedicalPanelScreen extends Screen {
         removeButtons.clear();
         int x = detailX();
         int y = top() + 140;
-        String[] keys = {"remove_dressing", "remove_tourniquet", "remove_splint", "remove_occlusive", "reduce"};
+        String[] keys = {"remove_dressing", "remove_tourniquet", "remove_splint", "remove_occlusive", "reduce", "remove_prosthesis"};
         PanelActionPacket.Kind[] kinds = {PanelActionPacket.Kind.REMOVE_DRESSING, PanelActionPacket.Kind.REMOVE_TOURNIQUET,
-                PanelActionPacket.Kind.REMOVE_SPLINT, PanelActionPacket.Kind.REMOVE_OCCLUSIVE, PanelActionPacket.Kind.REDUCE};
+                PanelActionPacket.Kind.REMOVE_SPLINT, PanelActionPacket.Kind.REMOVE_OCCLUSIVE, PanelActionPacket.Kind.REDUCE,
+                PanelActionPacket.Kind.REMOVE_PROSTHESIS};
         for (int i = 0; i < kinds.length; i++) {
             PanelActionPacket.Kind kind = kinds[i];
             Button b = Button.builder(Component.translatable("rpmedicine.panel." + keys[i]), btn -> {

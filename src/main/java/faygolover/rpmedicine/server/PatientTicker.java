@@ -59,6 +59,7 @@ public final class PatientTicker {
         in.distance = d.distance;
         in.suffocating = sp.getAirSupply() <= 0 && (sp.isEyeInFluid(FluidTags.WATER) || sp.isInWall());
         in.still = d.distance < 0.05 * step || m.isDown();
+        in.withering = sp.hasEffect(net.minecraft.world.effect.MobEffects.WITHER);
         HospitalService.applyConditions(d, in, s);
         // Голод, жажда, среда (второй этап, п. 12): своя жажда убывает и у здорового.
         SurvivalService.prepareStep(sp, d, in, in.sprintSeconds);

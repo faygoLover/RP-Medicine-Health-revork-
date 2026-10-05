@@ -50,6 +50,7 @@ public final class MedcardHooks {
         if (rep.has(Injuries.Outcome.ARTERIAL)) MedcardService.propose(server, target, "arterial", List.of(part(p)), "", circ);
         if (rep.has(Injuries.Outcome.PNEUMOTHORAX)) MedcardService.propose(server, target, "pneumothorax", List.of(), "", circ);
         if (rep.has(Injuries.Outcome.INTERNAL)) MedcardService.propose(server, target, "internal", List.of(part(p)), "", circ);
+        for (BodyPart a : rep.amputated) MedcardService.propose(server, target, "traumatic_amputation", List.of(part(a)), "", circ);
         if (rep.has(Injuries.Outcome.DISLOCATION)) MedcardService.propose(server, target, "dislocation", List.of(part(p)), "", circ);
         // Третий этап: травма органа.
         for (faygolover.rpmedicine.core.Organ o : rep.organs) MedcardService.propose(server, target, "organ", List.of("#" + o.translationKey()), "", circ);
@@ -85,7 +86,8 @@ public final class MedcardHooks {
 
     /** Итоги операции, которые идут в медкарту. */
     public static final java.util.Set<String> SURGERY_KEYS = java.util.Set.of("incised", "surgery_closed", "surgery_closed_weak",
-            "internal_stopped", "organ_repaired", "artery_repaired", "bone_fixated", "chest_drained", "foreign_all_removed");
+            "internal_stopped", "organ_repaired", "artery_repaired", "bone_fixated", "chest_drained", "foreign_all_removed",
+            "amputated", "prosthesis_installed");
 
     public static void surgery(ServerPlayer medic, LivingEntity target, BodyPart p, String key) {
         MedcardService.propose(medic.server, target, "surgery_" + key, List.of(part(p)), medic.getGameProfile().getName());

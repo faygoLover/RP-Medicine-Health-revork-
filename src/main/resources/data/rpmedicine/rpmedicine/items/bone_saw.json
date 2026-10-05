@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:bone_saw",
+  "action": "amputate",
+  "seconds": 12,
+  "min_level": 8,
+  "consume": false
+}

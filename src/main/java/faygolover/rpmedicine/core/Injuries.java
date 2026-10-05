@@ -16,7 +16,7 @@ public final class Injuries {
     /** Что получилось от одного попадания по части тела. */
     public enum Outcome {
         WOUND, FRACTURE, OPEN_FRACTURE, RIB_FRACTURE, ARTERIAL, INTERNAL, FOREIGN_BODY, CONCUSSION,
-        KNOCKOUT, PNEUMOTHORAX, DRESSING_REOPENED, INSTANT_DEATH, DISLOCATION, ORGAN
+        KNOCKOUT, PNEUMOTHORAX, DRESSING_REOPENED, INSTANT_DEATH, DISLOCATION, ORGAN, AMPUTATION
     }
 
     public static final class Report {
@@ -26,6 +26,8 @@ public final class Injuries {
         public final List<BodyPart> parts = new ArrayList<>();
         /** Задетые органы (третий этап). */
         public final List<Organ> organs = new ArrayList<>();
+        /** Отнятые травмой части (третий этап, п. 6.1). */
+        public final List<BodyPart> amputated = new ArrayList<>();
         public double totalSeverity;
 
         public boolean has(Outcome o) {
@@ -38,6 +40,7 @@ public final class Injuries {
             totalSeverity += o.totalSeverity;
             for (Wound w : o.wounds) if (!wounds.contains(w)) wounds.add(w);
             for (Organ g : o.organs) if (!organs.contains(g)) organs.add(g);
+            for (BodyPart p : o.amputated) if (!amputated.contains(p)) amputated.add(p);
         }
     }
 
@@ -91,6 +94,7 @@ public final class Injuries {
                                  RandomGenerator rnd, MedicalSettings s) {
         Report rep = new Report();
         if (damage <= 0 || prof.wound == null) return rep;
+        part = Limbs.present(m, part);
         double sev = damage * s.severityPerDamage * prof.severityMultiplier;
         if (sev <= 0) return rep;
         BodyPartState ps = m.part(part);
@@ -114,6 +118,14 @@ public final class Injuries {
         rep.outcomes.add(Outcome.WOUND);
         if (overflow > 0) overflow(m, part, overflow, wasIntact, rep, rnd, s);
 
+        // Травматическая ампутация: огромный урон по сломанной конечности (третий этап, п. 6.1).
+        if (s.traumaticAmputation && part.isLimb() && ps.hasFracture() && damage > s.traumaticAmputationDamage
+                && rnd.nextDouble() < s.traumaticAmputationChance) {
+            Limbs.traumatic(m, part, s);
+            rep.outcomes.add(Outcome.AMPUTATION);
+            rep.amputated.add(part);
+            return rep;
+        }
         // Перелом: рёбра в груди, кости рук, ног, стоп.
         if (s.fracturesEnabled && (part.isLimb() || part == BodyPart.CHEST) && !ps.hasFracture()) {
             double ch = prof.fracture.at(sev) * traits.fractureFactor(s);

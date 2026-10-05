@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:prosthetic_hook",
+  "action": "install_prosthesis",
+  "seconds": 8,
+  "min_level": 7,
+  "consume": true
+}

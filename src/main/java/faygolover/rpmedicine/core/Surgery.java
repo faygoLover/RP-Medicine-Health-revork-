@@ -26,7 +26,8 @@ public final class Surgery {
     /** Действия пошаговой хирургии (проверяются и применяются здесь). */
     public static boolean isSurgical(TreatmentAction a) {
         return a == TreatmentAction.INCISE || a == TreatmentAction.CLAMP || a == TreatmentAction.RETRACT
-                || a == TreatmentAction.VESSEL_SUTURE || a == TreatmentAction.OSTEOSYNTHESIS || a == TreatmentAction.DRAIN;
+                || a == TreatmentAction.VESSEL_SUTURE || a == TreatmentAction.OSTEOSYNTHESIS || a == TreatmentAction.DRAIN
+                || a == TreatmentAction.AMPUTATE;
     }
 
     /** Пациент не дёргается: без сознания (в том числе наркоз), зафиксирован или местная анестезия этой части. */
@@ -49,6 +50,7 @@ public final class Surgery {
     public static String check(MedicalState m, BodyPart part, TreatmentAction a, MedicalSettings s) {
         BodyPartState ps = m.part(part);
         SurgeryStage st = ps.surgery;
+        if (ps.missing) return "part_missing";
         switch (a) {
             case INCISE -> {
                 if (st != SurgeryStage.NONE) return "already_open";
@@ -71,6 +73,10 @@ public final class Surgery {
                 if (st != SurgeryStage.RETRACTED) return "not_retracted";
                 if (!ps.hasFracture()) return "no_fracture";
                 return ps.fixated ? "already_fixated" : null;
+            }
+            case AMPUTATE -> {
+                if (!part.isLimb()) return "limb_only";
+                return st == SurgeryStage.RETRACTED ? null : "not_retracted";
             }
             case DRAIN -> {
                 if (part != BodyPart.CHEST) return "chest_only";
@@ -125,6 +131,9 @@ public final class Surgery {
             case OSTEOSYNTHESIS -> {
                 ps.fixated = true;
                 return Result.ok("bone_fixated");
+            }
+            case AMPUTATE -> {
+                return Limbs.amputate(m, part, s, 1.0);
             }
             case DRAIN -> {
                 m.pneumo = Pneumo.NONE;

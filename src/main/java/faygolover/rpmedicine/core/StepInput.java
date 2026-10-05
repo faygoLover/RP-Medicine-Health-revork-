@@ -20,6 +20,8 @@ public final class StepInput {
     public boolean still = true;
     /** Во сколько раз быстрее идёт капельница и переливание (стойка, койка). */
     public double dripFactor = 1.0;
+    /** Действует иссушение (ванильный эффект): некроз (третий этап, п. 5). */
+    public boolean withering;
     /** Множители условий (больничная койка и т.п.): заживление, восстановление крови, восстановление мозга. */
     public double healFactor = 1.0;
     public double bloodRegenFactor = 1.0;

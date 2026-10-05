@@ -66,7 +66,11 @@ public enum TreatmentAction {
     /** Дрель и набор для остеосинтеза: зафиксировать перелом на раскрытой части. */
     OSTEOSYNTHESIS("osteosynthesis", Target.PART),
     /** Дренаж груди: снять пневмоторакс окончательно. */
-    DRAIN("drain", Target.PART);
+    DRAIN("drain", Target.PART),
+    /** Пила: ампутация раскрытой конечности (третий этап, п. 6.1). */
+    AMPUTATE("amputate", Target.PART),
+    /** Протез на зажившую культю (п. 6.2). */
+    INSTALL_PROSTHESIS("install_prosthesis", Target.PART);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

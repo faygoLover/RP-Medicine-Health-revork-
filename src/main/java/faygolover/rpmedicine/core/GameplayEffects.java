@@ -67,8 +67,26 @@ public final class GameplayEffects {
         int dislocatedLower = 0;
         int sorePartsLower = 0;
         boolean soreNoJump = false;
+        // Нет ноги или стопы (третий этап, п. 6): без протеза — только ползком; протез — медленнее.
+        boolean missingLower = false;
+        double prostheticPenalty = 0;
         for (BodyPart p : new BodyPart[]{BodyPart.RIGHT_LEG, BodyPart.LEFT_LEG, BodyPart.RIGHT_FOOT, BodyPart.LEFT_FOOT}) {
             BodyPartState ps = m.part(p);
+            if (!ps.missing) continue;
+            // Стопа без ноги — её покрывает протез ноги.
+            if (p.kind == BodyPart.Kind.FOOT && m.part(p.pairedLowerLimb()).missing) continue;
+            switch (ps.prosthesis) {
+                case FOOT -> prostheticPenalty += s.prostheticFootSpeedPenalty;
+                case PEG_LEG -> {
+                    prostheticPenalty += s.pegLegSpeedPenalty;
+                    r.noSprint = true;
+                }
+                default -> missingLower = true;
+            }
+        }
+        for (BodyPart p : new BodyPart[]{BodyPart.RIGHT_LEG, BodyPart.LEFT_LEG, BodyPart.RIGHT_FOOT, BodyPart.LEFT_FOOT}) {
+            BodyPartState ps = m.part(p);
+            if (ps.missing) continue;
             boolean fracture = ps.hasFracture() && !masked;
             boolean weak = ps.integrity() < s.limbIntegrityThreshold;
             if (fracture || weak) badLower++;
@@ -90,8 +108,11 @@ public final class GameplayEffects {
         }
         if (sorePartsLower > 0) r.noSprint = true;
         if (soreNoJump) r.noJump = true;
-        if (brokenLegs >= 2 && !masked) {
+        speed -= prostheticPenalty;
+        if (brokenLegs >= 2 && !masked || missingLower) {
             r.crawl = true;
+            r.noSprint = true;
+            r.noJump = true;
             speed = Math.min(speed, s.crawlSpeedFactor);
         }
 
@@ -123,7 +144,8 @@ public final class GameplayEffects {
         double offShare = armShare(offArm, masked, s);
         r.mainArmBad = mainShare > 0;
         r.offArmBad = offShare > 0;
-        r.armsDisabled = mainArm.hasFracture() && offArm.hasFracture() && !masked;
+        r.armsDisabled = mainArm.hasFracture() && offArm.hasFracture() && !masked
+                || armGone(mainArm) && armGone(offArm);
         if (r.mainArmBad) {
             r.useTimeFactor *= 1 + (s.armUseSlowMain - 1) * mainShare;
             r.attackFactor -= s.armAttackPenaltyMain * mainShare;
@@ -156,8 +178,15 @@ public final class GameplayEffects {
         return r;
     }
 
+    /** Руки нет и крюка нет. */
+    private static boolean armGone(BodyPartState arm) {
+        return arm.missing && arm.prosthesis != BodyPartState.Prosthesis.HOOK;
+    }
+
     /** Насколько рука плохая: 0 — здорова, 1 — полностью; под обезболиванием перелом и вывих — частично. */
     private static double armShare(BodyPartState arm, boolean masked, MedicalSettings s) {
+        // Нет руки: без протеза — как сломанная без обезболивания; крюк — наполовину.
+        if (arm.missing) return arm.prosthesis == BodyPartState.Prosthesis.HOOK ? 0.5 : 1.0;
         double share = 0;
         if (arm.hasFracture() || arm.dislocated) share = masked ? s.maskedArmPenaltyShare : 1.0;
         if (arm.integrity() < s.limbIntegrityThreshold || arm.ischemia > 30) share = 1.0;

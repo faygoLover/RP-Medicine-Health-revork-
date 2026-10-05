@@ -21,6 +21,8 @@ public final class Healing {
     /** Заживает ли рана сейчас: заражённая — нет; огнестрел — пока пуля внутри, осколочная — пока осколки внутри — нет. */
     public static boolean canHeal(Wound w, BodyPartState ps) {
         if (w.isInfected()) return false;
+        // Мёртвые ткани не заживают.
+        if (ps.necrosis > 0 && !ps.missing) return false;
         if (w.type == WoundType.GUNSHOT && ps.bullets > 0) return false;
         if (w.type == WoundType.SHRAPNEL && ps.fragments > 0) return false;
         return true;

@@ -94,6 +94,11 @@ public class SurgeryMinigameScreen extends Screen {
     private int hole;
     private boolean[] removed;
     private int carried = -1;
+    /** Пила: число ровных движений, направление и путь текущего движения. */
+    private int strokes;
+    private int sawDir;
+    private double sawTravel;
+    private double lastSawX = Double.NaN;
     private final List<double[]> drops = new ArrayList<>();
 
     public SurgeryMinigameScreen(MinigameStartPacket task, @Nullable Screen back) {
@@ -138,6 +143,7 @@ public class SurgeryMinigameScreen extends Screen {
             case ORGAN_SUTURE -> 14;
             case VESSEL -> 12;
             case EXTRACT -> 15;
+            case AMPUTATION -> 14;
             default -> 10;
         };
     }
@@ -306,6 +312,7 @@ public class SurgeryMinigameScreen extends Screen {
             case DRILL -> drill(g, l, t, dt);
             case DRAIN -> drain(g, l, t, dt);
             case EXTRACT -> extract(g, l, t, tx, ty);
+            case AMPUTATION -> saw(g, l, t, tx, ty, speed);
             default -> { }
         }
         // Капли крови.
@@ -796,6 +803,51 @@ public class SurgeryMinigameScreen extends Screen {
         carried = -1;
     }
 
+    // ------------------------------------------------------------------ ампутация
+
+    /** Распил поперёк конечности: ровные движения влево-вправо в полосе распила; 12 движений. */
+    private static final int STROKES = 12;
+
+    private void saw(GuiGraphics g, int l, int t, double tx, double ty, double speed) {
+        int cx = 160;
+        // Полоса распила и углубляющийся пропил.
+        g.fill(l + cx - 30, t + CY - 1, l + cx + 30, t + CY + 1, 0x60FFFFFF);
+        double depth = strokes / (double) STROKES;
+        int dh = (int) (6 * depth) + 1;
+        g.fill(l + cx - 2, t + CY - dh, l + cx + 2, t + CY + dh, 0xFF3A1010);
+        bar(g, l + 40, t + H - 46, W - 80, depth, 0xFFB8BCC0, "rpmedicine.minigame.sawing");
+        if (!mouseDown) {
+            lastSawX = Double.NaN;
+            return;
+        }
+        if (Math.abs(ty - CY) > channel * 2.5 || Math.abs(tx - cx) > 40) {
+            if (!outside) error("rpmedicine.minigame.tissue_cut");
+            outside = true;
+            return;
+        }
+        outside = false;
+        if (speed > 160 + 60 * ease) error("rpmedicine.minigame.too_rough");
+        if (!Double.isNaN(lastSawX)) {
+            double dx = tx - lastSawX;
+            int dir = dx > 0.5 ? 1 : dx < -0.5 ? -1 : 0;
+            if (dir != 0) {
+                if (dir != sawDir) {
+                    // Сменил направление: засчитать движение, если оно было достаточно длинным.
+                    if (sawTravel >= 22) {
+                        strokes++;
+                        sound(ModSounds.BONE_SAW.get(), 0.9f + rnd.nextFloat() * 0.2f);
+                        if (rnd.nextFloat() < 0.6 && drops.size() < 60) drops.add(new double[]{cx, CY + 4, 0, 0.7});
+                    }
+                    sawDir = dir;
+                    sawTravel = 0;
+                }
+                sawTravel += Math.abs(dx);
+            }
+        }
+        lastSawX = tx;
+        if (strokes >= STROKES) finish(quality());
+    }
+
     // ------------------------------------------------------------------ общее
 
     private void follow(double tx, double ty, String wallKey) {
@@ -872,6 +924,7 @@ public class SurgeryMinigameScreen extends Screen {
             case RETRACT -> Math.min(openTop, openBottom) / OPEN_H;
             case CLOSE, ORGAN_SUTURE -> stitchIndex / (double) (stitches.length / 2);
             case DRILL -> hole / 4.0;
+            case AMPUTATION -> strokes / (double) STROKES;
             case EXTRACT -> {
                 int c = 0;
                 for (boolean b : removed) if (b) c++;

@@ -126,7 +126,7 @@ public final class Infections {
 
     private static void tickSepsis(MedicalState m, StepInput in, MedicalSettings s) {
         double dt = in.dt;
-        double rate = sepsisSources(m) * s.sepsisPerHourPerSource;
+        double rate = sepsisSources(m) * s.sepsisPerHourPerSource + Limbs.necroticParts(m, s) * s.necrosisSepsisPerHour;
         if (m.spoiledBloodSeconds > 0) {
             rate += s.spoiledBloodSepsisPerHour;
             m.spoiledBloodSeconds = Math.max(0, m.spoiledBloodSeconds - dt);

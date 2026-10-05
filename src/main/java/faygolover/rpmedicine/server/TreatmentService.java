@@ -221,6 +221,7 @@ public final class TreatmentService {
             return faygolover.rpmedicine.item.BloodBagItem.bag(stack, actor.level().getGameTime());
         if (stack.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem)
             return new Treatments.Instrument(faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(stack));
+        if (stack.getItem() instanceof faygolover.rpmedicine.item.ProstheticItem pi) return new Treatments.Prosthetic(pi.type);
         return ItemRules.drugFor(stack);
     }
 
@@ -516,6 +517,7 @@ public final class TreatmentService {
                 faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(used, false);
             if (spec.action() == TreatmentAction.OSTEOSYNTHESIS && r.applied) consumeItem(actor, faygolover.rpmedicine.registry.ModItems.OSTEOSYNTHESIS_KIT.get());
             if (r.applied && MedcardHooks.SURGERY_KEYS.contains(r.key)) MedcardHooks.surgery(actor, target, part, r.key);
+            if (r.applied && r.key.equals("amputated")) LimbDrops.drop(target, part);
             Medical.changed(target);
             sound(spec.action());
             Component msg = resultMessage(r, part);
@@ -556,6 +558,8 @@ public final class TreatmentService {
                 case VESSEL_SUTURE -> ModSounds.SURGERY_STITCH.get();
                 case OSTEOSYNTHESIS -> ModSounds.BONE_DRILL.get();
                 case DRAIN -> ModSounds.SURGERY_SUCTION.get();
+                case AMPUTATE -> ModSounds.BONE_SAW.get();
+                case INSTALL_PROSTHESIS -> ModSounds.SPLINT.get();
                 case SCANNER -> ModSounds.SCANNER.get();
                 case DEFIBRILLATOR -> ModSounds.DEFIB_SHOCK.get();
                 default -> null;

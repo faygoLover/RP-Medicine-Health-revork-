@@ -93,6 +93,15 @@ public final class ModItems {
     public static final RegistryObject<Item> CHEST_DRAIN = medical("chest_drain", 8);
     public static final RegistryObject<Item> SURGICAL_MASK = tool("surgical_mask", () -> new faygolover.rpmedicine.item.SurgicalMaskItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> SURGICAL_GLOVES = medical("surgical_gloves", 1);
+    // Ампутация и протезы (третий этап, п. 6)
+    public static final RegistryObject<Item> BONE_SAW = tool("bone_saw", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> PROSTHETIC_FOOT = tool("prosthetic_foot", () -> new faygolover.rpmedicine.item.ProstheticItem(
+            faygolover.rpmedicine.core.BodyPartState.Prosthesis.FOOT, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> PEG_LEG = tool("peg_leg", () -> new faygolover.rpmedicine.item.ProstheticItem(
+            faygolover.rpmedicine.core.BodyPartState.Prosthesis.PEG_LEG, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> PROSTHETIC_HOOK = tool("prosthetic_hook", () -> new faygolover.rpmedicine.item.ProstheticItem(
+            faygolover.rpmedicine.core.BodyPartState.Prosthesis.HOOK, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SEVERED_LIMB = tool("severed_limb", () -> new faygolover.rpmedicine.item.SeveredLimbItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LARYNGOSCOPE = tool("laryngoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDOTRACHEAL_TUBE = medical("endotracheal_tube", 8);
     public static final RegistryObject<Item> MEDCARD = tool("medcard", () -> new faygolover.rpmedicine.item.MedcardItem(new Item.Properties().stacksTo(16)));
