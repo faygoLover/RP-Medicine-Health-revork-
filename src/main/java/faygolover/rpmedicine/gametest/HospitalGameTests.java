@@ -418,17 +418,27 @@ public final class HospitalGameTests {
         int id = mc.entries.get(0).id;
         medic.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, card.get().copy());
         faygolover.rpmedicine.medcard.MedcardService.onAction(medic, new faygolover.rpmedicine.network.MedcardActionPacket(
-                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.EDIT, id, "Огнестрел левого бедра, пуля извлечена"));
+                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.EDIT, id, "", List.of("Огнестрел левого бедра, пуля извлечена", "засада у моста", "хромота")));
         h.assertTrue(!mc.entries.get(0).proposed && mc.entries.get(0).text.startsWith("Огнестрел"), "правка принимает запись");
+        h.assertTrue(mc.entries.get(0).consequences.equals("хромота") && mc.entries.get(0).circumstances.equals("засада у моста"),
+                "обстоятельства и последствия");
+        // Титул по форме: позывной, отдел, особые отметки.
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, faygolover.rpmedicine.network.MedcardActionPacket.set(patient.getUUID(), "callsign", "Скальпель"));
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, faygolover.rpmedicine.network.MedcardActionPacket.set(patient.getUUID(), "department", "health"));
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, faygolover.rpmedicine.network.MedcardActionPacket.set(patient.getUUID(), "marks", "5"));
+        faygolover.rpmedicine.medcard.MedcardService.onAction(medic, faygolover.rpmedicine.network.MedcardActionPacket.set(patient.getUUID(), "height", "999"));
+        h.assertTrue(mc.callsign.equals("Скальпель") && mc.department.equals("health") && mc.marks == 5, "поля титула");
+        h.assertTrue(mc.height != 999, "рост с экрана не меняется — только ГМ");
+        h.assertTrue(mc.cardNumber.length() == 4, "номер карты из четырёх цифр");
         faygolover.rpmedicine.medcard.MedcardService.propose(server, patient, "clinical_death", List.of(), "");
         int id2 = mc.entries.get(1).id;
         faygolover.rpmedicine.medcard.MedcardService.onAction(medic, new faygolover.rpmedicine.network.MedcardActionPacket(
-                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.DECLINE, id2, ""));
+                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.DECLINE, id2, "", List.of()));
         h.assertTrue(mc.entries.size() == 1, "отклонённое предложение удалено");
         // Без карты в руках — правка не проходит.
         medic.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, net.minecraft.world.item.ItemStack.EMPTY);
         faygolover.rpmedicine.medcard.MedcardService.onAction(medic, new faygolover.rpmedicine.network.MedcardActionPacket(
-                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.ADD, -1, "чужая запись"));
+                patient.getUUID(), faygolover.rpmedicine.network.MedcardActionPacket.Op.ADD, -1, "", List.of("чужая запись")));
         h.assertTrue(mc.entries.size() == 1, "без карты — нельзя");
         // ГМ меняет группу и вес.
         faygolover.rpmedicine.medcard.MedcardService.gmSet(server, patient.getUUID(), patient.getGameProfile().getName(), "blood_type", "ab-");

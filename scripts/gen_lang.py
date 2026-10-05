@@ -732,6 +732,35 @@ for k, ru, en in [
     ("chest_drained", "Операция: дренаж груди", "Surgery: chest drain"),
     ("foreign_all_removed", "Операция: извлечены пули и осколки — %s", "Surgery: bullets and fragments removed — %s")]:
     t("rpmedicine.medcard.entry.surgery_" + k, ru, en)
+t("rpmedicine.settings.leave_body", "Оставлять тело при выходе", "Leave body on logout")
+# Медкарта по форме «Медицинская карта пациента» (решения, п. 1.14).
+for k, ru, en in [
+    ("form_title", "МЕДИЦИНСКАЯ КАРТА ПАЦИЕНТА", "PATIENT MEDICAL RECORD"),
+    ("registration", "Регистрационные данные", "Registration"), ("number", "Медицинская карта №", "Medical record No."),
+    ("opened", "Дата открытия", "Opened"), ("status", "Статус карты", "Status"),
+    ("status_active", "активна", "active"), ("status_closed", "закрыта", "closed"),
+    ("patient_info", "Сведения о пациенте", "Patient information"),
+    ("full_name", "ФИО", "Full name"), ("callsign", "Позывной", "Callsign"), ("service_date", "Вступил на службу", "Joined service"),
+    ("birth_date", "Дата рождения", "Date of birth"), ("gender", "Пол", "Sex"), ("department", "Отдел", "Department"),
+    ("gender.m", "Мужской", "Male"), ("gender.f", "Женский", "Female"), ("gender.none", "—", "—"),
+    ("blood", "Группа крови:", "Blood type:"), ("height", "Рост, см:", "Height, cm:"), ("weight", "Вес, кг:", "Weight, kg:"),
+    ("dept.health", "Здравоохранения", "Health"), ("dept.security", "Управления безопасностью", "Security"),
+    ("dept.research", "Научно-исследовательский", "Research"), ("dept.engineering", "Инженерно-технический", "Engineering"),
+    ("dept.admin", "Административный", "Administration"),
+    ("medical_info", "Медицинские сведения", "Medical information"),
+    ("allergies", "Аллергические реакции", "Allergies"), ("chronic", "Хронические заболевания", "Chronic diseases"),
+    ("medications", "Постоянный приём препаратов", "Regular medication"),
+    ("implants", "Металлоконструкции, импланты, инородные тела", "Metal implants, implants, foreign bodies"),
+    ("disability", "Инвалидность", "Disability"),
+    ("marks", "Особые отметки", "Special notes"), ("mark_psych", "Психиатрическое наблюдение", "Psychiatric observation"),
+    ("mark_incapacity", "Ограничение дееспособности", "Limited legal capacity"), ("mark_high_risk", "Повышенный риск для жизни", "Elevated risk to life"),
+    ("comment", "Комментарий", "Comment"),
+    ("confidential", "Документ конфиденциален", "Confidential document"),
+    ("history", "Анамнез", "Medical history"), ("col_date", "Дата", "Date"), ("col_diag", "Травма, диагноз", "Injury, diagnosis"),
+    ("col_circ", "Обстоятельства", "Circumstances"), ("col_cons", "Последствия", "Consequences"),
+    ("new_entry", "Новая запись:", "New entry:"), ("editing", "Правка:", "Editing:"),
+    ("no_photo", "нет фото", "no photo"), ("gm_only", "Рост, вес и группу меняет ГМ", "Height, weight and blood type are set by the GM")]:
+    t("rpmedicine.medcard." + k, ru, en)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

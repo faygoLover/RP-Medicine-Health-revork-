@@ -1,5 +1,6 @@
 package faygolover.rpmedicine.network;
 
+import com.google.gson.Gson;
 import faygolover.rpmedicine.medcard.Medcard;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
@@ -7,73 +8,40 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-/** Сервер → клиент: медкарта целиком (открыть экран или обновить открытый). */
-public record MedcardDataPacket(UUID uuid, String name, float height, float weight, String bloodType, String allergies, String chronic,
-                                String fullName, int age, String gender, long created, List<Medcard.Entry> entries) {
+/** Сервер → клиент: медкарта целиком (открыть экран или обновить открытый). Карта едет JSON-ом. */
+public record MedcardDataPacket(Medcard card) {
+    private static final Gson GSON = new Gson();
     private static final int MAX_ENTRIES = 200;
+    private static final int MAX_JSON = 1 << 18;
 
     public static MedcardDataPacket of(Medcard c) {
-        List<Medcard.Entry> list = c.entries.size() > MAX_ENTRIES ? c.entries.subList(c.entries.size() - MAX_ENTRIES, c.entries.size()) : c.entries;
-        return new MedcardDataPacket(c.uuid, c.name, (float) c.height, (float) c.weight, c.bloodType, c.allergies, c.chronic,
-                c.fullName, c.age, c.gender, c.created > 0 ? c.created : c.entries.isEmpty() ? 0 : c.entries.get(0).time, new ArrayList<>(list));
+        Medcard copy = GSON.fromJson(GSON.toJson(c), Medcard.class);
+        copy.uuid = c.uuid;
+        if (copy.entries.size() > MAX_ENTRIES) copy.entries = new ArrayList<>(copy.entries.subList(copy.entries.size() - MAX_ENTRIES, copy.entries.size()));
+        // Старым картам без даты заведения — дата первой записи.
+        if (copy.created <= 0 && !copy.entries.isEmpty()) copy.created = copy.entries.get(0).time;
+        return new MedcardDataPacket(copy);
+    }
+
+    public UUID uuid() {
+        return card.uuid;
     }
 
     public static void encode(MedcardDataPacket p, FriendlyByteBuf buf) {
-        buf.writeUUID(p.uuid);
-        buf.writeUtf(p.name, 64);
-        buf.writeFloat(p.height);
-        buf.writeFloat(p.weight);
-        buf.writeUtf(p.bloodType, 8);
-        buf.writeUtf(p.allergies, 512);
-        buf.writeUtf(p.chronic, 512);
-        buf.writeUtf(p.fullName, 64);
-        buf.writeVarInt(p.age);
-        buf.writeUtf(p.gender, 2);
-        buf.writeLong(p.created);
-        buf.writeVarInt(p.entries.size());
-        for (Medcard.Entry e : p.entries) {
-            buf.writeVarInt(e.id);
-            buf.writeLong(e.time);
-            buf.writeUtf(e.key, 64);
-            buf.writeVarInt(e.args.size());
-            for (String a : e.args) buf.writeUtf(a, 128);
-            buf.writeUtf(e.text, 512);
-            buf.writeUtf(e.author, 128);
-            buf.writeBoolean(e.proposed);
-        }
+        buf.writeUUID(p.card.uuid);
+        buf.writeUtf(GSON.toJson(p.card), MAX_JSON);
     }
 
     public static MedcardDataPacket decode(FriendlyByteBuf buf) {
         UUID uuid = buf.readUUID();
-        String name = buf.readUtf(64);
-        float h = buf.readFloat();
-        float w = buf.readFloat();
-        String blood = buf.readUtf(8);
-        String allergies = buf.readUtf(512);
-        String chronic = buf.readUtf(512);
-        String fullName = buf.readUtf(64);
-        int age = buf.readVarInt();
-        String gender = buf.readUtf(2);
-        long created = buf.readLong();
-        int n = Math.min(MAX_ENTRIES, buf.readVarInt());
-        List<Medcard.Entry> entries = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            Medcard.Entry e = new Medcard.Entry();
-            e.id = buf.readVarInt();
-            e.time = buf.readLong();
-            e.key = buf.readUtf(64);
-            int a = Math.min(8, buf.readVarInt());
-            for (int j = 0; j < a; j++) e.args.add(buf.readUtf(128));
-            e.text = buf.readUtf(512);
-            e.author = buf.readUtf(128);
-            e.proposed = buf.readBoolean();
-            entries.add(e);
-        }
-        return new MedcardDataPacket(uuid, name, h, w, blood, allergies, chronic, fullName, age, gender, created, entries);
+        Medcard c = GSON.fromJson(buf.readUtf(MAX_JSON), Medcard.class);
+        if (c == null) c = new Medcard(uuid);
+        c.uuid = uuid;
+        c.fixNulls();
+        return new MedcardDataPacket(c);
     }
 
     public static void handle(MedcardDataPacket p, Supplier<NetworkEvent.Context> ctx) {

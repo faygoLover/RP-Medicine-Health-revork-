@@ -288,6 +288,18 @@ public final class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void onLogin(ClientPlayerNetworkEvent.LoggingIn e) {
+        sendPrefs();
+    }
+
+    /** Личные настройки, нужные серверу (оставлять ли тело при выходе). */
+    public static void sendPrefs() {
+        if (net.minecraft.client.Minecraft.getInstance().getConnection() == null) return;
+        faygolover.rpmedicine.network.Network.sendToServer(new faygolover.rpmedicine.network.ClientPrefsPacket(
+                faygolover.rpmedicine.config.ClientConfig.LEAVE_BODY.get()));
+    }
+
+    @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut e) {
         ClientState.reset();
         Rhythm.stop();

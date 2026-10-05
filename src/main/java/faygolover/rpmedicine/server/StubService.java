@@ -66,6 +66,9 @@ public final class StubService {
 
     private static void leaveStub(ServerPlayer sp, MedicalState m) {
         if (!ServerConfig.STUBS_ENABLED.get()) return;
+        // Игрок отказался оставлять тело (клиентская настройка): состояние просто сохраняется с ним.
+        var d = Medical.data(sp);
+        if (d != null && !d.leaveBody) return;
         ServerLevel level = sp.serverLevel();
         BodyStubEntity stub = BodyStubEntity.create(level);
         stub.initFrom(sp, Medical.traits(sp));

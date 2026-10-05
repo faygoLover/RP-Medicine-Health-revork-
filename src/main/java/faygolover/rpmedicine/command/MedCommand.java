@@ -149,7 +149,7 @@ public final class MedCommand {
         root.then(op("card").then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
                 .then(Commands.argument("field", StringArgumentType.word())
                         .suggests((c, b) -> net.minecraft.commands.SharedSuggestionProvider.suggest(
-                                java.util.List.of("height", "weight", "blood_type", "allergies", "chronic", "full_name", "age", "gender"), b))
+                                java.util.List.of("height", "weight", "blood_type", "full_name", "callsign", "birth_date", "service_date", "gender", "department", "allergies", "chronic", "medications", "implants", "disability", "comment"), b))
                         .then(Commands.argument("value", StringArgumentType.greedyString()).executes(MedCommand::card)))));
         d.register(root);
     }

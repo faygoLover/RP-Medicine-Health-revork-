@@ -45,6 +45,8 @@ public final class MedcardStore {
             c = new Medcard(uuid);
             c.created = System.currentTimeMillis();
         }
+        c.fixNulls();
+        c.ensureNumber();
         CACHE.put(uuid, c);
         return c;
     }

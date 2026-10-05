@@ -67,6 +67,8 @@ public final class MedicalData {
 
     /** Уровень «Медицины», заданный командой ГМа (−1 — не задан), пока в RP Perks нет атрибута. Сохраняется. */
     public int skillOverride = -1;
+    /** Личная настройка игрока: оставлять тело-заглушку при выходе (приходит с клиента, не сохраняется). */
+    public boolean leaveBody = true;
 
     public CompoundTag save() {
         CompoundTag t = MedicalNbt.write(state);

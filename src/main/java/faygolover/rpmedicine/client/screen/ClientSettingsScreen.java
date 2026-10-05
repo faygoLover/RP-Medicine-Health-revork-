@@ -42,6 +42,7 @@ public class ClientSettingsScreen extends Screen {
                 new Toggle("aim_sway", ClientConfig.AIM_SWAY),
                 new Toggle("look_up_when_downed", ClientConfig.LOOK_UP_WHEN_DOWNED),
                 new Toggle("sensation_messages", ClientConfig.SENSATION_MESSAGES),
+                new Toggle("leave_body", ClientConfig.LEAVE_BODY),
         };
         Volume[] volumes = {
                 new Volume("effect_strength", ClientConfig.EFFECT_STRENGTH, 1.5),
@@ -61,6 +62,7 @@ public class ClientSettingsScreen extends Screen {
                     .create(x, yy, colW, 20, Component.translatable("rpmedicine.settings." + tg.key()), (b, on) -> {
                         tg.value().set(on);
                         ClientConfig.SPEC.save();
+                        if (tg.value() == ClientConfig.LEAVE_BODY) faygolover.rpmedicine.client.ClientEvents.sendPrefs();
                     }));
         }
         int vy = y + ((toggles.length + 1) / 2) * 22 + 6;

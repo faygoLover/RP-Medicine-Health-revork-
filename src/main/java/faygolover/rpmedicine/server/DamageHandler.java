@@ -105,7 +105,7 @@ public final class DamageHandler {
             // Ранен в воде — грязная рана, выше шанс заражения (второй этап, п. 5.1).
             if (target.isInWater()) for (var w : rep.wounds) w.infectionRisk = Math.max(w.infectionRisk, s.dirtyWaterInfectionFactor);
             if (target instanceof ServerPlayer sp) Feedback.onInjury(sp, rep);
-            MedcardHooks.injury(target, rep, part);
+            MedcardHooks.injury(target, rep, part, killer, prof.wound);
             faygolover.rpmedicine.stats.StatsService.injury(target, prof.id, part, killer, rep.totalSeverity);
         }
         Medical.changed(target);

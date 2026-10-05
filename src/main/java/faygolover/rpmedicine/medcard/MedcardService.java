@@ -65,6 +65,11 @@ public final class MedcardService {
      * Аргументы, начинающиеся с {@code #}, — ключи перевода (часть тела и т.п.).
      */
     public static void propose(MinecraftServer server, @Nullable Entity patient, String key, List<String> args, String author) {
+        propose(server, patient, key, args, author, "");
+    }
+
+    /** {@code circumstances} — обстоятельства травмы ({@code #ключ} — перевод), пусто — не известны. */
+    public static void propose(MinecraftServer server, @Nullable Entity patient, String key, List<String> args, String author, String circumstances) {
         UUID uuid = ownerOf(patient);
         if (uuid == null) return;
         Medcard c = MedcardStore.get(server, uuid);
@@ -72,7 +77,7 @@ public final class MedcardService {
         for (Medcard.Entry e : c.entries) {
             if (e.proposed && e.key.equals(key) && e.args.equals(args) && now - e.time < DEDUPE_MS) return;
         }
-        c.add(key, args, "", author, true);
+        c.add(key, args, "", author, true).circumstances = circumstances == null ? "" : circumstances;
         if (c.entries.size() > 500) c.entries.remove(0);
         MedcardStore.save(server, c);
     }
@@ -99,22 +104,33 @@ public final class MedcardService {
         return false;
     }
 
+    /** Поля титула, которые правят с экрана карты (рост, вес и группу — только ГМ командой). */
+    private static final java.util.Set<String> EDITABLE = java.util.Set.of("fullName", "callsign", "serviceDate", "birthDate", "gender",
+            "department", "allergies", "chronic", "medications", "implants", "disability", "comment", "marks", "closed");
+
     /** Правка с экрана карты. Открыть и дописать может любой с картой (известная проблема 1.10). */
     public static void onAction(ServerPlayer sp, MedcardActionPacket p) {
         if (!canAccess(sp, p.uuid())) return;
         Medcard c = MedcardStore.get(sp.server, p.uuid());
-        String text = p.text().length() > MAX_TEXT ? p.text().substring(0, MAX_TEXT) : p.text();
+        String me = sp.getGameProfile().getName();
         switch (p.op()) {
             case ADD -> {
-                if (!text.isBlank()) c.add("", List.of(), text, sp.getGameProfile().getName(), false);
+                String text = clip(p.value(0));
+                if (!text.isBlank()) {
+                    Medcard.Entry e = c.add("", List.of(), text, me, false);
+                    e.circumstances = clip(p.value(1));
+                    e.consequences = clip(p.value(2));
+                }
             }
             case EDIT -> {
                 Medcard.Entry e = c.entry(p.entryId());
-                if (e != null && !text.isBlank()) {
-                    e.text = text;
+                if (e != null) {
+                    String text = clip(p.value(0));
+                    if (!text.isBlank()) e.text = text;
+                    e.circumstances = clip(p.value(1));
+                    e.consequences = clip(p.value(2));
                     e.proposed = false;
-                    if (!e.author.contains(sp.getGameProfile().getName()))
-                        e.author = e.author.isEmpty() ? sp.getGameProfile().getName() : e.author + ", " + sp.getGameProfile().getName();
+                    if (!e.author.contains(me)) e.author = e.author.isEmpty() ? me : e.author + ", " + me;
                 }
             }
             case ACCEPT -> {
@@ -125,20 +141,43 @@ public final class MedcardService {
                 Medcard.Entry e = c.entry(p.entryId());
                 if (e != null && e.proposed) c.entries.remove(e);
             }
-            case ALLERGIES -> c.allergies = text;
-            case CHRONIC -> c.chronic = text;
-            case FULL_NAME -> c.fullName = text.length() > 64 ? text.substring(0, 64) : text;
-            case AGE -> {
-                try {
-                    int v = Integer.parseInt(text.trim());
-                    if (v >= 0 && v <= 150) c.age = v;
-                } catch (NumberFormatException ignored) {
-                }
+            case SET -> {
+                if (!EDITABLE.contains(p.field())) return;
+                setField(c, p.field(), clip(p.value(0)));
             }
-            case GENDER -> c.gender = text.equals("m") || text.equals("f") ? text : "";
         }
         MedcardStore.save(sp.server, c);
         Network.send(sp, MedcardDataPacket.of(c));
+    }
+
+    private static String clip(String s) {
+        return s.length() > MAX_TEXT ? s.substring(0, MAX_TEXT) : s;
+    }
+
+    /** Поле титула по имени (с экрана и командой ГМа). */
+    static void setField(Medcard c, String field, String v) {
+        switch (field) {
+            case "fullName" -> c.fullName = v.length() > 64 ? v.substring(0, 64) : v;
+            case "callsign" -> c.callsign = v.length() > 32 ? v.substring(0, 32) : v;
+            case "serviceDate" -> c.serviceDate = v.length() > 16 ? v.substring(0, 16) : v;
+            case "birthDate" -> c.birthDate = v.length() > 16 ? v.substring(0, 16) : v;
+            case "gender" -> c.gender = v.equals("m") || v.equals("f") ? v : "";
+            case "department" -> c.department = java.util.Arrays.asList(Medcard.DEPARTMENTS).contains(v) ? v : "";
+            case "allergies" -> c.allergies = v;
+            case "chronic" -> c.chronic = v;
+            case "medications" -> c.medications = v;
+            case "implants" -> c.implants = v;
+            case "disability" -> c.disability = v;
+            case "comment" -> c.comment = v;
+            case "marks" -> {
+                try {
+                    c.marks = Integer.parseInt(v.trim()) & 7;
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            case "closed" -> c.closed = v.equals("1") || v.equalsIgnoreCase("true");
+            default -> { }
+        }
     }
 
     /** Команда ГМа: рост, вес, группа, аллергии, хронические состояния. */
@@ -171,19 +210,25 @@ public final class MedcardService {
                 c.bloodType = t.id;
                 if (m != null) m.bloodType = t;
             }
-            case "allergies" -> c.allergies = value;
-            case "chronic" -> c.chronic = value;
-            case "full_name" -> c.fullName = value;
-            case "age" -> {
-                int v = Integer.parseInt(value);
-                if (v < 0 || v > 150) throw new IllegalArgumentException("0–150");
-                c.age = v;
-            }
             case "gender" -> {
                 if (!value.equals("m") && !value.equals("f") && !value.equals("-")) throw new IllegalArgumentException("m, f, -");
                 c.gender = value.equals("-") ? "" : value;
             }
-            default -> throw new IllegalArgumentException("height, weight, blood_type, allergies, chronic, full_name, age, gender");
+            case "department" -> {
+                if (!java.util.Arrays.asList(Medcard.DEPARTMENTS).contains(value)) throw new IllegalArgumentException("health, security, research, engineering, admin");
+                c.department = value;
+            }
+            default -> {
+                String f = switch (field) {
+                    case "full_name" -> "fullName";
+                    case "birth_date" -> "birthDate";
+                    case "service_date" -> "serviceDate";
+                    default -> field;
+                };
+                if (!EDITABLE.contains(f)) throw new IllegalArgumentException(
+                        "height, weight, blood_type, full_name, callsign, birth_date, service_date, gender, department, allergies, chronic, medications, implants, disability, comment");
+                setField(c, f, value);
+            }
         }
         if (online != null) Medical.changed(online);
         MedcardStore.save(server, c);

@@ -27,22 +27,35 @@ public final class MedcardHooks {
 
     /** Серьёзная травма: переломы, огнестрел и осколки, артерия, пневмоторакс, внутреннее кровотечение, вывих. */
     public static void injury(LivingEntity target, Injuries.Report rep, @Nullable BodyPart hit) {
+        injury(target, rep, hit, null, null);
+    }
+
+    /** Обстоятельства: кто ранил (игрок — по имени, существо — по виду), иначе вид раны. */
+    static String circumstances(@Nullable net.minecraft.world.entity.Entity killer, @Nullable WoundType type) {
+        if (killer instanceof net.minecraft.world.entity.player.Player pl) return pl.getGameProfile().getName();
+        if (killer != null) return "#" + killer.getType().getDescriptionId();
+        return type != null ? "#rpmedicine.wound." + type.id : "";
+    }
+
+    public static void injury(LivingEntity target, Injuries.Report rep, @Nullable BodyPart hit, @Nullable net.minecraft.world.entity.Entity killer,
+                              @Nullable WoundType type) {
         if (target.getServer() == null || rep.outcomes.isEmpty()) return;
         BodyPart p = hit != null ? hit : rep.parts.isEmpty() ? null : rep.parts.get(0);
         if (p == null) return;
         var server = target.getServer();
-        if (rep.has(Injuries.Outcome.OPEN_FRACTURE)) MedcardService.propose(server, target, "open_fracture", List.of(part(p)), "");
-        else if (rep.has(Injuries.Outcome.FRACTURE)) MedcardService.propose(server, target, "fracture", List.of(part(p)), "");
-        if (rep.has(Injuries.Outcome.RIB_FRACTURE)) MedcardService.propose(server, target, "rib_fracture", List.of(), "");
-        if (rep.has(Injuries.Outcome.ARTERIAL)) MedcardService.propose(server, target, "arterial", List.of(part(p)), "");
-        if (rep.has(Injuries.Outcome.PNEUMOTHORAX)) MedcardService.propose(server, target, "pneumothorax", List.of(), "");
-        if (rep.has(Injuries.Outcome.INTERNAL)) MedcardService.propose(server, target, "internal", List.of(part(p)), "");
-        if (rep.has(Injuries.Outcome.DISLOCATION)) MedcardService.propose(server, target, "dislocation", List.of(part(p)), "");
+        String circ = circumstances(killer, type);
+        if (rep.has(Injuries.Outcome.OPEN_FRACTURE)) MedcardService.propose(server, target, "open_fracture", List.of(part(p)), "", circ);
+        else if (rep.has(Injuries.Outcome.FRACTURE)) MedcardService.propose(server, target, "fracture", List.of(part(p)), "", circ);
+        if (rep.has(Injuries.Outcome.RIB_FRACTURE)) MedcardService.propose(server, target, "rib_fracture", List.of(), "", circ);
+        if (rep.has(Injuries.Outcome.ARTERIAL)) MedcardService.propose(server, target, "arterial", List.of(part(p)), "", circ);
+        if (rep.has(Injuries.Outcome.PNEUMOTHORAX)) MedcardService.propose(server, target, "pneumothorax", List.of(), "", circ);
+        if (rep.has(Injuries.Outcome.INTERNAL)) MedcardService.propose(server, target, "internal", List.of(part(p)), "", circ);
+        if (rep.has(Injuries.Outcome.DISLOCATION)) MedcardService.propose(server, target, "dislocation", List.of(part(p)), "", circ);
         // Третий этап: травма органа.
-        for (faygolover.rpmedicine.core.Organ o : rep.organs) MedcardService.propose(server, target, "organ", List.of("#" + o.translationKey()), "");
+        for (faygolover.rpmedicine.core.Organ o : rep.organs) MedcardService.propose(server, target, "organ", List.of("#" + o.translationKey()), "", circ);
         for (Wound w : rep.wounds) {
-            if (w.type == WoundType.GUNSHOT) MedcardService.propose(server, target, "gunshot", List.of(part(p)), "");
-            else if (w.type == WoundType.SHRAPNEL) MedcardService.propose(server, target, "shrapnel", List.of(part(p)), "");
+            if (w.type == WoundType.GUNSHOT) MedcardService.propose(server, target, "gunshot", List.of(part(p)), "", circ);
+            else if (w.type == WoundType.SHRAPNEL) MedcardService.propose(server, target, "shrapnel", List.of(part(p)), "", circ);
         }
     }
 
