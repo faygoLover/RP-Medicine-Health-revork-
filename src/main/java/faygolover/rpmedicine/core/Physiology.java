@@ -29,6 +29,7 @@ public final class Physiology {
         Infections.tick(m, in, s, r);
         Surgery.tick(m, in, s);
         Limbs.tickNecrosis(m, in, s);
+        Metabolism.tick(m, in, s);
         Organs.tick(m, in, s);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
@@ -702,6 +703,7 @@ public final class Physiology {
         if (m.bodyTemp > 40) c = Math.min(c, 100 - (m.bodyTemp - 40) * 40);
         if (m.sepsis >= 100) c = Math.min(c, 20);
         else if (m.sepsis >= 30) c = Math.min(c, s.sepsisConsciousnessLimit);
+        c = Math.min(c, Metabolism.consciousnessCap(m, s));
         return clamp(c, 0, 100);
     }
 

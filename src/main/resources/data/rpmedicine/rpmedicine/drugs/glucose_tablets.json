@@ -1,0 +1,9 @@
+{
+  "items": [
+    "rpmedicine:glucose_tablets"
+  ],
+  "form": "pill",
+  "min_level": 0,
+  "special": "glucose",
+  "effects": []
+}

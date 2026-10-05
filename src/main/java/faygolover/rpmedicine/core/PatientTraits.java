@@ -17,13 +17,25 @@ public final class PatientTraits {
     public final boolean coward;
     /** Леворукий: рабочая рука — левая. */
     public final boolean leftHanded;
+    /** Хронические состояния (третий этап, п. 8): «Диабетик», «Курильщик», «Закалённый алкоголик». */
+    public final boolean diabetic;
+    public final boolean smoker;
+    public final boolean alcoholic;
 
     public PatientTraits(boolean tough, boolean fragile, boolean brave, boolean coward, boolean leftHanded) {
+        this(tough, fragile, brave, coward, leftHanded, false, false, false);
+    }
+
+    public PatientTraits(boolean tough, boolean fragile, boolean brave, boolean coward, boolean leftHanded,
+                         boolean diabetic, boolean smoker, boolean alcoholic) {
         this.tough = tough;
         this.fragile = fragile;
         this.brave = brave;
         this.coward = coward;
         this.leftHanded = leftHanded;
+        this.diabetic = diabetic;
+        this.smoker = smoker;
+        this.alcoholic = alcoholic;
     }
 
     public double shockThreshold(MedicalSettings s) {

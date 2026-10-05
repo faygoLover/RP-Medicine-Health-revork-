@@ -853,6 +853,19 @@ for k, ru, en, hru, hen in [
     ("plant", "Пересадка", "Transplant", "Уложите орган на место, затем сшейте сосуд, не выходя из канала.", "Place the organ, then suture the vessel without leaving the channel.")]:
     t("rpmedicine.minigame." + k, ru, en)
     t("rpmedicine.minigame.hint_" + k, hru, hen)
+# Диабет и хронические состояния (третий этап, п. 8).
+for k, ru, en, dru, den in [
+    ("insulin", "Инсулин", "Insulin", "Снижает сахар крови примерно на 6 ммоль/л за 2 часа. Можно колоть себе.", "Lowers blood sugar by about 6 mmol/L over 2 hours. Can be self-injected."),
+    ("glucose_tablets", "Таблетки глюкозы", "Glucose tablets", "Сахар крови сразу выше — при гипогликемии.", "Raises blood sugar at once — for hypoglycemia."),
+    ("glucometer", "Глюкометр", "Glucometer", "Сахар крови цифрой.", "Blood sugar as a number.")]:
+    t(f"item.rpmedicine.{k}", ru, en)
+    t(f"item.rpmedicine.{k}.desc", dru, den)
+for k, ru, en in [("insulin", "Шприц-ручка с инсулином.", "An insulin pen."), ("glucose_tablets", "Жевательные таблетки глюкозы.", "Chewable glucose tablets."),
+    ("glucometer", "Карманный глюкометр.", "A pocket glucometer.")]:
+    t(f"item.rpmedicine.{k}.what", ru, en)
+t("rpmedicine.treat.glucometer", "Глюкометр: %2$s ммоль/л", "Glucometer: %2$s mmol/L")
+t("rpmedicine.exam.cold_sweat", "Холодный пот, бледность, дрожь", "Cold sweat, pallor, trembling")
+t("rpmedicine.exam.acetone_breath", "Запах ацетона изо рта, сухость", "Acetone breath, dryness")
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

@@ -1,0 +1,29 @@
+{
+  "items": [
+    "rpmedicine:insulin"
+  ],
+  "form": "injection",
+  "min_level": 0,
+  "effects": [
+    {
+      "effect": "insulin",
+      "strength": 3,
+      "delay": 300,
+      "duration": 7200
+    }
+  ],
+  "dose": {
+    "limit": 3,
+    "window_hours": 12
+  },
+  "overdose": {
+    "effects": [
+      {
+        "effect": "insulin",
+        "strength": 4,
+        "delay": 0,
+        "duration": 7200
+      }
+    ]
+  }
+}

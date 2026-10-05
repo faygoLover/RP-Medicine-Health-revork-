@@ -501,6 +501,21 @@ public final class MedicalSettings {
     public double rejectionPerHour = 10;
     /** Шов пришитой конечности. */
     public double reattachSeverity = 30;
+    /** Диабет (п. 8): сахар, ммоль/л — снижение в час, от еды за единицу сытости, глюкоза, пороги. */
+    public double sugarDeclinePerHour = 0.8;
+    public double sugarPerNutrition = 0.5;
+    public double glucoseTabletSugar = 3;
+    public double sugarLow = 3.5;
+    public double sugarFaint = 2.8;
+    public double sugarBrainDamage = 2.5;
+    public double hypoglycemiaBrainPerHour = 2;
+    public double sugarHigh = 15;
+    public double sugarComa = 25;
+    public double hyperglycemiaThirstPerHour = 15;
+    /** Курильщик и алкоголик: с какого повреждения лёгких и печени не восстанавливаются; кашель курильщика, раз в час. */
+    public double smokerLungsFloor = 15;
+    public double alcoholicLiverFloor = 20;
+    public double smokerCoughsPerHour = 1;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

@@ -207,7 +207,7 @@ public final class Treatments {
             case CPR -> {
                 return m.heart != Heart.NORMAL ? null : "pulse_present";
             }
-            case PULSE_OXIMETER, TONOMETER -> {
+            case PULSE_OXIMETER, TONOMETER, GLUCOMETER -> {
                 return null;
             }
             case BLOOD_BAG -> {
@@ -540,6 +540,9 @@ public final class Treatments {
             case PULSE_OXIMETER -> {
                 boolean pulse = m.heart == Heart.NORMAL;
                 return Result.okKeep("oximeter", pulse ? Math.round(m.heartRate) : 0, pulse ? Math.round(m.spo2) : 0);
+            }
+            case GLUCOMETER -> {
+                return Result.okKeep("glucometer", Math.round(m.bloodSugar * 10) / 10.0);
             }
             case TONOMETER -> {
                 if (m.heart != Heart.NORMAL || m.pressure < 20) return Result.okKeep("tonometer_none");

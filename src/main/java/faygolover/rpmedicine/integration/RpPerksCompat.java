@@ -69,7 +69,8 @@ public final class RpPerksCompat {
         boolean fragile = p.hasPerk(Perk.FRAGILE) || p.hasPerk(Perk.WEAKLING) || p.hasPerk(Perk.WIMP);
         boolean brave = p.hasPerk(Perk.BRAVE) || p.hasPerk(Perk.STRONG_WILLED);
         boolean coward = p.hasPerk(Perk.COWARD);
-        return new PatientTraits(tough, fragile, brave, coward, left);
+        return new PatientTraits(tough, fragile, brave, coward, left,
+                p.hasPerk(Perk.DIABETIC), p.hasPerk(Perk.SMOKER), p.hasPerk(Perk.ALCOHOLIC));
     }
 
     private static PlayerPerks perks(Player player) {

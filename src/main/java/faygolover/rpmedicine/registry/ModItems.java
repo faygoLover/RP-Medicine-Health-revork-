@@ -105,6 +105,10 @@ public final class ModItems {
     public static final RegistryObject<Item> ORGAN_CONTAINER = medical("organ_container", 4);
     public static final RegistryObject<Item> ORGAN = tool("organ", () -> new faygolover.rpmedicine.item.OrganItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CYCLOSPORINE = medical("cyclosporine", 16);
+    // Диабет (п. 8)
+    public static final RegistryObject<Item> INSULIN = medical("insulin", 8);
+    public static final RegistryObject<Item> GLUCOSE_TABLETS = medical("glucose_tablets", 16);
+    public static final RegistryObject<Item> GLUCOMETER = tool("glucometer", () -> new faygolover.rpmedicine.item.MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> SEVERED_LIMB = tool("severed_limb", () -> new faygolover.rpmedicine.item.SeveredLimbItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LARYNGOSCOPE = tool("laryngoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDOTRACHEAL_TUBE = medical("endotracheal_tube", 8);

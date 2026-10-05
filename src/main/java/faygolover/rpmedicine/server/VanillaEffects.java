@@ -104,9 +104,14 @@ public final class VanillaEffects {
     public static void onUseFinish(LivingEntityUseItemEvent.Finish e) {
         if (!(e.getEntity() instanceof ServerPlayer sp)) return;
         ItemStack used = e.getItem();
-        if (!used.is(Items.GOLDEN_APPLE) && !used.is(Items.ENCHANTED_GOLDEN_APPLE)) return;
         MedicalState m = Medical.state(sp);
         if (m == null) return;
+        var food = used.getFoodProperties(sp);
+        if (food != null && Medical.traits(sp).diabetic) {
+            faygolover.rpmedicine.core.Metabolism.eat(m, food.getNutrition(), MedicalSettings.get());
+            Medical.changed(sp);
+        }
+        if (!used.is(Items.GOLDEN_APPLE) && !used.is(Items.ENCHANTED_GOLDEN_APPLE)) return;
         MedicalSettings s = MedicalSettings.get();
         boolean ench = used.is(Items.ENCHANTED_GOLDEN_APPLE);
         // Ванильные золотые сердца и регенерация здесь не нужны: здоровье живёт в травмах.

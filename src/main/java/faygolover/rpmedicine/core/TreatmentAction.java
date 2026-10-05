@@ -76,7 +76,9 @@ public enum TreatmentAction {
     /** Пересадить орган из контейнера. */
     TRANSPLANT("transplant", Target.PART),
     /** Пришить отнятую конечность. */
-    REATTACH("reattach", Target.PART);
+    REATTACH("reattach", Target.PART),
+    /** Глюкометр: сахар крови цифрой (третий этап, п. 8). */
+    GLUCOMETER("glucometer", Target.BODY);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }
@@ -100,7 +102,7 @@ public enum TreatmentAction {
     }
 
     public boolean isInstrument() {
-        return this == PULSE_OXIMETER || this == TONOMETER;
+        return this == PULSE_OXIMETER || this == TONOMETER || this == GLUCOMETER;
     }
 
     public static Optional<TreatmentAction> byId(String id) {

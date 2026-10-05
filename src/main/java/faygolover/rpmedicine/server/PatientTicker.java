@@ -69,6 +69,10 @@ public final class PatientTicker {
             long t0 = System.nanoTime();
             in.random = RANDOM.split();
             StepResult r = Physiology.step(m, in, s);
+            // Кашель курильщика — примерно раз в час в сети.
+            if (in.traits.smoker && in.random.nextDouble() < s.smokerCoughsPerHour * in.dt / 3600.0)
+                sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.COUGH.get(),
+                        net.minecraft.sounds.SoundSource.VOICE, 0.8f, faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp));
             DownedService.onStep(sp, m, r);
             d.markDirty();
             Profiler.record(System.nanoTime() - t0);

@@ -139,6 +139,8 @@ public final class MedicalState {
     public int organsMissing;
     /** Пересаженные органы с несовместимой кровью: отторжение (биты {@link Organ#bit()}). */
     public int organRejection;
+    /** Сахар крови, ммоль/л (имеет значение у диабетика; третий этап, п. 8). */
+    public double bloodSugar = Metabolism.NORMAL_SUGAR;
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -251,6 +253,7 @@ public final class MedicalState {
         java.util.Arrays.fill(organs, 0);
         organsMissing = 0;
         organRejection = 0;
+        bloodSugar = Metabolism.NORMAL_SUGAR;
         doses.clear();
         effects.clear();
     }
@@ -395,6 +398,7 @@ public final class MedicalState {
         System.arraycopy(o.organs, 0, organs, 0, Organ.COUNT);
         organsMissing = o.organsMissing;
         organRejection = o.organRejection;
+        bloodSugar = o.bloodSugar;
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;

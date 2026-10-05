@@ -81,7 +81,7 @@ public final class MedicalNbt {
         if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
         putIf(t, "pFood", m.pendingFoodLoss);
         // Органы (третий этап): только если что-то повреждено или изъято.
-        boolean anyOrgan = m.organsMissing != 0 || m.organRejection != 0;
+        boolean anyOrgan = m.organsMissing != 0 || m.organRejection != 0 || Math.abs(m.bloodSugar - faygolover.rpmedicine.core.Metabolism.NORMAL_SUGAR) > 0.01;
         for (double v : m.organs) anyOrgan |= v > 0;
         if (anyOrgan) {
             ListTag ol = new ListTag();
@@ -90,6 +90,7 @@ public final class MedicalNbt {
         }
         if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
         if (m.organRejection != 0) t.putByte("orgRej", (byte) m.organRejection);
+        if (Math.abs(m.bloodSugar - faygolover.rpmedicine.core.Metabolism.NORMAL_SUGAR) > 0.01) t.putFloat("sugar", (float) m.bloodSugar);
         putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
             CompoundTag doses = new CompoundTag();
@@ -241,6 +242,7 @@ public final class MedicalNbt {
         for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
         m.organsMissing = t.getByte("orgMiss") & 0xFF;
         m.organRejection = t.getByte("orgRej") & 0xFF;
+        if (t.contains("sugar")) m.bloodSugar = t.getFloat("sugar");
         m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");
         for (String k : doses.getAllKeys()) {

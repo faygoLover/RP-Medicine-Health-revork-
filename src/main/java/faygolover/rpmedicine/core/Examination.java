@@ -179,6 +179,9 @@ public final class Examination {
 
     static List<Line> general(MedicalState m, int lvl, boolean self, MedicalSettings s) {
         List<Line> out = new ArrayList<>();
+        // Сахар (диабет): холодный пот при низком, запах ацетона при высоком.
+        if (m.bloodSugar < s.sugarLow) out.add(new Line("cold_sweat"));
+        if (m.bloodSugar > s.sugarHigh && lvl >= 3) out.add(new Line("acetone_breath"));
         // Сознание
         if (!self) {
             int cons = m.down == Down.CLINICAL ? 3 : m.down != Down.NONE ? 2 : m.consciousness < s.dazedConsciousness ? 1 : 0;

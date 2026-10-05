@@ -127,6 +127,11 @@ public final class GameplayEffects {
             speed -= s.painLimpSpeedPenalty;
             r.staminaRegen *= 0.8;
         }
+        // Гипогликемия: слабость.
+        if (m.bloodSugar < s.sugarLow) {
+            speed -= s.dazedSpeedPenalty;
+            r.staminaRegen *= 0.6;
+        }
         // Оглушение.
         if (m.consciousness < s.dazedConsciousness) {
             r.dazed = true;

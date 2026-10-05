@@ -34,7 +34,9 @@ public enum DrugEffect {
     /** Местная анестезия: не общий эффект — ставится на часть тела, куда сделан укол; сила — доля оставшейся боли. */
     LOCAL_ANESTHESIA("local_anesthesia"),
     /** Иммуносупрессия: останавливает отторжение пересаженного органа (третий этап, п. 7.1). */
-    IMMUNOSUPPRESSION("immunosuppression");
+    IMMUNOSUPPRESSION("immunosuppression"),
+    /** Инсулин: снижает сахар крови, ммоль/л в час (третий этап, п. 8). */
+    INSULIN("insulin");
 
     public static final DrugEffect[] VALUES = values();
 

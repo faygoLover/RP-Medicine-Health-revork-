@@ -111,7 +111,8 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
     }
 
     public PatientTraits traits() {
-        return new PatientTraits((traitFlags & 1) != 0, (traitFlags & 2) != 0, (traitFlags & 4) != 0, (traitFlags & 8) != 0, (traitFlags & 16) != 0);
+        return new PatientTraits((traitFlags & 1) != 0, (traitFlags & 2) != 0, (traitFlags & 4) != 0, (traitFlags & 8) != 0, (traitFlags & 16) != 0,
+                (traitFlags & 32) != 0, (traitFlags & 64) != 0, (traitFlags & 128) != 0);
     }
 
     public void markChanged() {
@@ -141,7 +142,8 @@ public class BodyStubEntity extends LivingEntity implements IEntityAdditionalSpa
         }
         selectedSlot = player.getInventory().selected;
         traitFlags = (byte) ((traits.tough ? 1 : 0) | (traits.fragile ? 2 : 0) | (traits.brave ? 4 : 0)
-                | (traits.coward ? 8 : 0) | (traits.leftHanded ? 16 : 0));
+                | (traits.coward ? 8 : 0) | (traits.leftHanded ? 16 : 0) | (traits.diabetic ? 32 : 0) | (traits.smoker ? 64 : 0)
+                | (traits.alcoholic ? 128 : 0));
         setCustomName(Component.literal(ownerName));
         setCustomNameVisible(false);
         moveTo(player.getX(), player.getY(), player.getZ(), player.getYRot(), 0);

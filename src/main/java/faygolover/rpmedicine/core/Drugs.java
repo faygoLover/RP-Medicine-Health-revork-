@@ -99,6 +99,7 @@ public final class Drugs {
         double eff = effectiveDose(m, d, amount, s);
         double k = (error ? 0.5 : 1.0) * eff;
         switch (d.special()) {
+            case GLUCOSE -> m.bloodSugar = Math.min(35, m.bloodSugar + MedicalSettings.get().glucoseTabletSugar * k);
             case OPIOID_ANTIDOTE -> {
                 m.morphineSeconds = 0;
                 m.morphineDelay = 0;

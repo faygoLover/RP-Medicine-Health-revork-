@@ -161,6 +161,8 @@ ITEMS = [
     ("peg_leg", "install_prosthesis", 8, 7, True), ("prosthetic_hook", "install_prosthesis", 8, 7, True),
     # органы и конечности вне тела (п. 7)
     ("organ_container", "organ_remove", 15, 9, True), ("organ", "transplant", 20, 10, True), ("severed_limb", "reattach", 25, 10, True),
+    # диабет (п. 8)
+    ("glucometer", "glucometer", 3, 0, False),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -188,6 +190,11 @@ DRUGS = {
                  "dose": {"limit": 2, "window_hours": 12},
                  "overdose": {"effects": [eff("resp_depression", 0.4, 0, 30 * 60), eff("sedation", 30, 0, 30 * 60)], "arrest_chance": 0.1}},
     "naloxone": {"form": "injection", "min_level": 4, "special": "opioid_antidote", "effects": []},
+    # Третий этап: диабет (п. 8) — инсулин сам себе, глюкоза.
+    "insulin": {"form": "injection", "min_level": 0, "effects": [eff("insulin", 3, 300, 2 * H)],
+                "dose": {"limit": 3, "window_hours": 12},
+                "overdose": {"effects": [eff("insulin", 4, 0, 2 * H)]}},
+    "glucose_tablets": {"form": "pill", "min_level": 0, "special": "glucose", "effects": []},
     # Третий этап: иммуносупрессор против отторжения (п. 7.1) — курс раз в 12 часов.
     "cyclosporine": {"form": "pill", "min_level": 4, "effects": [eff("immunosuppression", 1, 300, 12 * H)],
                      "dose": {"limit": 1, "window_hours": 12},
@@ -448,7 +455,9 @@ ICONS = {
     "peg_leg": ("board", (150, 110, 70), (110, 80, 50)), "prosthetic_hook": ("syringe", (190, 195, 200), (120, 125, 130)),
     "severed_limb": ("roll", (210, 160, 130), (150, 30, 30)),
     "organ_container": ("box", (90, 140, 170), (230, 240, 245)), "organ": ("box", (90, 140, 170), (160, 30, 40)),
-    "cyclosporine": ("pills", (240, 240, 230), (120, 80, 160)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
+    "cyclosporine": ("pills", (240, 240, 230), (120, 80, 160)),
+    "insulin": ("syringe", (230, 240, 250), (60, 120, 200)), "glucose_tablets": ("pills", (250, 250, 240), (240, 160, 40)),
+    "glucometer": ("device", (60, 60, 70), (120, 200, 240)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
     "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
     "propofol": ("syringe", (240, 240, 240), (245, 245, 245)), "laryngoscope": ("strap", (170, 175, 185), (230, 200, 60)),
@@ -466,7 +475,7 @@ REL_TEXTURES = {
     "blood_draw_syringe": BCT + "syringe.png", "surgical_tweezers": BCT + "tweezers.png", "test_tube": BCT + "microtube.png",
     "portable_scanner": BCT + "advanced_scanner.png", "hemoanalyzer": BCT + "organ_scanner.png", "lancet": BCT + "surgical_needle.png",
     "medcard": BCT + "tablet.png", "organ_container": BCT + "cooler_bag.png", "organ": BCT + "donor_heart.png",
-    "cyclosporine": BCT + "immunosuppressant.png", "stabilization_kit": BCT + "medical_kit.png",
+    "cyclosporine": BCT + "immunosuppressant.png", "insulin": BCT + "insulin_syringe.png", "stabilization_kit": BCT + "medical_kit.png",
     "scalpel": BCT + "scalpel.png", "surgical_gloves": BCT + "gloves.png", "vascular_suture": BCT + "surgical_thread.png",
 }
 def rel_texture(name):

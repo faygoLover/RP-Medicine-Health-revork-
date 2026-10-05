@@ -29,7 +29,9 @@ public record Drug(String id, Form form, List<Dose> effects, int doseLimit, doub
 
     /** Особое действие, кроме эффектов. */
     public enum Special {
-        NONE, OPIOID_ANTIDOTE, ANTISEPTIC, ANTIBIOTIC_OINTMENT;
+        NONE, OPIOID_ANTIDOTE, ANTISEPTIC, ANTIBIOTIC_OINTMENT,
+        /** Глюкоза: сахар крови сразу выше (третий этап, п. 8). */
+        GLUCOSE;
 
         public static Optional<Special> byId(String id) {
             String s = id.toLowerCase(Locale.ROOT);
