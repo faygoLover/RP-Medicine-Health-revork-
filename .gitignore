@@ -37,3 +37,6 @@ run/
 # Чужие моды, скачанные scripts/fetch_deps.sh
 external/
 __pycache__/
+
+# Распакованные чужие моды и образцы — только локально
+docs/reference/родственные моды/
