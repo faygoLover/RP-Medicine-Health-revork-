@@ -86,6 +86,7 @@ public final class Treatments {
         if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
             return drugOf(extra) != null ? Drugs.check(m, part, drugOf(extra), s) : "no_effect";
         BodyPartState ps = m.part(part);
+        if (Surgery.isSurgical(a)) return Surgery.check(m, part, a, s);
         switch (a) {
             case BANDAGE, PRESSURE_DRESSING -> {
                 for (Wound w : ps.wounds) if (!w.isDressed() && w.type != WoundType.BRUISE) return null;
@@ -199,6 +200,8 @@ public final class Treatments {
                 return ps.hasForeignBodies() ? null : "no_foreign_body";
             }
             case SUTURE -> {
+                // На вскрытой части — остановить кровотечение, восстановить орган или закрыть операцию.
+                if (Surgery.sutureOnOpen(ps)) return null;
                 boolean any = false;
                 for (Wound w : ps.wounds) if (w.canBeSutured() && !w.sutured) any = true;
                 if (!any) return "nothing_to_suture";
@@ -361,6 +364,11 @@ public final class Treatments {
         }
         Bag bag = extra instanceof Bag b ? b : null;
         BodyPartState ps = m.part(part);
+        if (Surgery.isSurgical(a))
+            return Surgery.apply(m, part, a, error, rnd, s, extra instanceof Surgery.Context c ? c : Surgery.Context.DEFAULT);
+        if (a == TreatmentAction.SUTURE && Surgery.sutureOnOpen(ps)) return Surgery.suture(m, ps, error, q, rnd, s);
+        if (a == TreatmentAction.TWEEZERS && ps.surgery == BodyPartState.SurgeryStage.RETRACTED && ps.hasForeignBodies())
+            return Surgery.extractAll(m, ps, s);
         switch (a) {
             case BANDAGE -> {
                 dress(ps, Dressing.BANDAGE, error, q, s);

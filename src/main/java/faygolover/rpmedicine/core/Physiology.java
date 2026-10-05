@@ -27,6 +27,7 @@ public final class Physiology {
         double hungerFactor = in.satiety < s.hungerThreshold ? s.hungerHealFactor : 1.0;
         if (in.online) Healing.advance(m, dt * in.healFactor * hungerFactor, s);
         Infections.tick(m, in, s, r);
+        Surgery.tick(m, in, s);
         Organs.tick(m, in, s);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);
@@ -145,6 +146,7 @@ public final class Physiology {
         double sum = 0;
         for (Wound w : ps.wounds) sum += w.bleed(s);
         if (ps.arterial) sum += s.arterialBleedRate;
+        sum += Surgery.openBleed(ps, s);
         if (ps.fracture == Fracture.OPEN) {
             boolean dressed = ps.anyDressing();
             sum += dressed ? s.openFractureBleed * 0.2 : s.openFractureBleed;

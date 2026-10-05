@@ -33,6 +33,12 @@
     "rpmedicine:suture_kit",
     "rpmedicine:scissors",
     "rpmedicine:endotracheal_tube",
+    "rpmedicine:scalpel",
+    "rpmedicine:hemostat",
+    "rpmedicine:retractor",
+    "rpmedicine:vascular_suture",
+    "rpmedicine:surgical_drill",
+    "rpmedicine:chest_drain",
     "rpmedicine:paracetamol",
     "rpmedicine:ibuprofen",
     "rpmedicine:ketorolac",
@@ -52,6 +58,10 @@
     "rpmedicine:blood_sample",
     "rpmedicine:test_tube",
     "rpmedicine:syringe",
+    "rpmedicine:osteosynthesis_kit",
+    "rpmedicine:surgical_mask",
+    "rpmedicine:surgical_gloves",
+    "rpmedicine:laryngoscope",
     {
       "id": "medicamod:adrenalin",
       "required": false

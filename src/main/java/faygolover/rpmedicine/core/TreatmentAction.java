@@ -53,7 +53,20 @@ public enum TreatmentAction {
     /** Интубация: трубка (нужен ларингоскоп в инвентаре). */
     INTUBATE("intubate", Target.BODY),
     /** Набор стабилизации: таймер нокдауна тает вдвое медленнее, один раз за нокдаун. */
-    STABILIZE("stabilize", Target.BODY);
+    STABILIZE("stabilize", Target.BODY),
+    // Пошаговая хирургия (третий этап, п. 4)
+    /** Скальпель: вскрыть часть. */
+    INCISE("incise", Target.PART),
+    /** Зажим: пережать сосуды вскрытой части. */
+    CLAMP("clamp", Target.PART),
+    /** Ретрактор: раскрыть рану для специального шага. */
+    RETRACT("retract", Target.PART),
+    /** Сосудистый шов: сшить артерию на раскрытой части. */
+    VESSEL_SUTURE("vessel_suture", Target.PART),
+    /** Дрель и набор для остеосинтеза: зафиксировать перелом на раскрытой части. */
+    OSTEOSYNTHESIS("osteosynthesis", Target.PART),
+    /** Дренаж груди: снять пневмоторакс окончательно. */
+    DRAIN("drain", Target.PART);
 
     /** Куда применяется: на часть тела, на человека целиком, удержанием. */
     public enum Target { PART, BODY, HOLD }

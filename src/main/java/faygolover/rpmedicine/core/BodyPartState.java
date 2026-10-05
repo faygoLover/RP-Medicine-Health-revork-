@@ -13,6 +13,15 @@ public final class BodyPartState {
         }
     }
 
+    /** Ход операции на части (третий этап, п. 4.1). Порядок — в сохранении. */
+    public enum SurgeryStage {
+        NONE, OPEN, CLAMPED, RETRACTED;
+
+        public static SurgeryStage byOrdinal(int i) {
+            return i >= 0 && i < values().length ? values()[i] : NONE;
+        }
+    }
+
     public enum Tourniquet {
         NONE, CAT, ESMARCH;
 
@@ -56,6 +65,16 @@ public final class BodyPartState {
     /** Местная анестезия этой части (третий этап, п. 3), секунд. */
     public double localAnesthesiaSeconds;
 
+    /** Операция на части: вскрыто, зажато, раскрыто (третий этап, п. 4). */
+    public SurgeryStage surgery = SurgeryStage.NONE;
+    /** Сколько секунд часть открыта; счётчик минутной проверки заражения. */
+    public double surgeryOpenSeconds;
+    public double surgeryCheckSeconds;
+    /** Загрязнение операции: множитель шанса заражения открытой части (место, инструменты, экипировка). */
+    public double surgeryContamination = 1.0;
+    /** Перелом зафиксирован остеосинтезом: заживает быстрее, шина не нужна. */
+    public boolean fixated;
+
     public BodyPartState(BodyPart part) {
         this.part = part;
     }
@@ -92,7 +111,7 @@ public final class BodyPartState {
     public boolean isHealthy() {
         return wounds.isEmpty() && fracture == Fracture.NONE && bullets == 0 && fragments == 0 && !arterial
                 && internalBleed <= 0 && tourniquet == Tourniquet.NONE && ischemia <= 0 && !occlusive && !splint && !dislocated
-                && localAnesthesiaSeconds <= 0;
+                && localAnesthesiaSeconds <= 0 && surgery == SurgeryStage.NONE && !fixated;
     }
 
     public boolean anyDressing() {
@@ -117,6 +136,11 @@ public final class BodyPartState {
         occlusive = false;
         dislocated = false;
         localAnesthesiaSeconds = 0;
+        surgery = SurgeryStage.NONE;
+        surgeryOpenSeconds = 0;
+        surgeryCheckSeconds = 0;
+        surgeryContamination = 1.0;
+        fixated = false;
     }
 
     public void copyFrom(BodyPartState o) {
@@ -137,5 +161,10 @@ public final class BodyPartState {
         occlusive = o.occlusive;
         dislocated = o.dislocated;
         localAnesthesiaSeconds = o.localAnesthesiaSeconds;
+        surgery = o.surgery;
+        surgeryOpenSeconds = o.surgeryOpenSeconds;
+        surgeryCheckSeconds = o.surgeryCheckSeconds;
+        surgeryContamination = o.surgeryContamination;
+        fixated = o.fixated;
     }
 }

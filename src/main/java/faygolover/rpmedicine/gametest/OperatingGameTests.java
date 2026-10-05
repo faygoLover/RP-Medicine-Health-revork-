@@ -107,4 +107,46 @@ public final class OperatingGameTests {
             h.succeed();
         });
     }
+
+    /** Операция на столе: маска и перчатки, место — стол; скальпель вскрывает живот и становится нестерильным. */
+    @GameTest(template = T, timeoutTicks = 400)
+    public static void incisionOnOperatingTable(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        HospitalGameTests.testBlocks();
+        MedicalSettings s = MedicalSettings.get();
+        net.minecraft.core.BlockPos table = h.absolutePos(new net.minecraft.core.BlockPos(2, 1, 2));
+        h.getLevel().setBlockAndUpdate(table, net.minecraft.world.level.block.Blocks.SMOOTH_STONE.defaultBlockState());
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        ServerPlayer medic = player(h, 3.5, 3.5);
+        faygolover.rpmedicine.server.Medical.data(medic).skillOverride = 10;
+        var scalpel = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SCALPEL.get());
+        // Без стола, маски и перчаток — «пол», заражение выше.
+        var floor = faygolover.rpmedicine.server.SurgeryService.context(medic, patient, scalpel);
+        h.assertTrue(faygolover.rpmedicine.server.SurgeryService.place(medic, patient) == faygolover.rpmedicine.server.SurgeryService.Place.FLOOR, "место — пол");
+        h.assertTrue(Math.abs(floor.infectionFactor() - s.surgeryFloorInfection * s.surgeryNoMaskFactor * s.surgeryNoGlovesFactor) < 1e-6, "пол без маски и перчаток");
+        h.assertTrue(faygolover.rpmedicine.hospital.HospitalService.onUseBlock(patient, table), "лечь на стол");
+        medic.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SURGICAL_MASK.get()));
+        medic.getInventory().setItem(8, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SURGICAL_GLOVES.get()));
+        var ctx = faygolover.rpmedicine.server.SurgeryService.context(medic, patient, scalpel);
+        h.assertTrue(Math.abs(ctx.infectionFactor() - s.surgeryTableInfection) < 1e-6 && ctx.successFactor() == s.surgeryTableSuccess, "стол, маска, перчатки: " + ctx);
+        MedicalState m = state(patient);
+        m.down = MedicalState.Down.FAINT;
+        medic.getInventory().selected = 0;
+        medic.getInventory().setItem(0, scalpel);
+        h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, BodyPart.ABDOMEN), "вскрытие началось");
+        h.runAfterDelay(250, () -> {
+            var ps = m.part(BodyPart.ABDOMEN);
+            h.assertTrue(ps.surgery == faygolover.rpmedicine.core.BodyPartState.SurgeryStage.OPEN, "живот вскрыт, было " + ps.surgery);
+            h.assertTrue(Math.abs(ps.surgeryContamination - s.surgeryTableInfection) < 1e-6, "загрязнение операции по месту");
+            h.assertTrue(!faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(medic.getInventory().getItem(0)), "скальпель нестерилен");
+            // Сохранение хода операции.
+            MedicalState copy = new MedicalState(s);
+            MedicalNbt.read(copy, MedicalNbt.write(m), s);
+            h.assertTrue(copy.part(BodyPart.ABDOMEN).surgery == ps.surgery && copy.part(BodyPart.ABDOMEN).wounds.stream().anyMatch(w -> w.surgical),
+                    "операция сохраняется");
+            remove(h, patient, medic);
+            h.succeed();
+        });
+    }
 }

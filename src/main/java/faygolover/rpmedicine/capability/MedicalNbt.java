@@ -136,6 +136,7 @@ public final class MedicalNbt {
                 putIf(wt, "imm", w.immuneProgress);
                 if (w.infectionRisk != 1.0) wt.putFloat("risk", (float) w.infectionRisk);
                 if (w.sutured) wt.putFloat("sut", (float) w.sutureQuality);
+                if (w.surgical) wt.putBoolean("surg", true);
                 ws.add(wt);
             }
             if (!ws.isEmpty()) p.put("w", ws);
@@ -158,6 +159,13 @@ public final class MedicalNbt {
             if (ps.occlusive) p.putBoolean("occl", true);
             if (ps.dislocated) p.putBoolean("disl", true);
             if (ps.localAnesthesiaSeconds > 0) p.putFloat("local", (float) ps.localAnesthesiaSeconds);
+            if (ps.surgery != BodyPartState.SurgeryStage.NONE) {
+                p.putByte("surg", (byte) ps.surgery.ordinal());
+                p.putFloat("surgSec", (float) ps.surgeryOpenSeconds);
+                p.putFloat("surgChk", (float) ps.surgeryCheckSeconds);
+                p.putFloat("surgDirt", (float) ps.surgeryContamination);
+            }
+            if (ps.fixated) p.putBoolean("fix", true);
             parts.add(p);
         }
         if (!parts.isEmpty()) t.put("parts", parts);
@@ -263,6 +271,7 @@ public final class MedicalNbt {
                 w.infectionRisk = wt.contains("risk") ? wt.getFloat("risk") : 1.0;
                 w.sutured = wt.contains("sut");
                 w.sutureQuality = w.sutured ? wt.getFloat("sut") : 1.0;
+                w.surgical = wt.getBoolean("surg");
                 if (w.severity > 0 && ps.wounds.size() < 16) ps.wounds.add(w);
             }
             ps.fracture = BodyPartState.Fracture.byOrdinal(p.getByte("fr"));
@@ -280,6 +289,11 @@ public final class MedicalNbt {
             ps.occlusive = p.getBoolean("occl");
             ps.dislocated = p.getBoolean("disl");
             ps.localAnesthesiaSeconds = p.getFloat("local");
+            ps.surgery = BodyPartState.SurgeryStage.byOrdinal(p.getByte("surg"));
+            ps.surgeryOpenSeconds = p.getFloat("surgSec");
+            ps.surgeryCheckSeconds = p.getFloat("surgChk");
+            ps.surgeryContamination = p.contains("surgDirt") ? p.getFloat("surgDirt") : 1.0;
+            ps.fixated = p.getBoolean("fix");
         }
     }
 

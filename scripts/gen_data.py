@@ -152,6 +152,10 @@ ITEMS = [
     ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
     # третий этап
     ("endotracheal_tube", "intubate", 6, 6, True),
+    # хирургия (третий этап, п. 4)
+    ("scalpel", "incise", 5, 7, False), ("hemostat", "clamp", 3, 7, False), ("retractor", "retract", 3, 7, False),
+    ("vascular_suture", "vessel_suture", 12, 8, True), ("surgical_drill", "osteosynthesis", 15, 8, False),
+    ("chest_drain", "drain", 10, 7, True),
 ]
 for item, action, sec, lvl, consume in ITEMS:
     write(f"{DATA}/rpmedicine/rpmedicine/items/{item}.json",
@@ -248,7 +252,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -425,7 +429,12 @@ ICONS = {
     "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
     "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)), "test_tube": ("pills", (230, 235, 245), (200, 210, 225)),
     "syringe": ("syringe", (235, 235, 240), (200, 200, 210)),
-    "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
+    "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)),
+    "scalpel": ("syringe", (210, 215, 225), (90, 90, 100)), "hemostat": ("strap", (200, 205, 215), (120, 125, 140)),
+    "retractor": ("board", (200, 205, 215), (120, 125, 140)), "surgical_drill": ("device", (200, 200, 205), (60, 60, 70)),
+    "osteosynthesis_kit": ("box", (180, 185, 195), (90, 90, 100)), "vascular_suture": ("box", (230, 230, 235), (200, 40, 40)),
+    "chest_drain": ("bag", (220, 225, 230), (120, 160, 200)), "surgical_mask": ("patch", (140, 190, 210), (240, 240, 240)),
+    "surgical_gloves": ("patch", (150, 200, 230), (110, 160, 200)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
     "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
     "propofol": ("syringe", (240, 240, 240), (245, 245, 245)), "laryngoscope": ("strap", (170, 175, 185), (230, 200, 60)),
@@ -443,6 +452,7 @@ REL_TEXTURES = {
     "blood_draw_syringe": BCT + "syringe.png", "surgical_tweezers": BCT + "tweezers.png", "test_tube": BCT + "microtube.png",
     "portable_scanner": BCT + "advanced_scanner.png", "hemoanalyzer": BCT + "organ_scanner.png", "lancet": BCT + "surgical_needle.png",
     "medcard": BCT + "tablet.png", "stabilization_kit": BCT + "medical_kit.png",
+    "scalpel": BCT + "scalpel.png", "surgical_gloves": BCT + "gloves.png", "vascular_suture": BCT + "surgical_thread.png",
 }
 def rel_texture(name):
     src = os.path.join(REL, REL_TEXTURES[name])

@@ -73,7 +73,7 @@ public final class TreatmentService {
             return true;
         }
         TreatmentAction action = spec.action();
-        Treatments.Extra extra = extraFor(stack, actor);
+        Treatments.Extra extra = extraFor(stack, actor, target, action);
         // Шприц и ампула: медик с нужным уровнем сам выбирает дозу укола или капельницы.
         if (dose == null && extra instanceof faygolover.rpmedicine.core.Drug drug
                 && (drug.form() == faygolover.rpmedicine.core.Drug.Form.INJECTION || drug.form() == faygolover.rpmedicine.core.Drug.Form.DRIP)
@@ -130,7 +130,9 @@ public final class TreatmentService {
         double seconds = Skill.applySeconds(spec.seconds(), level, self, mods.useTimeFactor, s);
         boolean fromHand = part == null;
         // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
-        Minigames.Type mg = forced ? null : MinigameService.minigameFor(actor, target, m,
+        // Пинцет на раскрытой части извлекает всё сразу, без мини-игры (третий этап, п. 4.5).
+        boolean openExtraction = action == TreatmentAction.TWEEZERS && p != null && m.part(p).surgery == faygolover.rpmedicine.core.BodyPartState.SurgeryStage.RETRACTED;
+        Minigames.Type mg = forced || openExtraction ? null : MinigameService.minigameFor(actor, target, m,
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
         if (mg != null) {
             final BodyPart part0 = p;
@@ -200,6 +202,18 @@ public final class TreatmentService {
 
     /** Что несёт предмет: пакет крови (группа, годность) или препарат. */
     @Nullable
+    /** То же для действия: шаги хирургии несут обстановку операции (место, стерильность, экипировка). */
+    static Treatments.Extra extraFor(ItemStack stack, ServerPlayer actor, LivingEntity target, TreatmentAction a) {
+        if (faygolover.rpmedicine.core.Surgery.isSurgical(a)) return SurgeryService.context(actor, target, stack);
+        return extraFor(stack, actor);
+    }
+
+    /** Шанс ошибки с учётом места операции: множитель успеха уменьшает шанс сделать всё правильно. */
+    static double surgeryError(double chance, Treatments.Extra extra) {
+        if (!(extra instanceof faygolover.rpmedicine.core.Surgery.Context c)) return chance;
+        return 1 - (1 - Math.min(1, chance)) * c.successFactor();
+    }
+
     static Treatments.Extra extraFor(ItemStack stack, ServerPlayer actor) {
         if (stack.getItem() instanceof faygolover.rpmedicine.item.BloodBagItem)
             return faygolover.rpmedicine.item.BloodBagItem.bag(stack, actor.level().getGameTime());
@@ -431,7 +445,7 @@ public final class TreatmentService {
             if (m == null) return;
             MedicalSettings s = MedicalSettings.get();
             // Повторная проверка: за время применения состояние могло измениться.
-            Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor);
+            Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor, target, spec.action());
             if (dose != null && extra instanceof faygolover.rpmedicine.core.Drug drug) {
                 // Шприц тратится на каждый укол с выбранной дозой.
                 if (!consumeItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
@@ -465,7 +479,12 @@ public final class TreatmentService {
                 }
             } else {
                 error = quality >= 0 ? Minigames.failed(quality, s)
-                        : !spec.action().isInstrument() && RANDOM.nextDouble() < Math.min(s.maxErrorChance, Skill.errorChance(level, spec.minLevel(), s) * errorFactor);
+                        : !spec.action().isInstrument() && RANDOM.nextDouble() < surgeryError(Math.min(s.maxErrorChance, Skill.errorChance(level, spec.minLevel(), s) * errorFactor), extra);
+            }
+            // Остеосинтез тратит набор (пластины и винты) из инвентаря хирурга.
+            if (spec.action() == TreatmentAction.OSTEOSYNTHESIS && !hasItem(actor, faygolover.rpmedicine.registry.ModItems.OSTEOSYNTHESIS_KIT.get())) {
+                actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_osteosynthesis_kit").withStyle(ChatFormatting.YELLOW), true);
+                return;
             }
             Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra, quality >= 0 ? quality : 1.0);
             faygolover.rpmedicine.stats.StatsService.treatment(actor, target, String.valueOf(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(original.getItem())),
@@ -490,8 +509,11 @@ public final class TreatmentService {
             if (spec.action() == TreatmentAction.INTUBATE && r.applied) MedcardHooks.intubation(actor, target);
             // Инструмент побывал в ране — больше не стерилен.
             ItemStack used = actor.getInventory().getItem(slot);
-            if (used.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem && spec.action() == TreatmentAction.TWEEZERS)
+            if (used.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem
+                    && (spec.action() == TreatmentAction.TWEEZERS || faygolover.rpmedicine.core.Surgery.isSurgical(spec.action())))
                 faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(used, false);
+            if (spec.action() == TreatmentAction.OSTEOSYNTHESIS && r.applied) consumeItem(actor, faygolover.rpmedicine.registry.ModItems.OSTEOSYNTHESIS_KIT.get());
+            if (r.applied && MedcardHooks.SURGERY_KEYS.contains(r.key)) MedcardHooks.surgery(actor, target, part, r.key);
             Medical.changed(target);
             sound(spec.action());
             Component msg = resultMessage(r, part);
@@ -526,6 +548,12 @@ public final class TreatmentService {
                 case AMMONIA -> ModSounds.AMMONIA.get();
                 case SURGICAL_KIT -> ModSounds.SURGERY_CAUTERY.get();
                 case TWEEZERS -> ModSounds.SURGERY_RETRACT.get();
+                case INCISE -> ModSounds.SURGERY_CUT.get();
+                case CLAMP -> ModSounds.SURGERY_CLAMP.get();
+                case RETRACT -> ModSounds.SURGERY_RETRACT.get();
+                case VESSEL_SUTURE -> ModSounds.SURGERY_STITCH.get();
+                case OSTEOSYNTHESIS -> ModSounds.BONE_DRILL.get();
+                case DRAIN -> ModSounds.SURGERY_SUCTION.get();
                 case SCANNER -> ModSounds.SCANNER.get();
                 case DEFIBRILLATOR -> ModSounds.DEFIB_SHOCK.get();
                 default -> null;

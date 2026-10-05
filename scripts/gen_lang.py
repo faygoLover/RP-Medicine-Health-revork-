@@ -676,6 +676,62 @@ for k, ru, en in [
     ("refuse.actor_restrained", "Вы зафиксированы", "You are restrained"),
     ("panel.restrain", "Зафиксировать", "Restrain"), ("panel.release", "Освободить", "Release")]:
     t("rpmedicine." + k, ru, en)
+# Пошаговая хирургия (третий этап, п. 4).
+for k, ru, en, dru, den in [
+    ("scalpel", "Скальпель", "Scalpel", "Вскрыть часть тела. Пациент без сознания, под местной анестезией этой части или зафиксирован. Без обезболивания — сильная боль. Медицина 7+.",
+     "Opens a body part. The patient must be unconscious, under local anesthesia of that part, or restrained. Without pain relief — severe pain. Medicine 7+."),
+    ("hemostat", "Зажим", "Hemostat", "Зажать сосуды вскрытой части: кровотечение почти прекращается. Медицина 7+.",
+     "Clamps the vessels of an opened part: bleeding almost stops. Medicine 7+."),
+    ("retractor", "Ретрактор", "Retractor", "Раскрыть зажатую рану — дальше специальные шаги: швы на кровотечение и органы, сосудистый шов, остеосинтез, дренаж, пинцет. Медицина 7+.",
+     "Opens a clamped wound for special steps: sutures for bleeding and organs, vascular suture, osteosynthesis, chest drain, tweezers. Medicine 7+."),
+    ("vascular_suture", "Сосудистый шов", "Vascular suture", "Сшить артерию на раскрытой части: артериальное кровотечение снято, жгут можно снимать. Медицина 8+.",
+     "Repairs an artery on an opened part: arterial bleeding stops, the tourniquet can come off. Medicine 8+."),
+    ("surgical_drill", "Хирургическая дрель", "Surgical drill", "Остеосинтез на раскрытой части (нужен набор для остеосинтеза): перелом заживает втрое быстрее, без шины. Медицина 8+.",
+     "Osteosynthesis on an opened part (needs an osteosynthesis kit): the fracture heals three times faster, no splint needed. Medicine 8+."),
+    ("osteosynthesis_kit", "Набор для остеосинтеза", "Osteosynthesis kit", "Пластины и винты; тратится дрелью.", "Plates and screws; used up by the drill."),
+    ("chest_drain", "Дренаж груди", "Chest drain", "На раскрытой груди: пневмоторакс снимается окончательно. Медицина 7+.",
+     "On an opened chest: removes a pneumothorax for good. Medicine 7+."),
+    ("surgical_mask", "Хирургическая маска", "Surgical mask", "Надеть (ПКМ): меньше заражение при операции.", "Wear it (right click): less infection during surgery."),
+    ("surgical_gloves", "Хирургические перчатки", "Surgical gloves", "В инвентаре хирурга: меньше заражение при операции.", "In the surgeon's inventory: less infection during surgery."),
+]:
+    t(f"item.rpmedicine.{k}", ru, en)
+    t(f"item.rpmedicine.{k}.desc", dru, den)
+for k, ru, en in [("scalpel", "Хирургический скальпель.", "A surgical scalpel."), ("hemostat", "Кровоостанавливающий зажим.", "A hemostatic clamp."),
+    ("retractor", "Ранорасширитель.", "A wound retractor."), ("vascular_suture", "Тонкая нить для сосудов.", "A fine thread for vessels."),
+    ("surgical_drill", "Аккумуляторная хирургическая дрель.", "A cordless surgical drill."), ("osteosynthesis_kit", "Пластины и винты.", "Plates and screws."),
+    ("chest_drain", "Трубка для дренажа грудной полости.", "A chest drainage tube."), ("surgical_mask", "Одноразовая маска.", "A disposable mask."),
+    ("surgical_gloves", "Стерильные перчатки.", "Sterile gloves.")]:
+    t(f"item.rpmedicine.{k}.what", ru, en)
+for k, ru, en in [
+    ("incised", "%s: вскрыто", "%s: opened"), ("clamped", "%s: сосуды зажаты", "%s: vessels clamped"), ("retracted", "%s: рана раскрыта", "%s: wound retracted"),
+    ("artery_repaired", "%s: артерия сшита", "%s: artery repaired"), ("bone_fixated", "%s: перелом зафиксирован", "%s: fracture fixed"),
+    ("chest_drained", "Дренаж стоит: воздух и кровь отходят", "Drain placed: air and blood are draining"),
+    ("organ_repaired", "%s: орган восстановлен", "%s: organ repaired"), ("surgery_closed", "%s: операция закончена, зашито", "%s: surgery done, closed"),
+    ("surgery_closed_weak", "%s: зашито наспех", "%s: closed hastily"), ("foreign_all_removed", "%s: извлечено всё", "%s: everything removed"),
+    ("surgery_slip", "%s: рука дрогнула — задеты ткани", "%s: the hand slipped — tissue damaged")]:
+    t("rpmedicine.treat." + k, ru, en)
+for k, ru, en in [
+    ("already_open", "Уже вскрыто", "Already opened"), ("patient_moves", "Пациент в сознании дёргается — нужен наркоз, местная анестезия или фиксация", "The conscious patient flinches — needs anesthesia, local anesthesia or restraint"),
+    ("not_open", "Сначала вскрыть", "Open it first"), ("already_clamped", "Уже зажато", "Already clamped"), ("clamp_first", "Сначала зажать", "Clamp first"),
+    ("already_retracted", "Уже раскрыто", "Already retracted"), ("not_retracted", "Сначала раскрыть ретрактором", "Retract it first"),
+    ("no_arterial", "Артерия цела", "The artery is intact"), ("already_fixated", "Уже зафиксировано", "Already fixed"),
+    ("chest_only", "Только на грудь", "Chest only"), ("no_pneumothorax", "Пневмоторакса нет", "No pneumothorax"),
+    ("need_osteosynthesis_kit", "Нужен набор для остеосинтеза", "You need an osteosynthesis kit")]:
+    t("rpmedicine.refuse." + k, ru, en)
+for k, ru, en in [
+    ("surgery_open", "Вскрыто, не зажато (%s мин)", "Opened, not clamped (%s min)"), ("surgery_clamped", "Вскрыто, зажато (%s мин)", "Opened, clamped (%s min)"),
+    ("surgery_retracted", "Раскрыто ретрактором (%s мин)", "Retracted (%s min)"), ("fixated", "  остеосинтез", "  internal fixation")]:
+    t("rpmedicine.exam." + k, ru, en)
+for k, ru, en in [
+    ("incised", "Операция: вскрыто — %s", "Surgery: opened — %s"), ("surgery_closed", "Операция закончена, зашито — %s", "Surgery finished, closed — %s"),
+    ("surgery_closed_weak", "Операция закончена, зашито наспех — %s", "Surgery finished, closed hastily — %s"),
+    ("internal_stopped", "Операция: остановлено внутреннее кровотечение — %s", "Surgery: internal bleeding stopped — %s"),
+    ("organ_repaired", "Операция: восстановлен орган — %s", "Surgery: organ repaired — %s"),
+    ("artery_repaired", "Операция: сшита артерия — %s", "Surgery: artery repaired — %s"),
+    ("bone_fixated", "Операция: остеосинтез — %s", "Surgery: osteosynthesis — %s"),
+    ("chest_drained", "Операция: дренаж груди", "Surgery: chest drain"),
+    ("foreign_all_removed", "Операция: извлечены пули и осколки — %s", "Surgery: bullets and fragments removed — %s")]:
+    t("rpmedicine.medcard.entry.surgery_" + k, ru, en)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:scalpel",
+  "action": "incise",
+  "seconds": 5,
+  "min_level": 7,
+  "consume": false
+}

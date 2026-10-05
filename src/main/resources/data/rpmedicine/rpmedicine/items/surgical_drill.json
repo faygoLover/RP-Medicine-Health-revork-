@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:surgical_drill",
+  "action": "osteosynthesis",
+  "seconds": 15,
+  "min_level": 8,
+  "consume": false
+}

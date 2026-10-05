@@ -446,6 +446,34 @@ public final class MedicalSettings {
     public double femaleVoicePitch = 1.3;
     /** Острая боль от процедуры в сознании на столе с фиксацией (воздуховод, интубация). */
     public double restrainedProcedurePain = 70;
+    /** Хирургия (третий этап, п. 4): боль шага без обезболивания, разрез, кровотечение вскрытой части, мл/мин. */
+    public double surgeryStepPain = 80;
+    public double surgeryStepPainSeconds = 30;
+    public double incisionSeverity = 15;
+    public double openPartBleed = 300;
+    public double clampedPartBleed = 20;
+    /** Шанс заражения открытой части за минуту (до множителей). */
+    public double openPartInfectionPerMinute = 0.04;
+    /** Ошибка шага: порез соседних тканей, урон органу при раскрытой груди или животе. */
+    public double surgeryErrorSeverity = 12;
+    public double surgeryErrorOrganDamage = 15;
+    /** Восстановление органа швами на раскрытой части. */
+    public double organRepairAmount = 40;
+    /** Остеосинтез: во сколько раз быстрее заживает перелом. */
+    public double osteosynthesisHealFactor = 3;
+    /** Место операции: множитель успеха и заражения (п. 4.2). */
+    public double surgeryTableSuccess = 1.0;
+    public double surgeryTableInfection = 0.3;
+    public double surgeryBedSuccess = 0.9;
+    public double surgeryBedInfection = 0.5;
+    public double surgeryFieldSuccess = 0.8;
+    public double surgeryFieldInfection = 1.0;
+    public double surgeryFloorSuccess = 0.6;
+    public double surgeryFloorInfection = 2.0;
+    /** Нестерильный инструмент и нет маски или перчаток — заражение умножается. */
+    public double surgeryNonSterileFactor = 1.5;
+    public double surgeryNoMaskFactor = 1.3;
+    public double surgeryNoGlovesFactor = 1.3;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

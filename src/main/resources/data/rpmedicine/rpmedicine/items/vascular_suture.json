@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:vascular_suture",
+  "action": "vessel_suture",
+  "seconds": 12,
+  "min_level": 8,
+  "consume": true
+}

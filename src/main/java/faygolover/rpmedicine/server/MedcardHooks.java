@@ -70,7 +70,15 @@ public final class MedcardHooks {
         MedcardService.propose(medic.server, target, "intubation", List.of(), medic.getGameProfile().getName());
     }
 
-    /** Результат лаборатории — предложение записи в медкарту пациента. */
+    /** Итоги операции, которые идут в медкарту. */
+    public static final java.util.Set<String> SURGERY_KEYS = java.util.Set.of("incised", "surgery_closed", "surgery_closed_weak",
+            "internal_stopped", "organ_repaired", "artery_repaired", "bone_fixated", "chest_drained", "foreign_all_removed");
+
+    public static void surgery(ServerPlayer medic, LivingEntity target, BodyPart p, String key) {
+        MedcardService.propose(medic.server, target, "surgery_" + key, List.of(part(p)), medic.getGameProfile().getName());
+    }
+
+        /** Результат лаборатории — предложение записи в медкарту пациента. */
     public static void labResult(ServerPlayer medic, ItemStack tube, Diagnostics.Lab lab) {
         var t = tube.getTag();
         if (t == null || !t.hasUUID("PatientId")) return;

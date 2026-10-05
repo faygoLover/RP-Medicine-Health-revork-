@@ -142,6 +142,9 @@ public final class Examination {
             else if (lvl >= 1) out.add(new Line("joint_deformed"));
             else out.add(new Line("broken"));
         }
+        if (ps.surgery != BodyPartState.SurgeryStage.NONE)
+            out.add(new Line("surgery_" + ps.surgery.name().toLowerCase(java.util.Locale.ROOT), new int[]{(int) (ps.surgeryOpenSeconds / 60)}));
+        if (ps.fixated && ps.hasFracture() && lvl >= 1) out.add(new Line("fixated"));
         if (ps.occlusive) out.add(new Line("occlusive"));
         if (ps.localAnesthesiaSeconds > 0 && lvl >= 1) out.add(new Line("local_anesthesia"));
         if (lvl >= 2 && ps.internalBleed > 0) out.add(new Line("suspect_internal"));

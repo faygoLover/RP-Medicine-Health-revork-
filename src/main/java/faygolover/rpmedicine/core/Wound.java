@@ -43,6 +43,8 @@ public final class Wound {
     /** Швы (второй этап, п. 8): закрывают рану, ускоряют заживление; качество меньше 0,75 — шов слабый. */
     public boolean sutured;
     public double sutureQuality = 1.0;
+    /** Операционный разрез (третий этап, п. 4.1): заживает как порез под швами. */
+    public boolean surgical;
 
     /** Раны, которые зашивают. */
     public boolean canBeSutured() {
@@ -129,6 +131,7 @@ public final class Wound {
         w.infectionRisk = infectionRisk;
         w.sutured = sutured;
         w.sutureQuality = sutureQuality;
+        w.surgical = surgical;
         return w;
     }
 }

@@ -83,6 +83,16 @@ public final class ModItems {
     public static final RegistryObject<Item> LIDOCAINE = medical("lidocaine", 8);
     public static final RegistryObject<Item> KETAMINE = medical("ketamine", 8);
     public static final RegistryObject<Item> PROPOFOL = medical("propofol", 8);
+    // Хирургия (третий этап, п. 4.4)
+    public static final RegistryObject<Item> SCALPEL = tool("scalpel", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> HEMOSTAT = tool("hemostat", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> RETRACTOR = tool("retractor", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SURGICAL_DRILL = tool("surgical_drill", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> OSTEOSYNTHESIS_KIT = medical("osteosynthesis_kit", 8);
+    public static final RegistryObject<Item> VASCULAR_SUTURE = medical("vascular_suture", 16);
+    public static final RegistryObject<Item> CHEST_DRAIN = medical("chest_drain", 8);
+    public static final RegistryObject<Item> SURGICAL_MASK = tool("surgical_mask", () -> new faygolover.rpmedicine.item.SurgicalMaskItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SURGICAL_GLOVES = medical("surgical_gloves", 1);
     public static final RegistryObject<Item> LARYNGOSCOPE = tool("laryngoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDOTRACHEAL_TUBE = medical("endotracheal_tube", 8);
     public static final RegistryObject<Item> MEDCARD = tool("medcard", () -> new faygolover.rpmedicine.item.MedcardItem(new Item.Properties().stacksTo(16)));

@@ -28,7 +28,7 @@ public final class Healing {
 
     public static double fractureHealSeconds(BodyPartState ps, MedicalSettings s) {
         if (ps.part == BodyPart.CHEST) return s.ribHealMinutes * 60.0;
-        double q = ps.splintQuality;
+        double q = ps.fixated ? s.osteosynthesisHealFactor : ps.splintQuality;
         double minutes = Physiology.lerp(s.fractureHealMinutesMin, s.fractureHealMinutesMax, ps.fracture == Fracture.OPEN ? 1 : 0.5);
         return minutes * 60.0 / Math.max(0.25, q);
     }
@@ -51,12 +51,13 @@ public final class Healing {
             if (ps.arterial && hadWounds && ps.wounds.isEmpty()) ps.arterial = false;
 
             if (ps.hasFracture()) {
-                boolean heals = ps.part == BodyPart.CHEST || ps.splint;
+                boolean heals = ps.part == BodyPart.CHEST || ps.splint || ps.fixated;
                 if (heals) {
                     ps.fractureHeal += dt / fractureHealSeconds(ps, s);
                     if (ps.fractureHeal >= 1) {
                         ps.fracture = Fracture.NONE;
                         ps.fractureHeal = 0;
+                        ps.fixated = false;
                     }
                 }
             }

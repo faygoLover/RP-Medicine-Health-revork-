@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:hemostat",
+  "action": "clamp",
+  "seconds": 3,
+  "min_level": 7,
+  "consume": false
+}

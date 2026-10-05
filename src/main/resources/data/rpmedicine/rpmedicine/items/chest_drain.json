@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:chest_drain",
+  "action": "drain",
+  "seconds": 10,
+  "min_level": 7,
+  "consume": true
+}
