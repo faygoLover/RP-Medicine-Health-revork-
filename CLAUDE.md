@@ -100,6 +100,8 @@ JDK 17 обязательно (Forge 1.20.1, ForgeGradle 6, Gradle 8.1.1 чер�
 - JDK 17: `JAVA_HOME="C:/Program Files/Eclipse Adoptium/jdk-17.0.14.7-hotspot"`.
 - Сервер: `gradlew.bat runServer -Pwith_optional=true` (папка `run/`, офлайн-режим, `Dev` и `Patient` — операторы, EULA принята автором).
 - Клиенты: `gradlew.bat runClient -Pwith_optional=true -Pusername=Dev -Pquickplay=localhost` и то же с `Patient`.
+- Тестовая площадка: `python scripts/test_site.py` кладёт датапак `rpm_test` в `run/world/datapacks` (ванильные блоки вместо мебели госпиталя, вещества на мёде/борще/бумаге), потом в игре `/execute at Dev run function rpm_test:site`. RCON сервера разработки включён (порт 25575, пароль `rpmtest`).
+- Наборы предметов: `/rpmedicine kit <field|resus|diag|surgeon|transplant|drugs|substances|food|gm|all> [игроки]`.
 
 **Прочее**
 - CurseForge закрыт проверкой на ботов; описания модов — через `api.cfwidget.com`, файлы — Modrinth или `edge.forgecdn.net/files/<первые 4 цифры id>/<остаток>/<имя>`.

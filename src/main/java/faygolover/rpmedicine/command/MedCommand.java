@@ -152,6 +152,8 @@ public final class MedCommand {
                 .then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
                         .executes(c -> stats(c, 24))
                         .then(Commands.argument("hours", DoubleArgumentType.doubleArg(0.1, 24 * 90)).executes(c -> stats(c, DoubleArgumentType.getDouble(c, "hours"))))));
+        // Наборы предметов для проверки.
+        root.then(KitCommand.node());
         // Панель ГМа (второй этап, п. 11.3).
         root.then(op("panel").executes(c -> {
             faygolover.rpmedicine.server.GmPanelService.open(c.getSource().getPlayerOrException());
