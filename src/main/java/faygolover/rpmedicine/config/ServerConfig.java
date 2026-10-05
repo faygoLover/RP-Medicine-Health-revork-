@@ -426,6 +426,14 @@ public final class ServerConfig {
         bind("totemBloodFraction", "Тотем бессмертия: кровь не ниже этой доли нормы.");
         bind("stabilizationFactor", "Набор стабилизации: таймер нокдауна тает во столько раз медленнее.");
         bind("stabilizationSeconds", "Набор стабилизации: сколько секунд действует (один раз за нокдаун).");
+        bind("doseByWeight", "Доза препарата действует по весу: стандартная доза — на эталонный вес.");
+        bind("doseReferenceWeight", "Эталонный вес для стандартной дозы, кг.");
+        bind("doseWeightExponent", "Насколько сильно вес меняет действие дозы (степень).");
+        bind("overdoseDoseFactor", "Действующая разовая доза выше этой доли нормы — шанс передозировки.");
+        bind("dosingMinLevel", "С какого уровня медицины шприц с ампулой позволяет выбрать дозу.");
+        bind("dripIvStandFactor", "Во сколько раз быстрее капельница и переливание у стойки.");
+        bind("dripBedFactor", "Во сколько раз быстрее капельница и переливание на койке (со стойкой — перемножается).");
+        bind("femaleVoicePitch", "Высота стонов и вскриков женского персонажа (пол — в медкарте).");
         bind("totemHealBase", "Тотем: каждая рана лечится на долю тяжести — база…");
         bind("totemHealRandom", "… плюс случайно до этой доли…");
         bind("totemHealPerLevel", "… плюс за каждый уровень медицины держащего.");
@@ -506,6 +514,9 @@ public final class ServerConfig {
                 APPLIERS.add(s -> set(f, s, v.get()));
             } else if (f.getType() == boolean.class) {
                 ForgeConfigSpec.BooleanValue v = B.comment(comment).define(snake(name), f.getBoolean(DEFAULTS));
+                APPLIERS.add(s -> set(f, s, v.get()));
+            } else if (f.getType() == int.class) {
+                ForgeConfigSpec.IntValue v = B.comment(comment).defineInRange(snake(name), f.getInt(DEFAULTS), 0, 1_000_000);
                 APPLIERS.add(s -> set(f, s, v.get()));
             } else {
                 throw new IllegalStateException("Неподдерживаемый тип " + name);

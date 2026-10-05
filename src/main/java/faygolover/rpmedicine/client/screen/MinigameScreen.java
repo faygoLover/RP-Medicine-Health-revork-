@@ -4,68 +4,83 @@ import faygolover.rpmedicine.core.Minigames;
 import faygolover.rpmedicine.network.MinigameResultPacket;
 import faygolover.rpmedicine.network.MinigameStartPacket;
 import faygolover.rpmedicine.network.Network;
+import faygolover.rpmedicine.registry.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
 /**
- * Мини-игры лечения (ТЗ второго этапа, п. 9). Сервер присылает вид, сид и сложность; результат —
- * качество 0–1, отказ — −1 (тогда прогресс-бар). Проверяет результат сервер.
+ * Мини-игры лечения (ТЗ второго этапа, п. 9; переделаны по итогам проверки в духе BodyControl).
+ * Инструмент — иконка предмета — следует за курсором с инерцией; стенки раны и вены нельзя задевать;
+ * внизу полоска оставшегося времени. Сервер присылает вид, сид и сложность; результат — качество 0–1,
+ * отказ — −1 (тогда прогресс-бар). Проверяет результат сервер.
  */
 public class MinigameScreen extends Screen {
-    private static final int W = 240;
-    private static final int H = 150;
-    /** Мини-игра не дольше, секунды (дальше засчитывается то, что успели). */
-    private static final double TIME_LIMIT = 30;
+    private static final int W = 300;
+    private static final int H = 196;
 
     private final MinigameStartPacket task;
     @Nullable
     private final Screen back;
     private final Random rnd;
     private final double ease;
-    private final long startMs = System.currentTimeMillis();
+    private final ItemStack tool;
+    private final double timeLimit;
+    private double time;
+    private long lastFrame = System.currentTimeMillis();
     private boolean sent;
     private boolean mouseDown;
+    /** Инструмент в координатах рамки (с инерцией). */
+    private double toolX = W / 2.0;
+    private double toolY = H / 2.0;
+    private double mouseX;
+    private double mouseY;
+    /** Ошибки (касания стенок, промахи) и вспышка после ошибки. */
+    private int errors;
+    private double flash;
+    private int phase;
+    private double progress;
+    private String status = "";
 
-    // Тайминг (укол, вена, вправление)
-    private double windowCenter;
-    private double windowHalf;
-    private double speed;
-    private int hitsNeeded;
-    private int hits;
-    private double hitQualitySum;
-
+    // Укол, вена
+    private double targetX;
+    private double targetY;
+    private double targetR;
+    private double pressure;
+    private double zoneCenter;
+    private double zoneHalf;
+    private double zonePhase;
+    // Канал (вена, пинцет, швы)
+    private double[][] path;
+    private double channel;
+    private boolean outside;
+    private int pathIndex;
+    private boolean carrying;
     // Перевязка
     private double angleSum;
     private double lastAngle = Double.NaN;
+    private int direction = 1;
+    private double nextSwitch;
     private double deviationSum;
     private int deviationCount;
-
-    // Жгут
-    private double tension;
-    private double zoneLow;
-    private double zoneHigh;
-    private double inZone;
-    private long lastFrameMs = System.currentTimeMillis();
-
-    // Пинцет
-    private double[][] path;
-    private double channel;
-    private int touches;
-    private boolean outside;
-    private int progressIndex;
-    private boolean dragging;
-
+    private double wrongSum;
     // Швы
-    private double[][] points;
-    private int pointIndex;
-    private double pointRadius;
+    private double[][] stitches;
+    private int stitchIndex;
+    private boolean stitchDragging;
+    // Вправление
+    private double marker;
 
     public MinigameScreen(MinigameStartPacket task, @Nullable Screen back) {
         super(Component.translatable("rpmedicine.minigame." + task.type().id()));
@@ -73,7 +88,27 @@ public class MinigameScreen extends Screen {
         this.back = back;
         this.rnd = new Random(task.seed());
         this.ease = Mth.clamp(task.ease(), 0.1f, 1f);
+        this.tool = itemFor(task.itemKey());
+        this.timeLimit = baseTime(task.type()) * (0.8 + 0.5 * ease);
         setupGame();
+    }
+
+    private static ItemStack itemFor(String descriptionId) {
+        for (Item it : ForgeRegistries.ITEMS) if (it.getDescriptionId().equals(descriptionId)) return new ItemStack(it);
+        return ItemStack.EMPTY;
+    }
+
+    /** Время на игру до поправки на уровень, секунды. */
+    private static double baseTime(Minigames.Type t) {
+        return switch (t) {
+            case INJECTION -> 9;
+            case VEIN -> 11;
+            case BANDAGE -> 11;
+            case TOURNIQUET -> 9;
+            case TWEEZERS -> 16;
+            case SUTURE -> 16;
+            case REDUCE -> 8;
+        };
     }
 
     public int session() {
@@ -82,40 +117,51 @@ public class MinigameScreen extends Screen {
 
     private void setupGame() {
         switch (task.type()) {
-            case INJECTION, VEIN, REDUCE -> {
-                windowHalf = (0.04 + 0.08 * ease) * (task.type() == Minigames.Type.REDUCE ? 0.7 : task.type() == Minigames.Type.VEIN ? 0.8 : 1.0);
-                speed = (task.type() == Minigames.Type.REDUCE ? 3.4 : 2.2) * (1.6 - 0.6 * ease);
-                hitsNeeded = task.type() == Minigames.Type.VEIN ? 2 : 1;
-                windowCenter = 0.2 + 0.6 * rnd.nextDouble();
+            case INJECTION -> {
+                targetR = 7 + 6 * ease;
+                targetX = 70 + rnd.nextDouble() * (W - 140);
+                targetY = 70 + rnd.nextDouble() * 60;
+                zoneHalf = 0.08 + 0.07 * ease;
             }
+            case VEIN -> {
+                path = winding(5, 0.35);
+                channel = 4.5 + 3.5 * ease;
+            }
+            case BANDAGE -> nextSwitch = Math.PI * (2.2 + rnd.nextDouble() * 1.4);
             case TOURNIQUET -> {
-                double width = 0.12 + 0.12 * ease;
-                zoneLow = 0.45 + rnd.nextDouble() * (0.4 - width);
-                zoneHigh = zoneLow + width;
+                zoneHalf = 0.06 + 0.06 * ease;
+                zonePhase = rnd.nextDouble() * Math.PI * 2;
             }
             case TWEEZERS -> {
-                int n = 7;
-                path = new double[n][2];
-                for (int i = 0; i < n; i++) {
-                    path[i][0] = 20 + i * (W - 40) / (double) (n - 1);
-                    path[i][1] = 75 + (i == 0 || i == n - 1 ? 0 : (rnd.nextDouble() - 0.5) * 70);
-                }
-                channel = 5 + 6 * ease;
+                path = winding(7, 0.9);
+                channel = 5 + 4 * ease;
             }
             case SUTURE -> {
-                int n = 6;
-                points = new double[n][2];
-                double y0 = 50 + rnd.nextDouble() * 20;
-                double y1 = 80 + rnd.nextDouble() * 30;
+                int n = 4 + (ease < 0.5 ? 1 : 0);
+                stitches = new double[n * 2][2];
+                double x0 = 60, x1 = W - 60;
                 for (int i = 0; i < n; i++) {
-                    double t = i / (double) (n - 1);
-                    points[i][0] = 40 + t * (W - 80) + (rnd.nextDouble() - 0.5) * 8;
-                    points[i][1] = Mth.lerp(t, y0, y1) + (rnd.nextDouble() - 0.5) * 10;
+                    double t = (i + 0.5) / n;
+                    double cx = Mth.lerp(t, x0, x1);
+                    double cy = 95 + Math.sin(t * Math.PI * 1.3 + rnd.nextDouble()) * 12;
+                    double off = 13 + rnd.nextDouble() * 4;
+                    stitches[i * 2] = new double[]{cx - 4 + rnd.nextDouble() * 3, cy - off};
+                    stitches[i * 2 + 1] = new double[]{cx + 4 - rnd.nextDouble() * 3, cy + off};
                 }
-                pointRadius = 5 + 6 * ease;
+                channel = 6 + 5 * ease;
             }
-            default -> { }
+            case REDUCE -> zoneHalf = 0.05 + 0.05 * ease;
         }
+    }
+
+    /** Извилистый путь слева направо: {@code bend} — насколько сильно гнётся. */
+    private double[][] winding(int n, double bend) {
+        double[][] p = new double[n][2];
+        for (int i = 0; i < n; i++) {
+            p[i][0] = 30 + i * (W - 60) / (double) (n - 1);
+            p[i][1] = 100 + (i == 0 || i == n - 1 ? 0 : (rnd.nextDouble() - 0.5) * 90 * bend);
+        }
+        return p;
     }
 
     private int left() {
@@ -134,155 +180,420 @@ public class MinigameScreen extends Screen {
         }
     }
 
-    private double elapsed() {
-        return (System.currentTimeMillis() - startMs) / 1000.0;
+    private void sound(SoundEvent e, float pitch) {
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(e, pitch, 0.7f));
     }
 
-    /** Положение стрелки 0–1 в тайминговых играх. */
-    private double marker() {
-        return (Math.sin(elapsed() * speed) + 1) / 2;
+    private void error(String why) {
+        errors++;
+        flash = 1;
+        status = why;
+        sound(ModSounds.MINIGAME_SLIP.get(), 0.8f + rnd.nextFloat() * 0.3f);
     }
 
-    // ------------------------------------------------------------------ отрисовка
+    // ------------------------------------------------------------------ кадр
 
     @Override
     public void render(GuiGraphics g, int mx, int my, float pt) {
+        long now = System.currentTimeMillis();
+        double dt = Math.min(0.1, (now - lastFrame) / 1000.0);
+        lastFrame = now;
+        if (!sent) time += dt;
         renderBackground(g);
         int l = left();
         int t = top();
-        g.fill(l, t, l + W, t + H, 0xE0101418);
-        g.renderOutline(l, t, W, H, 0xFF505860);
-        g.drawCenteredString(font, Component.translatable(task.itemKey()).append(" — ").append(title), width / 2, t + 6, 0xFFFFFF);
-        // Подсказка переносится внутри рамки.
-        int hy = t + 18;
-        for (var line : font.split(Component.translatable("rpmedicine.minigame.hint_" + task.type().id()).withStyle(ChatFormatting.GRAY), W - 12)) {
+        mouseX = mx - l;
+        mouseY = my - t;
+        // Инструмент догоняет курсор: резко дёрнуть — проскочит мимо.
+        double k = 1 - Math.exp(-dt * (10 + 8 * ease));
+        toolX += (mouseX - toolX) * k;
+        toolY += (mouseY - toolY) * k;
+        // Дрожь рук у неопытного.
+        double tremor = (1 - ease) * 1.6;
+        double tx = toolX + Math.sin(time * 17) * tremor;
+        double ty = toolY + Math.cos(time * 13) * tremor;
+
+        g.fill(l, t, l + W, t + H, 0xF0161210);
+        drawSkin(g, l, t);
+        g.renderOutline(l, t, W, H, flash > 0 ? 0xFFFF4040 : 0xFF6A5040);
+        // Заголовок.
+        g.drawCenteredString(font, title.copy().withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), width / 2, t + 5, 0xFFFFFF);
+        int hy = t + 16;
+        for (var line : font.split(Component.translatable("rpmedicine.minigame.hint_" + task.type().id()).withStyle(ChatFormatting.GRAY), W - 16)) {
             g.drawCenteredString(font, line, width / 2, hy, 0xFFFFFF);
             hy += 9;
         }
-        long now = System.currentTimeMillis();
-        double dt = Math.min(0.1, (now - lastFrameMs) / 1000.0);
-        lastFrameMs = now;
         switch (task.type()) {
-            case INJECTION, VEIN, REDUCE -> renderTiming(g, l, t);
-            case BANDAGE -> renderBandage(g, l, t, mx, my);
-            case TOURNIQUET -> renderTourniquet(g, l, t, dt);
-            case TWEEZERS -> renderTweezers(g, l, t, mx, my);
-            case SUTURE -> renderSuture(g, l, t);
+            case INJECTION -> injection(g, l, t, dt, tx, ty);
+            case VEIN -> vein(g, l, t, dt, tx, ty);
+            case BANDAGE -> bandage(g, l, t, dt);
+            case TOURNIQUET -> tourniquet(g, l, t, dt);
+            case TWEEZERS -> tweezers(g, l, t, tx, ty);
+            case SUTURE -> suture(g, l, t, tx, ty);
+            case REDUCE -> reduce(g, l, t, dt);
         }
-        // Время.
-        double left = TIME_LIMIT - elapsed();
-        g.drawString(font, String.format(java.util.Locale.ROOT, "%.0f", Math.max(0, left)), l + W - 18, t + H - 12, 0x808080, false);
-        if (left <= 0) finish(timeoutQuality());
+        // Инструмент у курсора (кроме игр без инструмента).
+        if (!tool.isEmpty() && task.type() != Minigames.Type.BANDAGE && task.type() != Minigames.Type.TOURNIQUET
+                && task.type() != Minigames.Type.REDUCE) {
+            g.pose().pushPose();
+            g.pose().translate(l + tx - 2, t + ty - 14, 200);
+            g.renderItem(tool, 0, 0);
+            g.pose().popPose();
+        }
+        // Вспышка ошибки, сообщение, ошибки.
+        if (flash > 0) {
+            g.fill(l, t, l + W, t + H, ((int) (flash * 80) << 24) | 0xC01010);
+            flash = Math.max(0, flash - dt * 2.5);
+        }
+        if (!status.isEmpty())
+            g.drawCenteredString(font, Component.translatable(status).withStyle(ChatFormatting.RED), width / 2, t + H - 28, 0xFFFFFF);
+        g.drawString(font, Component.translatable("rpmedicine.minigame.errors", errors), l + 6, t + H - 26, errors > 0 ? 0xFF8080 : 0x808080, false);
+        // Полоска оставшегося времени.
+        double leftFrac = Math.max(0, 1 - time / timeLimit);
+        g.fill(l + 6, t + H - 12, l + W - 6, t + H - 7, 0xFF2A2420);
+        int col = leftFrac > 0.5 ? 0xFF58B35A : leftFrac > 0.25 ? 0xFFE0B040 : 0xFFE04040;
+        g.fill(l + 6, t + H - 12, l + 6 + (int) ((W - 12) * leftFrac), t + H - 7, col);
+        if (time >= timeLimit) finish(timeoutQuality());
         super.render(g, mx, my, pt);
     }
 
-    private void renderTiming(GuiGraphics g, int l, int t) {
-        int bx = l + 20;
-        int by = t + 70;
-        int bw = W - 40;
-        g.fill(bx, by, bx + bw, by + 12, 0xFF303840);
-        int wx0 = bx + (int) ((windowCenter - windowHalf) * bw);
-        int wx1 = bx + (int) ((windowCenter + windowHalf) * bw);
-        g.fill(wx0, by, wx1, by + 12, 0xFF2E8B57);
-        int mx = bx + (int) (marker() * bw);
-        g.fill(mx - 1, by - 4, mx + 2, by + 16, 0xFFFFFFFF);
-        if (hitsNeeded > 1)
-            g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.hits", hits, hitsNeeded), width / 2, by + 24, 0xAAAAAA);
+    /** Фон: кожа с волосками и порами. */
+    private void drawSkin(GuiGraphics g, int l, int t) {
+        g.fill(l + 4, t + 38, l + W - 4, t + H - 34, 0xFFC99A7A);
+        Random r = new Random(task.seed() ^ 77);
+        for (int i = 0; i < 70; i++) {
+            int x = l + 6 + r.nextInt(W - 12);
+            int y = t + 40 + r.nextInt(H - 76);
+            g.fill(x, y, x + 1, y + 1, 0xFFB5876A);
+        }
     }
 
-    private void renderBandage(GuiGraphics g, int l, int t, int mx, int my) {
+    // ------------------------------------------------------------------ укол
+
+    private void injection(GuiGraphics g, int l, int t, double dt, double tx, double ty) {
+        if (phase == 0) {
+            // Место укола медленно «плывёт»: пациент дышит и дёргается.
+            double ox = Math.sin(time * 1.3) * 6 * (1.2 - ease);
+            double oy = Math.cos(time * 1.7) * 4 * (1.2 - ease);
+            circle(g, l + targetX + ox, t + targetY + oy, targetR, 0xFF3A70B0);
+            circle(g, l + targetX + ox, t + targetY + oy, 2, 0xFF3A70B0);
+            g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.inj_aim").withStyle(ChatFormatting.WHITE), width / 2, t + H - 40, 0xFFFFFF);
+            return;
+        }
+        // Поршень: держать давление в плывущей зелёной зоне, пока препарат не введён.
+        zoneCenter = 0.5 + Math.sin(time * (0.9 + (1 - ease) * 0.8) + zonePhase) * 0.28;
+        pressure += (mouseDown ? 0.9 : -0.7) * dt;
+        pressure = Mth.clamp(pressure, 0, 1);
+        boolean in = Math.abs(pressure - zoneCenter) <= zoneHalf;
+        if (in) progress += dt / (1.8 + (1 - ease));
+        else if (pressure > zoneCenter + zoneHalf + 0.12 && mouseDown) {
+            progress -= dt * 0.3;
+            if (flash <= 0) error("rpmedicine.minigame.inj_too_fast");
+        }
+        verticalGauge(g, l + W - 40, t + 44, 110, pressure, zoneCenter, zoneHalf);
+        bar(g, l + 40, t + H - 46, W - 110, progress, 0xFF6090E0, "rpmedicine.minigame.injected");
+        if (progress >= 1) finish(quality());
+    }
+
+    // ------------------------------------------------------------------ вена
+
+    private void vein(GuiGraphics g, int l, int t, double dt, double tx, double ty) {
+        drawChannel(g, l, t, 0xFF3A5A9A, 0xFF5878C0);
+        double[] s0 = path[0];
+        double[] e = path[path.length - 1];
+        circle(g, l + s0[0], t + s0[1], 4, 0xFF40C040);
+        circle(g, l + e[0], t + e[1], 5, 0xFFE0E0E0);
+        if (phase == 0) {
+            if (mouseDown && Math.hypot(tx - s0[0], ty - s0[1]) < channel * 1.4) {
+                phase = 1;
+                pathIndex = 0;
+            }
+            return;
+        }
+        if (phase == 1) {
+            followChannel(tx, ty);
+            if (pathIndex == path.length - 1 && Math.hypot(tx - e[0], ty - e[1]) < channel * 1.2) {
+                phase = 2;
+                progress = 0;
+                sound(ModSounds.INJECTION.get(), 1.0f);
+            }
+            return;
+        }
+        // Держать иглу в вене неподвижно.
+        if (Math.hypot(tx - e[0], ty - e[1]) > channel * 1.3) {
+            error("rpmedicine.minigame.vein_lost");
+            phase = 1;
+            pathIndex = Math.max(0, path.length - 2);
+            return;
+        }
+        progress += dt / 1.2;
+        bar(g, l + 40, t + H - 46, W - 80, progress, 0xFF6090E0, "rpmedicine.minigame.hold_still");
+        if (progress >= 1) finish(quality());
+    }
+
+    // ------------------------------------------------------------------ перевязка
+
+    private void bandage(GuiGraphics g, int l, int t, double dt) {
         int cx = l + W / 2;
-        int cy = t + 85;
-        int r = 40;
-        // Окружность, по которой вести мышь.
-        for (int i = 0; i < 72; i++) {
-            double a = i * Math.PI * 2 / 72;
+        int cy = t + 108;
+        int r = 46;
+        for (int i = 0; i < 90; i++) {
+            double a = i * Math.PI * 2 / 90;
             int x = cx + (int) (Math.cos(a) * r);
             int y = cy + (int) (Math.sin(a) * r);
             g.fill(x, y, x + 2, y + 2, 0xFF2E8B57);
         }
-        g.fill(cx - 6, cy - 6, cx + 6, cy + 6, 0xFF884444);
+        for (int i = 0; i < 60; i++) {
+            double a = i * Math.PI * 2 / 60;
+            int x = cx + (int) (Math.cos(a) * (r * 0.62));
+            int y = cy + (int) (Math.sin(a) * (r * 0.62));
+            g.fill(x, y, x + 1, y + 1, 0xFF7A6A5A);
+        }
+        g.fill(cx - 7, cy - 7, cx + 7, cy + 7, 0xFF8A3A3A);
+        String dir = direction > 0 ? "rpmedicine.minigame.dir_cw" : "rpmedicine.minigame.dir_ccw";
+        g.drawCenteredString(font, Component.translatable(dir).withStyle(ChatFormatting.GOLD), width / 2, t + 44, 0xFFFFFF);
         double turns = Math.abs(angleSum) / (Math.PI * 2);
-        g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.turns", String.format(java.util.Locale.ROOT, "%.1f", Math.min(3, turns))),
-                width / 2, t + H - 14, 0xAAAAAA);
+        bar(g, l + 40, t + H - 46, W - 80, Math.min(1, turns / 3), 0xFFE0E0D0, "rpmedicine.minigame.wrapped");
         if (mouseDown) {
-            double dx = mx - cx;
-            double dy = my - cy;
+            double dx = mouseX - W / 2.0;
+            double dy = mouseY - 108;
             double dist = Math.sqrt(dx * dx + dy * dy);
             double a = Math.atan2(dy, dx);
             if (!Double.isNaN(lastAngle)) {
                 double d = a - lastAngle;
                 if (d > Math.PI) d -= Math.PI * 2;
                 if (d < -Math.PI) d += Math.PI * 2;
-                if (Math.abs(d) < 1.0) angleSum += d;
+                if (Math.abs(d) < 1.0) {
+                    // Только в указанную сторону; против — ошибка.
+                    if (Math.signum(d) == direction) {
+                        angleSum += Math.abs(d);
+                        if (angleSum >= nextSwitch) {
+                            direction = -direction;
+                            nextSwitch = angleSum + Math.PI * (2.0 + rnd.nextDouble() * 1.4);
+                            sound(ModSounds.BANDAGE.get(), 1.1f);
+                        }
+                    } else if (Math.abs(d) > 0.02) {
+                        wrongSum += Math.abs(d);
+                        if (wrongSum > 0.8) {
+                            wrongSum = 0;
+                            error("rpmedicine.minigame.wrong_direction");
+                        }
+                    }
+                    // Слишком быстро — бинт соскальзывает.
+                    if (Math.abs(d) / Math.max(1e-3, dt) > 14 - 4 * (1 - ease) && flash <= 0) error("rpmedicine.minigame.too_fast");
+                }
             }
             lastAngle = a;
             deviationSum += Math.abs(dist - r) / r;
             deviationCount++;
-            if (Math.abs(angleSum) >= Math.PI * 6) finish(bandageQuality());
+            if (Math.abs(dist - r) > r * 0.35 && flash <= 0) error("rpmedicine.minigame.off_line");
+            if (angleSum >= Math.PI * 6) finish(quality() * bandageEvenness());
         } else {
             lastAngle = Double.NaN;
         }
     }
 
-    private double bandageQuality() {
+    private double bandageEvenness() {
         double dev = deviationCount > 0 ? deviationSum / deviationCount : 1;
-        return Mth.clamp(1 - dev * 2.5 * (1.2 - 0.4 * ease), 0, 1);
+        return Mth.clamp(1 - dev * 2.0, 0, 1);
     }
 
-    private void renderTourniquet(GuiGraphics g, int l, int t, double dt) {
-        tension += (mouseDown ? 0.55 : -0.45) * dt;
-        tension = Mth.clamp(tension, 0, 1);
-        if (tension >= zoneLow && tension <= zoneHigh) inZone += dt;
-        int bx = l + W / 2 - 10;
-        int by = t + 34;
-        int bh = 100;
-        g.fill(bx, by, bx + 20, by + bh, 0xFF303840);
-        int zy0 = by + bh - (int) (zoneHigh * bh);
-        int zy1 = by + bh - (int) (zoneLow * bh);
-        g.fill(bx, zy0, bx + 20, zy1, 0xFF2E8B57);
-        int ty = by + bh - (int) (tension * bh);
-        g.fill(bx - 6, ty - 1, bx + 26, ty + 2, 0xFFFFFFFF);
-        g.drawString(font, Component.translatable("rpmedicine.minigame.hold", String.format(java.util.Locale.ROOT, "%.1f", Math.min(3, inZone))),
-                l + W / 2 + 20, t + 80, 0xAAAAAA, false);
-        if (inZone >= 3) finish(Mth.clamp(inZone / Math.max(3, elapsed()) * 1.4, 0, 1));
+    // ------------------------------------------------------------------ жгут
+
+    private void tourniquet(GuiGraphics g, int l, int t, double dt) {
+        zoneCenter = 0.62 + Math.sin(time * (0.8 + (1 - ease) * 0.9) + zonePhase) * 0.18;
+        pressure += (mouseDown ? 0.75 : -0.55) * dt;
+        pressure = Mth.clamp(pressure, 0, 1);
+        boolean in = Math.abs(pressure - zoneCenter) <= zoneHalf;
+        if (in) progress += dt / 3.0;
+        if (pressure > 0.95 && flash <= 0) error("rpmedicine.minigame.too_tight");
+        verticalGauge(g, l + W / 2 - 12, t + 44, 110, pressure, zoneCenter, zoneHalf);
+        bar(g, l + 40, t + H - 46, W - 80, progress, 0xFF58B35A, "rpmedicine.minigame.held");
+        if (progress >= 1) finish(quality());
     }
 
-    private void renderTweezers(GuiGraphics g, int l, int t, int mx, int my) {
-        // Канал: толстая линия по точкам.
-        for (int i = 0; i + 1 < path.length; i++) {
-            for (int k = 0; k <= 30; k++) {
-                double f = k / 30.0;
-                int x = l + (int) Mth.lerp(f, path[i][0], path[i + 1][0]);
-                int y = t + (int) Mth.lerp(f, path[i][1], path[i + 1][1]);
-                int c = (int) channel;
-                g.fill(x - c, y - c, x + c, y + c, 0xFF5A3030);
+    // ------------------------------------------------------------------ пинцет
+
+    private void tweezers(GuiGraphics g, int l, int t, double tx, double ty) {
+        drawChannel(g, l, t, 0xFF5A2020, 0xFF8A3030);
+        double[] mouth = path[0];
+        double[] deep = path[path.length - 1];
+        circle(g, l + mouth[0], t + mouth[1], 5, 0xFF40C040);
+        // Пуля в глубине раны или в пинцете.
+        if (!carrying) circle(g, l + deep[0], t + deep[1], 4, 0xFFB0A060);
+        if (phase == 0) {
+            if (mouseDown && Math.hypot(tx - mouth[0], ty - mouth[1]) < channel * 1.4) {
+                phase = 1;
+                pathIndex = 0;
             }
+            return;
         }
-        int sx = l + (int) path[0][0];
-        int sy = t + (int) path[0][1];
-        int ex = l + (int) path[path.length - 1][0];
-        int ey = t + (int) path[path.length - 1][1];
-        g.fill(sx - 4, sy - 4, sx + 4, sy + 4, 0xFF2E8B57);
-        g.fill(ex - 4, ey - 4, ex + 4, ey + 4, 0xFFC0C0C0);
-        g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.touches", touches), width / 2, t + H - 14, 0xAAAAAA);
-        if (!dragging) return;
-        double lx = mx - l;
-        double ly = my - t;
-        double d = distanceToPath(lx, ly);
+        if (phase == 1) {
+            // Внутрь: от устья к пуле.
+            followChannel(tx, ty);
+            if (pathIndex == path.length - 1 && Math.hypot(tx - deep[0], ty - deep[1]) < channel * 1.1) {
+                carrying = true;
+                phase = 2;
+                pathIndex = path.length - 1;
+                sound(ModSounds.SURGERY_RETRACT.get(), 1.2f);
+            }
+            return;
+        }
+        // Наружу с пулей: обратно по каналу, не задевая стенок.
+        double d = distanceToPath(tx, ty);
         if (d > channel) {
-            if (!outside) touches++;
+            if (!outside) error("rpmedicine.minigame.wall");
             outside = true;
         } else {
             outside = false;
         }
-        // Продвижение по каналу: нельзя перескочить через участки.
-        for (int i = progressIndex; i < path.length; i++) {
-            if (Math.hypot(lx - path[i][0], ly - path[i][1]) < channel * 2.2) progressIndex = Math.max(progressIndex, i);
-            else if (i > progressIndex) break;
+        for (int i = pathIndex; i >= 0; i--) {
+            if (Math.hypot(tx - path[i][0], ty - path[i][1]) < channel * 2.2) pathIndex = Math.min(pathIndex, i);
+            else if (i < pathIndex) break;
         }
-        if (progressIndex == path.length - 1 && Math.hypot(lx - path[path.length - 1][0], ly - path[path.length - 1][1]) < channel * 1.5)
-            finish(Mth.clamp(1 - touches * 0.25, 0, 1));
+        g.fill((int) (l + tx) - 2, (int) (t + ty) - 2, (int) (l + tx) + 3, (int) (t + ty) + 3, 0xFFB0A060);
+        if (pathIndex == 0 && Math.hypot(tx - mouth[0], ty - mouth[1]) < channel * 1.2) finish(quality());
+    }
+
+    // ------------------------------------------------------------------ швы
+
+    private void suture(GuiGraphics g, int l, int t, double tx, double ty) {
+        // Рана — тёмная линия.
+        for (int x = 50; x < W - 50; x++) {
+            double f = (x - 50) / (double) (W - 100);
+            int y = (int) (95 + Math.sin(f * Math.PI * 1.3 + 0.5) * 12);
+            g.fill(l + x, t + y - 2, l + x + 1, t + y + 3, 0xFF6A1515);
+        }
+        int n = stitches.length / 2;
+        for (int i = 0; i < n; i++) {
+            double[] a = stitches[i * 2];
+            double[] b = stitches[i * 2 + 1];
+            boolean done = i < stitchIndex;
+            int col = done ? 0xFFE8E8E0 : i == stitchIndex ? 0xFFFFD040 : 0xFF707070;
+            circle(g, l + a[0], t + a[1], 3, col);
+            circle(g, l + b[0], t + b[1], 3, col);
+            if (done) line(g, l + a[0], t + a[1], l + b[0], t + b[1], 0xFFE8E8E0);
+        }
+        if (stitchIndex >= n) return;
+        double[] a = stitches[stitchIndex * 2];
+        double[] b = stitches[stitchIndex * 2 + 1];
+        if (stitchDragging) {
+            // Игла тянет нить от входа к выходу; уйти в сторону — рвёт кожу.
+            line(g, l + a[0], t + a[1], l + tx, t + ty, 0xFFE8E8E0);
+            double vx = b[0] - a[0], vy = b[1] - a[1];
+            double f = Mth.clamp(((tx - a[0]) * vx + (ty - a[1]) * vy) / (vx * vx + vy * vy), 0, 1);
+            double dev = Math.hypot(tx - (a[0] + vx * f), ty - (a[1] + vy * f));
+            if (dev > channel) {
+                if (!outside) error("rpmedicine.minigame.skin_torn");
+                outside = true;
+            } else {
+                outside = false;
+            }
+        }
+    }
+
+    private void stitchPress() {
+        if (stitches == null || stitchIndex >= stitches.length / 2) return;
+        double[] a = stitches[stitchIndex * 2];
+        if (Math.hypot(toolX - a[0], toolY - a[1]) < channel * 1.2) {
+            stitchDragging = true;
+            outside = false;
+        } else {
+            error("rpmedicine.minigame.missed");
+        }
+    }
+
+    private void stitchRelease() {
+        if (!stitchDragging) return;
+        stitchDragging = false;
+        double[] b = stitches[stitchIndex * 2 + 1];
+        if (Math.hypot(toolX - b[0], toolY - b[1]) < channel * 1.2) {
+            stitchIndex++;
+            sound(ModSounds.SURGERY_STITCH.get(), 1.0f + rnd.nextFloat() * 0.2f);
+            if (stitchIndex >= stitches.length / 2) finish(quality());
+        } else {
+            error("rpmedicine.minigame.missed");
+        }
+    }
+
+    // ------------------------------------------------------------------ вправление
+
+    private void reduce(GuiGraphics g, int l, int t, double dt) {
+        if (phase == 0) {
+            // Вытяжение: держать натяжение в зелёной зоне.
+            zoneCenter = 0.6;
+            pressure += (mouseDown ? 0.8 : -0.6) * dt;
+            pressure = Mth.clamp(pressure, 0, 1);
+            if (Math.abs(pressure - zoneCenter) <= 0.12) progress += dt / 1.4;
+            if (pressure > 0.92 && flash <= 0) error("rpmedicine.minigame.too_hard");
+            verticalGauge(g, l + W / 2 - 12, t + 44, 110, pressure, zoneCenter, 0.12);
+            bar(g, l + 40, t + H - 46, W - 80, progress, 0xFF58B35A, "rpmedicine.minigame.traction");
+            if (progress >= 1) {
+                phase = 1;
+                progress = 0;
+                zoneCenter = 0.25 + rnd.nextDouble() * 0.5;
+            }
+            return;
+        }
+        // Рывок: точно в окне.
+        marker = (Math.sin(time * (3.2 + (1 - ease) * 2.4)) + 1) / 2;
+        int bx = l + 30;
+        int by = t + 100;
+        int bw = W - 60;
+        g.fill(bx, by, bx + bw, by + 12, 0xFF303030);
+        g.fill(bx + (int) ((zoneCenter - zoneHalf) * bw), by, bx + (int) ((zoneCenter + zoneHalf) * bw), by + 12, 0xFF2E8B57);
+        int mx = bx + (int) (marker * bw);
+        g.fill(mx - 1, by - 4, mx + 2, by + 16, 0xFFFFFFFF);
+        g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.jerk").withStyle(ChatFormatting.GOLD), width / 2, by - 16, 0xFFFFFF);
+    }
+
+    private void jerk() {
+        if (phase != 1) return;
+        double d = Math.abs(marker - zoneCenter);
+        if (d <= zoneHalf) {
+            sound(ModSounds.SURGERY_BONE_SET.get(), 1.0f);
+            finish(quality() * Mth.clamp(1 - d / (zoneHalf * 2), 0.5, 1));
+        } else {
+            error("rpmedicine.minigame.missed");
+            if (errors >= 3) finish(0);
+        }
+    }
+
+    // ------------------------------------------------------------------ общее
+
+    /** Продвижение по каналу внутрь; выход за стенку — ошибка. */
+    private void followChannel(double tx, double ty) {
+        double d = distanceToPath(tx, ty);
+        if (d > channel) {
+            if (!outside) error("rpmedicine.minigame.wall");
+            outside = true;
+        } else {
+            outside = false;
+        }
+        for (int i = pathIndex; i < path.length; i++) {
+            if (Math.hypot(tx - path[i][0], ty - path[i][1]) < channel * 2.2) pathIndex = Math.max(pathIndex, i);
+            else if (i > pathIndex) break;
+        }
+    }
+
+    private void drawChannel(GuiGraphics g, int l, int t, int wall, int inner) {
+        int c = (int) channel;
+        for (int i = 0; i + 1 < path.length; i++) {
+            for (int k = 0; k <= 40; k++) {
+                double f = k / 40.0;
+                int x = l + (int) Mth.lerp(f, path[i][0], path[i + 1][0]);
+                int y = t + (int) Mth.lerp(f, path[i][1], path[i + 1][1]);
+                g.fill(x - c - 2, y - c - 2, x + c + 2, y + c + 2, wall);
+            }
+        }
+        for (int i = 0; i + 1 < path.length; i++) {
+            for (int k = 0; k <= 40; k++) {
+                double f = k / 40.0;
+                int x = l + (int) Mth.lerp(f, path[i][0], path[i + 1][0]);
+                int y = t + (int) Mth.lerp(f, path[i][1], path[i + 1][1]);
+                g.fill(x - c, y - c, x + c, y + c, inner);
+            }
+        }
     }
 
     private double distanceToPath(double x, double y) {
@@ -296,33 +607,55 @@ public class MinigameScreen extends Screen {
         return best;
     }
 
-    private void renderSuture(GuiGraphics g, int l, int t) {
-        // Линия раны.
-        for (int i = 0; i + 1 < points.length; i++) {
-            for (int k = 0; k <= 20; k++) {
-                double f = k / 20.0;
-                int x = l + (int) Mth.lerp(f, points[i][0], points[i + 1][0]);
-                int y = t + (int) Mth.lerp(f, points[i][1], points[i + 1][1]);
-                g.fill(x, y, x + 2, y + 2, 0xFF8B2020);
-            }
-        }
-        for (int i = 0; i < points.length; i++) {
-            int x = l + (int) points[i][0];
-            int y = t + (int) points[i][1];
-            int r = (int) pointRadius;
-            int color = i < pointIndex ? 0xFF2E8B57 : i == pointIndex ? 0xFFFFD700 : 0xFF606060;
-            g.renderOutline(x - r, y - r, r * 2, r * 2, color);
+    private void verticalGauge(GuiGraphics g, int x, int y, int h, double value, double center, double half) {
+        g.fill(x, y, x + 24, y + h, 0xFF2A2A2A);
+        g.fill(x, y + (int) ((1 - (center + half)) * h), x + 24, y + (int) ((1 - (center - half)) * h), 0xFF2E8B57);
+        g.fill(x, y, x + 24, y + (int) (h * 0.05), 0xFF7A2020);
+        int vy = y + (int) ((1 - value) * h);
+        g.fill(x - 5, vy - 1, x + 29, vy + 2, 0xFFFFFFFF);
+    }
+
+    private void bar(GuiGraphics g, int x, int y, int w, double frac, int color, String key) {
+        g.fill(x, y, x + w, y + 5, 0xFF2A2A2A);
+        g.fill(x, y, x + (int) (w * Mth.clamp(frac, 0, 1)), y + 5, color);
+        g.drawString(font, Component.translatable(key), x, y - 10, 0xCCCCCC, false);
+    }
+
+    private void circle(GuiGraphics g, double cx, double cy, double r, int color) {
+        int n = Math.max(12, (int) (r * 4));
+        for (int i = 0; i < n; i++) {
+            double a = i * Math.PI * 2 / n;
+            int x = (int) (cx + Math.cos(a) * r);
+            int y = (int) (cy + Math.sin(a) * r);
+            g.fill(x, y, x + 1, y + 1, color);
         }
     }
 
+    private void line(GuiGraphics g, double x0, double y0, double x1, double y1, int color) {
+        int n = (int) Math.max(2, Math.hypot(x1 - x0, y1 - y0));
+        for (int i = 0; i <= n; i++) {
+            double f = i / (double) n;
+            int x = (int) Mth.lerp(f, x0, x1);
+            int y = (int) Mth.lerp(f, y0, y1);
+            g.fill(x, y, x + 1, y + 1, color);
+        }
+    }
+
+    /** Качество: каждая ошибка −0,22, к концу времени чуть хуже. */
+    private double quality() {
+        double q = 1 - errors * 0.22 - Math.max(0, time / timeLimit - 0.6) * 0.3;
+        return Mth.clamp(q, 0, 1);
+    }
+
     private double timeoutQuality() {
-        return switch (task.type()) {
-            case BANDAGE -> bandageQuality() * Math.min(1, Math.abs(angleSum) / (Math.PI * 6));
-            case TOURNIQUET -> Mth.clamp(inZone / 3 * 0.5, 0, 0.5);
-            case SUTURE -> pointIndex == 0 ? 0 : hitQualitySum / points.length;
-            case INJECTION, VEIN, REDUCE -> hits == 0 ? 0 : hitQualitySum / hitsNeeded;
+        // Не успел — засчитывается доля сделанного, но не больше «плохо».
+        double done = switch (task.type()) {
+            case BANDAGE -> Math.min(1, Math.abs(angleSum) / (Math.PI * 6));
+            case SUTURE -> stitches == null ? 0 : stitchIndex / (double) (stitches.length / 2);
+            case TOURNIQUET, VEIN, INJECTION -> Mth.clamp(progress, 0, 1) * (phase > 0 || task.type() == Minigames.Type.TOURNIQUET ? 1 : 0);
             default -> 0;
         };
+        return Math.min(0.45, done * quality());
     }
 
     // ------------------------------------------------------------------ ввод
@@ -333,46 +666,38 @@ public class MinigameScreen extends Screen {
         if (button != 0 || sent) return false;
         mouseDown = true;
         switch (task.type()) {
-            case INJECTION, VEIN, REDUCE -> timingHit();
-            case TWEEZERS -> {
-                double lx = mx - left();
-                double ly = my - top();
-                if (Math.hypot(lx - path[0][0], ly - path[0][1]) < channel * 1.5) {
-                    dragging = true;
-                    progressIndex = 0;
-                    outside = false;
+            case INJECTION -> {
+                if (phase == 0) {
+                    double ox = Math.sin(time * 1.3) * 6 * (1.2 - ease);
+                    double oy = Math.cos(time * 1.7) * 4 * (1.2 - ease);
+                    if (Math.hypot(toolX - (targetX + ox), toolY - (targetY + oy)) <= targetR) {
+                        phase = 1;
+                        sound(ModSounds.INJECTION.get(), 1.1f);
+                    } else {
+                        error("rpmedicine.minigame.missed");
+                    }
                 }
             }
-            case SUTURE -> {
-                double lx = mx - left();
-                double ly = my - top();
-                double d = Math.hypot(lx - points[pointIndex][0], ly - points[pointIndex][1]);
-                hitQualitySum += Mth.clamp(1 - d / (pointRadius * 1.5), 0, 1);
-                pointIndex++;
-                if (pointIndex >= points.length) finish(hitQualitySum / points.length);
+            case SUTURE -> stitchPress();
+            case REDUCE -> {
+                if (phase == 1) jerk();
             }
             default -> { }
         }
         return true;
     }
 
-    private void timingHit() {
-        double d = Math.abs(marker() - windowCenter);
-        hitQualitySum += Mth.clamp(1 - d / (windowHalf * 1.5), 0, 1);
-        hits++;
-        if (hits >= hitsNeeded) finish(hitQualitySum / hitsNeeded);
-        else windowCenter = 0.2 + 0.6 * rnd.nextDouble();
-    }
-
     @Override
     public boolean mouseReleased(double mx, double my, int button) {
         if (button == 0) {
             mouseDown = false;
-            if (dragging) {
-                // Отпустил пинцет на полпути — касание и заново от начала.
-                dragging = false;
-                touches++;
-                progressIndex = 0;
+            if (task.type() == Minigames.Type.SUTURE) stitchRelease();
+            if ((task.type() == Minigames.Type.TWEEZERS || task.type() == Minigames.Type.VEIN) && phase >= 1 && !sent) {
+                // Отпустил инструмент в ране — сорвалось, начинать заново.
+                error("rpmedicine.minigame.dropped");
+                phase = 0;
+                carrying = false;
+                pathIndex = 0;
             }
         }
         return super.mouseReleased(mx, my, button);
@@ -380,10 +705,8 @@ public class MinigameScreen extends Screen {
 
     @Override
     public boolean keyPressed(int key, int scan, int mods) {
-        // Пробел — то же, что клик, в тайминговых играх.
-        if (key == org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE && !sent
-                && (task.type() == Minigames.Type.INJECTION || task.type() == Minigames.Type.VEIN || task.type() == Minigames.Type.REDUCE)) {
-            timingHit();
+        if (key == org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE && !sent && task.type() == Minigames.Type.REDUCE) {
+            jerk();
             return true;
         }
         return super.keyPressed(key, scan, mods);
@@ -394,6 +717,7 @@ public class MinigameScreen extends Screen {
     private void finish(double quality) {
         if (sent) return;
         sent = true;
+        sound(quality >= 0.5 ? ModSounds.MINIGAME_OK.get() : ModSounds.SURGERY_ERROR.get(), 1.0f);
         Network.sendToServer(new MinigameResultPacket(task.session(), (float) Mth.clamp(quality, 0, 1)));
         minecraft.setScreen(back);
     }

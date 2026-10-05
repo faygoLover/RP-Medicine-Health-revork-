@@ -50,6 +50,23 @@
 | `sounds/heavy_breathing_2.ogg` (событие `heavy_breathing`) | Health & Disease 1.4.2: `assets/health_and_disease/sounds/en1te-bu0v4.ogg` | JEDIGD | MIT | да |
 | `sounds/heavy_breathing_3.ogg` (событие `heavy_breathing`) | Health & Disease 1.4.2: `assets/health_and_disease/sounds/cl336-1jp1v.ogg` | JEDIGD | MIT | да |
 
+## Пачка 05.10.2026: ассеты «родственных модов»
+
+С 05.10.2026 мод только для локального использования, ассеты берутся из `docs/reference/родственные моды/` с указанием авторов. Лицензия RP Medicine сменена на GPL-3.0 (`gradle.properties`, `mod_license`): она совместима и с MIT, и с GPL-ассетами ниже. Копирование — `scripts/gen_data.py` (`BC_SOUNDS`, `REL_TEXTURES`) и `scripts/status_icons.py`.
+
+| Что в моде | Откуда | Автор | Лицензия мода-источника |
+|---|---|---|---|
+| `sounds/bc/*.ogg` — 94 звука: сердце, дыхание, кашель, стоны, переломы, рвота, бинт, шина, хирургия, пила, дрель, писк монитора, звон в ушах и др. (список — `BC_SOUNDS`) | Body Control 1.0.0-alpha, `assets/bodycontrol/sounds/` | VKM (файл LICENSE — fyz) | MIT |
+| `textures/item/`: propofol, syringe, blood_draw_syringe, surgical_tweezers, test_tube, portable_scanner, hemoanalyzer, lancet, medcard, stabilization_kit | Body Control 1.0.0-alpha, `assets/bodycontrol/textures/item/` | VKM | MIT |
+| `textures/item/`: adrenaline, txa, ketorolac, naloxone, diazepam, atropine, ceftriaxone, norepinephrine, ketamine, lidocaine | Tactical Aid 1.3.9, `assets/tactical_aid/textures/item/` | 17612 (MCreator) | MIT |
+| `textures/gui/status/`: bleed_1, bleed_3, pneumothorax, dressed | Tactical Medicine 1.1.0, `textures/mob_effect/` | Lector | MIT |
+| `textures/gui/status/`: bleed_2, bleed_4, internal, fracture, infection, adrenaline | Meds and Herbs 2.0.3, `textures/mob_effect/` | ChebyPattern | MIT |
+| `textures/gui/status/`: analgesia, dyspnea, nausea, sedated | MedicaMod 1.0.0, `textures/mob_effect/` | KG STUDIO | MIT |
+| `textures/gui/status/`: fever, cold, stabilized, concussion | Legendary Survival Overhaul 2.4.2, `textures/mob_effect/` | Sfiomn | GPL-3.0 |
+| `sounds/bc/hbm_vomit.ogg` | HBM's Nuclear Tech Mod | HBM и соавторы | см. репозиторий HBM |
+
+Иконки состояний уменьшены до 18×18; звуки — без изменений.
+
 ## Текст лицензии MIT
 
 ```

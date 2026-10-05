@@ -159,6 +159,11 @@ public final class MedicalHud {
         boolean own = ClientState.progressActive();
         boolean incoming = !own && ClientState.incomingActive();
         if (!preview && !own && !incoming) return;
+        // СЛР и Амбу — ритм вместо полосы.
+        if (own && ClientState.progressTotal < 0 && Rhythm.active()) {
+            Rhythm.draw(g, font);
+            return;
+        }
         float frac;
         Component label;
         Component sub;

@@ -58,7 +58,7 @@ public final class GmPanelService {
             rows.add(new GmPanelPacket.Row(e.getKey(), name, true, m != null ? stateColor(m) : (r.dead ? 4 : 3),
                     r.dimension.location().toString(), (int) r.pos.x, (int) r.pos.y, (int) r.pos.z));
         }
-        Network.send(gm, new GmPanelPacket(rows));
+        Network.send(gm, new GmPanelPacket(rows, faygolover.rpmedicine.data.DrugRules.ids()));
     }
 
     @Nullable
@@ -84,8 +84,8 @@ public final class GmPanelService {
         LivingEntity t = target(server, p.uuid());
         switch (p.action()) {
             case INSPECT -> {
-                List<Component> lines = t != null ? MedicalReports.full(t) : List.of(Component.translatable("rpmedicine.gm.not_loaded"));
-                Network.send(gm, new GmReportPacket(p.uuid(), lines));
+                if (t != null) sendReport(gm, p.uuid(), t);
+                else Network.send(gm, new GmReportPacket(p.uuid(), List.of(Component.translatable("rpmedicine.gm.not_loaded"))));
             }
             case HISTORY -> {
                 History.load(server, p.uuid());
@@ -112,8 +112,51 @@ public final class GmPanelService {
         }
         if (p.action() != GmActionPacket.Action.INSPECT && p.action() != GmActionPacket.Action.HISTORY) {
             open(gm);
-            if (t != null && p.action() != GmActionPacket.Action.KILL) Network.send(gm, new GmReportPacket(p.uuid(), MedicalReports.full(t)));
+            if (t != null && p.action() != GmActionPacket.Action.KILL) sendReport(gm, p.uuid(), t);
         }
+    }
+
+    /** Полный осмотр и цвета частей тела для силуэта. */
+    private static void sendReport(ServerPlayer gm, UUID uuid, LivingEntity t) {
+        MedicalState m = Medical.state(t);
+        byte[] colors = new byte[faygolover.rpmedicine.core.BodyPart.VALUES.length];
+        if (m != null) {
+            MedicalSettings s = MedicalSettings.get();
+            for (int i = 0; i < colors.length; i++) colors[i] = (byte) faygolover.rpmedicine.core.Examination.partColor(m, m.parts[i], s);
+        }
+        Network.send(gm, new GmReportPacket(uuid, MedicalReports.full(t), colors));
+    }
+
+    /** Правка тела с силуэта: рана, лечение части, препарат. */
+    public static void onEdit(ServerPlayer gm, faygolover.rpmedicine.network.GmEditPacket p) {
+        if (!gm.hasPermissions(2)) return;
+        LivingEntity t = target(gm.server, p.uuid());
+        MedicalState m = t != null ? Medical.state(t) : null;
+        if (m == null) return;
+        String part = p.part().id;
+        switch (p.op()) {
+            case INJURE -> {
+                if (faygolover.rpmedicine.core.WoundType.byId(p.arg()).isEmpty()) return;
+                command(gm, "rpmedicine injure " + t.getStringUUID() + " " + p.arg() + " " + part + " "
+                        + String.format(java.util.Locale.ROOT, "%.0f", Math.max(1, Math.min(100, p.value()))));
+            }
+            case HEAL_PART -> command(gm, "rpmedicine heal " + t.getStringUUID() + " " + part);
+            case DRUG -> {
+                faygolover.rpmedicine.core.Drug d = faygolover.rpmedicine.data.DrugRules.byId(p.arg());
+                if (d == null) return;
+                double dose = Math.max(0.25, Math.min(5, p.value()));
+                var r = faygolover.rpmedicine.core.Drugs.apply(m, p.part(), d, false, new java.util.SplittableRandom(), MedicalSettings.get(), dose);
+                Medical.changed(t);
+                gm.displayClientMessage(Component.translatable("rpmedicine.gm.drug_given", d.id(), String.format(java.util.Locale.ROOT, "%.1f", dose),
+                        Component.literal(r.key)), false);
+            }
+        }
+        open(gm);
+        sendReport(gm, p.uuid(), t);
+    }
+
+    private static void command(ServerPlayer gm, String cmd) {
+        gm.server.getCommands().performPrefixedCommand(gm.createCommandSourceStack(), cmd);
     }
 
     /** Для отладки и тестов: цвет состояния сущности. */

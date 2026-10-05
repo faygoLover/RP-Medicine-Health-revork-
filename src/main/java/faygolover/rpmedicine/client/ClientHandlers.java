@@ -54,6 +54,11 @@ public final class ClientHandlers {
         if (Minecraft.getInstance().screen instanceof faygolover.rpmedicine.client.screen.GmPanelScreen s) s.report(p);
     }
 
+    public static void onDoseRequest(faygolover.rpmedicine.network.DosePacket.Request p) {
+        Minecraft mc = Minecraft.getInstance();
+        mc.setScreen(new faygolover.rpmedicine.client.screen.DoseScreen(p, mc.screen));
+    }
+
     public static void onMedcard(faygolover.rpmedicine.network.MedcardDataPacket p) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen instanceof faygolover.rpmedicine.client.screen.MedcardScreen ms && ms.uuid().equals(p.uuid())) ms.update(p);
@@ -78,6 +83,8 @@ public final class ClientHandlers {
             ClientState.incomingSubtitle = p.subtitle();
             return;
         }
+        if (p.totalTicks() < 0) Rhythm.set(p.labelKey());
+        else Rhythm.stop();
         ClientState.progressLabel = p.labelKey();
         ClientState.progressTotal = p.totalTicks();
         ClientState.progressDone = p.doneTicks();

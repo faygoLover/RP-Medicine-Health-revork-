@@ -94,7 +94,8 @@ public final class VanillaEffects {
             puddle.moveTo(sp.getX() + look.x * 0.8, sp.getEyeY() - 0.4, sp.getZ() + look.z * 0.8, 0, 0);
             sp.serverLevel().addFreshEntity(puddle);
         }
-        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ModSounds.VOMIT.get(), SoundSource.VOICE, 0.9f, 1.0f);
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ModSounds.VOMIT.get(), SoundSource.VOICE, 0.9f,
+                faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp));
         sp.displayClientMessage(Component.translatable("rpmedicine.msg.vomit").withStyle(ChatFormatting.DARK_GREEN), true);
         Medical.changed(sp);
     }

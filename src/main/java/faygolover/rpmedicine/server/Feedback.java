@@ -21,7 +21,8 @@ public final class Feedback {
         if (last != null && now - last < 60) return;
         LAST_GROAN.put(sp.getUUID(), now);
         var ev = rep.totalSeverity >= 25 ? ModSounds.PAIN_GROAN.get() : ModSounds.PAIN_MOAN.get();
-        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ev, SoundSource.VOICE, 0.9f, 0.95f + sp.getRandom().nextFloat() * 0.1f);
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), ev, SoundSource.VOICE, 0.9f,
+                faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp) * (0.95f + sp.getRandom().nextFloat() * 0.1f));
     }
 
     public static void onInjury(ServerPlayer sp, Injuries.Report rep) {

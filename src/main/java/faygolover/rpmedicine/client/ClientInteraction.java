@@ -33,6 +33,11 @@ public final class ClientInteraction {
         if (v.useTimePct > 100) event.setDuration((int) Math.ceil(event.getDuration() * v.useTimePct / 100.0));
     }
 
+    /** Лежачий ли (для СЛР пустой рукой на клиенте). */
+    public static boolean isDowned(net.minecraft.world.entity.Entity e) {
+        return e instanceof faygolover.rpmedicine.entity.BodyStubEntity || ClientState.DOWNED.contains(e.getId());
+    }
+
     public static boolean armsDisabled() {
         return ClientState.self.armsDisabled;
     }

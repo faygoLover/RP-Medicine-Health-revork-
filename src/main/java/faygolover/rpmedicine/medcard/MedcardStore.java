@@ -41,7 +41,10 @@ public final class MedcardStore {
         Medcard c = CACHE.get(uuid);
         if (c != null) return c;
         c = load(server, uuid);
-        if (c == null) c = new Medcard(uuid);
+        if (c == null) {
+            c = new Medcard(uuid);
+            c.created = System.currentTimeMillis();
+        }
         CACHE.put(uuid, c);
         return c;
     }

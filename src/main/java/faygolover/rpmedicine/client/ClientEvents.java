@@ -289,6 +289,7 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onLogout(ClientPlayerNetworkEvent.LoggingOut e) {
         ClientState.reset();
+        Rhythm.stop();
         PostEffects.reset();
         faygolover.rpmedicine.client.render.DownedPose.reset();
         lastHoverTarget = -1;

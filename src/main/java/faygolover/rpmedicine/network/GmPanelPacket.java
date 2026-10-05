@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /** Сервер → ГМ: список игроков онлайн и тел для панели ГМа (только операторам). */
-public record GmPanelPacket(List<Row> rows) {
+public record GmPanelPacket(List<Row> rows, List<String> drugs) {
     /** @param color 0 — здоров, 1 — ранен, 2 — серьёзно, 3 — лежит, 4 — клиническая смерть */
     public record Row(UUID uuid, String name, boolean stub, int color, String dimension, int x, int y, int z) {}
 
@@ -27,6 +27,8 @@ public record GmPanelPacket(List<Row> rows) {
             buf.writeInt(r.y);
             buf.writeInt(r.z);
         }
+        buf.writeVarInt(p.drugs.size());
+        for (String d : p.drugs) buf.writeUtf(d, 64);
     }
 
     public static GmPanelPacket decode(FriendlyByteBuf buf) {
@@ -34,7 +36,10 @@ public record GmPanelPacket(List<Row> rows) {
         List<Row> rows = new ArrayList<>(n);
         for (int i = 0; i < n; i++)
             rows.add(new Row(buf.readUUID(), buf.readUtf(64), buf.readBoolean(), buf.readByte(), buf.readUtf(128), buf.readInt(), buf.readInt(), buf.readInt()));
-        return new GmPanelPacket(rows);
+        int d = Math.min(500, buf.readVarInt());
+        List<String> drugs = new ArrayList<>(d);
+        for (int i = 0; i < d; i++) drugs.add(buf.readUtf(64));
+        return new GmPanelPacket(rows, drugs);
     }
 
     public static void handle(GmPanelPacket p, Supplier<NetworkEvent.Context> ctx) {

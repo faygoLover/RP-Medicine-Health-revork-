@@ -56,6 +56,11 @@ public final class InteractionHandler {
         if (event.getLevel().isClientSide) {
             // Клиент: жест переноски и медпредметы поглощаем, чтобы не сработали чужие действия.
             if (carryOnGesture || main.is(faygolover.rpmedicine.menu.MedicalContainerMenu.MEDICAL_ITEMS)) cancel(event);
+            // СЛР пустой рукой: рука вытянута, а не машет на каждый повтор.
+            else if (main.isEmpty() && faygolover.rpmedicine.client.ClientInteraction.isDowned(target)) {
+                event.setCanceled(true);
+                event.setCancellationResult(InteractionResult.CONSUME);
+            }
             return;
         }
         ServerPlayer sp = (ServerPlayer) p;

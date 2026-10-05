@@ -442,6 +442,19 @@ public final class MedicalSettings {
     public double goldenAppleAdrenalineSeconds = 60.0;
     /** Тотем бессмертия: кровь не ниже этой доли нормы. */
     public double totemBloodFraction = 0.6;
+    /** Высота стонов и вскриков женского персонажа (пол — в медкарте). */
+    public double femaleVoicePitch = 1.3;
+    /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
+    public double dripIvStandFactor = 1.5;
+    public double dripBedFactor = 1.5;
+    /** Дозы по весу: стандартная доза инъектора — на этот вес, кг; степень зависимости. */
+    public boolean doseByWeight = true;
+    public double doseReferenceWeight = 70.0;
+    public double doseWeightExponent = 0.7;
+    /** Действующая разовая доза выше этой доли нормы — растёт шанс передозировки. */
+    public double overdoseDoseFactor = 1.4;
+    /** С какого уровня медицины шприц с ампулой позволяет выбрать дозу. */
+    public int dosingMinLevel = 4;
     /** Набор стабилизации: во сколько раз медленнее тает таймер нокдауна и сколько секунд. */
     public double stabilizationFactor = 0.5;
     public double stabilizationSeconds = 300.0;

@@ -243,13 +243,13 @@ public final class Physiology {
         double normal = m.normalBlood(s);
         // Капельница: только пока пациент неподвижен.
         if (m.salineDripRemaining > 0 && in.still) {
-            double add = Math.min(m.salineDripRemaining, m.salineDripRate * dt);
+            double add = Math.min(m.salineDripRemaining, m.salineDripRate * in.dripFactor * dt);
             m.salineDripRemaining -= add;
             infuseSaline(m, add, s);
         }
         // Переливание крови: настоящая кровь, несёт кислород.
         if (m.bloodDripRemaining > 0 && in.still) {
-            double add = Math.min(m.bloodDripRemaining, m.bloodDripRate * dt);
+            double add = Math.min(m.bloodDripRemaining, m.bloodDripRate * in.dripFactor * dt);
             m.bloodDripRemaining -= add;
             transfuse(m, add, in, s, r);
         }

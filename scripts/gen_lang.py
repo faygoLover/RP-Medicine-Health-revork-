@@ -613,6 +613,61 @@ for k, ru, en in [("hide_vanilla_health", "Скрыть сердца", "Hide hea
     ("hud_editor", "Редактор HUD…", "HUD editor…")]:
     t("rpmedicine.settings." + k, ru, en)
 t("entity.rpmedicine.vomit", "Рвота", "Vomit")
+for k, ru, en in [
+    ("injection", "Инъекция", "Injection"), ("vein", "Венепункция", "Venipuncture"), ("bandage", "Перевязка", "Bandaging"),
+    ("tourniquet", "Наложение жгута", "Tourniquet"), ("tweezers", "Извлечение пули", "Bullet extraction"),
+    ("suture", "Наложение швов", "Suturing"), ("reduce", "Вправление вывиха", "Joint reduction"),
+    ("hint_injection", "Наведите иглу на место укола и нажмите. Потом держите ЛКМ и давите на поршень ровно — в плывущей зелёной зоне",
+     "Aim the needle at the injection site and click. Then hold LMB and press the plunger evenly — inside the moving green zone"),
+    ("hint_vein", "Зажмите ЛКМ у зелёной метки и ведите иглу по вене до конца, не выходя за стенки. Потом держите неподвижно",
+     "Hold LMB at the green mark and guide the needle along the vein without touching the walls. Then hold still"),
+    ("hint_bandage", "Зажмите ЛКМ и ведите по кругу в указанную сторону — направление меняется. Не спешите и не сходите с линии",
+     "Hold LMB and circle in the shown direction — it changes. Don't rush and stay on the line"),
+    ("hint_tourniquet", "ЛКМ — затянуть, отпустите — ослабить. Держите стрелку в плывущей зелёной зоне, не перетягивайте",
+     "LMB tightens, release loosens. Keep the marker in the moving green zone, don't overtighten"),
+    ("hint_tweezers", "Зажмите ЛКМ у зелёной метки, доведите пинцет до пули и вытащите её обратно по каналу, не задевая стенок",
+     "Hold LMB at the green mark, reach the bullet and pull it back out along the channel without touching the walls"),
+    ("hint_suture", "Зажмите ЛКМ на жёлтой точке, протяните нить к парной точке и отпустите. Не уводите иглу в сторону",
+     "Hold LMB on the yellow point, pull the thread to its pair and release. Don't drift sideways"),
+    ("hint_reduce", "Держите ЛКМ: вытяжение в зелёной зоне. Затем рывок (ЛКМ или пробел), когда метка в окне",
+     "Hold LMB: traction in the green zone. Then jerk (LMB or Space) when the marker is in the window"),
+    ("inj_aim", "Наведите иглу на место укола", "Aim at the injection site"), ("inj_too_fast", "Слишком резко — больно!", "Too fast — it hurts!"),
+    ("injected", "Введено", "Injected"), ("vein_lost", "Игла вышла из вены", "The needle left the vein"),
+    ("hold_still", "Держите неподвижно", "Hold still"), ("dir_cw", "По часовой ⟳", "Clockwise ⟳"), ("dir_ccw", "⟲ Против часовой", "⟲ Counter-clockwise"),
+    ("wrapped", "Намотано", "Wrapped"), ("wrong_direction", "Не в ту сторону!", "Wrong direction!"),
+    ("too_fast", "Слишком быстро — соскальзывает", "Too fast — it slips"), ("off_line", "Сошли с линии", "Off the line"),
+    ("too_tight", "Перетянули!", "Too tight!"), ("held", "Удержано", "Held"), ("wall", "Задели стенку!", "Hit the wall!"),
+    ("skin_torn", "Порвали кожу!", "Tore the skin!"), ("missed", "Мимо!", "Missed!"), ("too_hard", "Слишком сильно!", "Too hard!"),
+    ("traction", "Вытяжение", "Traction"), ("jerk", "Рывок — когда метка в зелёном!", "Jerk — when the marker is in the green!"),
+    ("dropped", "Отпустили инструмент — сначала", "Dropped the instrument — start over"), ("errors", "Ошибок: %s", "Errors: %s")]:
+    t("rpmedicine.minigame." + k, ru, en)
+for k, ru, en in [("cpr", "СЛР: пробел в такт", "CPR: Space on the beat"), ("ambu", "Амбу: сжать пробелом до зелёного", "Bag: squeeze with Space to green"),
+    ("exhale", "выдох…", "exhale…"), ("great", "Отлично", "Great"), ("good", "Хорошо", "Good"), ("miss", "Мимо", "Miss"),
+    ("space", "держите ПКМ, пробел — компрессия", "hold RMB, Space — compression")]:
+    t("rpmedicine.rhythm." + k, ru, en)
+t("item.rpmedicine.syringe", "Шприц", "Syringe")
+t("item.rpmedicine.syringe.what", "Пустой одноразовый шприц.", "An empty disposable syringe.")
+t("item.rpmedicine.syringe.desc", "С ампулой препарата медик сам выбирает дозу: половина, стандартная, полторы, двойная. Тратится на каждый укол. Медицина 4+.", "With a drug ampoule a medic chooses the dose: half, standard, one and a half, double. Used up per injection. Medicine 4+.")
+t("rpmedicine.refuse.need_syringe", "Нужен шприц", "You need a syringe")
+t("rpmedicine.dose.title", "Доза", "Dose")
+t("rpmedicine.dose.weight", "Вес пациента ≈ %s кг (стандартная доза — на 70 кг)", "Patient weighs ≈ %s kg (a standard dose is for 70 kg)")
+for i, (ru, en) in enumerate([("½ дозы", "½ dose"), ("1 доза", "1 dose"), ("1½ дозы", "1½ doses"), ("2 дозы", "2 doses")]):
+    t(f"rpmedicine.dose.option_{i}", ru, en)
+for k, ru, en in [
+    ("entry.drug", "Введено: %s, доза %s", "Given: %s, dose %s"), ("entry.intubation", "Интубация трахеи", "Tracheal intubation"),
+    ("page_title", "МЕДИЦИНСКАЯ КАРТА", "MEDICAL RECORD"), ("page_history", "История травм и лечения", "Injuries and treatment"),
+    ("full_name", "Ф. И. О.:", "Full name:"), ("age", "Возраст:", "Age:"), ("gender", "Пол:", "Sex:"),
+    ("gender.m", "муж.", "male"), ("gender.f", "жен.", "female"), ("gender.none", "—", "—"),
+    ("height", "Рост, см:", "Height, cm:"), ("weight", "Вес, кг:", "Weight, kg:"), ("blood", "Группа крови:", "Blood type:"),
+    ("created", "Карта заведена %s", "Record opened %s"), ("no_photo", "нет фото", "no photo"),
+    ("select_hint", "Щёлкните запись: принять, отклонить, изменить", "Click an entry to accept, decline or edit it"),
+    ("gm_only", "Рост, вес и группу меняет ГМ", "Height, weight and blood type are set by the GM")]:
+    t("rpmedicine.medcard." + k, ru, en)
+for k, ru, en in [
+    ("drug_given", "Введено %s, доза %s: %s", "Given %s, dose %s: %s"), ("body_pick", "Щёлкните часть тела", "Click a body part"),
+    ("injure_btn", "Нанести", "Inflict"), ("heal_part_btn", "Лечить часть", "Heal part"), ("drug_btn", "Ввести", "Give"),
+    ("severity", "Тяжесть %s", "Severity %s"), ("dose", "Доза %s", "Dose %s"), ("no_drugs", "нет препаратов", "no drugs")]:
+    t("rpmedicine.gm." + k, ru, en)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

@@ -94,7 +94,7 @@ public final class DownedService {
 
     public static void onWokeUp(ServerPlayer sp) {
         sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.WAKE_UP.get(),
-                net.minecraft.sounds.SoundSource.VOICE, 0.7f, 1.0f);
+                net.minecraft.sounds.SoundSource.VOICE, 0.7f, faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp));
         CarryService.dropIfCarried(sp);
         broadcastDowned(sp, false);
         sp.displayClientMessage(Component.translatable("rpmedicine.msg.woke_up"), true);

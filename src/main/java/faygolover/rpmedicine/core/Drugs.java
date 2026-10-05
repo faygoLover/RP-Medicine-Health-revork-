@@ -82,7 +82,22 @@ public final class Drugs {
     }
 
     public static Treatments.Result apply(MedicalState m, BodyPart part, Drug d, boolean error, RandomGenerator rnd, MedicalSettings s) {
-        double k = error ? 0.5 : 1.0;
+        return apply(m, part, d, error, rnd, s, 1.0);
+    }
+
+    /**
+     * Действующая доза с учётом веса: стандартная доза рассчитана на {@code s.doseReferenceWeight} кг —
+     * тяжёлому её мало, лёгкому много (решения, п. 1.13). Наружные средства от веса не зависят.
+     */
+    public static double effectiveDose(MedicalState m, Drug d, double dose, MedicalSettings s) {
+        if (d.form() == Drug.Form.TOPICAL || !s.doseByWeight) return dose;
+        double f = Math.pow(s.doseReferenceWeight / Math.max(20, m.weightKg), s.doseWeightExponent);
+        return dose * Physiology.clamp(f, 0.5, 1.6);
+    }
+
+    public static Treatments.Result apply(MedicalState m, BodyPart part, Drug d, boolean error, RandomGenerator rnd, MedicalSettings s, double amount) {
+        double eff = effectiveDose(m, d, amount, s);
+        double k = (error ? 0.5 : 1.0) * eff;
         switch (d.special()) {
             case OPIOID_ANTIDOTE -> {
                 m.morphineSeconds = 0;
@@ -122,14 +137,17 @@ public final class Drugs {
                 ps.localAnesthesiaSeconds = Math.max(ps.localAnesthesiaSeconds, dose.seconds() * k);
                 continue;
             }
-            m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * k);
+            // Сила — по дозе, длительность растёт медленнее.
+            m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * Math.sqrt(k));
         }
         if (d.opioid()) {
             double longest = 0;
             for (Drug.Dose dose : d.effects()) longest = Math.max(longest, dose.delay() + dose.seconds() * k);
             m.opioidSeconds = Math.max(m.opioidSeconds, longest);
         }
-        boolean overdose = recordDose(m, d);
+        boolean overdose = recordDose(m, d, amount);
+        // Разовая доза сильно выше нормы (лёгкий пациент, большая доза из шприца) — тоже передозировка.
+        if (!overdose && eff > s.overdoseDoseFactor && rnd.nextDouble() < (eff - s.overdoseDoseFactor) / 0.6) overdose = true;
         if (overdose) {
             for (Drug.Dose dose : d.overdose()) m.addEffect(dose.effect(), dose.strength(), dose.delay(), dose.seconds());
             if (rnd.nextDouble() < d.overdoseArrestChance()) m.respiratoryArrest = true;
@@ -147,9 +165,15 @@ public final class Drugs {
 
     /** Записать дозу; true — превышен предел за окно (передозировка). */
     static boolean recordDose(MedicalState m, Drug d) {
+        return recordDose(m, d, 1.0);
+    }
+
+    /** Доза из шприца считается долями: 1,5 дозы — две записи, 0,5 — одна. */
+    static boolean recordDose(MedicalState m, Drug d, double dose) {
         if (d.doseLimit() <= 0 || d.doseWindowSeconds() <= 0) return false;
         List<Double> list = m.doses.computeIfAbsent(d.id(), k -> new ArrayList<>());
-        list.add(d.doseWindowSeconds());
+        int units = Math.max(1, (int) Math.round(dose));
+        for (int i = 0; i < units; i++) list.add(d.doseWindowSeconds());
         return list.size() > d.doseLimit();
     }
 

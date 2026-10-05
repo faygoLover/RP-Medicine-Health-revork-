@@ -12,11 +12,16 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 /** Сервер → ГМ: полный осмотр цифрами или история для панели ГМа. */
-public record GmReportPacket(UUID uuid, List<Component> lines) {
+public record GmReportPacket(UUID uuid, List<Component> lines, byte[] colors) {
+    public GmReportPacket(UUID uuid, List<Component> lines) {
+        this(uuid, lines, new byte[0]);
+    }
+
     public static void encode(GmReportPacket p, FriendlyByteBuf buf) {
         buf.writeUUID(p.uuid);
         buf.writeVarInt(p.lines.size());
         for (Component c : p.lines) buf.writeComponent(c);
+        buf.writeByteArray(p.colors);
     }
 
     public static GmReportPacket decode(FriendlyByteBuf buf) {
@@ -24,7 +29,7 @@ public record GmReportPacket(UUID uuid, List<Component> lines) {
         int n = Math.min(64, buf.readVarInt());
         List<Component> lines = new ArrayList<>(n);
         for (int i = 0; i < n; i++) lines.add(buf.readComponent());
-        return new GmReportPacket(u, lines);
+        return new GmReportPacket(u, lines, buf.readByteArray(32));
     }
 
     public static void handle(GmReportPacket p, Supplier<NetworkEvent.Context> ctx) {

@@ -259,6 +259,8 @@ public final class MedicalGameTests {
                     TreatmentService.startWithItem(medic, p, 1, BodyPart.CHEST);
                 }
                 TreatmentService.hold(medic, p, faygolover.rpmedicine.core.TreatmentAction.CPR, 0);
+                // Пробел в такт метронома (≈110 в минуту), как жмёт клиент.
+                if (h.getTick() % 11 == 0) TreatmentService.onRhythm(medic, false, 1f);
             }
         });
         h.succeedWhen(() -> {

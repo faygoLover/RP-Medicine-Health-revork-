@@ -2,7 +2,7 @@
 
 Мод Minecraft Forge 1.20.1 (Java 17): детальная система здоровья и медицины для ролевого сервера. Автор — faygoLover (Alex). **С автором общаемся по-русски.**
 
-Мод `rpmedicine`, название «RP Medicine», пакет `faygolover.rpmedicine`, лицензия MIT, языки ru и en.
+Мод `rpmedicine`, название «RP Medicine», пакет `faygolover.rpmedicine`, лицензия GPL-3.0 (с 05.10.2026; ассеты родственных модов — `docs/assets_credits.md`), языки ru и en.
 
 ## Состояние на 04.10.2026
 - **Этап 1 «Поле»** — готов (ветка `stage1`). Отчёт: `docs/stage1_report.md`.

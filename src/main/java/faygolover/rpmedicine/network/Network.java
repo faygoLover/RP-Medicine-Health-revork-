@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 /** Сетевой канал мода. Сервер → клиент: только изменения и только то, что клиенту положено видеть. */
 public final class Network {
-    private static final String PROTOCOL = "4";
+    private static final String PROTOCOL = "5";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(RpMedicine.MODID, "main"),
@@ -46,6 +46,10 @@ public final class Network {
         toServer(RequestExamPacket.class, RequestExamPacket::encode, RequestExamPacket::decode, RequestExamPacket::handle);
         toServer(PanelActionPacket.class, PanelActionPacket::encode, PanelActionPacket::decode, PanelActionPacket::handle);
         toServer(DownedActionPacket.class, DownedActionPacket::encode, DownedActionPacket::decode, DownedActionPacket::handle);
+        toServer(RhythmPacket.class, RhythmPacket::encode, RhythmPacket::decode, RhythmPacket::handle);
+        toServer(GmEditPacket.class, GmEditPacket::encode, GmEditPacket::decode, GmEditPacket::handle);
+        toServer(DosePacket.Choice.class, DosePacket.Choice::encode, DosePacket.Choice::decode, DosePacket.Choice::handle);
+        toClient(DosePacket.Request.class, DosePacket.Request::encode, DosePacket.Request::decode, DosePacket.Request::handle);
         toServer(HoverRequestPacket.class, HoverRequestPacket::encode, HoverRequestPacket::decode, HoverRequestPacket::handle);
         toServer(MonitorRequestPacket.class, MonitorRequestPacket::encode, MonitorRequestPacket::decode, MonitorRequestPacket::handle);
         toServer(MinigameResultPacket.class, MinigameResultPacket::encode, MinigameResultPacket::decode, MinigameResultPacket::handle);

@@ -71,6 +71,8 @@ public final class ModItems {
     public static final RegistryObject<Item> HEMOANALYZER = tool("hemoanalyzer", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LANCET = medical("lancet", 32);
     public static final RegistryObject<Item> TEST_TUBE = medical("test_tube", 16);
+    /** Пустой шприц: с ним медик (4+) сам выбирает дозу препарата для укола или капельницы. */
+    public static final RegistryObject<Item> SYRINGE = medical("syringe", 16);
     public static final RegistryObject<Item> BLOOD_DRAW_SYRINGE = medical("blood_draw_syringe", 16);
     public static final RegistryObject<Item> BLOOD_SAMPLE = tool("blood_sample", () -> new faygolover.rpmedicine.item.BloodSampleItem(new Item.Properties().stacksTo(1)));
     // Пули, швы (второй этап, п. 8)

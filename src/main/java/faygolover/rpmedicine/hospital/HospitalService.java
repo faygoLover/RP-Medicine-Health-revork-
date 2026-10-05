@@ -242,8 +242,12 @@ public final class HospitalService {
             in.oxygen = d.nearOxygen || d.onTable;
             in.ventilator = d.onTable;
             in.still = true;
+            in.dripFactor *= s.dripBedFactor;
         }
-        if (d.nearIvStand) in.still = true;
+        if (d.nearIvStand) {
+            in.still = true;
+            in.dripFactor *= s.dripIvStandFactor;
+        }
     }
 
     // ------------------------------------------------------------------ монитор

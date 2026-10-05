@@ -18,6 +18,8 @@ public final class StepInput {
     public boolean suffocating;
     /** Стоит на месте или лежит (капельница идёт только так). */
     public boolean still = true;
+    /** Во сколько раз быстрее идёт капельница и переливание (стойка, койка). */
+    public double dripFactor = 1.0;
     /** Множители условий (больничная койка и т.п.): заживление, восстановление крови, восстановление мозга. */
     public double healFactor = 1.0;
     public double bloodRegenFactor = 1.0;

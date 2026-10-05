@@ -51,6 +51,7 @@
     "rpmedicine:lancet",
     "rpmedicine:blood_sample",
     "rpmedicine:test_tube",
+    "rpmedicine:syringe",
     {
       "id": "medicamod:adrenalin",
       "required": false

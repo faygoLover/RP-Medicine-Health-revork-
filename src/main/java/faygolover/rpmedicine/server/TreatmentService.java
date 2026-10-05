@@ -43,6 +43,19 @@ public final class TreatmentService {
      * @return true, если событие взаимодействия нужно поглотить
      */
     public static boolean startWithItem(ServerPlayer actor, LivingEntity target, int slot, @Nullable BodyPart part) {
+        return startWithItem(actor, target, slot, part, null);
+    }
+
+    /** Ответ на выбор дозы шприцем: 0 — отмена. */
+    public static void onDoseChoice(ServerPlayer actor, int targetId, int slot, @Nullable BodyPart part, float dose) {
+        if (dose <= 0 || slot < 0 || slot >= actor.getInventory().getContainerSize()) return;
+        net.minecraft.world.entity.Entity e = targetId < 0 ? actor : actor.level().getEntity(targetId);
+        if (!(e instanceof LivingEntity target) || !Medical.isPatient(target)) return;
+        startWithItem(actor, target, slot, part, (double) Math.max(0.25f, Math.min(3f, dose)));
+    }
+
+    /** {@code dose} — выбранная доза шприцем (null — стандартная доза инъектора или спросить). */
+    public static boolean startWithItem(ServerPlayer actor, LivingEntity target, int slot, @Nullable BodyPart part, @Nullable Double dose) {
         ItemStack stack = actor.getInventory().getItem(slot);
         ItemRules.Spec spec = ItemRules.specFor(stack);
         if (spec == null) return false;
@@ -61,6 +74,16 @@ public final class TreatmentService {
         }
         TreatmentAction action = spec.action();
         Treatments.Extra extra = extraFor(stack, actor);
+        // Шприц и ампула: медик с нужным уровнем сам выбирает дозу укола или капельницы.
+        if (dose == null && extra instanceof faygolover.rpmedicine.core.Drug drug
+                && (drug.form() == faygolover.rpmedicine.core.Drug.Form.INJECTION || drug.form() == faygolover.rpmedicine.core.Drug.Form.DRIP)
+                && Medical.medicineLevel(actor) >= MedicalSettings.get().dosingMinLevel
+                && hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
+            faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.DosePacket.Request(
+                    target == actor ? -1 : target.getId(), slot, part == null ? -1 : part.ordinal(), stack.getHoverName(), (int) Math.round(m.weightKg)));
+            return true;
+        }
+        if (dose != null && extra instanceof faygolover.rpmedicine.core.Drug drug) extra = new Treatments.Dosed(drug, dose);
         if (action.target == TreatmentAction.Target.HOLD) {
             hold(actor, target, action, spec.minLevel());
             return true;
@@ -113,15 +136,16 @@ public final class TreatmentService {
             final BodyPart part0 = p;
             final ItemStack copy = stack.copy();
             TreatmentTimedAction probe = new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand);
+            final Double dose0 = dose;
             MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), q -> {
-                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand).withQuality(q);
+                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand).withQuality(q).withDose(dose0);
                 return new TreatmentTimedAction(actor, target, part0, spec, slot, copy,
-                        (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor);
+                        (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor).withDose(dose0);
             }, probe::checkItem);
             return true;
         }
         ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand)
-                .withForced(forced));
+                .withForced(forced).withDose(dose));
         return true;
     }
 
@@ -333,6 +357,14 @@ public final class TreatmentService {
 
         /** Применение вопреки отказу проверки. */
         private boolean forced;
+        /** Доза шприцем (null — стандартная). */
+        @Nullable
+        private Double dose;
+
+        TreatmentTimedAction withDose(@Nullable Double d) {
+            this.dose = d;
+            return this;
+        }
 
         TreatmentTimedAction withForced(boolean f) {
             this.forced = f;
@@ -399,6 +431,14 @@ public final class TreatmentService {
             MedicalSettings s = MedicalSettings.get();
             // Повторная проверка: за время применения состояние могло измениться.
             Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor);
+            if (dose != null && extra instanceof faygolover.rpmedicine.core.Drug drug) {
+                // Шприц тратится на каждый укол с выбранной дозой.
+                if (!consumeItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
+                    actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_syringe").withStyle(ChatFormatting.YELLOW), true);
+                    return;
+                }
+                extra = new Treatments.Dosed(drug, dose);
+            }
             String why = Treatments.check(m, part, spec.action(), s, extra);
             if (forced && why != null && Treatments.FORCEABLE.contains(why)) {
                 Treatments.Result fr = Treatments.applyForced(m, part, spec.action(), RANDOM.split(), s, extra);
@@ -444,6 +484,9 @@ public final class TreatmentService {
                 MedcardHooks.transfusion(actor, target, bag.type());
             if (spec.action() == TreatmentAction.TWEEZERS && r.applied)
                 MedcardHooks.extraction(actor, target, part, r.key.equals("bullet_removed"));
+            if ((spec.action() == TreatmentAction.DRUG || spec.action() == TreatmentAction.DRUG_TOPICAL) && r.applied && Treatments.drugOf(extra) != null)
+                MedcardHooks.drug(actor, target, original, Treatments.drugOf(extra), extra instanceof Treatments.Dosed ds ? ds.dose() : 1.0);
+            if (spec.action() == TreatmentAction.INTUBATE && r.applied) MedcardHooks.intubation(actor, target);
             // Инструмент побывал в ране — больше не стерилен.
             ItemStack used = actor.getInventory().getItem(slot);
             if (used.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem && spec.action() == TreatmentAction.TWEEZERS)
@@ -526,16 +569,40 @@ public final class TreatmentService {
             actor.displayClientMessage(Component.translatable("rpmedicine.refuse." + why).withStyle(ChatFormatting.YELLOW), true);
             return;
         }
-        int level = Medical.medicineLevel(actor);
-        boolean error = RANDOM.nextDouble() < Skill.errorChance(level, minLevel, s);
-        Treatments.apply(m, BodyPart.CHEST, action, error, RANDOM.split(), s);
-        Medical.changed(target);
         long now = actor.serverLevel().getGameTime();
+        // Само удержание даёт лишь слабый эффект; настоящая СЛР и вдохи — в ритм пробелом (onRhythm).
+        if (action == TreatmentAction.CPR) m.cprSeconds = Math.max(m.cprSeconds, 0.25);
+        else if (action == TreatmentAction.AMBU) m.ambuSeconds = Math.max(m.ambuSeconds, 0.25);
+        HOLD_INFO.put(actor.getUUID(), new HoldInfo(target, action, minLevel));
+        Medical.changed(target);
         Long last = HOLDS.put(actor.getUUID(), now);
         if (last == null || now - last > 10) {
             String label = action == TreatmentAction.CPR ? "rpmedicine.action.cpr" : "rpmedicine.action.ambu";
             faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.ProgressPacket(label, -1, 0));
         }
+    }
+
+    private record HoldInfo(LivingEntity target, TreatmentAction action, int minLevel) {}
+
+    private static final Map<UUID, HoldInfo> HOLD_INFO = new HashMap<>();
+
+    /**
+     * Такт удерживаемого действия: нажатие пробела в ритм при СЛР (100–120 в минуту) или вдох мешком
+     * Амбу. Точность 0–1 даёт силу компрессии или вдоха; ошибка по навыку — вдвое слабее.
+     */
+    public static void onRhythm(ServerPlayer actor, boolean ambu, float quality) {
+        Long last = HOLDS.get(actor.getUUID());
+        HoldInfo info = HOLD_INFO.get(actor.getUUID());
+        if (last == null || info == null || actor.serverLevel().getGameTime() - last > 12) return;
+        if ((info.action() == TreatmentAction.AMBU) != ambu) return;
+        MedicalState m = Medical.state(info.target());
+        if (m == null) return;
+        MedicalSettings s = MedicalSettings.get();
+        double q = Math.max(0, Math.min(1, quality));
+        if (RANDOM.nextDouble() < Skill.errorChance(Medical.medicineLevel(actor), info.minLevel(), s)) q *= 0.5;
+        if (ambu) m.ambuSeconds = Math.max(m.ambuSeconds, 1.5 + 3.5 * q);
+        else m.cprSeconds = Math.max(m.cprSeconds, 0.35 + 0.9 * q);
+        Medical.changed(info.target());
     }
 
     /** Каждый тик: удержание, которое не продлевали, закончилось. */
@@ -546,6 +613,7 @@ public final class TreatmentService {
             if (now - e.getValue() <= 10) return false;
             ServerPlayer sp = server.getPlayerList().getPlayer(e.getKey());
             if (sp != null && !ActionManager.isBusy(sp)) faygolover.rpmedicine.network.Network.send(sp, faygolover.rpmedicine.network.ProgressPacket.stop());
+            HOLD_INFO.remove(e.getKey());
             return true;
         });
     }

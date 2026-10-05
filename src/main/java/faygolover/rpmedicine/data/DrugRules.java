@@ -116,6 +116,13 @@ public final class DrugRules {
         return item == null ? null : byItem.get(item);
     }
 
+    /** Все id препаратов по алфавиту (для панели ГМа). */
+    public static List<String> ids() {
+        List<String> out = new ArrayList<>(byId.keySet());
+        java.util.Collections.sort(out);
+        return out;
+    }
+
     @Nullable
     public static Drug byId(String id) {
         return byId.get(id);

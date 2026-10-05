@@ -239,6 +239,8 @@ public final class HospitalGameTests {
         faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
         h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) == null, "без ланцета гемоанализатор не запускается");
         inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get()));
+        // Кровь набирается в пустую пробирку (проверка 05.10): без неё анализа не будет.
+        inv.setItem(8, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get()));
         h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "забор в пробирку");
         h.runAfterDelay(140, () -> {
             h.assertTrue(!inv.contains(new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get())), "шприц потрачен");

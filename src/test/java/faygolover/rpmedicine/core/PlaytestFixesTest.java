@@ -124,4 +124,37 @@ class PlaytestFixesTest {
         m.down = MedicalState.Down.FAINT;
         assertNull(Treatments.check(m, BodyPart.CHEST, TreatmentAction.AIRWAY, s), "обморок и наркоз — воздуховод можно");
     }
+
+    private static final Drug TEST_DRUG = new Drug("test:drug", Drug.Form.INJECTION,
+            java.util.List.of(new Drug.Dose(DrugEffect.ANALGESIA, 40, 0, 600)), 0, 0, java.util.List.of(), 0, false, Drug.Special.NONE);
+
+    @Test
+    void doseActsByWeight() {
+        MedicalSettings s = settings();
+        MedicalState heavy = new MedicalState(s);
+        heavy.weightKg = 120;
+        MedicalState light = new MedicalState(s);
+        light.weightKg = 45;
+        assertTrue(Drugs.effectiveDose(heavy, TEST_DRUG, 1, s) < 1, "тяжёлому стандартной дозы мало");
+        assertTrue(Drugs.effectiveDose(light, TEST_DRUG, 1, s) > 1, "лёгкому — много");
+        assertTrue(Drugs.effectiveDose(light, TEST_DRUG, 2, s) > s.overdoseDoseFactor, "двойная доза лёгкому — риск передозировки");
+        s.doseByWeight = false;
+        assertEquals(1, Drugs.effectiveDose(heavy, TEST_DRUG, 1, s), 1e-9, "без учёта веса доза как есть");
+    }
+
+    @Test
+    void dripFasterWithFactor() {
+        MedicalSettings s = settings();
+        MedicalState a = new MedicalState(s);
+        MedicalState b = new MedicalState(s);
+        for (MedicalState m : new MedicalState[]{a, b}) {
+            m.salineDripRemaining = 500;
+            m.salineDripRate = 1;
+        }
+        StepInput fast = input(1);
+        fast.dripFactor = 2.25;
+        run(a, input(1), s, 10);
+        run(b, fast, s, 10);
+        assertTrue(500 - b.salineDripRemaining > 2 * (500 - a.salineDripRemaining), "со стойкой и койкой капает быстрее");
+    }
 }

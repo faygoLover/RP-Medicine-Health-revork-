@@ -248,7 +248,7 @@ write(f"{DATA}/rpmedicine/rpmedicine/mobs/default.json",
       {"entities": [], "bleeding": True, "fracture": True, "pain_shock": True})
 
 # ---------------------------------------------------------------- теги
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -423,6 +423,7 @@ ICONS = {
     "portable_scanner": ("device", (60, 90, 120), (120, 220, 240)), "hemoanalyzer": ("device", (230, 230, 230), (200, 40, 50)),
     "lancet": ("syringe", (210, 210, 220), (210, 210, 220)), "blood_draw_syringe": ("syringe", (230, 230, 240), (170, 30, 40)),
     "blood_sample": ("pills", (230, 230, 240), (170, 20, 30)), "test_tube": ("pills", (230, 235, 245), (200, 210, 225)),
+    "syringe": ("syringe", (235, 235, 240), (200, 200, 210)),
     "surgical_tweezers": ("syringe", (200, 205, 215), (120, 125, 140)), "suture_kit": ("box", (230, 230, 235), (60, 60, 200)),
     "scissors": ("strap", (190, 195, 205), (60, 60, 60)), "medcard": ("patch", (235, 225, 200), (60, 110, 160)),
     "lidocaine": ("syringe", (235, 235, 240), (90, 160, 220)), "ketamine": ("syringe", (235, 235, 240), (200, 120, 40)),
@@ -437,7 +438,7 @@ REL_TEXTURES = {
     "adrenaline": TA + "adrenaline.png", "txa": TA + "quickaction.png", "ketorolac": TA + "painless.png",
     "naloxone": TA + "metabolize.png", "diazepam": TA + "relief.png", "atropine": TA + "aggressiveness.png",
     "ceftriaxone": TA + "glucose.png", "norepinephrine": TA + "igu.png", "ketamine": TA + "narcotism.png",
-    "lidocaine": TA + "adrenaline_ii.png", "propofol": BCT + "emulsion_vial.png",
+    "lidocaine": TA + "adrenaline_ii.png", "propofol": BCT + "emulsion_vial.png", "syringe": BCT + "insulin_syringe.png",
     "blood_draw_syringe": BCT + "syringe.png", "surgical_tweezers": BCT + "tweezers.png", "test_tube": BCT + "microtube.png",
     "portable_scanner": BCT + "advanced_scanner.png", "hemoanalyzer": BCT + "organ_scanner.png", "lancet": BCT + "surgical_needle.png",
     "medcard": BCT + "tablet.png", "stabilization_kit": BCT + "medical_kit.png",

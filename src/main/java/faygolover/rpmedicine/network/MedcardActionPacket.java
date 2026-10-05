@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 /** Клиент → сервер: правка медкарты. Сервер проверяет, что у игрока карта этого персонажа. */
 public record MedcardActionPacket(UUID uuid, Op op, int entryId, String text) {
-    public enum Op { ADD, EDIT, ACCEPT, DECLINE, ALLERGIES, CHRONIC }
+    public enum Op { ADD, EDIT, ACCEPT, DECLINE, ALLERGIES, CHRONIC, FULL_NAME, AGE, GENDER }
 
     public static void encode(MedcardActionPacket p, FriendlyByteBuf buf) {
         buf.writeUUID(p.uuid);

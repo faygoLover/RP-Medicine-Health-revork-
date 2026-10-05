@@ -13,12 +13,13 @@ import java.util.function.Supplier;
 
 /** Сервер → клиент: медкарта целиком (открыть экран или обновить открытый). */
 public record MedcardDataPacket(UUID uuid, String name, float height, float weight, String bloodType, String allergies, String chronic,
-                                List<Medcard.Entry> entries) {
+                                String fullName, int age, String gender, long created, List<Medcard.Entry> entries) {
     private static final int MAX_ENTRIES = 200;
 
     public static MedcardDataPacket of(Medcard c) {
         List<Medcard.Entry> list = c.entries.size() > MAX_ENTRIES ? c.entries.subList(c.entries.size() - MAX_ENTRIES, c.entries.size()) : c.entries;
-        return new MedcardDataPacket(c.uuid, c.name, (float) c.height, (float) c.weight, c.bloodType, c.allergies, c.chronic, new ArrayList<>(list));
+        return new MedcardDataPacket(c.uuid, c.name, (float) c.height, (float) c.weight, c.bloodType, c.allergies, c.chronic,
+                c.fullName, c.age, c.gender, c.created > 0 ? c.created : c.entries.isEmpty() ? 0 : c.entries.get(0).time, new ArrayList<>(list));
     }
 
     public static void encode(MedcardDataPacket p, FriendlyByteBuf buf) {
@@ -29,6 +30,10 @@ public record MedcardDataPacket(UUID uuid, String name, float height, float weig
         buf.writeUtf(p.bloodType, 8);
         buf.writeUtf(p.allergies, 512);
         buf.writeUtf(p.chronic, 512);
+        buf.writeUtf(p.fullName, 64);
+        buf.writeVarInt(p.age);
+        buf.writeUtf(p.gender, 2);
+        buf.writeLong(p.created);
         buf.writeVarInt(p.entries.size());
         for (Medcard.Entry e : p.entries) {
             buf.writeVarInt(e.id);
@@ -50,6 +55,10 @@ public record MedcardDataPacket(UUID uuid, String name, float height, float weig
         String blood = buf.readUtf(8);
         String allergies = buf.readUtf(512);
         String chronic = buf.readUtf(512);
+        String fullName = buf.readUtf(64);
+        int age = buf.readVarInt();
+        String gender = buf.readUtf(2);
+        long created = buf.readLong();
         int n = Math.min(MAX_ENTRIES, buf.readVarInt());
         List<Medcard.Entry> entries = new ArrayList<>();
         for (int i = 0; i < n; i++) {
@@ -64,7 +73,7 @@ public record MedcardDataPacket(UUID uuid, String name, float height, float weig
             e.proposed = buf.readBoolean();
             entries.add(e);
         }
-        return new MedcardDataPacket(uuid, name, h, w, blood, allergies, chronic, entries);
+        return new MedcardDataPacket(uuid, name, h, w, blood, allergies, chronic, fullName, age, gender, created, entries);
     }
 
     public static void handle(MedcardDataPacket p, Supplier<NetworkEvent.Context> ctx) {

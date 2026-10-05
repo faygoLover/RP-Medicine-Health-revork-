@@ -58,6 +58,18 @@ public final class MedcardHooks {
         MedcardService.propose(medic.server, target, bullet ? "bullet_removed" : "fragment_removed", List.of(part(p)), medic.getGameProfile().getName());
     }
 
+    /** Укол или капельница (и любой антибиотик): препарат и доза. Таблетки и мази — не пишем. */
+    public static void drug(ServerPlayer medic, LivingEntity target, ItemStack item, faygolover.rpmedicine.core.Drug d, double dose) {
+        boolean antibiotic = d.id().contains("cillin") || d.id().contains("ceftriax") || d.id().contains("antibiotic");
+        if (d.form() != faygolover.rpmedicine.core.Drug.Form.INJECTION && d.form() != faygolover.rpmedicine.core.Drug.Form.DRIP && !antibiotic) return;
+        MedcardService.propose(medic.server, target, "drug", List.of("#" + item.getDescriptionId(),
+                String.format(java.util.Locale.ROOT, "%.1f", dose).replace(".0", "")), medic.getGameProfile().getName());
+    }
+
+    public static void intubation(ServerPlayer medic, LivingEntity target) {
+        MedcardService.propose(medic.server, target, "intubation", List.of(), medic.getGameProfile().getName());
+    }
+
     /** Результат лаборатории — предложение записи в медкарту пациента. */
     public static void labResult(ServerPlayer medic, ItemStack tube, Diagnostics.Lab lab) {
         var t = tube.getTag();

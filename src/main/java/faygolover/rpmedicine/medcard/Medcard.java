@@ -24,6 +24,12 @@ public final class Medcard {
 
     public UUID uuid;
     public String name = "";
+    /** Полное имя персонажа (ролевое), возраст, пол: {@code m}, {@code f} или пусто. Пол задаёт голос стонов. */
+    public String fullName = "";
+    public int age;
+    public String gender = "";
+    /** Когда карта заведена (мс); 0 — карта старше этого поля. */
+    public long created;
     public double height;
     public double weight;
     /** Группа крови: id ({@code a+}) или пусто. */

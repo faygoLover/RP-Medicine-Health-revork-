@@ -77,6 +77,14 @@ public final class MedcardService {
         MedcardStore.save(server, c);
     }
 
+    /** Высота голоса по полу из медкарты: женский выше. */
+    public static float voicePitch(@Nullable Entity e) {
+        UUID uuid = ownerOf(e);
+        if (uuid == null || e.getServer() == null) return 1f;
+        String g = MedcardStore.get(e.getServer(), uuid).gender;
+        return g.equals("f") ? (float) faygolover.rpmedicine.core.MedicalSettings.get().femaleVoicePitch : 1f;
+    }
+
     /** Открыть карту: проверяется, что у игрока карта этого персонажа (или он оператор). */
     public static void open(ServerPlayer viewer, UUID uuid) {
         if (!canAccess(viewer, uuid)) return;
@@ -119,6 +127,15 @@ public final class MedcardService {
             }
             case ALLERGIES -> c.allergies = text;
             case CHRONIC -> c.chronic = text;
+            case FULL_NAME -> c.fullName = text.length() > 64 ? text.substring(0, 64) : text;
+            case AGE -> {
+                try {
+                    int v = Integer.parseInt(text.trim());
+                    if (v >= 0 && v <= 150) c.age = v;
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            case GENDER -> c.gender = text.equals("m") || text.equals("f") ? text : "";
         }
         MedcardStore.save(sp.server, c);
         Network.send(sp, MedcardDataPacket.of(c));
@@ -156,7 +173,17 @@ public final class MedcardService {
             }
             case "allergies" -> c.allergies = value;
             case "chronic" -> c.chronic = value;
-            default -> throw new IllegalArgumentException("height, weight, blood_type, allergies, chronic");
+            case "full_name" -> c.fullName = value;
+            case "age" -> {
+                int v = Integer.parseInt(value);
+                if (v < 0 || v > 150) throw new IllegalArgumentException("0–150");
+                c.age = v;
+            }
+            case "gender" -> {
+                if (!value.equals("m") && !value.equals("f") && !value.equals("-")) throw new IllegalArgumentException("m, f, -");
+                c.gender = value.equals("-") ? "" : value;
+            }
+            default -> throw new IllegalArgumentException("height, weight, blood_type, allergies, chronic, full_name, age, gender");
         }
         if (online != null) Medical.changed(online);
         MedcardStore.save(server, c);

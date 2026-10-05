@@ -61,6 +61,16 @@ public final class Treatments {
     /** Инструмент: стерилен ли (пинцет; нестерильный — выше шанс заражения раны). */
     public record Instrument(boolean sterile) implements Extra {}
 
+    /** Препарат с выбранной дозой (шприц и ампула, медицина 4+): 1 — стандартная доза инъектора. */
+    public record Dosed(Drug drug, double dose) implements Extra {}
+
+    /** Препарат из «содержимого» предмета (с дозой или без). */
+    public static Drug drugOf(Extra extra) {
+        if (extra instanceof Drug d) return d;
+        if (extra instanceof Dosed ds) return ds.drug();
+        return null;
+    }
+
     /** Содержимое пакета крови для переливания: группа (null — не подписан), объём, испорчен ли. */
     public record Bag(BloodType type, double volume, boolean spoiled) implements Extra {}
 
@@ -74,7 +84,7 @@ public final class Treatments {
     /** То же с содержимым предмета (препарат). */
     public static String check(MedicalState m, BodyPart part, TreatmentAction a, MedicalSettings s, Extra extra) {
         if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
-            return extra instanceof Drug d ? Drugs.check(m, part, d, s) : "no_effect";
+            return drugOf(extra) != null ? Drugs.check(m, part, drugOf(extra), s) : "no_effect";
         BodyPartState ps = m.part(part);
         switch (a) {
             case BANDAGE, PRESSURE_DRESSING -> {
@@ -226,9 +236,9 @@ public final class Treatments {
 
     public static BodyPart bestPart(MedicalState m, TreatmentAction a, MedicalSettings s, Extra extra) {
         // Местная анестезия — в самую больную часть (третий этап).
-        if (a == TreatmentAction.DRUG && extra instanceof Drug d && Drugs.isLocal(d)) return Drugs.localPart(m, s);
+        if (a == TreatmentAction.DRUG && drugOf(extra) != null && Drugs.isLocal(drugOf(extra))) return Drugs.localPart(m, s);
         if (a.target != TreatmentAction.Target.PART) return BodyPart.CHEST;
-        if (a == TreatmentAction.DRUG_TOPICAL) return extra instanceof Drug d ? Drugs.bestPart(m, d, s) : null;
+        if (a == TreatmentAction.DRUG_TOPICAL) return drugOf(extra) != null ? Drugs.bestPart(m, drugOf(extra), s) : null;
         BodyPart best = null;
         double bestScore = 0;
         for (BodyPart p : BodyPart.VALUES) {
@@ -338,8 +348,10 @@ public final class Treatments {
     public static Result apply(MedicalState m, BodyPart part, TreatmentAction a, boolean error, RandomGenerator rnd, MedicalSettings s,
                                Extra extra, double quality) {
         double q = Physiology.clamp(quality, 0, 1);
-        if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL)
+        if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL) {
+            if (extra instanceof Dosed ds) return Drugs.apply(m, part, ds.drug(), error, rnd, s, ds.dose());
             return extra instanceof Drug d ? Drugs.apply(m, part, d, error, rnd, s) : Result.failed("no_effect");
+        }
         Bag bag = extra instanceof Bag b ? b : null;
         BodyPartState ps = m.part(part);
         switch (a) {
