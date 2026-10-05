@@ -216,6 +216,7 @@ public final class ClientEvents {
      */
     @SubscribeEvent
     public static void onRenderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre e) {
+        faygolover.rpmedicine.client.render.MissingLimbs.onRenderPre(e);
         Player p = e.getEntity();
         Float yaw = BedPose.CLIENT_BED_YAW.get(p.getId());
         if (yaw == null || !p.hasPose(Pose.SLEEPING)) return;
@@ -229,6 +230,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderPlayerPost(net.minecraftforge.client.event.RenderPlayerEvent.Post e) {
+        faygolover.rpmedicine.client.render.MissingLimbs.onRenderPost(e);
         if (BED_SHIFTED.remove(e.getEntity().getId())) e.getPoseStack().popPose();
     }
 

@@ -90,6 +90,11 @@ public final class MedCommand {
                                 .executes(c -> injure(c, 20))
                                 .then(Commands.argument("severity", DoubleArgumentType.doubleArg(0, 100))
                                         .executes(c -> injure(c, DoubleArgumentType.getDouble(c, "severity"))))))));
+        // ГМ: убрать или вернуть часть тела (третий этап, п. 11).
+        root.then(op("amputate").then(Commands.argument("targets", EntityArgument.entities())
+                .then(Commands.argument("part", StringArgumentType.word()).suggests(PARTS).executes(c -> limbs(c, true)))));
+        root.then(op("restore").then(Commands.argument("targets", EntityArgument.entities())
+                .then(Commands.argument("part", StringArgumentType.word()).suggests(PARTS).executes(c -> limbs(c, false)))));
         root.then(op("heal").then(Commands.argument("targets", EntityArgument.entities())
                 .executes(c -> heal(c, "all"))
                 .then(Commands.argument("part", StringArgumentType.word()).suggests(PARTS_ALL)
@@ -116,6 +121,7 @@ public final class MedCommand {
                     }
                 }))
                 .then(scalar("sepsis", 0, 100, (m, v) -> m.sepsis = v))
+                .then(scalar("sugar", 1, 35, (m, v) -> m.bloodSugar = v))
                 .then(scalar("temperature", 30, 43, (m, v) -> m.bodyTemp = v))
                 .then(organ())
                 .then(foreign("bullets", true))
@@ -372,6 +378,28 @@ public final class MedCommand {
             })));
         }
         return lit;
+    }
+
+    /** {@code amputate} / {@code restore}: только рука, нога (со стопой), стопа. */
+    private static int limbs(CommandContext<CommandSourceStack> c, boolean amputate) throws CommandSyntaxException {
+        BodyPart part = BodyPart.byId(StringArgumentType.getString(c, "part")).orElseThrow(() -> BAD_PART.create());
+        if (!part.isLimb()) throw BAD_PART.create();
+        int n = 0;
+        for (LivingEntity t : patients(c)) {
+            MedicalState m = Medical.state(t);
+            if (amputate) {
+                faygolover.rpmedicine.core.Limbs.removePart(m, part);
+            } else {
+                m.part(part).clear();
+                if (part.kind == BodyPart.Kind.LEG) m.part(part.pairedLowerLimb()).clear();
+                if (part.kind == BodyPart.Kind.FOOT) m.part(part.pairedLowerLimb()).missing = false;
+            }
+            Medical.changed(t);
+            n++;
+            c.getSource().sendSuccess(() -> Component.translatable(amputate ? "rpmedicine.cmd.amputated" : "rpmedicine.cmd.restored",
+                    t.getDisplayName(), Component.translatable(part.translationKey())), true);
+        }
+        return n;
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> scalar(String name, double min, double max, BiConsumer<MedicalState, Double> setter) {

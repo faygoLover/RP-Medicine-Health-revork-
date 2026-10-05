@@ -43,6 +43,7 @@ public class ClientSettingsScreen extends Screen {
                 new Toggle("look_up_when_downed", ClientConfig.LOOK_UP_WHEN_DOWNED),
                 new Toggle("sensation_messages", ClientConfig.SENSATION_MESSAGES),
                 new Toggle("leave_body", ClientConfig.LEAVE_BODY),
+                new Toggle("show_missing_limbs", ClientConfig.SHOW_MISSING_LIMBS),
         };
         Volume[] volumes = {
                 new Volume("effect_strength", ClientConfig.EFFECT_STRENGTH, 1.5),

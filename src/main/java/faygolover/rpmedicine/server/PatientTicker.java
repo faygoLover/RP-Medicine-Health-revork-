@@ -24,11 +24,28 @@ public final class PatientTicker {
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
     /** Каждый тик игрока на сервере. */
+    /** Маска невидимых конечностей: часть отсутствует и протеза нет. */
+    public static int limbMask(faygolover.rpmedicine.core.MedicalState m) {
+        int mask = 0;
+        for (var ps : m.parts) if (ps.missing && ps.prosthesis == faygolover.rpmedicine.core.BodyPartState.Prosthesis.NONE) mask |= 1 << ps.part.ordinal();
+        return mask;
+    }
+
+    /** Разослать видимость конечностей, если изменилась. */
+    static void syncLimbs(ServerPlayer sp, faygolover.rpmedicine.capability.MedicalData d) {
+        int mask = limbMask(d.state);
+        if (mask == d.sentLimbMask) return;
+        d.sentLimbMask = mask;
+        faygolover.rpmedicine.network.Network.CHANNEL.send(net.minecraftforge.network.PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp),
+                new faygolover.rpmedicine.network.LimbsVisualPacket(sp.getId(), mask));
+    }
+
     public static void tickPlayer(ServerPlayer sp) {
         MedicalData d = Medical.data(sp);
         if (d == null) return;
         MedicalSettings s = MedicalSettings.get();
         MedicalState m = d.state;
+        if (sp.tickCount % 20 == 0) syncLimbs(sp, d);
 
         // Ванильное здоровье всегда полное (кроме /kill и пустоты, которые убивают по-настоящему).
         if (!sp.isDeadOrDying() && sp.getHealth() < sp.getMaxHealth()) sp.setHealth(sp.getMaxHealth());

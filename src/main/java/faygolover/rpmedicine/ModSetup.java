@@ -191,6 +191,13 @@ public final class ModSetup {
 
     /** Новый наблюдатель увидел лежачего игрока — сообщить ему позу. */
     private static void onStartTracking(PlayerEvent.StartTracking e) {
+        // Отсутствующие конечности — новому наблюдателю (третий этап, п. 12).
+        if (e.getTarget() instanceof ServerPlayer target && e.getEntity() instanceof ServerPlayer viewer) {
+            var m = Medical.state(target);
+            int mask = m != null ? faygolover.rpmedicine.server.PatientTicker.limbMask(m) : 0;
+            if (mask != 0) Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer),
+                    new faygolover.rpmedicine.network.LimbsVisualPacket(target.getId(), mask));
+        }
         if (e.getTarget() instanceof ServerPlayer target && e.getEntity() instanceof ServerPlayer viewer
                 && (Medical.isDown(target) || HospitalService.isOnBed(target))) {
             Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer),

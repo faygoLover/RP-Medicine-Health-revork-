@@ -50,7 +50,9 @@ public final class Minigames {
         /** Изъятие органа: пересечь сосуды между толчками крови и вынуть орган в контейнер. */
         HARVEST(2.4),
         /** Пересадка: уложить орган на место и сшить сосуд. */
-        PLANT(2.6);
+        PLANT(2.6),
+        /** Интубация: провести трубку между связками, когда они раскрываются в ритме дыхания (п. 10). */
+        INTUBATION(1.6);
 
         public static final Type[] VALUES = values();
 
@@ -67,7 +69,7 @@ public final class Minigames {
 
         /** Мини-игра операции: идёт всегда (и в бою), рисуется сценой тела. */
         public boolean isSurgical() {
-            return ordinal() >= INCISION.ordinal();
+            return ordinal() >= INCISION.ordinal() && this != INTUBATION;
         }
 
         public static Type byOrdinal(int i) {
@@ -88,6 +90,7 @@ public final class Minigames {
             case TWEEZERS -> Type.TWEEZERS;
             case SUTURE -> Type.SUTURE;
             case REDUCE -> Type.REDUCE;
+            case INTUBATE -> Type.INTUBATION;
             case DRUG -> drug == null ? null : switch (drug.form()) {
                 case INJECTION -> Type.INJECTION;
                 case DRIP -> Type.VEIN;

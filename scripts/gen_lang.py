@@ -866,6 +866,19 @@ for k, ru, en in [("insulin", "Шприц-ручка с инсулином.", "A
 t("rpmedicine.treat.glucometer", "Глюкометр: %2$s ммоль/л", "Glucometer: %2$s mmol/L")
 t("rpmedicine.exam.cold_sweat", "Холодный пот, бледность, дрожь", "Cold sweat, pallor, trembling")
 t("rpmedicine.exam.acetone_breath", "Запах ацетона изо рта, сухость", "Acetone breath, dryness")
+# Медкарта, команды, интубация (третий этап, п. 10–11).
+for k, ru, en in [("chronic_diabetic", "Хроническое: сахарный диабет", "Chronic: diabetes"), ("chronic_smoker", "Хроническое: курение, бронхит курильщика", "Chronic: smoking, smoker's bronchitis"),
+    ("chronic_alcoholic", "Хроническое: алкоголизм, поражение печени", "Chronic: alcoholism, liver damage")]:
+    t("rpmedicine.medcard.entry." + k, ru, en)
+t("rpmedicine.cmd.amputated", "%s: убрана часть тела — %s", "%s: body part removed — %s")
+t("rpmedicine.cmd.restored", "%s: часть тела возвращена — %s", "%s: body part restored — %s")
+t("rpmedicine.minigame.intubation", "Интубация", "Intubation")
+t("rpmedicine.minigame.hint_intubation", "Наведите трубку на щель между связками и нажмите, когда они раскроются; продвигайте на вдохе, держите по центру.",
+  "Aim the tube at the gap between the vocal cords and click when they open; advance on each breath, keep it centred.")
+for k, ru, en in [("tube_depth", "Глубина трубки", "Tube depth"), ("esophagus", "Мимо — в пищевод", "Missed — into the esophagus"),
+    ("cords_closed", "Связки сомкнуты", "The cords are closed")]:
+    t("rpmedicine.minigame." + k, ru, en)
+t("rpmedicine.settings.show_missing_limbs", "Скрывать отнятые конечности", "Hide missing limbs")
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

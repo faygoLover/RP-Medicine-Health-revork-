@@ -56,6 +56,14 @@ public final class MedcardService {
         }
         if (!c.bloodType.isEmpty()) BloodType.byId(c.bloodType).ifPresent(t -> m.bloodType = t);
         else if (m.bloodType != null) c.bloodType = m.bloodType.id;
+        // Хронические состояния от перков — предложение записи один раз (третий этап, п. 11).
+        var traits = faygolover.rpmedicine.server.Medical.traits(sp);
+        String[][] chronic = {{"diabetic", String.valueOf(traits.diabetic)}, {"smoker", String.valueOf(traits.smoker)}, {"alcoholic", String.valueOf(traits.alcoholic)}};
+        for (String[] ch : chronic) {
+            if (!Boolean.parseBoolean(ch[1])) continue;
+            String key = "chronic_" + ch[0];
+            if (c.entries.stream().noneMatch(e -> e.key.equals(key))) c.add(key, List.of(), "", "", true);
+        }
         Medical.changed(sp);
         MedcardStore.save(sp.server, c);
     }

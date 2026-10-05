@@ -43,6 +43,8 @@ public final class ClientState {
 
     /** Лежачие игроки рядом (id сущностей) — для позы на этом клиенте. */
     public static final Set<Integer> DOWNED = new HashSet<>();
+    /** Каких конечностей не видно у игроков (третий этап, п. 12): id сущности → биты частей. */
+    public static final java.util.Map<Integer, Integer> MISSING_LIMBS = new java.util.HashMap<>();
 
     /** Последний ответ монитора, на который смотрит игрок. */
     @Nullable
@@ -58,6 +60,7 @@ public final class ClientState {
         incomingTotal = 0;
         lastOverlay = null;
         DOWNED.clear();
+        MISSING_LIMBS.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_ON_BED.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_BED_YAW.clear();
         monitor = null;

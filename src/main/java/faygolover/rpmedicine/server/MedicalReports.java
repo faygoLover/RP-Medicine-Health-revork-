@@ -151,6 +151,11 @@ public final class MedicalReports {
         if (all || m.sepsis > 0) x.add("сепсис", f("%.0f%%", m.sepsis), high(m.sepsis, 0, 20, 50));
         if (m.transfusionReactionSeconds > 0) x.add("РЕАКЦИЯ на кровь", f("%.0f с", m.transfusionReactionSeconds), CRIT);
         if (m.spoiledBloodSeconds > 0) x.add("испорченная кровь", f("%.0f с", m.spoiledBloodSeconds), BAD);
+        if (all || Math.abs(m.bloodSugar - faygolover.rpmedicine.core.Metabolism.NORMAL_SUGAR) > 0.5)
+            x.add("сахар", f("%.1f", m.bloodSugar), m.bloodSugar < 3.5 || m.bloodSugar > 15 ? BAD : m.bloodSugar > 9 ? MILD : OK);
+        for (faygolover.rpmedicine.core.Organ g : faygolover.rpmedicine.core.Organ.VALUES)
+            if ((m.organRejection & g.bit()) != 0) x.add("отторжение", g.id, BAD);
+        if (all || m.restrained) x.add("фиксация", m.restrained ? "да" : "нет", m.restrained ? MILD : OK);
         if (faygolover.rpmedicine.core.Organs.worst(m) > 0) {
             for (faygolover.rpmedicine.core.Organ g : faygolover.rpmedicine.core.Organ.VALUES) {
                 if (!m.hasOrgan(g)) x.add(g.id, "ИЗЪЯТ", CRIT);
@@ -195,6 +200,14 @@ public final class MedicalReports {
                     .withStyle(ps.tourniquetSeconds >= 900 ? BAD : ChatFormatting.AQUA));
             if (ps.ischemia > 0) c.append(Component.literal(f(" │ ишемия %.0f", ps.ischemia)).withStyle(BAD));
             if (ps.occlusive) c.append(Component.literal(" │ наклейка").withStyle(ChatFormatting.AQUA));
+            if (ps.surgery != faygolover.rpmedicine.core.BodyPartState.SurgeryStage.NONE)
+                c.append(Component.literal(f(" │ операция: %s %.0f мин, загрязнение ×%.2f", ps.surgery, ps.surgeryOpenSeconds / 60, ps.surgeryContamination)).withStyle(MOD));
+            if (ps.fixated) c.append(Component.literal(" │ остеосинтез").withStyle(ChatFormatting.AQUA));
+            if (ps.necrosis > 0) c.append(Component.literal(f(" │ некроз %.0f%%", ps.necrosis)).withStyle(ps.necrosis >= s.necrosisIrreversible ? CRIT : BAD));
+            if (ps.missing) c.append(Component.literal(" │ НЕТ ЧАСТИ").withStyle(CRIT));
+            if (ps.prosthesis != faygolover.rpmedicine.core.BodyPartState.Prosthesis.NONE)
+                c.append(Component.literal(" │ протез " + ps.prosthesis).withStyle(ChatFormatting.AQUA));
+            if (ps.localAnesthesiaSeconds > 0) c.append(Component.literal(f(" │ анестезия %.0f с", ps.localAnesthesiaSeconds)).withStyle(ChatFormatting.AQUA));
             out.add(c);
         }
         if (!all) out.add(Component.literal("(всё — /rpmedicine inspect <цель> full)").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));

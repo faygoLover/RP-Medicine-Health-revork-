@@ -108,6 +108,7 @@ public class MinigameScreen extends Screen {
             case TWEEZERS -> 16;
             case SUTURE -> 16;
             case REDUCE -> 8;
+            case INTUBATION -> 12;
             default -> 10;
         };
     }
@@ -152,6 +153,11 @@ public class MinigameScreen extends Screen {
                 channel = 6 + 5 * ease;
             }
             case REDUCE -> zoneHalf = 0.05 + 0.05 * ease;
+            case INTUBATION -> {
+                targetR = 6 + 5 * ease;
+                zonePhase = rnd.nextDouble() * Math.PI * 2;
+            }
+            default -> { }
         }
     }
 
@@ -232,6 +238,8 @@ public class MinigameScreen extends Screen {
             case TWEEZERS -> tweezers(g, l, t, tx, ty);
             case SUTURE -> suture(g, l, t, tx, ty);
             case REDUCE -> reduce(g, l, t, dt);
+            case INTUBATION -> intubation(g, l, t, dt, tx, ty);
+            default -> { }
         }
         // Инструмент у курсора (кроме игр без инструмента).
         if (!tool.isEmpty() && task.type() != Minigames.Type.BANDAGE && task.type() != Minigames.Type.TOURNIQUET
@@ -560,6 +568,51 @@ public class MinigameScreen extends Screen {
         }
     }
 
+    // ------------------------------------------------------------------ интубация
+
+    /** Насколько раскрыты голосовые связки 0–1: в ритме дыхания. */
+    private double glottisOpen() {
+        return Math.max(0, Math.sin(time * (1.6 + (1 - ease) * 0.8) + zonePhase));
+    }
+
+    private void intubation(GuiGraphics g, int l, int t, double dt, double tx, double ty) {
+        int cx = l + W / 2;
+        int cy = t + 105;
+        // Глотка: тёмное кольцо, надгортанник, связки — раскрывающаяся щель.
+        g.fill(cx - 70, cy - 52, cx + 70, cy + 52, 0xFF7A2A2A);
+        g.fill(cx - 56, cy - 42, cx + 56, cy + 42, 0xFF4A1414);
+        g.fill(cx - 14, cy - 50, cx + 14, cy - 38, 0xFFC07070);
+        double open = glottisOpen();
+        int half = (int) (2 + open * targetR * 1.6);
+        g.fill(cx - 24, cy - half - 3, cx + 24, cy - half, 0xFFE8D8C8);
+        g.fill(cx - 24, cy + half, cx + 24, cy + half + 3, 0xFFE8D8C8);
+        g.fill(cx - 22, cy - half, cx + 22, cy + half, 0xFF100606);
+        bar(g, l + 40, t + H - 46, W - 80, progress, 0xFF6090E0, "rpmedicine.minigame.tube_depth");
+        if (phase == 0) return;
+        // Трубка введена — продвигать, пока связки открыты, и держать по центру.
+        if (Math.abs(tx - W / 2.0) > targetR * 1.5 || Math.abs(ty - 105) > targetR * 1.5) {
+            if (!outside) error("rpmedicine.minigame.esophagus");
+            outside = true;
+            return;
+        }
+        outside = false;
+        if (mouseDown) {
+            if (open > 0.4) progress += dt / 1.2;
+            else if (flash <= 0) error("rpmedicine.minigame.cords_closed");
+        }
+        if (progress >= 1) finish(quality());
+    }
+
+    private void intubationClick() {
+        if (phase != 0) return;
+        if (Math.hypot(toolX - W / 2.0, toolY - 105) <= targetR * 1.3 && glottisOpen() > 0.4) {
+            phase = 1;
+            sound(ModSounds.SURGERY_TRACHEA.get(), 1.0f);
+        } else {
+            error(glottisOpen() <= 0.4 ? "rpmedicine.minigame.cords_closed" : "rpmedicine.minigame.missed");
+        }
+    }
+
     // ------------------------------------------------------------------ общее
 
     /** Продвижение по каналу внутрь; выход за стенку — ошибка. */
@@ -680,6 +733,7 @@ public class MinigameScreen extends Screen {
                 }
             }
             case SUTURE -> stitchPress();
+            case INTUBATION -> intubationClick();
             case REDUCE -> {
                 if (phase == 1) jerk();
             }

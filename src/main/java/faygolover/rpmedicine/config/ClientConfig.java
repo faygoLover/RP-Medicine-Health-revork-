@@ -98,6 +98,7 @@ public final class ClientConfig {
     public static final ForgeConfigSpec.BooleanValue LOOK_UP_WHEN_DOWNED;
     public static final ForgeConfigSpec.BooleanValue SENSATION_MESSAGES;
     public static final ForgeConfigSpec.BooleanValue LEAVE_BODY;
+    public static final ForgeConfigSpec.BooleanValue SHOW_MISSING_LIMBS;
     public static final ForgeConfigSpec.DoubleValue HEARTBEAT_VOLUME;
     public static final ForgeConfigSpec.DoubleValue BREATHING_VOLUME;
     public static final ForgeConfigSpec.DoubleValue RINGING_VOLUME;
@@ -124,6 +125,7 @@ public final class ClientConfig {
         SENSATION_MESSAGES = B.comment("Ощущения текстом над панелью быстрого доступа.").define("sensation_messages", true);
         LEAVE_BODY = B.comment("Оставлять тело при выходе из игры в обмороке, нокдауне или на койке (если выключить — тело уходит с вами).")
                 .define("leave_body", true);
+        SHOW_MISSING_LIMBS = B.comment("Не рисовать отсутствующие (ампутированные) конечности на модели игрока.").define("show_missing_limbs", true);
         EFFECT_STRENGTH = B.comment("Сила эффектов экрана (0–1,5).").defineInRange("effect_strength", 1.0, 0.0, 1.5);
         B.pop();
 
