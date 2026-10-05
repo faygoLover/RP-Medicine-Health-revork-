@@ -69,4 +69,17 @@ class NutritionTest {
         // Напитки и исключения не считаются.
         assertFalse(Nutrition.eat(m, steak, -1, s));
     }
+
+    @Test
+    void labShowsNutritionNumbers() {
+        MedicalSettings s = settings();
+        MedicalState m = new MedicalState(s);
+        java.util.Arrays.fill(m.nutrients, 60);
+        Diagnostics.Lab ok = Diagnostics.lab(m, s);
+        assertTrue(ok.albumin() >= 35 && ok.albumin() <= 50 && ok.triglycerides() <= 1.7 && ok.glucose() >= 3.9 && ok.b12() >= 200, "сбалансировано — норма: " + ok);
+        m.nutrients[Nutrition.PROTEIN] = 5;
+        m.nutrients[Nutrition.VITAMINS] = 5;
+        Diagnostics.Lab low = Diagnostics.lab(m, s);
+        assertTrue(low.albumin() < 35 && low.b12() < 200, "нехватка белка и витаминов видна анализом");
+    }
 }

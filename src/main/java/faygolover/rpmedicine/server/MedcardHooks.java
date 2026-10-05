@@ -103,6 +103,8 @@ public final class MedcardHooks {
         c.add("lab", List.of(lab.bloodType() != null ? lab.bloodType().label : "?", String.valueOf((int) lab.hemoglobin()),
                 String.format(java.util.Locale.ROOT, "%.1f", lab.leukocytes()),
                 lab.sepsis() ? "#rpmedicine.medcard.yes" : "#rpmedicine.medcard.no"), "", medic.getGameProfile().getName(), true);
+        c.add("lab_nutrition", List.of(String.valueOf((int) lab.albumin()), String.format(java.util.Locale.ROOT, "%.1f", lab.triglycerides()),
+                String.format(java.util.Locale.ROOT, "%.1f", lab.glucose()), String.valueOf((int) lab.b12())), "", medic.getGameProfile().getName(), true);
         faygolover.rpmedicine.medcard.MedcardStore.save(medic.server, c);
     }
 }

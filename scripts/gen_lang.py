@@ -917,6 +917,22 @@ for k, ru, en, mru, men in [
     t("rpmedicine.monotony." + k, mru, men)
 t("rpmedicine.nutrition.fed_up", "Приелось: %s", "Fed up with: %s")
 t("rpmedicine.exam.poor_appetite", "Плохой аппетит", "Poor appetite")
+# Питание — ощущения и анализ.
+for k, ru, en in [("feel_low_protein", "Слабость в мышцах, ссадины и раны заживают долго.", "Weak muscles; scrapes and wounds heal slowly."),
+    ("feel_low_fat", "Всё время зябко, кожа сухая.", "You feel chilly all the time; dry skin."),
+    ("feel_low_carbs", "Нет сил, быстро выдыхаешься.", "No energy; you get winded fast."),
+    ("feel_low_vitamins", "Бледность, ломкие ногти, легко простужаешься.", "Pale, brittle nails, you catch colds easily."),
+    ("feel_heavy", "Тяжесть в теле, одышка.", "Heavy body, short of breath."),
+    ("feel_balanced", "Чувствуешь себя бодро и сыто.", "You feel well fed and lively."),
+    ("feel_ok", "Ничего особенного.", "Nothing in particular."),
+    ("lab_hint", "Точно — только анализом крови в лаборатории.", "Exact values — only by a lab blood test.")]:
+    t("rpmedicine.nutrition." + k, ru, en)
+for k, ru, en in [("albumin", "Альбумин: %s г/л (норма 35–50)", "Albumin: %s g/L (normal 35–50)"),
+    ("triglycerides", "Триглицериды: %s ммоль/л (норма 0,5–1,7)", "Triglycerides: %s mmol/L (normal 0.5–1.7)"),
+    ("glucose", "Глюкоза: %s ммоль/л (норма 3,9–6,1)", "Glucose: %s mmol/L (normal 3.9–6.1)"),
+    ("b12", "Витамин B12: %s пг/мл (норма 200–900)", "Vitamin B12: %s pg/mL (normal 200–900)")]:
+    t("rpmedicine.lab." + k, ru, en)
+t("rpmedicine.medcard.entry.lab_nutrition", "Анализ крови: альбумин %s г/л, триглицериды %s, глюкоза %s, B12 %s", "Blood test: albumin %s g/L, triglycerides %s, glucose %s, B12 %s")
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

@@ -119,9 +119,32 @@ public final class ModItems {
             .title(Component.translatable("itemGroup.rpmedicine"))
             .icon(() -> new ItemStack(BANDAGE.get()))
             .displayItems((params, out) -> {
-                for (RegistryObject<? extends Item> ro : ALL) out.accept(ro.get());
+                // По смыслу, в порядке оказания помощи; не попавшее в список — в конце.
+                java.util.Set<String> shown = new java.util.HashSet<>();
+                for (String id : ModItems.TAB_ORDER) {
+                    for (RegistryObject<? extends Item> ro : ALL) {
+                        if (ro.getId().getPath().equals(id) && shown.add(id)) out.accept(ro.get());
+                    }
+                }
+                for (RegistryObject<? extends Item> ro : ALL) if (shown.add(ro.getId().getPath())) out.accept(ro.get());
             })
             .build());
+
+    /** Порядок во вкладке: наборы, раны, дыхание, таблетки, уколы, капельницы и кровь, диагностика, хирургия, протезы и органы, документы. */
+    private static final String[] TAB_ORDER = {
+            "first_aid_kit", "medical_pouch", "stabilization_kit", "field_surgery_kit",
+            "bandage", "pressure_dressing", "hemostatic_gauze", "tourniquet", "esmarch", "occlusive_dressing", "antiseptic",
+            "antibiotic_ointment", "suture_kit", "scissors", "splint",
+            "decompression_needle", "airway", "ambu_bag", "laryngoscope", "endotracheal_tube", "defibrillator", "ammonia",
+            "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",
+            "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
+            "propofol", "insulin", "syringe",
+            "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "blood_draw_syringe", "test_tube", "blood_sample", "lancet",
+            "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
+            "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
+            "surgical_drill", "osteosynthesis_kit", "chest_drain", "bone_saw",
+            "prosthetic_foot", "peg_leg", "prosthetic_hook", "organ_container", "organ", "severed_limb",
+            "medcard", "gm_scanner"};
 
     private static RegistryObject<Item> medical(String name, int stack) {
         return tool(name, () -> new MedicalItem(new Item.Properties().stacksTo(stack)));

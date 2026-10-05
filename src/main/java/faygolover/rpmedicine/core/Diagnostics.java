@@ -93,8 +93,13 @@ public final class Diagnostics {
     }
 
     /** Полный анализ крови в лаборатории (цифрами). */
+    /**
+     * Лаборатория. Питание видно только здесь (как в Health & Disease): альбумин (белок, г/л, норма 35–50),
+     * триглицериды (жиры, ммоль/л, норма 0,5–1,7), глюкоза (углеводы, у диабетика — сахар, ммоль/л, норма 3,9–6,1),
+     * витамин B12 (витамины, пг/мл, норма 200–900).
+     */
     public record Lab(BloodType bloodType, double hemoglobin, double leukocytes, boolean sepsis, double oxygenCapacity,
-                      double alt, double creatinine, double troponin) {}
+                      double alt, double creatinine, double troponin, double albumin, double triglycerides, double glucose, double b12) {}
 
     public static Lab lab(MedicalState m, MedicalSettings s) {
         double cap = m.oxygenCapacity(s);
@@ -106,6 +111,13 @@ public final class Diagnostics {
         double alt = Math.round(25 + m.organ(Organ.LIVER) * 15);
         double creat = Math.round(80 + m.organ(Organ.KIDNEYS) * 8);
         double trop = Math.round(5 + m.organ(Organ.HEART) * 20);
-        return new Lab(m.bloodType, hb, Math.round(wbc * 10) / 10.0, m.sepsis >= 10, cap, alt, creat, trop);
+        double albumin = Math.round(Physiology.clamp(26 + m.nutrients[Nutrition.PROTEIN] * 0.27, 15, 60));
+        double tg = Math.round(Physiology.clamp(0.3 + m.nutrients[Nutrition.FAT] * 0.022, 0.2, 5) * 10) / 10.0;
+        // Сахар диабетика отличается от нормы — он и есть глюкоза; иначе глюкоза — по запасу углеводов.
+        double glucose = Math.abs(m.bloodSugar - Metabolism.NORMAL_SUGAR) > 0.05 ? m.bloodSugar
+                : Physiology.clamp(3.4 + m.nutrients[Nutrition.CARBS] * 0.03, 2.5, 8);
+        glucose = Math.round(glucose * 10) / 10.0;
+        double b12 = Math.round(Physiology.clamp(110 + m.nutrients[Nutrition.VITAMINS] * 7, 60, 1200));
+        return new Lab(m.bloodType, hb, Math.round(wbc * 10) / 10.0, m.sepsis >= 10, cap, alt, creat, trop, albumin, tg, glucose, b12);
     }
 }

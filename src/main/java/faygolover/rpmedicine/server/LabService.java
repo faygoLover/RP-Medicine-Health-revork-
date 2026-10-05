@@ -128,6 +128,15 @@ public final class LabService {
                 .withStyle(lab.creatinine() > 110 ? ChatFormatting.RED : ChatFormatting.WHITE));
         out.add(Component.translatable("rpmedicine.lab.troponin", (int) lab.troponin())
                 .withStyle(lab.troponin() > 14 ? ChatFormatting.RED : ChatFormatting.WHITE));
+        // Питание — только анализом.
+        out.add(Component.translatable("rpmedicine.lab.albumin", (int) lab.albumin())
+                .withStyle(lab.albumin() < 35 ? ChatFormatting.RED : lab.albumin() > 50 ? ChatFormatting.GOLD : ChatFormatting.WHITE));
+        out.add(Component.translatable("rpmedicine.lab.triglycerides", String.format(java.util.Locale.ROOT, "%.1f", lab.triglycerides()))
+                .withStyle(lab.triglycerides() < 0.5 ? ChatFormatting.RED : lab.triglycerides() > 1.7 ? ChatFormatting.GOLD : ChatFormatting.WHITE));
+        out.add(Component.translatable("rpmedicine.lab.glucose", String.format(java.util.Locale.ROOT, "%.1f", lab.glucose()))
+                .withStyle(lab.glucose() < 3.9 ? ChatFormatting.RED : lab.glucose() > 6.1 ? ChatFormatting.GOLD : ChatFormatting.WHITE));
+        out.add(Component.translatable("rpmedicine.lab.b12", (int) lab.b12())
+                .withStyle(lab.b12() < 200 ? ChatFormatting.RED : ChatFormatting.WHITE));
         // Пакет крови во второй руке — проверка совместимости.
         if (offhand.getItem() instanceof BloodBagItem) {
             BloodType bag = BloodBagItem.type(offhand);

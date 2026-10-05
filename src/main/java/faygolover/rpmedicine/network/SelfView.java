@@ -66,12 +66,9 @@ public final class SelfView {
     public short useTimePct = 100;
     /** Свой уровень медицины (подсказки предметов). */
     public byte medLevel;
-    /** Питание: запасы 0–120 и пороги, калории за последние часы. */
-    public final byte[] nutrients = new byte[4];
-    public byte nutrientLow = 20;
-    public byte balancedMin = 35;
-    public byte balancedMax = 85;
-    public short kcalRecent;
+    /** Питание — только ощущения (цифры видны анализом крови): биты {@link #FEEL_LOW_PROTEIN} и т.д. */
+    public byte nutritionFeel;
+    public static final int FEEL_LOW_PROTEIN = 1, FEEL_LOW_FAT = 2, FEEL_LOW_CARBS = 4, FEEL_LOW_VITAMINS = 8, FEEL_HEAVY = 16, FEEL_BALANCED = 32;
     /** Приевшиеся виды еды (биты) и во сколько раз дольше их есть, %. */
     public byte fedUpMask;
     public short monotonyEatSlowPct = 100;
@@ -123,11 +120,7 @@ public final class SelfView {
         buf.writeByte(breakSpeedPct);
         buf.writeShort(useTimePct);
         buf.writeByte(medLevel);
-        buf.writeBytes(nutrients);
-        buf.writeByte(nutrientLow);
-        buf.writeByte(balancedMin);
-        buf.writeByte(balancedMax);
-        buf.writeShort(kcalRecent);
+        buf.writeByte(nutritionFeel);
         buf.writeByte(fedUpMask);
         buf.writeShort(monotonyEatSlowPct);
         buf.writeVarInt(sensations.size());
@@ -175,11 +168,7 @@ public final class SelfView {
         v.breakSpeedPct = buf.readByte();
         v.useTimePct = buf.readShort();
         v.medLevel = buf.readByte();
-        buf.readBytes(v.nutrients);
-        v.nutrientLow = buf.readByte();
-        v.balancedMin = buf.readByte();
-        v.balancedMax = buf.readByte();
-        v.kcalRecent = buf.readShort();
+        v.nutritionFeel = buf.readByte();
         v.fedUpMask = buf.readByte();
         v.monotonyEatSlowPct = buf.readShort();
         int s = Math.min(32, buf.readVarInt());
@@ -205,7 +194,7 @@ public final class SelfView {
                 && breakSpeedPct == v.breakSpeedPct && useTimePct == v.useTimePct && medLevel == v.medLevel
                 && fever == v.fever && cold == v.cold && nausea == v.nausea && concussion == v.concussion
                 && stabilized == v.stabilized && drip == v.drip && splint == v.splint && sedated == v.sedated
-                && java.util.Arrays.equals(nutrients, v.nutrients) && kcalRecent == v.kcalRecent && fedUpMask == v.fedUpMask
+                && nutritionFeel == v.nutritionFeel && fedUpMask == v.fedUpMask
                 && sensations.equals(v.sensations);
     }
 

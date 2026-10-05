@@ -2,23 +2,41 @@ package faygolover.rpmedicine.client.screen;
 
 import faygolover.rpmedicine.client.ClientState;
 import faygolover.rpmedicine.core.Nutrition;
+import faygolover.rpmedicine.network.SelfView;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Питание: запасы белков, жиров, углеводов и витаминов с полосой нормы и калории за последние часы.
- * Иконки — Health & Disease (JEDIGD, MIT).
+ * Самочувствие от питания: только ощущения, без цифр. Точный состав крови — лабораторным анализом
+ * (как в Health & Disease). Иконки — Health & Disease (JEDIGD, MIT).
  */
 public class NutritionScreen extends Screen {
-    private static final int W = 240;
-    private static final int H = 168;
-    private static final String[] ICONS = {"protein", "fats_and_oil", "dietary_fiber", "vitamin"};
+    private static final int W = 260;
+    private static final int H = 150;
+
+    private record Feel(String icon, String key, ChatFormatting color) {}
 
     public NutritionScreen() {
         super(Component.translatable("rpmedicine.nutrition.title"));
+    }
+
+    private List<Feel> feelings() {
+        int f = ClientState.self.nutritionFeel;
+        List<Feel> out = new ArrayList<>();
+        if ((f & SelfView.FEEL_LOW_PROTEIN) != 0) out.add(new Feel("protein", "feel_low_protein", ChatFormatting.RED));
+        if ((f & SelfView.FEEL_LOW_FAT) != 0) out.add(new Feel("fats_and_oil", "feel_low_fat", ChatFormatting.RED));
+        if ((f & SelfView.FEEL_LOW_CARBS) != 0) out.add(new Feel("dietary_fiber", "feel_low_carbs", ChatFormatting.RED));
+        if ((f & SelfView.FEEL_LOW_VITAMINS) != 0) out.add(new Feel("vitamin", "feel_low_vitamins", ChatFormatting.RED));
+        if ((f & SelfView.FEEL_HEAVY) != 0) out.add(new Feel("fats_and_oil", "feel_heavy", ChatFormatting.GOLD));
+        if ((f & SelfView.FEEL_BALANCED) != 0) out.add(new Feel("vitamin", "feel_balanced", ChatFormatting.GREEN));
+        if (out.isEmpty()) out.add(new Feel(null, "feel_ok", ChatFormatting.GRAY));
+        return out;
     }
 
     @Override
@@ -29,30 +47,17 @@ public class NutritionScreen extends Screen {
         g.fill(l, t, l + W, t + H, 0xF0201C18);
         g.renderOutline(l, t, W, H, 0xFF7A6A50);
         g.drawCenteredString(font, title.copy().withStyle(ChatFormatting.GOLD), width / 2, t + 8, 0xFFFFFF);
-        var v = ClientState.self;
-        int low = v.nutrientLow;
-        int bmin = v.balancedMin;
-        int bmax = v.balancedMax;
-        for (int i = 0; i < Nutrition.COUNT; i++) {
-            int y = t + 26 + i * 30;
-            ResourceLocation icon = new ResourceLocation(faygolover.rpmedicine.RpMedicine.MODID, "textures/gui/nutrition/" + ICONS[i] + ".png");
-            g.blit(icon, l + 10, y, 0, 0, 20, 20, 20, 20);
-            int value = v.nutrients[i] & 0xFF;
-            g.drawString(font, Component.translatable("rpmedicine.nutrition." + Nutrition.IDS[i]), l + 36, y, 0xFFFFFF, false);
-            int bx = l + 36;
-            int bw = W - 50;
-            int by = y + 11;
-            g.fill(bx, by, bx + bw, by + 6, 0xFF3A3530);
-            // Полоса нормы.
-            g.fill(bx + bw * bmin / 120, by, bx + bw * Math.min(120, bmax) / 120, by + 6, 0x502E8B57);
-            int col = value < low ? 0xFFE04040 : value > 100 ? 0xFFE0A040 : value >= bmin && value <= bmax ? 0xFF58B35A : 0xFFE0D060;
-            g.fill(bx, by, bx + bw * Math.min(120, value) / 120, by + 6, col);
-            String state = value < low ? "low" : value > 100 ? "high" : value >= bmin && value <= bmax ? "ok" : "mid";
-            Component st = Component.translatable("rpmedicine.nutrition.state_" + state);
-            g.drawString(font, st, l + W - 10 - font.width(st), y, col & 0xFFFFFF, false);
+        int y = t + 26;
+        for (Feel f : feelings()) {
+            if (f.icon() != null)
+                g.blit(new ResourceLocation(faygolover.rpmedicine.RpMedicine.MODID, "textures/gui/nutrition/" + f.icon() + ".png"), l + 10, y - 5, 0, 0, 20, 20, 20, 20);
+            for (var line : font.split(Component.translatable("rpmedicine.nutrition." + f.key()).withStyle(f.color()), W - 48)) {
+                g.drawString(font, line, l + 36, y, 0xFFFFFF, false);
+                y += 10;
+            }
+            y += 12;
         }
-        g.drawString(font, Component.translatable("rpmedicine.nutrition.kcal_recent", v.kcalRecent).withStyle(ChatFormatting.GRAY),
-                l + 10, t + H - 14, 0xFFFFFF, false);
+        var v = ClientState.self;
         if (v.fedUpMask != 0) {
             net.minecraft.network.chat.MutableComponent list = Component.empty();
             boolean first = true;
@@ -64,6 +69,8 @@ public class NutritionScreen extends Screen {
             }
             g.drawString(font, Component.translatable("rpmedicine.nutrition.fed_up", list).withStyle(ChatFormatting.GOLD), l + 10, t + H - 26, 0xFFFFFF, false);
         }
+        g.drawString(font, Component.translatable("rpmedicine.nutrition.lab_hint").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC),
+                l + 10, t + H - 13, 0xFFFFFF, false);
         super.render(g, mx, my, pt);
     }
 
