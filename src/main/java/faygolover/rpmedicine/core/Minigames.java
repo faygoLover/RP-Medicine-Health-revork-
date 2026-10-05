@@ -23,7 +23,28 @@ public final class Minigames {
         /** Швы: протягивать нить от точки к парной точке, не уводя иглу. */
         SUTURE(2.4),
         /** Вправление: вытяжение, затем рывок точно в окне. */
-        REDUCE(1.4);
+        REDUCE(1.4),
+        // Операция (решения, п. 1.14): одна сцена тела, шаги продолжают друг друга.
+        /** Разрез: провести скальпелем по линии ровно и не спеша. */
+        INCISION(1.6),
+        /** Зажимы: поймать пульсирующие точки кровотечения. */
+        CLAMP(1.5),
+        /** Ретракторы: медленно развести края раны до меток. */
+        RETRACT(1.4),
+        /** Закрыть операцию: стежки по разрезу. */
+        CLOSE(2.4),
+        /** Внутреннее кровотечение: удержать иглу на источнике, пока он ушивается. */
+        BLEED_SUTURE(2.0),
+        /** Орган: стежки по разрыву органа. */
+        ORGAN_SUTURE(2.2),
+        /** Сосудистый шов: провести нить от одного конца артерии к другому по узкому каналу. */
+        VESSEL(2.0),
+        /** Остеосинтез: навести дрель на отверстие под винт и сверлить с нужным усилием. */
+        DRILL(2.4),
+        /** Дренаж: попасть в межрёберный промежуток и ввести трубку. */
+        DRAIN(1.8),
+        /** Пули и осколки из раскрытой раны — пинцетом на лоток. */
+        EXTRACT(1.0);
 
         public static final Type[] VALUES = values();
 
@@ -36,6 +57,11 @@ public final class Minigames {
 
         public String id() {
             return name().toLowerCase(Locale.ROOT);
+        }
+
+        /** Мини-игра операции: идёт всегда (и в бою), рисуется сценой тела. */
+        public boolean isSurgical() {
+            return ordinal() >= INCISION.ordinal();
         }
 
         public static Type byOrdinal(int i) {
@@ -61,6 +87,56 @@ public final class Minigames {
                 case DRIP -> Type.VEIN;
                 default -> null;
             };
+            default -> null;
+        };
+    }
+
+    /**
+     * Что видно на сцене операции: часть тела, стадия до шага, постоянный сид сцены (разрез и точки
+     * кровотечения на тех же местах во всех шагах), признаки и число инородных тел.
+     */
+    public record Scene(int part, int stage, long seed, int flags, int bullets, int fragments) {
+        public static final Scene NONE = new Scene(-1, 0, 0, 0, 0, 0);
+        public static final int ARTERIAL = 1, FRACTURE = 2, INTERNAL = 4, ORGAN = 8, PNEUMO = 16, FIXATED = 32;
+
+        public boolean has(int flag) {
+            return (flags & flag) != 0;
+        }
+
+        public static Scene of(MedicalState m, BodyPart part, long seed) {
+            BodyPartState ps = m.part(part);
+            int f = 0;
+            if (ps.arterial) f |= ARTERIAL;
+            if (ps.hasFracture()) f |= FRACTURE;
+            if (ps.internalBleed > 0) f |= INTERNAL;
+            for (Organ o : Organ.VALUES) if (o.part == part && m.organs[o.ordinal()] > 0) f |= ORGAN;
+            if (m.pneumo != MedicalState.Pneumo.NONE) f |= PNEUMO;
+            if (ps.fixated) f |= FIXATED;
+            return new Scene(part.ordinal(), ps.surgery.ordinal(), seed, f, ps.bullets, ps.fragments);
+        }
+    }
+
+    /**
+     * Мини-игра шага операции по состоянию части (null — не операция). Швы на вскрытой части — по тому,
+     * что они сделают: кровотечение, орган или закрыть.
+     */
+    public static Type surgeryType(TreatmentAction a, MedicalState m, BodyPartState ps) {
+        return switch (a) {
+            case INCISE -> Type.INCISION;
+            case CLAMP -> Type.CLAMP;
+            case RETRACT -> Type.RETRACT;
+            case VESSEL_SUTURE -> Type.VESSEL;
+            case OSTEOSYNTHESIS -> Type.DRILL;
+            case DRAIN -> Type.DRAIN;
+            case TWEEZERS -> ps.surgery == BodyPartState.SurgeryStage.RETRACTED && ps.hasForeignBodies() ? Type.EXTRACT : null;
+            case SUTURE -> {
+                if (ps.surgery == BodyPartState.SurgeryStage.NONE) yield null;
+                if (ps.surgery == BodyPartState.SurgeryStage.RETRACTED) {
+                    if (ps.internalBleed > 0) yield Type.BLEED_SUTURE;
+                    for (Organ o : Organ.VALUES) if (o.part == ps.part && m.organs[o.ordinal()] > 0) yield Type.ORGAN_SUTURE;
+                }
+                yield Type.CLOSE;
+            }
             default -> null;
         };
     }

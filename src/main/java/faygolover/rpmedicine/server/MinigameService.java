@@ -47,10 +47,16 @@ public final class MinigameService {
      */
     public static void start(ServerPlayer actor, LivingEntity target, Minigames.Type type, int level, int minLevel, String itemKey,
                              DoubleFunction<ActionManager.TimedAction> next, java.util.function.Supplier<String> checkContinue) {
+        start(actor, target, type, level, minLevel, itemKey, Minigames.Scene.NONE, next, checkContinue);
+    }
+
+    /** То же со сценой операции. */
+    public static void start(ServerPlayer actor, LivingEntity target, Minigames.Type type, int level, int minLevel, String itemKey,
+                             Minigames.Scene scene, DoubleFunction<ActionManager.TimedAction> next, java.util.function.Supplier<String> checkContinue) {
         int session = ++nextSession;
         float ease = (float) Minigames.ease(level, minLevel);
         ActionManager.start(new MinigameAction(actor, target, type, session, next, checkContinue));
-        Network.send(actor, new MinigameStartPacket(session, type, RANDOM.nextLong(), ease, MedicalSettings.get().minigameRefuseAllowed, itemKey));
+        Network.send(actor, new MinigameStartPacket(session, type, RANDOM.nextLong(), ease, MedicalSettings.get().minigameRefuseAllowed, itemKey, scene));
     }
 
     /** Номер идущей мини-игры игрока или −1 (для тестов и отладки). */

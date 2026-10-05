@@ -130,16 +130,18 @@ public final class TreatmentService {
         double seconds = Skill.applySeconds(spec.seconds(), level, self, mods.useTimeFactor, s);
         boolean fromHand = part == null;
         // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
-        // Пинцет на раскрытой части извлекает всё сразу, без мини-игры (третий этап, п. 4.5).
-        boolean openExtraction = action == TreatmentAction.TWEEZERS && p != null && m.part(p).surgery == faygolover.rpmedicine.core.BodyPartState.SurgeryStage.RETRACTED;
-        Minigames.Type mg = forced || openExtraction ? null : MinigameService.minigameFor(actor, target, m,
+        // Операция — всегда мини-игрой на сцене тела (решения, п. 1.14), даже в бою.
+        Minigames.Type surgical = p != null ? Minigames.surgeryType(action, m, m.part(p)) : null;
+        Minigames.Type mg = forced ? null : surgical != null ? (s.minigamesEnabled ? surgical : null) : MinigameService.minigameFor(actor, target, m,
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
+        Minigames.Scene scene = surgical != null ? Minigames.Scene.of(m, p, target.getUUID().getLeastSignificantBits() ^ p.ordinal() * 0x9E3779B97F4A7C15L)
+                : Minigames.Scene.NONE;
         if (mg != null) {
             final BodyPart part0 = p;
             final ItemStack copy = stack.copy();
             TreatmentTimedAction probe = new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand);
             final Double dose0 = dose;
-            MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), q -> {
+            MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), scene, q -> {
                 if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand).withQuality(q).withDose(dose0);
                 return new TreatmentTimedAction(actor, target, part0, spec, slot, copy,
                         (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor).withDose(dose0);

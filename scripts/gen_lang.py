@@ -761,6 +761,26 @@ for k, ru, en in [
     ("new_entry", "Новая запись:", "New entry:"), ("editing", "Правка:", "Editing:"),
     ("no_photo", "нет фото", "no photo"), ("gm_only", "Рост, вес и группу меняет ГМ", "Height, weight and blood type are set by the GM")]:
     t("rpmedicine.medcard." + k, ru, en)
+# Мини-игры операции.
+for k, ru, en, hru, hen in [
+    ("incision", "Разрез", "Incision", "Зажмите у зелёной метки и ведите скальпель по разметке ровно и не спеша.", "Press at the green mark and draw the scalpel along the line, steady and slow."),
+    ("clamp", "Зажимы", "Clamps", "Щёлкайте по точкам кровотечения, когда кровь не брызжет.", "Click the bleeding points between spurts."),
+    ("retract", "Ретракторы", "Retractors", "Захватите край раны и медленно отведите до зелёной метки — сначала один, потом другой.", "Grab a wound edge and slowly pull it to the green mark — one, then the other."),
+    ("close", "Закрытие раны", "Closing", "Стежки: зажмите у жёлтой точки и протяните нить к парной, не уводя иглу.", "Stitches: press at the yellow dot and pull the thread to its pair without straying."),
+    ("bleed_suture", "Источник кровотечения", "Bleeding source", "Удерживайте иглу на источнике, пока он не ушит: он смещается с каждым ударом сердца.", "Keep the needle on the source until it is sutured: it moves with each heartbeat."),
+    ("organ_suture", "Шов органа", "Organ repair", "Мелкие стежки поперёк разрыва органа.", "Small stitches across the organ tear."),
+    ("vessel", "Сосудистый шов", "Vascular suture", "Ведите нить от одного конца артерии к другому, не выходя из канала.", "Lead the thread from one end of the artery to the other without leaving the channel."),
+    ("drill", "Остеосинтез", "Osteosynthesis", "Наведите дрель на отверстие пластины и сверлите, держа усилие в зелёной зоне. Четыре винта.", "Aim the drill at a plate hole and drill keeping the force in the green zone. Four screws."),
+    ("drain", "Дренаж", "Chest drain", "Попадите в межрёберный промежуток и вводите трубку с ровным усилием.", "Hit the gap between the ribs and push the tube with even force."),
+    ("extract", "Инородные тела", "Foreign bodies", "Пинцетом перенесите каждую пулю и осколок на лоток.", "Move every bullet and fragment to the tray with the tweezers.")]:
+    t("rpmedicine.minigame." + k, ru, en)
+    t("rpmedicine.minigame.hint_" + k, hru, hen)
+for k, ru, en in [("tissue_cut", "Задеты ткани", "Tissue damaged"), ("too_rough", "Слишком резко", "Too rough"),
+    ("blood_hidden", "Не видно — кровь", "Can't see — blood"), ("tissue_tear", "Ткани рвутся", "Tissue tearing"),
+    ("over_pull", "Перерастянуто", "Over-stretched"), ("lost_source", "Источник упущен", "Lost the source"),
+    ("drill_slip", "Сверло соскочило", "The drill slipped"), ("rib_hit", "Попали в ребро", "Hit a rib"),
+    ("sutured", "Ушито", "Sutured"), ("drilling", "Сверление", "Drilling"), ("draining", "Дренирование", "Draining")]:
+    t("rpmedicine.minigame." + k, ru, en)
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

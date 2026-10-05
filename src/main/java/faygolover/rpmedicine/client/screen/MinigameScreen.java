@@ -108,6 +108,7 @@ public class MinigameScreen extends Screen {
             case TWEEZERS -> 16;
             case SUTURE -> 16;
             case REDUCE -> 8;
+            default -> 10;
         };
     }
 

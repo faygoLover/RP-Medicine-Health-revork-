@@ -149,4 +149,33 @@ public final class OperatingGameTests {
             h.succeed();
         });
     }
+
+    /** Операция — всегда мини-игра на сцене тела, даже в бою; хорошее качество — шаг сделан. */
+    @GameTest(template = T, batch = "minigames", timeoutTicks = 200)
+    public static void surgeryStepIsAlwaysMinigame(GameTestHelper h) {
+        noDeath(false);
+        MedicalGameTests.noErrors();
+        MedicalSettings.get().minigamesEnabled = true;
+        ServerPlayer patient = player(h, 3.5, 2.5);
+        ServerPlayer medic = player(h, 2.5, 2.5);
+        faygolover.rpmedicine.server.Medical.data(medic).skillOverride = 10;
+        MedicalState m = state(patient);
+        m.down = MedicalState.Down.FAINT;
+        // «Бой»: пациента только что ранили — обычное лечение шло бы прогресс-баром, операция — нет.
+        patient.hurt(patient.damageSources().generic(), 1f);
+        medic.getInventory().selected = 0;
+        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SCALPEL.get()));
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, BodyPart.ABDOMEN);
+        int session = faygolover.rpmedicine.server.MinigameService.currentSession(medic);
+        h.assertTrue(session > 0, "разрез — мини-игра, даже в бою");
+        h.runAfterDelay(50, () -> {
+            faygolover.rpmedicine.server.MinigameService.onResult(medic, session, 0.95f);
+            h.runAfterDelay(3, () -> {
+                h.assertTrue(m.part(BodyPart.ABDOMEN).surgery == faygolover.rpmedicine.core.BodyPartState.SurgeryStage.OPEN, "вскрыто после мини-игры");
+                MedicalSettings.get().minigamesEnabled = false;
+                remove(h, patient, medic);
+                h.succeed();
+            });
+        });
+    }
 }
