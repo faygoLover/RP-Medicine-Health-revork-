@@ -6,8 +6,11 @@ import java.util.Random;
 final class TestUtil {
     private TestUtil() {}
 
+    /** Настройки по умолчанию; питание выключено (его проверяет NutritionTest), чтобы не сдвигать остальные расчёты. */
     static MedicalSettings settings() {
-        return new MedicalSettings();
+        MedicalSettings s = new MedicalSettings();
+        s.nutritionEnabled = false;
+        return s;
     }
 
     static StepInput input(long seed) {

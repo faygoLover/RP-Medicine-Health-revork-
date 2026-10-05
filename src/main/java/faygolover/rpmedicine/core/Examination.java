@@ -179,6 +179,8 @@ public final class Examination {
 
     static List<Line> general(MedicalState m, int lvl, boolean self, MedicalSettings s) {
         List<Line> out = new ArrayList<>();
+        // Питание: истощение видно.
+        if (Nutrition.anyLow(m, s) && lvl >= 1) out.add(new Line(Nutrition.low(m, Nutrition.PROTEIN, s) ? "malnourished" : "undernourished"));
         // Алкоголь и ломка (п. 9).
         if (m.intoxication > 10) out.add(new Line(m.intoxication > 40 ? "drunk" : "smells_alcohol"));
         for (Substance x : Substance.VALUES) {

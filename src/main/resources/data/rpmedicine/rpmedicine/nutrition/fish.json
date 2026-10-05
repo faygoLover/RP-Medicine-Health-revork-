@@ -1,0 +1,21 @@
+{
+  "items": [
+    "minecraft:cod",
+    "minecraft:tropical_fish",
+    "minecraft:pufferfish",
+    "stardew_fishing:blazing_oarfish",
+    "stardew_fishing:chromatic_arapaima",
+    "stardew_fishing:crystalline_snakehead",
+    "stardew_fishing:cyclops_mahimahi",
+    "stardew_fishing:demon_gar",
+    "stardew_fishing:golden_snook",
+    "stardew_fishing:goliath_grouper",
+    "stardew_fishing:sabretoothed_tigerfish",
+    "stardew_fishing:storm_tarpon",
+    "stardew_fishing:vampire_payara"
+  ],
+  "protein": 35,
+  "fat": 4,
+  "carbs": 0,
+  "vitamins": 3
+}

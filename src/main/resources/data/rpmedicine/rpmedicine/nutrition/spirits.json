@@ -1,0 +1,19 @@
+{
+  "items": [
+    "brewery:whiskey_ak",
+    "brewery:whiskey_carrasconlabel",
+    "brewery:whiskey_cristelwalker",
+    "brewery:whiskey_highland_hearth",
+    "brewery:whiskey_jamesons_malt",
+    "brewery:whiskey_jojannik",
+    "brewery:whiskey_lilitusinglemalt",
+    "brewery:whiskey_maggoallan",
+    "brewery:whiskey_smokey_reverie",
+    "brewery:dark_brew"
+  ],
+  "protein": 0,
+  "fat": 0,
+  "carbs": 0,
+  "vitamins": 0,
+  "kcal": 250
+}

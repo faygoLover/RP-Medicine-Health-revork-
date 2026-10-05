@@ -894,6 +894,16 @@ for k, ru, en in [("smells_alcohol", "Запах алкоголя", "Smells of a
     ("withdrawal_signs", "Пот, дрожь, беспокойство", "Sweating, tremor, restlessness"), ("withdrawal", "Абстиненция: %s", "Withdrawal: %s"),
     ("seizure", "Судороги!", "Seizure!")]:
     t("rpmedicine.exam." + k, ru, en)
+# Питание.
+for k, ru, en in [("title", "Питание", "Nutrition"), ("protein", "Белки", "Protein"), ("fat", "Жиры", "Fats"), ("carbs", "Углеводы", "Carbohydrates"),
+    ("vitamins", "Витамины и клетчатка", "Vitamins and fibre"), ("state_low", "мало", "low"), ("state_mid", "так себе", "so-so"),
+    ("state_ok", "норма", "good"), ("state_high", "избыток", "excess"),
+    ("kcal_recent", "Съедено за последние часы: %s ккал", "Eaten over the last hours: %s kcal"),
+    ("tooltip", "%s ккал · Б %s · Ж %s · У %s", "%s kcal · P %s · F %s · C %s")]:
+    t("rpmedicine.nutrition." + k, ru, en)
+t("key.rpmedicine.nutrition", "Питание", "Nutrition")
+t("rpmedicine.exam.malnourished", "Истощён: худой, слабый", "Malnourished: thin and weak")
+t("rpmedicine.exam.undernourished", "Недоедает: вялый, бледный", "Undernourished: sluggish and pale")
 # --- конец пачки 05.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

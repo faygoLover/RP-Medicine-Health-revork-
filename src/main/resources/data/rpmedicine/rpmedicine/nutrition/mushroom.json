@@ -1,0 +1,12 @@
+{
+  "items": [
+    "minecraft:brown_mushroom",
+    "minecraft:red_mushroom",
+    "minecraft:crimson_fungus",
+    "minecraft:warped_fungus"
+  ],
+  "protein": 2,
+  "fat": 0,
+  "carbs": 3,
+  "vitamins": 3
+}

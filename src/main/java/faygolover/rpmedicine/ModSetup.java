@@ -218,6 +218,7 @@ public final class ModSetup {
         e.addListener(HospitalBlocks.LOADER);
         e.addListener(faygolover.rpmedicine.data.DrugRules.LOADER);
         e.addListener(faygolover.rpmedicine.data.SubstanceRules.LOADER);
+        e.addListener(faygolover.rpmedicine.data.NutritionRules.LOADER);
         e.addListener(faygolover.rpmedicine.server.SurvivalService.DRINKS);
     }
 
@@ -225,12 +226,18 @@ public final class ModSetup {
     private static void onDatapackSync(net.minecraftforge.event.OnDatapackSyncEvent e) {
         var packet = new faygolover.rpmedicine.network.HospitalBlocksPacket(HospitalBlocks.entries(), HospitalBlocks.radii());
         var info = faygolover.rpmedicine.data.ItemRules.infoPacket();
+        // Рецепты могли смениться — состав блюд пересчитать.
+        if (e.getPlayer() == null) faygolover.rpmedicine.server.NutritionTable.invalidate();
+        var server = e.getPlayerList().getServer();
+        var foods = new faygolover.rpmedicine.network.NutritionInfoPacket(faygolover.rpmedicine.server.NutritionTable.snapshot(server));
         if (e.getPlayer() != null) {
+            Network.send(e.getPlayer(), foods);
             Network.send(e.getPlayer(), packet);
             Network.send(e.getPlayer(), info);
         } else {
             Network.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
             Network.CHANNEL.send(PacketDistributor.ALL.noArg(), info);
+            Network.CHANNEL.send(PacketDistributor.ALL.noArg(), foods);
         }
     }
 

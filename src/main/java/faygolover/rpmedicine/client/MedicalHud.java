@@ -132,6 +132,9 @@ public final class MedicalHud {
         if (v.drip) out.add(new Icon("drip", "", 0, false));
         if (v.stabilized) out.add(new Icon("stabilized", "", 0, false));
         if (v.sedated) out.add(new Icon("sedated", "", 0, false));
+        // Нехватка питательных веществ (иконки Health & Disease).
+        String[] nIcons = {"protein_low", "fat_low", "carbs_low", "vitamins_low"};
+        for (int i = 0; i < 4; i++) if ((v.nutrients[i] & 0xFF) < v.nutrientLow) out.add(new Icon(nIcons[i], "", 0, false));
         return out;
     }
 

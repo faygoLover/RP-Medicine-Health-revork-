@@ -1,0 +1,18 @@
+{
+  "items": [
+    "butchery:raw_chicken_leg",
+    "butchery:raw_chicken_wing",
+    "butchery:raw_cave_spider_leg",
+    "butchery:raw_spider_leg",
+    "butchery:raw_creeper_leg",
+    "butchery:raw_gray_frog_leg",
+    "butchery:raw_green_frog_leg",
+    "butchery:raw_orange_frog_leg",
+    "butchery:raw_endermite_chunks",
+    "butchery:raw_silverfish_chunks"
+  ],
+  "protein": 22,
+  "fat": 10,
+  "carbs": 0,
+  "vitamins": 1
+}

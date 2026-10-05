@@ -40,6 +40,12 @@ public final class SelfSync {
         v.analgesia = Physiology.analgesia(m, s) > 0;
         v.dyspnea = m.spo2 < 90 || m.respRate > 24 || m.pneumo != MedicalState.Pneumo.NONE;
         v.fever = m.bodyTemp >= 37.8;
+        var ns = faygolover.rpmedicine.core.MedicalSettings.get();
+        for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++) v.nutrients[i] = (byte) Math.round(Math.min(120, m.nutrients[i]));
+        v.nutrientLow = (byte) ns.nutrientLow;
+        v.balancedMin = (byte) ns.balancedMin;
+        v.balancedMax = (byte) Math.min(120, ns.balancedMax);
+        v.kcalRecent = (short) Math.min(30000, Math.round(m.kcalEaten));
         v.cold = m.bodyTemp <= 35.5;
         v.nausea = m.nauseaSeconds > 0;
         v.concussion = m.concussion > 20;

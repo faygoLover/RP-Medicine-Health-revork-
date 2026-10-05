@@ -27,7 +27,15 @@ SRC = {
     "dressed": "tacmed-1.1.0/assets/tacmed/textures/mob_effect/hemostatic_protection.png",
     "nausea": "medicamod-1.0.0-forge-1.20.1/assets/medicamod/textures/mob_effect/stomach_stabilization.png",
     "sedated": "medicamod-1.0.0-forge-1.20.1/assets/medicamod/textures/mob_effect/sedation.png",
+    # Нехватка питательных веществ — иконки Health & Disease (JEDIGD, MIT).
+    "protein_low": "health_and_disease-1.4.2-forge-1.20.1/assets/health_and_disease/textures/item/protein.png",
+    "fat_low": "health_and_disease-1.4.2-forge-1.20.1/assets/health_and_disease/textures/item/fats_and_oil.png",
+    "carbs_low": "health_and_disease-1.4.2-forge-1.20.1/assets/health_and_disease/textures/item/dietary_fiber.png",
+    "vitamins_low": "health_and_disease-1.4.2-forge-1.20.1/assets/health_and_disease/textures/item/vitamin.png",
 }
+# Иконки экрана питания (20×20) — Health & Disease.
+NUTRITION = ["protein", "fats_and_oil", "dietary_fiber", "vitamin"]
+NUT_OUT = os.path.join(ROOT, "src", "main", "resources", "assets", "rpmedicine", "textures", "gui", "nutrition")
 
 
 def fit(img):
@@ -91,4 +99,10 @@ if __name__ == "__main__":
     for name, fn in (("pain", pain), ("tourniquet", tourniquet), ("splint", splint), ("drip", drip)):
         fn().save(os.path.join(OUT, name + ".png"))
         n += 1
+    os.makedirs(NUT_OUT, exist_ok=True)
+    for name in NUTRITION:
+        p = os.path.join(REL, "health_and_disease-1.4.2-forge-1.20.1", "assets", "health_and_disease", "textures", "screens", name + ".png")
+        if os.path.exists(p):
+            Image.open(p).convert("RGBA").resize((20, 20), Image.NEAREST).save(os.path.join(NUT_OUT, name + ".png"))
+            n += 1
     print(n, "значков")

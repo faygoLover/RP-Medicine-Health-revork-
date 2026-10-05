@@ -1,0 +1,10 @@
+{
+  "items": [
+    "butchery:animal_fat",
+    "butchery:crackling"
+  ],
+  "protein": 10,
+  "fat": 80,
+  "carbs": 0,
+  "vitamins": 0
+}

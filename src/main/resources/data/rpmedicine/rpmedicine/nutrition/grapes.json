@@ -1,0 +1,16 @@
+{
+  "items": [
+    "vinery:red_grape",
+    "vinery:white_grape",
+    "vinery:jungle_grapes_red",
+    "vinery:jungle_grapes_white",
+    "vinery:savanna_grapes_red",
+    "vinery:savanna_grapes_white",
+    "vinery:taiga_grapes_red",
+    "vinery:taiga_grapes_white"
+  ],
+  "protein": 1,
+  "fat": 0,
+  "carbs": 17,
+  "vitamins": 8
+}

@@ -107,10 +107,14 @@ public final class VanillaEffects {
         MedicalState m = Medical.state(sp);
         if (m == null) return;
         var food = used.getFoodProperties(sp);
+        var comp = food != null || faygolover.rpmedicine.data.NutritionRules.base(used.getItem()) != null
+                ? faygolover.rpmedicine.server.NutritionTable.get(sp.server, used.getItem()) : null;
+        if (comp != null) faygolover.rpmedicine.core.Nutrition.eat(m, comp, MedicalSettings.get());
         if (food != null && Medical.traits(sp).diabetic) {
-            faygolover.rpmedicine.core.Metabolism.eat(m, food.getNutrition(), MedicalSettings.get());
-            Medical.changed(sp);
+            if (comp != null) faygolover.rpmedicine.core.Metabolism.eatCarbs(m, comp.carbs(), MedicalSettings.get());
+            else faygolover.rpmedicine.core.Metabolism.eat(m, food.getNutrition(), MedicalSettings.get());
         }
+        if (comp != null || food != null) Medical.changed(sp);
         if (!used.is(Items.GOLDEN_APPLE) && !used.is(Items.ENCHANTED_GOLDEN_APPLE)) return;
         MedicalSettings s = MedicalSettings.get();
         boolean ench = used.is(Items.ENCHANTED_GOLDEN_APPLE);

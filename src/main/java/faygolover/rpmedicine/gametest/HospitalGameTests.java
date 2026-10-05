@@ -686,4 +686,23 @@ public final class HospitalGameTests {
         h.assertTrue(cw.sutured && Math.abs(cw.sutureQuality - 0.6) < 1e-6, "швы и их качество сохранены");
         h.succeed();
     }
+
+    /** Питание: блюдо считается по рецепту из базовых ингредиентов датапака; жарка состав не меняет; еда без всего — оценка. */
+    @GameTest(template = T, timeoutTicks = 100)
+    public static void nutritionFromRecipes(GameTestHelper h) {
+        var server = h.getLevel().getServer();
+        var wheat = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.WHEAT);
+        var bread = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.BREAD);
+        h.assertTrue(wheat != null && bread != null, "пшеница из датапака, хлеб из рецепта");
+        h.assertTrue(Math.abs(bread.carbs() - 3 * wheat.carbs()) < 0.01, "хлеб — три пшеницы: " + bread + " / " + wheat);
+        var beef = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.BEEF);
+        var steak = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.COOKED_BEEF);
+        h.assertTrue(steak != null && Math.abs(steak.protein() - beef.protein()) < 0.01, "жареная говядина = сырая по составу");
+        var stew = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.MUSHROOM_STEW);
+        h.assertTrue(stew != null && stew.kcal() > 0, "грибной суп — грибы, миска не считается");
+        var notch = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.ENCHANTED_GOLDEN_APPLE);
+        h.assertTrue(notch != null && notch.kcal() > 0, "без рецепта — оценка по сытости");
+        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.STONE) == null, "камень — не еда");
+        h.succeed();
+    }
 }

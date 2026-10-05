@@ -63,6 +63,7 @@
 | `textures/gui/status/`: bleed_2, bleed_4, internal, fracture, infection, adrenaline | Meds and Herbs 2.0.3, `textures/mob_effect/` | ChebyPattern | MIT |
 | `textures/gui/status/`: analgesia, dyspnea, nausea, sedated | MedicaMod 1.0.0, `textures/mob_effect/` | KG STUDIO | MIT |
 | `textures/gui/status/`: fever, cold, stabilized, concussion | Legendary Survival Overhaul 2.4.2, `textures/mob_effect/` | Sfiomn | GPL-3.0 |
+| `textures/gui/nutrition/` (protein, fats_and_oil, dietary_fiber, vitamin) и `textures/gui/status/` (protein_low, fat_low, carbs_low, vitamins_low) | Health & Disease 1.4.2, `textures/screens/`, `textures/item/` | JEDIGD | MIT |
 | `sounds/bc/hbm_vomit.ogg` | HBM's Nuclear Tech Mod | HBM и соавторы | см. репозиторий HBM |
 
 Иконки состояний уменьшены до 18×18; звуки — без изменений.

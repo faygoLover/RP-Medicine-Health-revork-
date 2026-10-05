@@ -90,6 +90,12 @@ public final class MedicalNbt {
         }
         if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
         if (m.organRejection != 0) t.putByte("orgRej", (byte) m.organRejection);
+        {
+            net.minecraft.nbt.CompoundTag nu = new net.minecraft.nbt.CompoundTag();
+            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++) nu.putFloat(faygolover.rpmedicine.core.Nutrition.IDS[i], (float) m.nutrients[i]);
+            putIf(nu, "kcal", m.kcalEaten);
+            t.put("nutr", nu);
+        }
         boolean anySub = m.dependence != 0 || m.intoxication > 0;
         for (double v : m.tolerance) if (v > 0) anySub = true;
         if (anySub) {
@@ -255,6 +261,12 @@ public final class MedicalNbt {
         for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
         m.organsMissing = t.getByte("orgMiss") & 0xFF;
         m.organRejection = t.getByte("orgRej") & 0xFF;
+        if (t.contains("nutr")) {
+            var nu = t.getCompound("nutr");
+            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++)
+                if (nu.contains(faygolover.rpmedicine.core.Nutrition.IDS[i])) m.nutrients[i] = nu.getFloat(faygolover.rpmedicine.core.Nutrition.IDS[i]);
+            m.kcalEaten = nu.getFloat("kcal");
+        }
         if (t.contains("subst")) {
             var sub = t.getCompound("subst");
             for (var x : faygolover.rpmedicine.core.Substance.VALUES) {

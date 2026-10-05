@@ -540,6 +540,38 @@ public final class MedicalSettings {
     public double alcoholicTolerance = 60.0;
     public double smokerNicotineTolerance = 30.0;
     public double caffeineAddictTolerance = 30.0;
+    /** Питание: включено; запас за грамм белка, жира, углеводов и за единицу витаминов; трата в час; предел. */
+    public boolean nutritionEnabled = true;
+    public double proteinPerGram = 0.9;
+    public double fatPerGram = 1.2;
+    public double carbsPerGram = 0.45;
+    public double vitaminsPerUnit = 1.0;
+    public double proteinDecayPerHour = 25;
+    public double fatDecayPerHour = 15;
+    public double carbsDecayPerHour = 30;
+    public double vitaminsDecayPerHour = 12;
+    public double sprintNutrientFactor = 2.0;
+    public double nutrientMax = 120;
+    /** Нехватка (ниже), избыток (выше), баланс (все в полосе). */
+    public double nutrientLow = 20;
+    public double nutrientHigh = 100;
+    public double balancedMin = 35;
+    public double balancedMax = 85;
+    /** Нехватка: белок — заживление и удар; витамины — иммунитет и заживление; жир — мёрзнет; углеводы — выносливость и скорость. */
+    public double proteinLowHealFactor = 0.7;
+    public double proteinLowAttackPenalty = 0.15;
+    public double vitaminsLowImmunityFactor = 0.7;
+    public double vitaminsLowHealFactor = 0.85;
+    public double fatLowColdShift = 1.5;
+    public double carbsLowStaminaCap = 0.75;
+    public double carbsLowSpeedPenalty = 0.05;
+    /** Избыток жира — тяжело; баланс — бонус к заживлению и иммунитету. */
+    public double fatHighStaminaCap = 0.85;
+    public double fatHighSpeedPenalty = 0.05;
+    public double balancedHealFactor = 1.15;
+    public double balancedImmunityFactor = 1.1;
+    /** Диабет: сахар за грамм углеводов. */
+    public double sugarPerCarbGram = 0.06;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */
     public double dripIvStandFactor = 1.5;
     public double dripBedFactor = 1.5;

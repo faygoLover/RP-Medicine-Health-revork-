@@ -1,0 +1,17 @@
+{
+  "items": [
+    "butchery:raw_cod_fillet",
+    "butchery:raw_blue_axolotl_fillet",
+    "butchery:raw_brown_axolotl_fillet",
+    "butchery:raw_cyan_axolotl_fillet",
+    "butchery:raw_gold_axolotl_fillet",
+    "butchery:raw_pink_axolotl_fillet",
+    "butchery:raw_pufferfish",
+    "butchery:raw_salmon",
+    "butchery:calamari"
+  ],
+  "protein": 30,
+  "fat": 5,
+  "carbs": 0,
+  "vitamins": 3
+}

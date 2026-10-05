@@ -31,6 +31,7 @@ public final class Physiology {
         Limbs.tickNecrosis(m, in, s);
         Metabolism.tick(m, in, s);
         Substances.tick(m, in, s);
+        Nutrition.tick(m, in, s);
         Organs.tick(m, in, s);
         tickPain(m, in, s, r);
         tickChest(m, dt, s, r);

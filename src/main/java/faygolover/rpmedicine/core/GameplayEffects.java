@@ -187,6 +187,7 @@ public final class GameplayEffects {
         if (m.postClinicalSeconds > 0) cap *= 0.6;
         r.staminaCap = Math.max(0.1, Math.min(1.0, cap));
         if (m.postClinicalSeconds > 0) r.staminaRegen *= 0.6;
+        Nutrition.gameplay(m, r, s);
         return r;
     }
 

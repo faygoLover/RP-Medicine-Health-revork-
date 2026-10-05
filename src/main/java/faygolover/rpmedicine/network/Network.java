@@ -52,6 +52,7 @@ public final class Network {
         toServer(OrganChoicePacket.Choice.class, OrganChoicePacket.Choice::encode, OrganChoicePacket.Choice::decode, OrganChoicePacket.Choice::handle);
         toClient(OrganChoicePacket.Request.class, OrganChoicePacket.Request::encode, OrganChoicePacket.Request::decode, OrganChoicePacket.Request::handle);
         toClient(LimbsVisualPacket.class, LimbsVisualPacket::encode, LimbsVisualPacket::decode, LimbsVisualPacket::handle);
+        toClient(NutritionInfoPacket.class, NutritionInfoPacket::encode, NutritionInfoPacket::decode, NutritionInfoPacket::handle);
         toServer(DosePacket.Choice.class, DosePacket.Choice::encode, DosePacket.Choice::decode, DosePacket.Choice::handle);
         toClient(DosePacket.Request.class, DosePacket.Request::encode, DosePacket.Request::decode, DosePacket.Request::handle);
         toServer(HoverRequestPacket.class, HoverRequestPacket::encode, HoverRequestPacket::decode, HoverRequestPacket::handle);

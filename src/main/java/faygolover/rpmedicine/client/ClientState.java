@@ -45,6 +45,8 @@ public final class ClientState {
     public static final Set<Integer> DOWNED = new HashSet<>();
     /** Каких конечностей не видно у игроков (третий этап, п. 12): id сущности → биты частей. */
     public static final java.util.Map<Integer, Integer> MISSING_LIMBS = new java.util.HashMap<>();
+    /** Состав еды для подсказок (с сервера). */
+    public static final java.util.Map<net.minecraft.resources.ResourceLocation, faygolover.rpmedicine.core.Nutrition.Food> FOODS = new java.util.HashMap<>();
 
     /** Последний ответ монитора, на который смотрит игрок. */
     @Nullable

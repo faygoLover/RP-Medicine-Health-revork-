@@ -44,4 +44,9 @@ public final class Metabolism {
     public static void eat(MedicalState m, int nutrition, MedicalSettings s) {
         m.bloodSugar = Math.min(35, m.bloodSugar + nutrition * s.sugarPerNutrition);
     }
+
+    /** Еда с известным составом: сахар — по углеводам. */
+    public static void eatCarbs(MedicalState m, double carbs, MedicalSettings s) {
+        m.bloodSugar = Math.min(35, m.bloodSugar + carbs * s.sugarPerCarbGram);
+    }
 }

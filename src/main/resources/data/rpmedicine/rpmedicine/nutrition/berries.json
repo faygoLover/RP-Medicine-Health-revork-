@@ -1,0 +1,12 @@
+{
+  "items": [
+    "minecraft:sweet_berries",
+    "minecraft:glow_berries",
+    "farm_and_charm:strawberry",
+    "vinery:cherry"
+  ],
+  "protein": 0,
+  "fat": 0,
+  "carbs": 6,
+  "vitamins": 8
+}

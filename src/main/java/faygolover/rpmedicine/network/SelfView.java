@@ -66,6 +66,12 @@ public final class SelfView {
     public short useTimePct = 100;
     /** Свой уровень медицины (подсказки предметов). */
     public byte medLevel;
+    /** Питание: запасы 0–120 и пороги, калории за последние часы. */
+    public final byte[] nutrients = new byte[4];
+    public byte nutrientLow = 20;
+    public byte balancedMin = 35;
+    public byte balancedMax = 85;
+    public short kcalRecent;
 
     /** Ощущения: ключи {@code rpmedicine.exam.complaint_<k>}. */
     public final List<String> sensations = new ArrayList<>();
@@ -114,6 +120,11 @@ public final class SelfView {
         buf.writeByte(breakSpeedPct);
         buf.writeShort(useTimePct);
         buf.writeByte(medLevel);
+        buf.writeBytes(nutrients);
+        buf.writeByte(nutrientLow);
+        buf.writeByte(balancedMin);
+        buf.writeByte(balancedMax);
+        buf.writeShort(kcalRecent);
         buf.writeVarInt(sensations.size());
         for (String s : sensations) buf.writeUtf(s, 64);
     }
@@ -159,6 +170,11 @@ public final class SelfView {
         v.breakSpeedPct = buf.readByte();
         v.useTimePct = buf.readShort();
         v.medLevel = buf.readByte();
+        buf.readBytes(v.nutrients);
+        v.nutrientLow = buf.readByte();
+        v.balancedMin = buf.readByte();
+        v.balancedMax = buf.readByte();
+        v.kcalRecent = buf.readShort();
         int s = Math.min(32, buf.readVarInt());
         for (int i = 0; i < s; i++) v.sensations.add(buf.readUtf(64));
         return v;
@@ -182,6 +198,7 @@ public final class SelfView {
                 && breakSpeedPct == v.breakSpeedPct && useTimePct == v.useTimePct && medLevel == v.medLevel
                 && fever == v.fever && cold == v.cold && nausea == v.nausea && concussion == v.concussion
                 && stabilized == v.stabilized && drip == v.drip && splint == v.splint && sedated == v.sedated
+                && java.util.Arrays.equals(nutrients, v.nutrients) && kcalRecent == v.kcalRecent
                 && sensations.equals(v.sensations);
     }
 

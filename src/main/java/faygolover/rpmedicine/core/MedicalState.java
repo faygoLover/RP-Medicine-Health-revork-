@@ -148,6 +148,9 @@ public final class MedicalState {
     /** Опьянение 0–100; судороги (ломка алкоголя), секунд. */
     public double intoxication;
     public double seizureSeconds;
+    /** Питание: запасы белков, жиров, углеводов, витаминов 0–120; калории, съеденные за последние часы. */
+    public final double[] nutrients = {60, 60, 60, 60};
+    public double kcalEaten;
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -266,6 +269,8 @@ public final class MedicalState {
         dependence = 0;
         intoxication = 0;
         seizureSeconds = 0;
+        java.util.Arrays.fill(nutrients, 60);
+        kcalEaten = 0;
         doses.clear();
         effects.clear();
     }
@@ -416,6 +421,8 @@ public final class MedicalState {
         dependence = o.dependence;
         intoxication = o.intoxication;
         seizureSeconds = o.seizureSeconds;
+        System.arraycopy(o.nutrients, 0, nutrients, 0, nutrients.length);
+        kcalEaten = o.kcalEaten;
         thirst = o.thirst;
         pendingFoodLoss = o.pendingFoodLoss;
         pendingThirstLoss = o.pendingThirstLoss;
