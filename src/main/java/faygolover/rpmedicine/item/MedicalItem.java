@@ -24,6 +24,16 @@ public class MedicalItem extends Item {
         String what = getDescriptionId() + ".what";
         tooltip.add(Component.translatable(net.minecraft.locale.Language.getInstance().has(what) ? what : getDescriptionId() + ".desc")
                 .withStyle(net.minecraft.ChatFormatting.GRAY));
+        // Начатый пакет капельницы: остаток и добавленный препарат.
+        net.minecraft.nbt.CompoundTag tag = stack.getTag();
+        if (tag != null && tag.contains(faygolover.rpmedicine.hospital.IvStandBlockEntity.ML))
+            tooltip.add(Component.translatable("rpmedicine.tooltip.bag_left", Math.round(tag.getFloat(faygolover.rpmedicine.hospital.IvStandBlockEntity.ML)))
+                    .withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+        if (tag != null && tag.contains(faygolover.rpmedicine.hospital.IvStandBlockEntity.ADD))
+            tooltip.add(Component.translatable("rpmedicine.tooltip.bag_drug", faygolover.rpmedicine.item.FilledSyringeItem.drugName(
+                    tag.getString(faygolover.rpmedicine.hospital.IvStandBlockEntity.ADD)),
+                    String.format(java.util.Locale.ROOT, "%.1f", tag.getFloat(faygolover.rpmedicine.hospital.IvStandBlockEntity.ADD_DOSES)).replace('.', ','))
+                    .withStyle(net.minecraft.ChatFormatting.GOLD));
         if (stack.isDamageableItem()) {
             int left = stack.getMaxDamage() - stack.getDamageValue();
             if (faygolover.rpmedicine.registry.ModItems.isPen(stack) || faygolover.rpmedicine.registry.ModItems.isVial(stack)) {

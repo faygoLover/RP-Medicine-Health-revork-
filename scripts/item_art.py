@@ -72,6 +72,8 @@ ICONS = {
     "atropine": ("hue", TA + "textures/item/aggressiveness.png", 0.2),
     "ceftriaxone": ("hue", BC + "textures/item/hypnotic_vial.png", -0.3),
     "norepinephrine": BC + "textures/item/oil_vial.png",
+    "used_iv_bag": ("recolor", TM + "textures/item/saline.png",
+                    {(175, 205, 230): (214, 220, 226), (140, 175, 205): (196, 202, 210), (210, 225, 235): (232, 236, 240)}),
     "filled_syringe": ("liquidicon", HD + "textures/item/brinject.png", (236, 234, 224)),
     "ketamine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.5),
     "lidocaine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.12),

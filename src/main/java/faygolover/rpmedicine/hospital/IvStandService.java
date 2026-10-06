@@ -40,15 +40,35 @@ public final class IvStandService {
             msg(sp, "rpmedicine.iv.hung", ChatFormatting.WHITE);
             return true;
         }
+        // Набранный шприц с препаратом для капельницы — ввести в пакет физраствора (решения, п. 1.16).
+        if (hand.getItem() instanceof faygolover.rpmedicine.item.FilledSyringeItem) {
+            var d = faygolover.rpmedicine.item.FilledSyringeItem.drugOf(hand);
+            if (d == null || d.form() != faygolover.rpmedicine.core.Drug.Form.DRIP) {
+                msg(sp, "rpmedicine.iv.drug_not_for_drip", ChatFormatting.YELLOW);
+                return true;
+            }
+            String why = be.inject(d.id(), faygolover.rpmedicine.item.FilledSyringeItem.ml(hand));
+            if (why != null) {
+                msg(sp, why, ChatFormatting.YELLOW);
+                return true;
+            }
+            if (!sp.getAbilities().instabuild) {
+                hand.shrink(1);
+                ItemStack dirty = new ItemStack(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
+                if (!sp.getInventory().add(dirty)) sp.drop(dirty, false);
+            }
+            msg(sp, "rpmedicine.iv.drug_added", ChatFormatting.WHITE);
+            return true;
+        }
         if (!hand.isEmpty()) return false;
         if (sp.isShiftKeyDown()) {
-            boolean[] thrown = {false};
-            ItemStack bag = be.takeLast(thrown);
+            ItemStack bag = be.takeLast();
             if (bag == null) {
                 msg(sp, be.linked() ? "rpmedicine.iv.bag_in_use" : "rpmedicine.iv.no_bags", ChatFormatting.YELLOW);
             } else {
-                if (!bag.isEmpty() && !sp.getInventory().add(bag)) sp.drop(bag, false);
-                msg(sp, thrown[0] ? "rpmedicine.iv.bag_thrown" : "rpmedicine.iv.bag_taken", ChatFormatting.WHITE);
+                boolean used = bag.is(faygolover.rpmedicine.registry.ModItems.USED_IV_BAG.get());
+                if (!sp.getInventory().add(bag)) sp.drop(bag, false);
+                msg(sp, used ? "rpmedicine.iv.bag_used" : "rpmedicine.iv.bag_taken", ChatFormatting.WHITE);
             }
             return true;
         }

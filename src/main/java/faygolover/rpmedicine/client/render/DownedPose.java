@@ -67,6 +67,12 @@ public final class DownedPose {
         return ClientState.DOWNED.contains(p.getId()) || BedPose.CLIENT_ON_BED.contains(p.getId());
     }
 
+    /** Куда смотрит лежачее тело (для шланга капельницы и т. п.). */
+    public static float lyingYaw(Player p) {
+        State st = STATES.get(p.getId());
+        return st != null ? st.yaw : yawFor(p, p.yBodyRot);
+    }
+
     private static float yawFor(Player p, float fallback) {
         Float bed = BedPose.CLIENT_BED_YAW.get(p.getId());
         return bed != null ? bed : fallback;

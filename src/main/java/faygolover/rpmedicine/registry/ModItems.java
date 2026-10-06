@@ -42,6 +42,8 @@ public final class ModItems {
     public static final RegistryObject<Item> SALINE = medical("saline", 4);
     /** Венозный катетер: через него капает со стойки (замечание 35). */
     public static final RegistryObject<Item> IV_CATHETER = medical("iv_catheter", 16);
+    /** Опустевший пакет капельницы — мусор (решения, п. 1.16). */
+    public static final RegistryObject<Item> USED_IV_BAG = medical("used_iv_bag", 16);
     /** Стойка капельницы — свой блок. */
     public static final RegistryObject<Item> IV_STAND = tool("iv_stand", () -> new net.minecraft.world.item.BlockItem(ModBlocks.IV_STAND.get(), new Item.Properties()));
     public static final RegistryObject<Item> AMMONIA = medical("ammonia", 16);
@@ -172,7 +174,7 @@ public final class ModItems {
             "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
             "propofol", "insulin", "syringe", "filled_syringe", "dirty_syringe", "used_pen",
-            "iv_stand", "iv_catheter", "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
+            "iv_stand", "iv_catheter", "saline", "used_iv_bag", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
             "surgical_drill", "osteosynthesis_kit", "chest_drain", "bone_saw",

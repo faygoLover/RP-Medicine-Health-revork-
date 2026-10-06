@@ -142,6 +142,7 @@ public final class ClientEvents {
 
     /** Смотрит на монитор показателей — запрашивать цифры, пока смотрит (п. 2.3 ТЗ второго этапа). */
     private static void updateMonitor(Minecraft mc, SelfView v) {
+        ClientState.lookingAtMonitor = false;
         if (v.isDown() || !(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult bhr)
                 || bhr.getType() != HitResult.Type.BLOCK) return;
         var pos = bhr.getBlockPos();
@@ -150,6 +151,7 @@ public final class ClientEvents {
         if (!HospitalBlocks.is(looked, HospitalFunction.MONITOR) && !HospitalBlocks.is(looked, HospitalFunction.OPERATING_TABLE)
                 && !HospitalBlocks.is(looked, HospitalFunction.RESTRAINT_TABLE)) return;
         if (mc.player.getEyePosition().distanceTo(net.minecraft.world.phys.Vec3.atCenterOf(pos)) > 8) return;
+        ClientState.lookingAtMonitor = true;
         Network.sendToServer(new MonitorRequestPacket(pos));
     }
 

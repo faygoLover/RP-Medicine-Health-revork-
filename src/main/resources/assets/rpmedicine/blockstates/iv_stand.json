@@ -1,19 +1,31 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,upper=false": {
       "model": "rpmedicine:block/iv_stand"
     },
-    "facing=east": {
+    "facing=north,upper=true": {
+      "model": "rpmedicine:block/iv_stand_top"
+    },
+    "facing=east,upper=false": {
       "model": "rpmedicine:block/iv_stand",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,upper=true": {
+      "model": "rpmedicine:block/iv_stand_top"
+    },
+    "facing=south,upper=false": {
       "model": "rpmedicine:block/iv_stand",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,upper=true": {
+      "model": "rpmedicine:block/iv_stand_top"
+    },
+    "facing=west,upper=false": {
       "model": "rpmedicine:block/iv_stand",
       "y": 270
+    },
+    "facing=west,upper=true": {
+      "model": "rpmedicine:block/iv_stand_top"
     }
   }
 }

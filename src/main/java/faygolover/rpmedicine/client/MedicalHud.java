@@ -238,6 +238,7 @@ public final class MedicalHud {
 
     /** Цифры монитора, на который смотрит игрок (второй этап, п. 2.3). */
     private static void drawMonitor(GuiGraphics g, Font font, boolean preview) {
+        if (!preview && drawStand(g, font)) return;
         MonitorPacket p = preview ? new MonitorPacket(net.minecraft.core.BlockPos.ZERO, (byte) 0, (short) 88, (short) 118, (short) 77,
                 (short) 97, (short) 16, (byte) 0) : ClientState.monitor;
         if (p == null || (!preview && !ClientState.monitorActive())) return;
@@ -256,6 +257,44 @@ public final class MedicalHud {
                 p.spo2() < 0 || low ? 0xFF5555 : 0x55FFFF, false);
         g.drawString(font, Component.translatable("rpmedicine.monitor.rr", dash(p.rr(), false)), 0, 40, 0xFFFF55, false);
         g.drawString(font, Component.translatable("rpmedicine.monitor.rhythm_" + p.rhythm()), 0, 50, alarm ? 0xFF5555 : 0xAAAAAA, false);
+    }
+
+    /** Стойка капельницы под прицелом: что висит, сколько осталось, что капает (решения, п. 1.16). */
+    private static boolean drawStand(GuiGraphics g, Font font) {
+        var mc = net.minecraft.client.Minecraft.getInstance();
+        if (mc.level == null || !(mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult bhr)
+                || bhr.getType() != net.minecraft.world.phys.HitResult.Type.BLOCK) return false;
+        var pos = bhr.getBlockPos();
+        var st = mc.level.getBlockState(pos);
+        if (!st.is(faygolover.rpmedicine.registry.ModBlocks.IV_STAND.get())) return false;
+        if (st.getValue(faygolover.rpmedicine.hospital.IvStandBlock.UPPER)) pos = pos.below();
+        if (!(mc.level.getBlockEntity(pos) instanceof faygolover.rpmedicine.hospital.IvStandBlockEntity be)) return false;
+        java.util.List<Component> lines = new java.util.ArrayList<>();
+        for (int i = 0; i < faygolover.rpmedicine.hospital.IvStandBlockEntity.HOOKS; i++) {
+            byte k = be.clientKinds[i];
+            if (k == 0) continue;
+            boolean blood = k == faygolover.rpmedicine.hospital.IvStandBlockEntity.BLOOD || k == faygolover.rpmedicine.hospital.IvStandBlockEntity.EMPTY_BLOOD;
+            var line = Component.translatable(blood ? "rpmedicine.stand.blood" : "rpmedicine.stand.saline",
+                    Math.round(be.clientVolume[i]), Math.round(be.clientMax[i]));
+            if (!be.clientAdd[i].isEmpty())
+                line.append(Component.translatable("rpmedicine.stand.with", faygolover.rpmedicine.item.FilledSyringeItem.drugName(be.clientAdd[i]),
+                        String.format(java.util.Locale.ROOT, "%.1f", be.clientAddDoses[i]).replace('.', ',')));
+            ChatFormatting c = be.clientVolume[i] <= 0.5 ? ChatFormatting.DARK_GRAY : i == be.clientActive ? ChatFormatting.GREEN : ChatFormatting.WHITE;
+            lines.add((i == be.clientActive ? Component.literal("▶ ") : Component.literal("  ")).append(line).withStyle(c));
+        }
+        if (lines.isEmpty()) lines.add(Component.translatable("rpmedicine.stand.empty").withStyle(ChatFormatting.GRAY));
+        lines.add(Component.translatable(be.clientPatientId >= 0 ? "rpmedicine.stand.linked" : "rpmedicine.stand.not_linked")
+                .withStyle(be.clientPatientId >= 0 ? ChatFormatting.AQUA : ChatFormatting.DARK_GRAY));
+        int w = 108;
+        for (Component l : lines) w = Math.max(w, font.width(l) + 6);
+        g.fill(-3, -3, w, 10 + lines.size() * 10, 0xB0000000);
+        g.drawString(font, Component.translatable("rpmedicine.stand.title").withStyle(ChatFormatting.DARK_GREEN), 0, 0, 0xFFFFFF, false);
+        int y = 10;
+        for (Component l : lines) {
+            g.drawString(font, l, 0, y, 0xFFFFFF, false);
+            y += 10;
+        }
+        return true;
     }
 
     private static String dash(int v, boolean force) {

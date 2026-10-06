@@ -24,6 +24,9 @@ KINDS = {
     "blood": ([(168, 26, 36), (140, 18, 28), (112, 12, 20)], (150, 20, 30), (150, 40, 46)),
     "empty_saline": ([(198, 206, 212), (186, 195, 202), (176, 186, 194)], (190, 198, 204), None),
     "empty_blood": ([(214, 182, 186), (204, 162, 168), (176, 104, 110)], (180, 120, 125), (196, 150, 154)),
+    # Физраствор с препаратом (решения, п. 1.16): норадреналин — жёлтый, пропофол — молочный.
+    "saline_yellow": ([(236, 214, 110), (222, 196, 84), (204, 176, 64)], (236, 214, 110), (222, 200, 120)),
+    "saline_milky": ([(246, 244, 236), (234, 232, 222), (220, 218, 206)], (246, 244, 236), (232, 230, 222)),
 }
 # Трубка капельницы на боковом пакете (столбец x=2, строки 7–19) — с кровью красная.
 TUBE = [(2, y) for y in range(7, 20)]
@@ -81,23 +84,28 @@ def main():
     bags = [up(e) for e in pos["elements"] if e.get("name") == "iv_bag"]
     textures = {"1": "rpmedicine:block/iv_stand", "particle": "rpmedicine:block/iv_stand"}
     write(os.path.join(ASSETS, "models", "block", "iv_stand.json"),
-          {"credit": "Industrial Hellscape (YellowUboat, MIT), без пакетов", "texture_size": pos.get("texture_size", [32, 32]),
-           "textures": textures, "elements": base})
+          {"credit": "Industrial Hellscape (YellowUboat, MIT), без пакетов", "render_type": "minecraft:cutout",
+           "texture_size": pos.get("texture_size", [32, 32]), "textures": textures, "elements": base})
+    # Верхняя половина невидима: модель целиком рисует нижняя.
+    write(os.path.join(ASSETS, "models", "block", "iv_stand_top.json"), {"textures": {"particle": "rpmedicine:block/iv_stand"}})
     for i, e in enumerate(bags):
         for k in KINDS:
             write(os.path.join(ASSETS, "models", "block", f"iv_bag_{i}_{k}.json"),
                   {"texture_size": pos.get("texture_size", [32, 32]),
                    "textures": {"1": f"rpmedicine:block/iv_bag_{k}", "particle": f"rpmedicine:block/iv_bag_{k}"},
                    "elements": [e]})
-    write(os.path.join(ASSETS, "blockstates", "iv_stand.json"), {"variants": {
-        f"facing={f}": {"model": "rpmedicine:block/iv_stand", **({"y": y} if y else {})}
-        for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    variants = {}
+    for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+        variants[f"facing={f},upper=false"] = {"model": "rpmedicine:block/iv_stand", **({"y": y} if y else {})}
+        variants[f"facing={f},upper=true"] = {"model": "rpmedicine:block/iv_stand_top"}
+    write(os.path.join(ASSETS, "blockstates", "iv_stand.json"), {"variants": variants})
     display = item.get("display", {})
     display["gui"] = {"rotation": [30, -135, 0], "translation": [0, -4, 0], "scale": [0.42, 0.42, 0.42]}
     write(os.path.join(ASSETS, "models", "item", "iv_stand.json"), {"parent": "rpmedicine:block/iv_stand", "display": display})
     write(os.path.join(DATA, "loot_tables", "blocks", "iv_stand.json"), {"type": "minecraft:block", "pools": [
         {"rolls": 1, "entries": [{"type": "minecraft:item", "name": "rpmedicine:iv_stand"}],
-         "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+         "conditions": [{"condition": "minecraft:survives_explosion"},
+                        {"condition": "minecraft:block_state_property", "block": "rpmedicine:iv_stand", "properties": {"upper": "false"}}]}]})
     write(os.path.join(DATA, "recipes", "iv_stand.json"), {
         "type": "minecraft:crafting_shaped", "pattern": ["NIN", " I ", "III"],
         "key": {"I": {"item": "minecraft:iron_ingot"}, "N": {"item": "minecraft:iron_nugget"}},

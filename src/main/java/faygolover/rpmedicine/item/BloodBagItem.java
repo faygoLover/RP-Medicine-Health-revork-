@@ -71,8 +71,8 @@ public class BloodBagItem extends MedicalItem {
         CompoundTag t = stack.getTag();
         if (t == null || !t.contains(COLLECTED)) return false;
         MedicalSettings s = MedicalSettings.get();
-        long age = now - t.getLong(COLLECTED);
-        return warmTicks(stack, now) > s.bloodSpoilWarmHours * 72000 || age > s.bloodSpoilFridgeDays * 24 * 72000;
+        // В холодильнике порча стоит совсем (решения, п. 1.16): считается только время в тепле.
+        return warmTicks(stack, now) > s.bloodSpoilWarmHours * 72000;
     }
 
     /** Положили в холодильник (или вынули в обычный контейнер): зафиксировать тёплое время. */

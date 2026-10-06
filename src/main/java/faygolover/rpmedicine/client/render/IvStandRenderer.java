@@ -32,7 +32,7 @@ import java.util.List;
  * пустые после них) и шланг к руке пациента — провисает, как поводок (замечание 35).
  */
 public class IvStandRenderer implements BlockEntityRenderer<IvStandBlockEntity> {
-    private static final String[] KINDS = {null, "saline", "blood", "empty_saline", "empty_blood"};
+    private static final String[] KINDS = {null, "saline", "blood", "empty_saline", "empty_blood", "saline_yellow", "saline_milky"};
     /** Низ каждого пакета в координатах модели (для стойки лицом на север), откуда идёт шланг. */
     private static final Vec3[] HOOK = {new Vec3(8, 19, 4), new Vec3(12, 9.5, 8), new Vec3(3.75, 19, 8.25)};
 
@@ -65,14 +65,15 @@ public class IvStandRenderer implements BlockEntityRenderer<IvStandBlockEntity> 
             if (k <= 0 || k >= KINDS.length) continue;
             BakedModel m = mc.getModelManager().getModel(model(i, KINDS[k]));
             renderer.renderModel(pose.last(), vc, be.getBlockState(), m, 1f, 1f, 1f, light, overlay, ModelData.EMPTY, RenderType.translucent());
-            if (hoseFrom < 0 && (k == IvStandBlockEntity.SALINE || k == IvStandBlockEntity.BLOOD)) hoseFrom = i;
+            if (hoseFrom < 0 && k != IvStandBlockEntity.EMPTY_SALINE && k != IvStandBlockEntity.EMPTY_BLOOD) hoseFrom = i;
         }
         pose.popPose();
         if (be.clientPatientId >= 0 && mc.level != null) {
             Entity e = mc.level.getEntity(be.clientPatientId);
             if (e instanceof LivingEntity patient) {
-                int from = hoseFrom >= 0 ? hoseFrom : 0;
-                boolean blood = hoseFrom >= 0 && be.clientKinds[hoseFrom] == IvStandBlockEntity.BLOOD;
+                // Шланг — от того пакета, что сейчас капает (опустел — переходит к следующему).
+                int from = be.clientActive >= 0 ? be.clientActive : hoseFrom >= 0 ? hoseFrom : 0;
+                boolean blood = be.clientKinds[from] == IvStandBlockEntity.BLOOD;
                 Vec3 local = HOOK[from].scale(1 / 16.0).subtract(0.5, 0, 0.5);
                 local = local.yRot((float) Math.toRadians(facing.toYRot() + 180) * -1f + 0f);
                 Vec3 start = Vec3.atLowerCornerOf(be.getBlockPos()).add(0.5, 0, 0.5).add(local);
@@ -86,9 +87,13 @@ public class IvStandRenderer implements BlockEntityRenderer<IvStandBlockEntity> 
     private static Vec3 armPos(LivingEntity p, int arm, float pt) {
         Vec3 base = p.getPosition(pt);
         boolean left = arm == faygolover.rpmedicine.core.BodyPart.LEFT_ARM.ordinal();
-        if (ClientState.DOWNED.contains(p.getId())) return base.add(0, 0.25, 0);
-        float yaw = Mth.lerp(pt, p.yBodyRotO, p.yBodyRot) * Mth.DEG_TO_RAD;
         double side = left ? 0.36 : -0.36;
+        // Лежачий и на койке: тело лежит вдоль взгляда, руки вдоль тела — кисть у бедра, сбоку.
+        if (p instanceof net.minecraft.world.entity.player.Player pl && DownedPose.isDowned(pl)) {
+            float yaw = DownedPose.lyingYaw(pl) * Mth.DEG_TO_RAD;
+            return base.add(Mth.cos(yaw) * side, 0.32, Mth.sin(yaw) * side);
+        }
+        float yaw = Mth.lerp(pt, p.yBodyRotO, p.yBodyRot) * Mth.DEG_TO_RAD;
         return base.add(Mth.cos(yaw) * side, 0.78, Mth.sin(yaw) * side);
     }
 

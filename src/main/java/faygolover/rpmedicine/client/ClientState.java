@@ -74,8 +74,11 @@ public final class ClientState {
     }
 
     /** Показывать ли монитор: ответ свежий (запрос повторяется, пока игрок смотрит). */
+    /** Прицел сейчас на мониторе (окно пропадает сразу, как отвернулся — замечание 33). */
+    public static boolean lookingAtMonitor;
+
     public static boolean monitorActive() {
-        return monitor != null && System.currentTimeMillis() - monitorTime < 1500;
+        return monitor != null && lookingAtMonitor && System.currentTimeMillis() - monitorTime < 1500;
     }
 
     public static boolean progressActive() {
