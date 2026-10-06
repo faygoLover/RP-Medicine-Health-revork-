@@ -152,6 +152,23 @@ public final class MedCommand {
                 .then(Commands.argument("player", net.minecraft.commands.arguments.GameProfileArgument.gameProfile())
                         .executes(c -> stats(c, 24))
                         .then(Commands.argument("hours", DoubleArgumentType.doubleArg(0.1, 24 * 90)).executes(c -> stats(c, DoubleArgumentType.getDouble(c, "hours"))))));
+        // Уложить на койку (ГМ и проверка позы).
+        root.then(op("bed").then(Commands.argument("targets", EntityArgument.entities())
+                .then(Commands.argument("pos", net.minecraft.commands.arguments.coordinates.BlockPosArgument.blockPos()).executes(c -> {
+                    var pos = net.minecraft.commands.arguments.coordinates.BlockPosArgument.getLoadedBlockPos(c, "pos");
+                    if (!faygolover.rpmedicine.hospital.HospitalBlocks.isBed(c.getSource().getLevel().getBlockState(pos))) {
+                        c.getSource().sendFailure(Component.translatable("rpmedicine.cmd.not_bed"));
+                        return 0;
+                    }
+                    int n = 0;
+                    for (Entity t : EntityArgument.getEntities(c, "targets")) {
+                        if (t instanceof LivingEntity le && Medical.isPatient(le)) {
+                            faygolover.rpmedicine.hospital.HospitalService.placeOnBed(le, pos);
+                            n++;
+                        }
+                    }
+                    return n;
+                }))));
         // Наборы предметов для проверки.
         root.then(KitCommand.node());
         // Панель ГМа (второй этап, п. 11.3).

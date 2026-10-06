@@ -228,6 +228,9 @@ public final class MedicalSettings {
     public double overflowAbdomen = 1.05;
     /** Урон по разрушенной голове бьёт по мозгу: на единицу тяжести. */
     public double destroyedHeadBrainPerSeverity = 0.4;
+    /** Проникающее ранение головы: мозг теряет столько процентов за единицу тяжести, контузия — столько. */
+    public double headPenetratingBrainPerSeverity = 0.6;
+    public double headPenetratingConcussionPerSeverity = 3.0;
     /** Урон по разрушенной груди бьёт по сердцу и лёгким: на единицу тяжести. */
     public double destroyedChestOrganPerSeverity = 0.5;
     /** Часть считается разрушенной при целостности ниже. */

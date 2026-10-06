@@ -969,6 +969,8 @@ t("rpmedicine.gm.value.sepsis", "Сепсис, %", "Sepsis, %")
 t("rpmedicine.gm.value.sugar", "Сахар, ммоль/л", "Sugar, mmol/L")
 t("rpmedicine.gm.value.temperature", "Температура, °C", "Temperature, °C")
 t("rpmedicine.gm.value.intoxication", "Опьянение, 0–100", "Intoxication, 0–100")
+t("rpmedicine.cmd.not_bed", "Это не койка (нет функции bed, operating_table или restraint_table)", "Not a bed (no bed, operating_table or restraint_table function)")
+t("rpmedicine.refuse.prosthesis_need_leg", "Ноги нет — протез стопы не на что ставить: нужна деревянная нога", "No leg — nothing to fit a foot prosthesis to: use a peg leg")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

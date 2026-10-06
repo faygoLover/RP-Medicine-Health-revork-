@@ -104,7 +104,9 @@ public final class DownedService {
 
     /** Сообщить всем, кто видит игрока (и ему самому), что он лежит или встал. */
     public static void broadcastDowned(ServerPlayer sp, boolean down) {
-        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp), new EntityDownedPacket(sp.getId(), down, onBed(sp), bedQuarter(sp)));
+        MedicalData d = Medical.data(sp);
+        Network.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> sp),
+                new EntityDownedPacket(sp.getId(), down, onBed(sp), bedQuarter(sp), d != null && d.crawling));
     }
 
     /** Сообщить позу по текущему состоянию (лежит, на койке). */
@@ -126,6 +128,13 @@ public final class DownedService {
     public static void updatePose(ServerPlayer sp, MedicalState m, GameplayEffects.Mods mods) {
         Pose want = onBed(sp) ? Pose.SLEEPING : (m.isDown() || mods.crawl) ? Pose.SWIMMING : null;
         if (sp.getForcedPose() != want) sp.setForcedPose(want);
+        // Ползёт (сломаны или отняты ноги) — сказать окружающим, чтобы и у них полз, а не стоял (замечания 21, 82).
+        MedicalData d = Medical.data(sp);
+        boolean crawl = mods.crawl && !m.isDown() && !onBed(sp);
+        if (d != null && d.crawling != crawl) {
+            d.crawling = crawl;
+            broadcastPose(sp);
+        }
     }
 
     // ------------------------------------------------------------------ смерть

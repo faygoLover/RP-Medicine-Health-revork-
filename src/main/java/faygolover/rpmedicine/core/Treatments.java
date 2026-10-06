@@ -125,6 +125,8 @@ public final class Treatments {
             if (!ps.missing) return "not_missing";
             if (ps.prosthesis != BodyPartState.Prosthesis.NONE) return "prosthesis_already";
             if (extra instanceof Prosthetic pr && !Limbs.fits(pr.type(), part)) return "prosthesis_wrong_part";
+            // Протез стопы — только на живую голень: без ноги ставят деревянную ногу (замечание 81).
+            if (part.kind == BodyPart.Kind.FOOT && m.part(part.pairedLowerLimb()).missing) return "prosthesis_need_leg";
             return Limbs.stumpHealed(ps) ? null : "stump_not_healed";
         }
         switch (a) {

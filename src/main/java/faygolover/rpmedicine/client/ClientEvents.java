@@ -76,7 +76,7 @@ public final class ClientEvents {
         }
         for (Player other : mc.level.players()) {
             if (other == p) continue;
-            Pose op = ClientHandlers.poseFor(other.getId(), false);
+            Pose op = ClientHandlers.poseFor(other.getId(), ClientState.CRAWLING.contains(other.getId()));
             if (other.getForcedPose() != op) {
                 other.setForcedPose(op);
                 other.refreshDimensions();

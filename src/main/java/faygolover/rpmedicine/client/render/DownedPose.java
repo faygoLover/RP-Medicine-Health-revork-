@@ -59,6 +59,8 @@ public final class DownedPose {
 
     private static final Map<Integer, State> STATES = new HashMap<>();
     private static final Map<Integer, float[]> SAVED = new HashMap<>();
+    /** Сдвиг и поворот, которые применили к модели (для ника — снять их обратно). */
+    private static final Map<Integer, Object[]> APPLIED = new HashMap<>();
 
     /** Лежит ли игрок на этом клиенте (не на койке: там своя поза сна). */
     public static boolean isDowned(Player p) {
@@ -99,6 +101,7 @@ public final class DownedPose {
     public static void reset() {
         STATES.clear();
         SAVED.clear();
+        APPLIED.clear();
     }
 
     /** Лежачий на клиенте низкий, глаза у земли. */
@@ -131,13 +134,53 @@ public final class DownedPose {
         double fx = -Math.sin(y), fz = Math.cos(y);
         PoseStack ps = e.getPoseStack();
         ps.pushPose();
-        ps.translate(fx * HALF_BODY * pr, LIFT * pr, fz * HALF_BODY * pr);
+        float tx = (float) (fx * HALF_BODY * pr), ty = (float) (LIFT * pr), tz = (float) (fz * HALF_BODY * pr);
+        ps.translate(tx, ty, tz);
         // Поворот вокруг оси «влево-вправо» тела на −90°: верх тела уходит назад.
-        ps.mulPose(new Quaternionf().rotationAxis((float) Math.toRadians(-90.0 * pr), (float) Math.cos(y), 0f, (float) Math.sin(y)));
+        Quaternionf q = new Quaternionf().rotationAxis((float) Math.toRadians(-90.0 * pr), (float) Math.cos(y), 0f, (float) Math.sin(y));
+        ps.mulPose(q);
+        APPLIED.put(p.getId(), new Object[]{new org.joml.Vector3f(tx, ty, tz), q, pr});
+    }
+
+    /**
+     * Ник лежачего: ванильный рисуется внутри повёрнутой модели и ложится на живот боком (замечание 4).
+     * Рисуем сами: снимаем наш поворот и ставим ник низко над телом, лицом к камере.
+     */
+    @SubscribeEvent
+    public static void onNameTag(net.minecraftforge.client.event.RenderNameTagEvent e) {
+        if (!(e.getEntity() instanceof Player p)) return;
+        Object[] ap = APPLIED.get(p.getId());
+        if (ap == null) return;
+        e.setResult(net.minecraftforge.eventbus.api.Event.Result.DENY);
+        Minecraft mc = Minecraft.getInstance();
+        if (p == mc.player || p.isInvisible() || mc.options.hideGui) return;
+        if (mc.getEntityRenderDispatcher().distanceToSqr(p) > 32 * 32) return;
+        PoseStack ps = e.getPoseStack();
+        ps.pushPose();
+        Quaternionf q = (Quaternionf) ap[1];
+        org.joml.Vector3f t = (org.joml.Vector3f) ap[0];
+        ps.mulPose(new Quaternionf(q).conjugate());
+        ps.translate(-t.x, -t.y, -t.z);
+        // Над серединой лежащего тела, чуть выше груди.
+        float pr = (Float) ap[2];
+        double y = Math.toRadians(STATES.containsKey(p.getId()) ? STATES.get(p.getId()).yaw : p.yBodyRot);
+        ps.translate(-Math.sin(y) * HALF_BODY * pr, 0.75 + (1 - pr) * 1.3, Math.cos(y) * HALF_BODY * pr);
+        ps.mulPose(mc.getEntityRenderDispatcher().cameraOrientation());
+        ps.scale(-0.025f, -0.025f, 0.025f);
+        var font = mc.font;
+        net.minecraft.network.chat.Component name = e.getContent();
+        float x = -font.width(name) / 2f;
+        int bg = (int) (mc.options.getBackgroundOpacity(0.25f) * 255f) << 24;
+        var mat = ps.last().pose();
+        font.drawInBatch(name, x, 0, 0x20FFFFFF, false, mat, e.getMultiBufferSource(),
+                net.minecraft.client.gui.Font.DisplayMode.SEE_THROUGH, bg, e.getPackedLight());
+        font.drawInBatch(name, x, 0, -1, false, mat, e.getMultiBufferSource(), net.minecraft.client.gui.Font.DisplayMode.NORMAL, 0, e.getPackedLight());
+        ps.popPose();
     }
 
     @SubscribeEvent
     public static void onRenderPost(RenderPlayerEvent.Post e) {
+        APPLIED.remove(e.getEntity().getId());
         float[] r = SAVED.remove(e.getEntity().getId());
         if (r == null) return;
         Player p = e.getEntity();

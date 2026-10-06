@@ -52,6 +52,25 @@ public final class EffectsApplier {
         }
         if ((mods.noSprint || d.carrying || m.isDown()) && sp.isSprinting()) sp.setSprinting(false);
         DownedService.updatePose(sp, m, mods);
+        // Нет руки (и нет крюка) — в ней ничего не удержать: предмет в рюкзак или на землю (замечание 83).
+        for (net.minecraft.world.InteractionHand hand : net.minecraft.world.InteractionHand.values()) {
+            boolean right = (hand == net.minecraft.world.InteractionHand.MAIN_HAND) == (sp.getMainArm() == net.minecraft.world.entity.HumanoidArm.RIGHT);
+            var arm = m.part(right ? faygolover.rpmedicine.core.BodyPart.RIGHT_ARM : faygolover.rpmedicine.core.BodyPart.LEFT_ARM);
+            if (!arm.missing || arm.prosthesis == faygolover.rpmedicine.core.BodyPartState.Prosthesis.HOOK) continue;
+            var held = sp.getItemInHand(hand);
+            if (held.isEmpty()) continue;
+            sp.setItemInHand(hand, net.minecraft.world.item.ItemStack.EMPTY);
+            var inv = sp.getInventory();
+            boolean stored = false;
+            for (int i = 9; i < 36 && !held.isEmpty(); i++) {
+                if (inv.getItem(i).isEmpty()) {
+                    inv.setItem(i, held);
+                    stored = true;
+                    break;
+                }
+            }
+            if (!stored) sp.drop(held, false);
+        }
     }
 
     /** Снять все модификаторы (смерть, сброс). */

@@ -71,6 +71,8 @@ public final class MedicalData {
     public boolean leaveBody = true;
     /** Личная настройка «без мини-игр»: всегда прогресс-бар. */
     public boolean noMinigames;
+    /** Ползёт (последнее, что сообщили окружающим). */
+    public boolean crawling;
     /** Последняя разосланная маска невидимых конечностей (−1 — ещё не рассылали). */
     public int sentLimbMask = -1;
 

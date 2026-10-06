@@ -211,6 +211,12 @@ public final class Injuries {
             }
         }
 
+        // Проникающее ранение головы (пуля, осколок, нож) — по мозгу и сознанию (замечание 23).
+        if (part == BodyPart.HEAD && prof.wound.isPenetrating() && partSev > 0) {
+            m.brain = Math.max(m.down == Down.CLINICAL ? 1 : 0.5, m.brain - partSev * s.headPenetratingBrainPerSeverity);
+            if (addConcussion(m, partSev * s.headPenetratingConcussionPerSeverity, rnd, s)) rep.outcomes.add(Outcome.KNOCKOUT);
+            rep.outcomes.add(Outcome.CONCUSSION);
+        }
         // Контузия — от удара по голове или взрывной волны; ушиб руки или ноги её не даёт (замечание 26).
         boolean headOrBlast = part == BodyPart.HEAD || prof.location == InjuryProfile.Location.EXPLOSION;
         if (s.concussionEnabled && headOrBlast && rnd.nextDouble() < prof.concussion.at(sev)) {

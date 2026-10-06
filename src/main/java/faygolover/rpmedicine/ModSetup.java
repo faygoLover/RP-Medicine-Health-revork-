@@ -203,10 +203,10 @@ public final class ModSetup {
                     new faygolover.rpmedicine.network.LimbsVisualPacket(target.getId(), mask));
         }
         if (e.getTarget() instanceof ServerPlayer target && e.getEntity() instanceof ServerPlayer viewer
-                && (Medical.isDown(target) || HospitalService.isOnBed(target))) {
+                && (Medical.isDown(target) || HospitalService.isOnBed(target) || Medical.data(target) != null && Medical.data(target).crawling)) {
             Network.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer),
                     new EntityDownedPacket(target.getId(), Medical.isDown(target), HospitalService.isOnBed(target),
-                            faygolover.rpmedicine.server.DownedService.bedQuarter(target)));
+                            faygolover.rpmedicine.server.DownedService.bedQuarter(target), Medical.data(target).crawling));
         }
     }
 

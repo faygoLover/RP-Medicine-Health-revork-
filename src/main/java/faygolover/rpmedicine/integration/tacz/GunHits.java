@@ -127,7 +127,11 @@ public final class GunHits {
         for (Pending p : copy.values()) {
             if (p.target == null || p.target.isRemoved()) continue;
             float received = p.receivedArmorable + p.receivedPiercing;
-            if (received <= 0) continue;
+            if (received <= 0) {
+                // Шлем остановил пулю целиком: всё равно удар — контузия и звон по каске (замечание 23).
+                if (p.part == BodyPart.HEAD && Integrations.zeroContact() && ZcCompat.hasHelmet(p.target)) helmetStop(p);
+                continue;
+            }
             apply(p);
         }
     }
@@ -167,8 +171,19 @@ public final class GunHits {
         DamageHandler.applyInjury(target, m, prof, amount, part, 0, p.shooter);
         if (outcome == Outcome.HELMET) {
             Injuries.addConcussion(m, ServerConfig.ZC_HELMET_CONCUSSION.get(), RANDOM.split(), MedicalSettings.get());
+            target.level().playSound(null, target.getX(), target.getEyeY(), target.getZ(),
+                    net.minecraft.sounds.SoundEvents.SHIELD_BLOCK, net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1.3f);
             Medical.changed(target);
         }
+    }
+
+    private static void helmetStop(Pending p) {
+        MedicalState m = Medical.state(p.target);
+        if (m == null) return;
+        Injuries.addConcussion(m, ServerConfig.ZC_HELMET_CONCUSSION.get(), RANDOM.split(), MedicalSettings.get());
+        p.target.level().playSound(null, p.target.getX(), p.target.getEyeY(), p.target.getZ(),
+                net.minecraft.sounds.SoundEvents.SHIELD_BLOCK, net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1.3f);
+        Medical.changed(p.target);
     }
 
     /** Доступ к броне по частям из перехвата урона. */

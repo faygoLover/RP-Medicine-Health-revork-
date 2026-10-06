@@ -46,6 +46,8 @@ public final class ClientState {
     /** Каких конечностей не видно у игроков (третий этап, п. 12): id сущности → биты частей. */
     public static final java.util.Map<Integer, Integer> MISSING_LIMBS = new java.util.HashMap<>();
     /** Состав еды для подсказок (с сервера). */
+    /** Игроки рядом, которые ползут (сломаны или отняты ноги). */
+    public static final java.util.Set<Integer> CRAWLING = java.util.concurrent.ConcurrentHashMap.newKeySet();
     public static final java.util.Map<net.minecraft.resources.ResourceLocation, faygolover.rpmedicine.core.Nutrition.Food> FOODS = new java.util.HashMap<>();
     /** Вид еды для «приелось» (с сервера). */
     public static final java.util.Map<net.minecraft.resources.ResourceLocation, Integer> FOOD_CATEGORIES = new java.util.HashMap<>();
@@ -64,6 +66,7 @@ public final class ClientState {
         incomingTotal = 0;
         lastOverlay = null;
         DOWNED.clear();
+        CRAWLING.clear();
         MISSING_LIMBS.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_ON_BED.clear();
         faygolover.rpmedicine.hospital.BedPose.CLIENT_BED_YAW.clear();
