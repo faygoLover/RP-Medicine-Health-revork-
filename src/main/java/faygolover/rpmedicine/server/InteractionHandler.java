@@ -98,13 +98,14 @@ public final class InteractionHandler {
         if (event.getTarget() instanceof LivingEntity t && Medical.isPatient(t) && p.isShiftKeyDown() && p.getMainHandItem().isEmpty()
                 && Integrations.carryOn() && ServerConfig.BLOCK_CARRY_ON.get()) {
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCancellationResult(InteractionResult.CONSUME);
         }
     }
 
+    /** CONSUME, а не SUCCESS: при SUCCESS сервер рассылает ванильный взмах руки (замечание 06.10). */
     private static void cancel(PlayerInteractEvent.EntityInteract event) {
         event.setCanceled(true);
-        event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCancellationResult(InteractionResult.CONSUME);
     }
 
     /** ПКМ предметом в воздух: лечение себя. */
@@ -134,7 +135,7 @@ public final class InteractionHandler {
         ItemRules.Spec spec = ItemRules.specFor(stack);
         if (spec == null) return;
         event.setCanceled(true);
-        event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCancellationResult(InteractionResult.CONSUME);
         if (spec.action().target == TreatmentAction.Target.HOLD) return;
         int slot = event.getHand() == InteractionHand.MAIN_HAND ? sp.getInventory().selected : 40;
         TreatmentService.startWithItem(sp, sp, slot, null);
@@ -153,7 +154,7 @@ public final class InteractionHandler {
                 && HospitalBlocks.is(event.getLevel().getBlockState(event.getPos()), faygolover.rpmedicine.hospital.HospitalFunction.LAB)) {
             if (!event.getLevel().isClientSide) LabService.onUseBlock((ServerPlayer) p, event.getPos());
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCancellationResult(InteractionResult.CONSUME);
             return;
         }
         // Стерилизатор: грязные шприцы и пробирки (вся стопка) снова чистые.
@@ -168,7 +169,7 @@ public final class InteractionHandler {
                 p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.sterilized"), true);
             }
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCancellationResult(InteractionResult.CONSUME);
             return;
         }
         // Стерилизатор: инструмент в руке снова стерилен (второй этап, п. 2.1).
@@ -179,7 +180,7 @@ public final class InteractionHandler {
                 p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.sterilized"), true);
             }
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCancellationResult(InteractionResult.CONSUME);
             return;
         }
         // Несёшь тело: Shift+ПКМ по блоку — положить туда; по койке — на койку.
@@ -188,7 +189,7 @@ public final class InteractionHandler {
             if (!event.getLevel().isClientSide)
                 CarryService.dropAt((ServerPlayer) p, event.getPos().relative(event.getFace() != null ? event.getFace() : net.minecraft.core.Direction.UP));
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCancellationResult(InteractionResult.CONSUME);
             return;
         }
         // Больничная койка: лечь пустой рукой или положить того, кого несёшь (второй этап, п. 2.2).
@@ -199,7 +200,7 @@ public final class InteractionHandler {
                 : true;
         if (handled) {
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setCancellationResult(InteractionResult.CONSUME);
         }
     }
 

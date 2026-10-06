@@ -130,6 +130,8 @@ public final class ServerConfig {
         bind("salineDripSeconds", "Капельница идёт столько секунд.");
         bind("ivHoseLength", "Стойка капельницы: длина шланга, блоков. Пациент отошёл дальше — катетер вырван.");
         bind("ivTearWoundSeverity", "Рана от вырванного катетера (тяжесть пореза).");
+        bind("drugAbsorbImSeconds", "Всасывание укола в мышцу (шприц-ручка), с: почти весь препарат в крови через 3 таких срока.");
+        bind("drugAbsorbOralSeconds", "Всасывание таблеток, с: почти весь препарат в крови через 3 таких срока.");
         bind("arrestBloodLossFraction", "Потеря этой доли крови — остановка сердца.");
         B.pop();
 

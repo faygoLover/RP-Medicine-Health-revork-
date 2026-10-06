@@ -171,6 +171,10 @@ public final class MedicalState {
     public final java.util.Map<String, java.util.List<Double>> doses = new java.util.HashMap<>();
     /** Действующие эффекты лекарств из датапака. */
     public final java.util.EnumMap<DrugEffect, DrugEffect.Active> effects = new java.util.EnumMap<>(DrugEffect.class);
+    /** Препараты в крови (решения, п. 1.16). */
+    public final java.util.LinkedHashMap<String, DrugLevels.Level> drugLevels = new java.util.LinkedHashMap<>();
+    /** Эффекты от препаратов в крови — пересчитываются каждый шаг. */
+    public final java.util.EnumMap<DrugEffect, Double> pkEffects = new java.util.EnumMap<>(DrugEffect.class);
 
     public MedicalState() {
         for (BodyPart p : BodyPart.VALUES) parts[p.ordinal()] = new BodyPartState(p);
@@ -281,6 +285,8 @@ public final class MedicalState {
         java.util.Arrays.fill(monotony, 0);
         doses.clear();
         effects.clear();
+        drugLevels.clear();
+        pkEffects.clear();
     }
 
     /** Лечение части или всего тела командой ГМа: убирает травмы, но не сбрасывает лекарства. */
@@ -440,6 +446,10 @@ public final class MedicalState {
         for (var e : o.doses.entrySet()) doses.put(e.getKey(), new java.util.ArrayList<>(e.getValue()));
         effects.clear();
         for (var e : o.effects.entrySet()) effects.put(e.getKey(), e.getValue().copy());
+        drugLevels.clear();
+        for (var e : o.drugLevels.entrySet()) drugLevels.put(e.getKey(), e.getValue().copy());
+        pkEffects.clear();
+        pkEffects.putAll(o.pkEffects);
     }
 
     /** Острая боль от манипуляции: сильнее предыдущей — заменяет, дольше — продлевает. */
@@ -453,12 +463,12 @@ public final class MedicalState {
     /** Действующая сила эффекта (0, если не действует или ещё не начал). */
     public double effect(DrugEffect e) {
         DrugEffect.Active a = effects.get(e);
-        return a != null && a.working() ? a.strength : 0;
+        return (a != null && a.working() ? a.strength : 0) + pkEffects.getOrDefault(e, 0.0);
     }
 
     public boolean hasEffect(DrugEffect e) {
         DrugEffect.Active a = effects.get(e);
-        return a != null && a.seconds > 0;
+        return a != null && a.seconds > 0 || pkEffects.getOrDefault(e, 0.0) != 0;
     }
 
     /**

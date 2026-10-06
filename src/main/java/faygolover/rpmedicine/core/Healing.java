@@ -96,7 +96,7 @@ public final class Healing {
             if (m.down == MedicalState.Down.NONE && m.brain < 100)
                 m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * dt);
             m.postClinicalSeconds = Math.max(0, m.postClinicalSeconds - dt);
-            Physiology.tickDrugTimers(m, dt, true);
+            Physiology.tickDrugTimers(m, dt, true, s, new java.util.Random());
             StepInput in = new StepInput(dt);
             Infections.tick(m, in, s, new StepResult());
             Limbs.tickNecrosis(m, in, s);

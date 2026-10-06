@@ -61,7 +61,7 @@ public final class Physiology {
         m.healBoostSeconds = dec(m.healBoostSeconds, dt);
         m.concussionKoSeconds = dec(m.concussionKoSeconds, dt);
         m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * (1 + m.effect(DrugEffect.CONCUSSION_RELIEF)) * dt);
-        tickDrugTimers(m, dt, in.online);
+        tickDrugTimers(m, dt, in.online, s, in.random);
         m.acutePainSeconds = dec(m.acutePainSeconds, dt);
         if (m.acutePainSeconds <= 0) m.acutePain = 0;
         m.nauseaSeconds = dec(m.nauseaSeconds, dt);
@@ -82,8 +82,9 @@ public final class Physiology {
     }
 
     /** Таймеры лекарств второго этапа: эффекты (сначала задержка, потом действие), опиаты, окна доз (в сети). */
-    static void tickDrugTimers(MedicalState m, double dt, boolean online) {
+    static void tickDrugTimers(MedicalState m, double dt, boolean online, MedicalSettings s, RandomGenerator rnd) {
         m.opioidSeconds = dec(m.opioidSeconds, dt);
+        DrugLevels.tick(m, dt, s, rnd);
         if (online) Drugs.tickDoses(m, dt);
         var it = m.effects.values().iterator();
         while (it.hasNext()) {

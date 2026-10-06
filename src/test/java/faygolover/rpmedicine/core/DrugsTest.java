@@ -43,12 +43,12 @@ class DrugsTest {
         run(m, input(1), s, 5);
         double rawPain = m.pain;
         give(m, PARACETAMOL, s);
-        run(m, input(1), s, 30);
-        assertEquals(rawPain, m.pain, 1.5, "через 30 с ещё не действует");
-        run(m, input(1), s, 60);
-        assertTrue(m.pain < rawPain - 10, "после задержки боль ниже");
-        run(m, input(1), s, 1800);
-        assertEquals(0, m.effect(DrugEffect.ANALGESIA), "обезболивание закончилось");
+        run(m, input(1), s, 3);
+        assertEquals(rawPain, m.pain, 1.5, "таблетка ещё не всосалась");
+        run(m, input(1), s, 120);
+        assertTrue(m.pain < rawPain - 10, "через 1–2 минуты боль ниже");
+        Healing.fastForward(m, 6 * 3600, s);
+        assertEquals(0, m.effect(DrugEffect.ANALGESIA), "препарат вышел — обезболивание закончилось");
     }
 
     @Test
@@ -57,14 +57,15 @@ class DrugsTest {
         MedicalState m = new MedicalState(s);
         assertEquals("pill_taken", give(m, PARACETAMOL, s).key);
         assertEquals("pill_taken", give(m, PARACETAMOL, s).key);
-        assertEquals("drug_overdose", give(m, PARACETAMOL, s).key, "третья доза при пределе 2 — передозировка");
-        assertTrue(m.hasEffect(DrugEffect.PRESSURE), "эффект передозировки");
-        // Окно идёт по времени в сети: через сутки снова можно.
+        assertEquals("drug_overdose", give(m, PARACETAMOL, s).key, "три дозы сразу — в крови больше порога");
+        run(m, input(1), s, 120);
+        assertTrue(m.hasEffect(DrugEffect.PRESSURE), "эффект передозировки, когда всосалось");
+        // Препарат выводится: через сутки та же доза уже не передозировка.
         MedicalState fresh = new MedicalState(s);
         give(fresh, PARACETAMOL, s);
         give(fresh, PARACETAMOL, s);
         Healing.fastForward(fresh, 24 * 3600 + 60, s);
-        assertTrue(fresh.doses.isEmpty(), "окно доз прошло");
+        assertTrue(fresh.drugLevels.isEmpty(), "препарат вышел из крови");
         assertEquals("pill_taken", give(fresh, PARACETAMOL, s).key);
     }
 
@@ -83,10 +84,10 @@ class DrugsTest {
         MedicalState m = new MedicalState(s);
         assertEquals("no_opioids", Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, NALOXONE));
         give(m, TRAMADOL, s);
-        run(m, input(2), s, 5);
+        run(m, input(2), s, 120);
         double alone = Physiology.respiratoryDepression(m);
         give(m, DIAZEPAM, s);
-        run(m, input(2), s, 5);
+        run(m, input(2), s, 120);
         assertTrue(Physiology.respiratoryDepression(m) >= alone + 0.29, "седация с опиатом угнетает дыхание");
         assertNull(Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, NALOXONE));
         assertEquals("antidote_given", give(m, NALOXONE, s).key);
@@ -101,8 +102,8 @@ class DrugsTest {
         MedicalSettings s = settings();
         MedicalState m = new MedicalState(s);
         give(m, DIAZEPAM, s);
-        run(m, input(3), s, 5);
-        assertTrue(m.consciousness <= 60.01, "сонливость: сознание не выше 100 − сила");
+        run(m, input(3), s, 120);
+        assertTrue(m.consciousness <= 65, "сонливость: сознание не выше 100 − сила, " + m.consciousness);
     }
 
     @Test

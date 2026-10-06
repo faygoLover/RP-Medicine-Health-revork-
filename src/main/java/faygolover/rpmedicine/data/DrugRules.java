@@ -61,6 +61,7 @@ public final class DrugRules {
             }
             byItem = Map.copyOf(items);
             byId = Map.copyOf(drugs);
+            faygolover.rpmedicine.core.DrugLevels.resolver = id -> byId.get(id);
             RpMedicine.LOGGER.info("RP Medicine: загружено препаратов: {}", drugs.size());
         }
     };
@@ -105,7 +106,14 @@ public final class DrugRules {
             sub = faygolover.rpmedicine.core.Substance.byId(sid).orElseThrow(() -> new IllegalArgumentException("неизвестное вещество " + sid));
             subAmount = GsonHelper.getAsDouble(so, "amount", 1.0);
         }
-        return new Drug(id, form, effects, limit, window, overdose, arrest, opioid, special, sub, subAmount);
+        // Препарат в крови (решения, п. 1.16).
+        Drug.Kinetics kin = Drug.Kinetics.AUTO;
+        if (o.has("kinetics")) {
+            JsonObject k = GsonHelper.getAsJsonObject(o, "kinetics");
+            kin = new Drug.Kinetics(GsonHelper.getAsDouble(k, "half_life_minutes", 0) * 60.0, GsonHelper.getAsDouble(k, "min_level", 0.2),
+                    GsonHelper.getAsDouble(k, "overdose_level", 0), GsonHelper.getAsDouble(k, "mg_per_dose", 0), GsonHelper.getAsString(k, "unit", "mg"));
+        }
+        return new Drug(id, form, effects, limit, window, overdose, arrest, opioid, special, sub, subAmount, kin);
     }
 
     private static List<Drug.Dose> doses(JsonArray arr) {

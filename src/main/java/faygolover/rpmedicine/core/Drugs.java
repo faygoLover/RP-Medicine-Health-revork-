@@ -96,10 +96,14 @@ public final class Drugs {
     }
 
     public static Treatments.Result apply(MedicalState m, BodyPart part, Drug d, boolean error, RandomGenerator rnd, MedicalSettings s, double amount) {
+        return apply(m, part, d, error, rnd, s, amount, DrugLevels.routeOf(d));
+    }
+
+    /** Ввести препарат: доза идёт в кровь по пути введения (решения, п. 1.16), дальше действует уровень в крови. */
+    public static Treatments.Result apply(MedicalState m, BodyPart part, Drug d, boolean error, RandomGenerator rnd, MedicalSettings s,
+                                          double amount, DrugLevels.Route route) {
         double eff = effectiveDose(m, d, amount, s);
         double k = (error ? 0.5 : 1.0) * eff;
-        // Толерантность к веществу препарата: действует короче (п. 9.2), затем доза идёт в счёт.
-        double tolFactor = Substances.durationFactor(m, d.substance());
         if (d.substance() != null) Substances.dose(m, d.substance(), d.substanceAmount() * amount, PatientTraits.NONE, rnd, s);
         switch (d.special()) {
             case GLUCOSE -> m.bloodSugar = Math.min(35, m.bloodSugar + MedicalSettings.get().glucoseTabletSugar * k);
@@ -111,6 +115,8 @@ public final class Drugs {
                 m.opioidSeconds = 0;
                 m.effects.remove(DrugEffect.RESP_DEPRESSION);
                 m.effects.remove(DrugEffect.ANALGESIA);
+                DrugLevels.clearOpioids(m);
+                DrugLevels.refresh(m, s, rnd);
                 if (m.heart == MedicalState.Heart.NORMAL) m.respiratoryArrest = false;
             }
             case ANTISEPTIC -> {
@@ -140,24 +146,13 @@ public final class Drugs {
             if (dose.effect() == DrugEffect.LOCAL_ANESTHESIA) {
                 BodyPartState ps = m.part(part);
                 ps.localAnesthesiaSeconds = Math.max(ps.localAnesthesiaSeconds, dose.seconds() * k);
-                continue;
             }
-            // Сила — по дозе, длительность растёт медленнее.
-            m.addEffect(dose.effect(), dose.strength() * k, dose.delay(), dose.seconds() * Math.sqrt(k) * tolFactor);
         }
-        if (d.opioid()) {
-            double longest = 0;
-            for (Drug.Dose dose : d.effects()) longest = Math.max(longest, dose.delay() + dose.seconds() * k);
-            m.opioidSeconds = Math.max(m.opioidSeconds, longest);
-        }
-        boolean overdose = recordDose(m, d, amount);
-        // Разовая доза сильно выше нормы (лёгкий пациент, большая доза из шприца) — тоже передозировка.
-        if (!overdose && eff > s.overdoseDoseFactor && rnd.nextDouble() < (eff - s.overdoseDoseFactor) / 0.6) overdose = true;
-        if (overdose) {
-            for (Drug.Dose dose : d.overdose()) m.addEffect(dose.effect(), dose.strength(), dose.delay(), dose.seconds());
-            if (rnd.nextDouble() < d.overdoseArrestChance()) m.respiratoryArrest = true;
-            return Treatments.Result.ok("drug_overdose");
-        }
+        // Промах — половина дозы мимо.
+        DrugLevels.give(m, d, amount * (error ? 0.5 : 1.0), route, s);
+        DrugLevels.refresh(m, s, rnd);
+        DrugLevels.Level lvl = m.drugLevels.get(d.id());
+        if (lvl != null && lvl.plasma + lvl.depot > d.overdoseLevel()) return Treatments.Result.ok("drug_overdose");
         if (d.special() == Drug.Special.OPIOID_ANTIDOTE) return Treatments.Result.ok("antidote_given");
         if (error) return Treatments.Result.failed("dose_partial");
         return Treatments.Result.ok(switch (d.form()) {

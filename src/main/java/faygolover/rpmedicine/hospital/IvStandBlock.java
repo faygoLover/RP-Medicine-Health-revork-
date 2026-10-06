@@ -71,7 +71,7 @@ public class IvStandBlock extends HorizontalDirectionalBlock implements EntityBl
     @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState st, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide) return InteractionResult.CONSUME;
         return IvStandService.use((ServerPlayer) player, pos) ? InteractionResult.CONSUME : InteractionResult.PASS;
     }
 

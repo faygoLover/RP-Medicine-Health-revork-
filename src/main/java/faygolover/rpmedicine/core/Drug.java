@@ -14,7 +14,14 @@ import java.util.Optional;
  * @param opioid            опиат: вместе с седацией угнетает дыхание, снимается налоксоном
  */
 public record Drug(String id, Form form, List<Dose> effects, int doseLimit, double doseWindowSeconds, List<Dose> overdose,
-                   double overdoseArrestChance, boolean opioid, Special special, Substance substance, double substanceAmount) implements Treatments.Extra {
+                   double overdoseArrestChance, boolean opioid, Special special, Substance substance, double substanceAmount,
+                   Kinetics kinetics) implements Treatments.Extra {
+
+    public Drug(String id, Form form, List<Dose> effects, int doseLimit, double doseWindowSeconds, List<Dose> overdose,
+                double overdoseArrestChance, boolean opioid, Special special, Substance substance, double substanceAmount) {
+        this(id, form, effects, doseLimit, doseWindowSeconds, overdose, overdoseArrestChance, opioid, special, substance, substanceAmount,
+                Kinetics.AUTO);
+    }
 
     public Drug(String id, Form form, List<Dose> effects, int doseLimit, double doseWindowSeconds, List<Dose> overdose,
                 double overdoseArrestChance, boolean opioid, Special special) {
@@ -45,6 +52,29 @@ public record Drug(String id, Form form, List<Dose> effects, int doseLimit, doub
             for (Special f : values()) if (f.name().toLowerCase(Locale.ROOT).equals(s)) return Optional.of(f);
             return Optional.empty();
         }
+    }
+
+    /**
+     * Препарат в крови (решения, п. 1.16): полувыведение (с; 0 — по самому долгому эффекту), ниже какого уровня
+     * (в стандартных дозах) уже не действует, с какого — передозировка, сколько мг в дозе и единица для ГМа.
+     */
+    public record Kinetics(double halfLife, double minLevel, double overdoseLevel, double mgPerDose, String unit) {
+        public static final Kinetics AUTO = new Kinetics(0, 0.2, 0, 0, "mg");
+    }
+
+    /** Полувыведение, секунды в сети. */
+    public double halfLife() {
+        if (kinetics.halfLife() > 0) return kinetics.halfLife();
+        double longest = 60;
+        for (Dose d : effects) longest = Math.max(longest, d.delay() + d.seconds());
+        // От 1 дозы до порога действия 0,2 — около 2,3 полувыведения: держится примерно как раньше.
+        return longest / 2.3;
+    }
+
+    /** С какого уровня в крови — передозировка (в стандартных дозах). */
+    public double overdoseLevel() {
+        if (kinetics.overdoseLevel() > 0) return kinetics.overdoseLevel();
+        return doseLimit > 0 ? doseLimit + 0.5 : 2.5;
     }
 
     /** Эффект дозы: сила, задержка до начала и длительность, секунды. */

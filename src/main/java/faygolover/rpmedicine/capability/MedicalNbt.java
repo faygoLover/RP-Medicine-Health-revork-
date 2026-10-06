@@ -136,6 +136,20 @@ public final class MedicalNbt {
             t.put("effects", effects);
         }
 
+        if (!m.drugLevels.isEmpty()) {
+            ListTag lv = new ListTag();
+            for (var l : m.drugLevels.values()) {
+                CompoundTag lt = new CompoundTag();
+                lt.putString("id", l.id);
+                lt.putFloat("p", (float) l.plasma);
+                putIf(lt, "d", l.depot);
+                putIf(lt, "a", l.absorbSeconds);
+                if (l.overdosed) lt.putBoolean("o", true);
+                lv.add(lt);
+            }
+            t.put("levels", lv);
+        }
+
         ListTag parts = new ListTag();
         for (BodyPartState ps : m.parts) {
             if (ps.isHealthy()) continue;
@@ -291,6 +305,16 @@ public final class MedicalNbt {
             java.util.List<Double> list = new java.util.ArrayList<>();
             for (int i = 0; i < l.size(); i++) list.add((double) l.getFloat(i));
             if (!list.isEmpty()) m.doses.put(k, list);
+        }
+        ListTag lv = t.getList("levels", Tag.TAG_COMPOUND);
+        for (int i = 0; i < lv.size(); i++) {
+            CompoundTag lt = lv.getCompound(i);
+            var l = new faygolover.rpmedicine.core.DrugLevels.Level(lt.getString("id"));
+            l.plasma = lt.getFloat("p");
+            l.depot = lt.getFloat("d");
+            l.absorbSeconds = lt.getFloat("a");
+            l.overdosed = lt.getBoolean("o");
+            m.drugLevels.put(l.id, l);
         }
         ListTag effects = t.getList("effects", Tag.TAG_COMPOUND);
         for (int i = 0; i < effects.size(); i++) {

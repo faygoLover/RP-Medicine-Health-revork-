@@ -24,8 +24,9 @@ class AnesthesiaTest {
             List.of(dose(DrugEffect.ANESTHESIA, 1, 0, 300), dose(DrugEffect.PRESSURE, 10, 0, 300)), 0, 0, List.of(), 0, false,
             Drug.Special.NONE);
 
+    /** Наркоз — шприцем в вену из флакона (решения, п. 1.16); лидокаин — местно. */
     private static void give(MedicalState m, BodyPart part, Drug d, MedicalSettings s) {
-        Treatments.apply(m, part, TreatmentAction.DRUG, false, new Random(1), s, d);
+        Drugs.apply(m, part, d, false, new Random(1), s, 1.0, DrugLevels.Route.IV);
     }
 
     @Test
