@@ -291,6 +291,13 @@ def main():
         shutil.copyfile(src_path(src), os.path.join(ASSETS, dst))
         note(dst, src)
 
+    # Сцена операции: бельё, кожа, жир, мышца, кость, полость, кровь, органы, инструменты (Body Control).
+    for name in ("blood", "bone", "cavity", "drape", "fat", "muscle", "organs", "skin", "tools"):
+        dst = f"textures/gui/surgery/{name}.png"
+        os.makedirs(os.path.dirname(os.path.join(ASSETS, dst)), exist_ok=True)
+        shutil.copyfile(src_path(BC + f"textures/gui/surgery_{name}.png"), os.path.join(ASSETS, dst))
+        note(dst, BC + f"textures/gui/surgery_{name}.png")
+
     # 3D-модели
     index, times = {}, {}
     for item, g in GEO.items():

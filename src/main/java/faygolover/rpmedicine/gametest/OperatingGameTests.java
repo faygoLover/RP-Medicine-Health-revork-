@@ -193,6 +193,8 @@ public final class OperatingGameTests {
         var inv = medic.getInventory();
         inv.selected = 0;
         inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.ORGAN_CONTAINER.get(), 2));
+        // Связки режет скальпель — без него изъятие не начать.
+        inv.setItem(7, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SCALPEL.get()));
         // В груди два органа — сначала выбор, действия ещё нет.
         faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, BodyPart.CHEST);
         h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) == null, "ждём выбора органа");

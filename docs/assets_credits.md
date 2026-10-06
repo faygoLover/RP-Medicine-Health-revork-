@@ -127,6 +127,15 @@ SOFTWARE.
 | `textures/item/organ_pancreas.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_pancreas.png` | VKM | MIT |
 | `textures/gui/medical_pouch.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/gui/ifak_pouch.png` | Lector | MIT |
 | `textures/gui/first_aid_kit.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/gui/paramedic_backpack.png` | Lector | MIT |
+| `textures/gui/surgery/blood.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_blood.png` | VKM | MIT |
+| `textures/gui/surgery/bone.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_bone.png` | VKM | MIT |
+| `textures/gui/surgery/cavity.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_cavity.png` | VKM | MIT |
+| `textures/gui/surgery/drape.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_drape.png` | VKM | MIT |
+| `textures/gui/surgery/fat.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_fat.png` | VKM | MIT |
+| `textures/gui/surgery/muscle.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_muscle.png` | VKM | MIT |
+| `textures/gui/surgery/organs.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` | VKM | MIT |
+| `textures/gui/surgery/skin.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_skin.png` | VKM | MIT |
+| `textures/gui/surgery/tools.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_tools.png` | VKM | MIT |
 | `rpgeo/bandage.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/bengdai.geo.json` | JEDIGD | MIT |
 | `textures/geo/bandage.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/bengdai.png` | JEDIGD | MIT |
 | `rpgeo/bandage.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/bengdai.animation.json` | JEDIGD | MIT |

@@ -971,6 +971,16 @@ t("rpmedicine.gm.value.temperature", "Температура, °C", "Temperature
 t("rpmedicine.gm.value.intoxication", "Опьянение, 0–100", "Intoxication, 0–100")
 t("rpmedicine.cmd.not_bed", "Это не койка (нет функции bed, operating_table или restraint_table)", "Not a bed (no bed, operating_table or restraint_table function)")
 t("rpmedicine.refuse.prosthesis_need_leg", "Ноги нет — протез стопы не на что ставить: нужна деревянная нога", "No leg — nothing to fit a foot prosthesis to: use a peg leg")
+t("rpmedicine.refuse.need_scalpel", "Нужен скальпель: связки и сосуды режут им, контейнер только для органа", "You need a scalpel: it cuts the vessels, the container only holds the organ")
+t("rpmedicine.exam.next_step_clamp", "  Дальше: зажим на кровящие сосуды", "  Next: clamp the bleeding vessels")
+t("rpmedicine.exam.next_step_retract", "  Дальше: ретрактор — развести края", "  Next: retractor — open the edges")
+t("rpmedicine.exam.next_step_vessel", "  Дальше: сосудистый шов на артерию", "  Next: vascular suture on the artery")
+t("rpmedicine.exam.next_step_tweezers", "  Дальше: пинцет — достать инородные тела", "  Next: tweezers — remove foreign bodies")
+t("rpmedicine.exam.next_step_osteosynthesis", "  Дальше: дрель и набор для остеосинтеза", "  Next: drill and osteosynthesis kit")
+t("rpmedicine.exam.next_step_bleed_suture", "  Дальше: набор для швов — внутреннее кровотечение", "  Next: suture kit — internal bleeding")
+t("rpmedicine.exam.next_step_drain", "  Дальше: дренаж плевральной полости", "  Next: chest drain")
+t("rpmedicine.exam.next_step_organ_suture", "  Дальше: набор для швов — шов органа", "  Next: suture kit — repair the organ")
+t("rpmedicine.exam.next_step_close", "  Дальше: набор для швов — закрыть рану", "  Next: suture kit — close the wound")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

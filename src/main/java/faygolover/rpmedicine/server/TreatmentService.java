@@ -149,6 +149,11 @@ public final class TreatmentService {
             actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_laryngoscope").withStyle(ChatFormatting.YELLOW), true);
             return true;
         }
+        // Изъятие органа: связки и сосуды режет скальпель, контейнер только принимает орган (замечание 86).
+        if (action == TreatmentAction.ORGAN_REMOVE && !hasItem(actor, faygolover.rpmedicine.registry.ModItems.SCALPEL.get())) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_scalpel").withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
         if (action == TreatmentAction.BLOOD_SAMPLE && !hasItem(actor, faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get())) {
             actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_test_tube").withStyle(ChatFormatting.YELLOW), true);
             return true;

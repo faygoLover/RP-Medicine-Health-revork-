@@ -88,6 +88,23 @@ public final class Examination {
         return new View(parts, general(m, lvl, self, s), lvl);
     }
 
+    /** Следующий шаг операции на раскрытой части: зажим, ретрактор, затем то, что внутри, и закрыть. */
+    static String nextSurgeryStep(MedicalState m, BodyPartState ps) {
+        return switch (ps.surgery) {
+            case OPEN -> "clamp";
+            case CLAMPED -> "retract";
+            default -> {
+                if (ps.arterial) yield "vessel";
+                if (ps.hasForeignBodies()) yield "tweezers";
+                if (ps.hasFracture() && !ps.fixated && ps.part.isLimb()) yield "osteosynthesis";
+                if (ps.internalBleed > 0) yield "bleed_suture";
+                if (ps.part == BodyPart.CHEST && m.pneumo != MedicalState.Pneumo.NONE) yield "drain";
+                for (Organ o : Organ.VALUES) if (o.part == ps.part && m.organs[o.ordinal()] > 0) yield "organ_suture";
+                yield "close";
+            }
+        };
+    }
+
     static List<Line> partLines(MedicalState m, BodyPartState ps, int lvl, boolean self, MedicalSettings s) {
         List<Line> out = new ArrayList<>();
         if (ps.missing) {
@@ -155,8 +172,11 @@ public final class Examination {
         // Отторжение пересаженного органа видно анализами и врачу опытному.
         if (lvl >= 6) for (Organ o : Organ.VALUES)
             if (o.part == ps.part && (m.organRejection & o.bit()) != 0) out.add(new Line("organ_rejection", new int[]{o.ordinal()}));
-        if (ps.surgery != BodyPartState.SurgeryStage.NONE)
+        if (ps.surgery != BodyPartState.SurgeryStage.NONE) {
             out.add(new Line("surgery_" + ps.surgery.name().toLowerCase(java.util.Locale.ROOT), new int[]{(int) (ps.surgeryOpenSeconds / 60)}));
+            // Опытный медик видит, какой шаг операции следующий (замечание 74).
+            if (lvl >= 6) out.add(new Line("next_step_" + nextSurgeryStep(m, ps)));
+        }
         if (ps.fixated && ps.hasFracture() && lvl >= 1) out.add(new Line("fixated"));
         if (ps.occlusive) out.add(new Line("occlusive"));
         if (ps.localAnesthesiaSeconds > 0 && lvl >= 1) out.add(new Line("local_anesthesia"));

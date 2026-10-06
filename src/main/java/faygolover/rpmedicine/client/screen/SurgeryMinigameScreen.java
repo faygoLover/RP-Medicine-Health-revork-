@@ -312,12 +312,14 @@ public class SurgeryMinigameScreen extends Screen {
         mouseY = my - t;
         prevToolX = toolX;
         prevToolY = toolY;
-        double k = 1 - Math.exp(-dt * (10 + 8 * ease));
+        // Новичок: инструмент запаздывает за рукой, дрожит и «плывёт»; опытный — точен (замечание 75).
+        double clumsy = 1 - ease;
+        double k = 1 - Math.exp(-dt * (3 + 22 * ease * ease));
         toolX += (mouseX - toolX) * k;
         toolY += (mouseY - toolY) * k;
-        double tremor = (1 - ease) * 1.6;
-        double tx = toolX + Math.sin(time * 17) * tremor;
-        double ty = toolY + Math.cos(time * 13) * tremor;
+        double tremor = 9 * Math.pow(clumsy, 1.5);
+        double tx = toolX + (Math.sin(time * 17) * 0.55 + Math.sin(time * 5.3 + 1) * 0.3 + Math.sin(time * 0.7) * 0.5) * tremor;
+        double ty = toolY + (Math.cos(time * 13) * 0.55 + Math.cos(time * 4.1 + 2) * 0.3 + Math.cos(time * 0.9) * 0.5) * tremor;
         double speed = dt > 0 ? Math.hypot(toolX - prevToolX, toolY - prevToolY) / dt : 0;
 
         g.fill(l, t, l + W, t + H, 0xF0101418);
@@ -351,7 +353,25 @@ public class SurgeryMinigameScreen extends Screen {
             d[1] += dt * 30;
             g.fill(l + (int) d[0], t + (int) d[1], l + (int) d[0] + 2, t + (int) d[1] + 2, 0xFFA01010);
         }
-        if (!tool.isEmpty()) {
+        int icon = switch (type) {
+            case INCISION, AMPUTATION -> type == Minigames.Type.AMPUTATION ? 7 : 0;
+            case CLAMP -> 1;
+            case RETRACT -> 2;
+            case CLOSE, ORGAN_SUTURE, BLEED_SUTURE, VESSEL -> 8;
+            case DRILL -> 9;
+            case DRAIN -> 3;
+            case EXTRACT -> 5;
+            case HARVEST -> phase == 0 ? 0 : -1;
+            case PLANT -> phase == 0 ? -1 : 8;
+            default -> -1;
+        };
+        if (icon >= 0) {
+            g.pose().pushPose();
+            g.pose().translate(0, 0, 200);
+            // Кончик инструмента в атласе — в левом верхнем углу иконки.
+            g.blit(T_TOOLS, l + (int) tx - 2, t + (int) ty - 2, 24, 24, icon * 24, 0, 24, 24, 240, 24);
+            g.pose().popPose();
+        } else if (!tool.isEmpty()) {
             g.pose().pushPose();
             g.pose().translate(l + tx - 2, t + ty - 14, 200);
             g.renderItem(tool, 0, 0);
@@ -374,24 +394,41 @@ public class SurgeryMinigameScreen extends Screen {
 
     // ------------------------------------------------------------------ сцена
 
+    // Текстуры сцены — из Body Control (замечание 80).
+    private static final net.minecraft.resources.ResourceLocation T_DRAPE = tex("drape"), T_SKIN = tex("skin"),
+            T_CAVITY = tex("cavity"), T_MUSCLE = tex("muscle"), T_BONE = tex("bone"), T_FAT = tex("fat"),
+            T_ORGANS = tex("organs"), T_TOOLS = tex("tools");
+
+    private static net.minecraft.resources.ResourceLocation tex(String n) {
+        return new net.minecraft.resources.ResourceLocation(faygolover.rpmedicine.RpMedicine.MODID, "textures/gui/surgery/" + n + ".png");
+    }
+
+    /** Заливка прямоугольника плиткой 64×64. */
+    private static void tiled(GuiGraphics g, net.minecraft.resources.ResourceLocation tex, int x0, int y0, int x1, int y1) {
+        for (int y = y0; y < y1; y += 64 - Math.floorMod(y, 64) == 0 ? 64 : 64 - Math.floorMod(y, 64)) {
+            int v = Math.floorMod(y, 64);
+            int h = Math.min(64 - v, y1 - y);
+            for (int x = x0; x < x1; ) {
+                int u = Math.floorMod(x, 64);
+                int w = Math.min(64 - u, x1 - x);
+                g.blit(tex, x, y, u, v, w, h, 64, 64);
+                x += w;
+            }
+        }
+    }
+
     /** Операционное бельё вокруг поля. */
     private void drawDrape(GuiGraphics g, int l, int t) {
-        g.fill(l + 4, t + 34, l + W - 4, t + H - 34, 0xFF2F6B66);
-        for (int x = 8; x < W - 8; x += 12) g.fill(l + x, t + 34, l + x + 1, t + H - 34, 0xFF2A615C);
+        tiled(g, T_DRAPE, l + 4, t + 34, l + W - 4, t + H - 34);
     }
 
     private void drawBody(GuiGraphics g, int l, int t) {
         // Кожа в окне белья: туловище — всё поле, конечность — полоса.
         int sy0 = torso ? 44 : 78;
         int sy1 = torso ? H - 44 : 164;
-        g.fill(l + 40, t + sy0, l + W - 40, t + sy1, 0xFFD2A383);
-        g.fill(l + 40, t + sy0, l + W - 40, t + sy0 + 2, 0xFFB8886A);
-        Random r = new Random(scene.seed() ^ 77);
-        for (int i = 0; i < 60; i++) {
-            int x = l + 42 + r.nextInt(W - 84);
-            int y = t + sy0 + 2 + r.nextInt(sy1 - sy0 - 4);
-            g.fill(x, y, x + 1, y + 1, 0xFFBE8F70);
-        }
+        tiled(g, T_SKIN, l + 40, t + sy0, l + W - 40, t + sy1);
+        g.fill(l + 40, t + sy0, l + W - 40, t + sy0 + 2, 0x60603020);
+        g.fill(l + 40, t + sy1 - 2, l + W - 40, t + sy1, 0x60603020);
         // Разметка разреза (до разреза) — пунктир хирургическим маркером.
         if (stage() == 0) {
             for (double x = X0; x <= X1; x += 6) g.fill(l + (int) x, t + (int) incisionY(x), l + (int) x + 3, t + (int) incisionY(x) + 1, 0xFF6A4AA0);
@@ -409,7 +446,8 @@ public class SurgeryMinigameScreen extends Screen {
         // Зажимы: стоят со своего шага и до закрытия.
         if (stage() >= 2 && type != Minigames.Type.CLOSE) for (int i = 0; i < bleedPoints.length; i++) drawClamp(g, l, t, i, top, bottom);
         // Ретракторы.
-        if (stage() >= 3 && type != Minigames.Type.CLOSE) drawRetractors(g, l, t, top, bottom);
+        if ((stage() >= 3 || type == Minigames.Type.RETRACT && (top > 1 || bottom > 1)) && type != Minigames.Type.CLOSE)
+            drawRetractors(g, l, t, top, bottom);
         // Открытая рана без зажима кровит.
         if (stage() == 1 && type != Minigames.Type.CLOSE) for (double[] p : bleedPoints) bleedSpot(g, l, t, p[0], p[1], 1.0);
     }
@@ -422,7 +460,9 @@ public class SurgeryMinigameScreen extends Screen {
             int yc = (int) incisionY(x);
             int y0 = (int) (yc - top * f);
             int y1 = (int) (yc + bottom * f);
-            g.fill(l + x, t + y0, l + x + 1, t + y1, torso ? 0xFF8A2A2A : 0xFF9A3A34);
+            columnTex(g, torso ? T_CAVITY : T_MUSCLE, l + x, t + y0, t + y1);
+            g.fill(l + x, t + y0, l + x + 1, t + y0 + 2, 0xFFE8C468);
+            g.fill(l + x, t + y1 - 2, l + x + 1, t + y1, 0xFFE8C468);
             g.fill(l + x, t + y0, l + x + 1, t + y0 + 1, 0xFF5A1010);
             g.fill(l + x, t + y1 - 1, l + x + 1, t + y1, 0xFF5A1010);
         }
@@ -432,9 +472,15 @@ public class SurgeryMinigameScreen extends Screen {
                 for (int i = -2; i <= 2; i++) masked(g, l, t, X0, CY + i * 12 - 2, X1, CY + i * 12 + 2, 0xFFE8DCC0, top, bottom);
                 masked(g, l, t, X0 + 10, CY - 30, X0 + 70, CY + 30, 0x90D07A80, top, bottom);
                 masked(g, l, t, X1 - 70, CY - 30, X1 - 10, CY + 30, 0x90D07A80, top, bottom);
-                double beat = 1 + 0.08 * Math.max(0, Math.sin(time * 7));
-                int hw = (int) (16 * beat);
-                masked(g, l, t, 160 - hw, CY - hw, 160 + hw, CY + hw, 0xFF7A1018, top, bottom);
+                boolean heartOut = type == Minigames.Type.HARVEST && phase >= 1 && scene.organ() == faygolover.rpmedicine.core.Organ.HEART.ordinal();
+                if (!heartOut) {
+                    // Сердце бьётся, только если оно на месте; при изъятии — пустое ложе.
+                    double beat = type == Minigames.Type.HARVEST && scene.organ() == faygolover.rpmedicine.core.Organ.HEART.ordinal() ? 1 : 1 + 0.08 * Math.max(0, Math.sin(time * 7));
+                    int hw = (int) (16 * beat);
+                    masked(g, l, t, 160 - hw, CY - hw, 160 + hw, CY + hw, 0xFF7A1018, top, bottom);
+                } else {
+                    masked(g, l, t, 146, CY - 14, 174, CY + 14, 0xFF4A0A0E, top, bottom);
+                }
             } else {
                 // Печень и петли кишечника.
                 masked(g, l, t, X0 + 6, CY - 34, X0 + 70, CY + 4, 0xFF6A2A1A, top, bottom);
@@ -448,7 +494,7 @@ public class SurgeryMinigameScreen extends Screen {
         } else {
             // Мышца с волокнами, кость, артерия.
             for (int y = CY - 34; y < CY + 34; y += 5) masked(g, l, t, X0, y, X1, y + 1, 0xFF7A2A26, top, bottom);
-            masked(g, l, t, X0, CY - 6, X1, CY + 6, 0xFFEDE3C8, top, bottom);
+            maskedTex(g, l, t, X0, CY - 6, X1, CY + 6, T_BONE, top, bottom);
             if (scene.has(Scene.FRACTURE) && !(type == Minigames.Type.DRILL && hole >= 4)) {
                 for (int i = 0; i < 12; i++) masked(g, l, t, 158 + (i % 2) * 3, CY - 6 + i, 161 + (i % 2) * 3, CY - 5 + i, 0xFF3A2A1A, top, bottom);
             }
@@ -485,6 +531,29 @@ public class SurgeryMinigameScreen extends Screen {
         // Разрыв органа.
         if (scene.has(Scene.ORGAN) && torso && type != Minigames.Type.ORGAN_SUTURE)
             masked(g, l, t, (int) sourcePoint[0] - 26, (int) sourcePoint[1] - 1, (int) sourcePoint[0] + 26, (int) sourcePoint[1] + 1, 0xFF3A0A0A, top, bottom);
+    }
+
+    /** Столбец шириной 1 пиксель из плитки 64×64 (для полости, обрезанной по краям раны). */
+    private static void columnTex(GuiGraphics g, net.minecraft.resources.ResourceLocation tex, int x, int y0, int y1) {
+        int u = Math.floorMod(x, 64);
+        for (int y = y0; y < y1; ) {
+            int v = Math.floorMod(y, 64);
+            int h = Math.min(64 - v, y1 - y);
+            g.blit(tex, x, y, u, v, 1, h, 64, 64);
+            y += h;
+        }
+    }
+
+    /** Текстура, обрезанная по раскрытой ране. */
+    private void maskedTex(GuiGraphics g, int l, int t, int x0, int y0, int x1, int y1, net.minecraft.resources.ResourceLocation tex, double top, double bottom) {
+        for (int x = Math.max(x0, X0); x < Math.min(x1, X1); x++) {
+            double f = halfOpen(x, 1);
+            if (f <= 0) continue;
+            double yc = incisionY(x);
+            int a = (int) Math.max(y0, yc - top * f + 1);
+            int b = (int) Math.min(y1, yc + bottom * f - 1);
+            if (b > a) columnTex(g, tex, l + x, t + a, t + b);
+        }
     }
 
     /** Прямоугольник, обрезанный по раскрытой ране. */
@@ -534,11 +603,19 @@ public class SurgeryMinigameScreen extends Screen {
 
     // ------------------------------------------------------------------ разрез
 
+    /** След скальпеля: где на самом деле прошёл разрез. */
+    private final java.util.List<double[]> cutTrail = new java.util.ArrayList<>();
+
     private void incision(GuiGraphics g, int l, int t, double tx, double ty, double speed) {
         double[] s0 = path[0];
         double[] e = path[path.length - 1];
-        // Сделанная часть разреза.
-        for (int i = 0; i + 1 <= pathIndex && i + 1 < path.length; i++) line(g, l + path[i][0], t + path[i][1], l + path[i + 1][0], t + path[i + 1][1], 0xFF8A1010);
+        // Сделанный разрез — там, где прошла рука; вне разметки — темнее и шире.
+        for (int i = 1; i < cutTrail.size(); i++) {
+            double[] a = cutTrail.get(i - 1), b = cutTrail.get(i);
+            boolean off = b[2] > 0;
+            line(g, l + a[0], t + a[1], l + b[0], t + b[1], off ? 0xFF4A0505 : 0xFF8A1010);
+            if (off) line(g, l + a[0], t + a[1] + 1, l + b[0], t + b[1] + 1, 0xFF6A0808);
+        }
         if (phase == 0) {
             circle(g, l + path[pathIndex][0], t + path[pathIndex][1], 4, 0xFF40C040);
             circle(g, l + e[0], t + e[1], 4, 0xFFE0E0E0);
@@ -547,6 +624,8 @@ public class SurgeryMinigameScreen extends Screen {
         }
         circle(g, l + e[0], t + e[1], 4, 0xFFE0E0E0);
         follow(tx, ty, "rpmedicine.minigame.tissue_cut");
+        if (cutTrail.isEmpty() || Math.hypot(cutTrail.get(cutTrail.size() - 1)[0] - tx, cutTrail.get(cutTrail.size() - 1)[1] - ty) > 1.2)
+            cutTrail.add(new double[]{tx, ty, outside ? 1 : 0});
         if (speed > 80 + 50 * ease) error("rpmedicine.minigame.too_rough");
         if (rnd.nextFloat() < 0.15 && drops.size() < 60) drops.add(new double[]{tx, ty + 2, 0, 0.6});
         if (pathIndex == path.length - 1 && Math.hypot(tx - e[0], ty - e[1]) < channel * 1.4) finish(quality());
@@ -608,15 +687,25 @@ public class SurgeryMinigameScreen extends Screen {
             if (dragging == 0) openTop = next;
             else openBottom = next;
         }
+        // Захваты краёв: жёлтым — тот, что ещё не разведён; подсказка стрелкой.
+        int gx = l + (int) xm;
+        if (openTop < OPEN_H - 3) {
+            circle(g, gx, t + yc - openTop, 4, 0xFFFFD040);
+            g.drawCenteredString(font, "↑", gx + 18, t + (int) (yc - openTop) - 10, 0xFFFFD040);
+        }
+        if (openBottom < OPEN_H - 3) {
+            circle(g, gx, t + yc + openBottom, 4, 0xFFFFD040);
+            g.drawCenteredString(font, "↓", gx + 18, t + (int) (yc + openBottom) + 2, 0xFFFFD040);
+        }
         if (openTop >= OPEN_H - 3 && openBottom >= OPEN_H - 3 && !mouseDown) finish(quality());
     }
 
     private void retractPress() {
         double xm = (X0 + X1) / 2.0;
         double yc = incisionY(xm);
-        if (Math.abs(toolX - xm) < 18) {
-            if (Math.abs(toolY - (yc - openTop)) < 8) dragging = 0;
-            else if (Math.abs(toolY - (yc + openBottom)) < 8) dragging = 1;
+        if (Math.abs(toolX - xm) < 22) {
+            if (Math.abs(toolY - (yc - openTop)) < 9) dragging = 0;
+            else if (Math.abs(toolY - (yc + openBottom)) < 9) dragging = 1;
         }
         if (dragging < 0) error("rpmedicine.minigame.missed");
     }
@@ -679,12 +768,13 @@ public class SurgeryMinigameScreen extends Screen {
 
     private void bleedSuture(GuiGraphics g, int l, int t, double dt, double tx, double ty) {
         // Источник смещается с каждым ударом сердца.
-        double sx = sourcePoint[0] + Math.sin(time * 1.1) * 8 * (1.2 - ease);
-        double sy = sourcePoint[1] + Math.sin(time * 7) * 2;
+        double c = 1 - ease;
+        double sx = sourcePoint[0] + Math.sin(time * (1.1 + 1.6 * c)) * (6 + 18 * c) + Math.sin(time * 3.1) * 3 * c;
+        double sy = sourcePoint[1] + Math.cos(time * (0.9 + 1.3 * c)) * (3 + 9 * c) + Math.sin(time * 7) * 2;
         int pool = (int) (14 * (1 - progress) + 3);
         masked(g, l, t, (int) sx - pool, (int) sy - pool / 2, (int) sx + pool, (int) sy + pool / 2, 0xC0700000, OPEN_H, OPEN_H);
         bleedSpot(g, l, t, sx, sy, 1.4 * (1 - progress));
-        double r = 4 + 4 * ease;
+        double r = 3 + 5 * ease;
         circle(g, l + sx, t + sy, r, 0xFFFFD040);
         if (mouseDown) {
             if (Math.hypot(tx - sx, ty - sy) <= r) {
@@ -850,20 +940,22 @@ public class SurgeryMinigameScreen extends Screen {
             lastSawX = Double.NaN;
             return;
         }
-        if (Math.abs(ty - CY) > channel * 2.5 || Math.abs(tx - cx) > 40) {
+        // Новичку пилу «ведёт»: полоса узкая, рука гуляет; опытный пилит в широкой полосе (замечание 75).
+        if (Math.abs(ty - CY) > channel * (1.2 + 2.0 * ease) || Math.abs(tx - cx) > 40) {
             if (!outside) error("rpmedicine.minigame.tissue_cut");
             outside = true;
             return;
         }
         outside = false;
-        if (speed > 160 + 60 * ease) error("rpmedicine.minigame.too_rough");
+        if (speed > 90 + 130 * ease) error("rpmedicine.minigame.too_rough");
         if (!Double.isNaN(lastSawX)) {
             double dx = tx - lastSawX;
             int dir = dx > 0.5 ? 1 : dx < -0.5 ? -1 : 0;
             if (dir != 0) {
                 if (dir != sawDir) {
                     // Сменил направление: засчитать движение, если оно было достаточно длинным.
-                    if (sawTravel >= 22) {
+                    // Ход засчитан, если длинный; у новичка полный ход нужен длиннее, и пропил идёт медленнее.
+                    if (sawTravel >= 18 + 16 * (1 - ease) && (ease > 0.5 || rnd.nextDouble() < 0.45 + ease)) {
                         strokes++;
                         sound(ModSounds.BONE_SAW.get(), 0.9f + rnd.nextFloat() * 0.2f);
                         if (rnd.nextFloat() < 0.6 && drops.size() < 60) drops.add(new double[]{cx, CY + 4, 0, 0.7});
@@ -903,8 +995,16 @@ public class SurgeryMinigameScreen extends Screen {
     }
 
     private void drawOrgan(GuiGraphics g, int l, int t, double x, double y) {
-        g.fill(l + (int) x - 12, t + (int) y - 9, l + (int) x + 12, t + (int) y + 9, organColor());
-        g.fill(l + (int) x - 10, t + (int) y - 7, l + (int) x - 4, t + (int) y - 4, 0x40FFFFFF);
+        // Атлас Body Control: сердце, лёгкие, желудок, печень, почки, поджелудочная, мозг, селезёнка.
+        int idx = switch (scene.organ()) {
+            case 0 -> 0;   // сердце
+            case 1 -> 1;   // лёгкие
+            case 2 -> 3;   // печень
+            case 3 -> 4;   // почки
+            case 4 -> 2;   // кишечник — желудок
+            default -> 0;
+        };
+        g.blit(T_ORGANS, l + (int) x - 16, t + (int) y - 16, 32, 32, idx * 64, 0, 64, 64, 512, 64);
     }
 
     private void tray(GuiGraphics g, int l, int t) {
