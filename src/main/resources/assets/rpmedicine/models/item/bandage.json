@@ -1,6 +1,77 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "rpmedicine:item/bandage"
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "builtin/entity",
+    "display": {
+      "thirdperson_righthand": {
+        "translation": [
+          0,
+          -3.25,
+          0.25
+        ],
+        "scale": [
+          0.55,
+          0.55,
+          0.55
+        ]
+      },
+      "thirdperson_lefthand": {
+        "translation": [
+          0,
+          -3,
+          0.25
+        ],
+        "scale": [
+          0.55,
+          0.55,
+          0.55
+        ]
+      },
+      "firstperson_righthand": {
+        "translation": [
+          0,
+          -2.75,
+          0
+        ]
+      },
+      "firstperson_lefthand": {
+        "translation": [
+          0,
+          -3.5,
+          0
+        ]
+      },
+      "ground": {
+        "translation": [
+          0,
+          -3,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "fixed": {
+        "translation": [
+          0,
+          -3.25,
+          0
+        ]
+      }
+    },
+    "textures": {
+      "particle": "rpmedicine:item/bandage"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "rpmedicine:item/bandage"
+      }
+    }
   }
 }

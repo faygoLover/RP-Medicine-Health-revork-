@@ -157,7 +157,9 @@ public final class TreatmentService {
         int level = Medical.medicineLevel(actor);
         boolean self = actor == target;
         GameplayEffects.Mods mods = Medical.data(actor) != null ? Medical.data(actor).lastMods : new GameplayEffects.Mods();
-        double seconds = Skill.applySeconds(spec.seconds(), level, self, mods.useTimeFactor, s);
+        // Не быстрее, чем отыгрывает анимация предмета в руке.
+        double seconds = Math.max(Skill.applySeconds(spec.seconds(), level, self, mods.useTimeFactor, s),
+                faygolover.rpmedicine.data.UseTimes.min(stack));
         boolean fromHand = part == null;
         // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
         // Операция — всегда мини-игрой на сцене тела (решения, п. 1.14), даже в бою.

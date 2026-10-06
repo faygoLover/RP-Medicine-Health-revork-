@@ -1,6 +1,102 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "rpmedicine:item/field_surgery_kit"
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "builtin/entity",
+    "display": {
+      "thirdperson_righthand": {
+        "rotation": [
+          90,
+          0,
+          0
+        ],
+        "translation": [
+          0.25,
+          -1,
+          -4.25
+        ],
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [
+          90,
+          180,
+          0
+        ],
+        "translation": [
+          0,
+          -2.75,
+          -4.25
+        ],
+        "scale": [
+          0.8,
+          0.8,
+          0.8
+        ]
+      },
+      "firstperson_righthand": {
+        "rotation": [
+          0,
+          36.75,
+          0
+        ],
+        "translation": [
+          -1,
+          -1,
+          -0.5
+        ]
+      },
+      "firstperson_lefthand": {
+        "rotation": [
+          -180,
+          -12.5,
+          180
+        ],
+        "translation": [
+          0,
+          0,
+          2.25
+        ]
+      },
+      "ground": {
+        "translation": [
+          0,
+          -3,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "translation": [
+          0.75,
+          -3.75,
+          0
+        ]
+      }
+    },
+    "textures": {
+      "particle": "rpmedicine:item/field_surgery_kit"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "rpmedicine:item/field_surgery_kit"
+      }
+    }
   }
 }

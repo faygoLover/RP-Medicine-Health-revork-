@@ -2,5 +2,43 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "rpmedicine:item/organ"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.1
+      },
+      "model": "rpmedicine:item/organ_heart"
+    },
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.2
+      },
+      "model": "rpmedicine:item/organ_lungs"
+    },
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.3
+      },
+      "model": "rpmedicine:item/organ_liver"
+    },
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.4
+      },
+      "model": "rpmedicine:item/organ_kidneys"
+    },
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.5
+      },
+      "model": "rpmedicine:item/organ_intestines"
+    },
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.9
+      },
+      "model": "rpmedicine:item/organ_spoiled"
+    }
+  ]
 }

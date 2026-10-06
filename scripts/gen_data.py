@@ -628,6 +628,10 @@ for name, (shape, color, accent) in ICONS.items():
         png(f"{ASSETS}/textures/item/{name}.png", icon(shape, color, accent))
     write(f"{ASSETS}/models/item/{name}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"rpmedicine:item/{name}"}})
 
+# Внешний вид предметов: иконки, 3D-модели, варианты органов и конечностей (перезаписывает заглушки выше).
+import item_art  # noqa: E402
+item_art.main()
+
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
 print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(DRUGS), "препаратов,", len(ALIASES), "аналогов")
 

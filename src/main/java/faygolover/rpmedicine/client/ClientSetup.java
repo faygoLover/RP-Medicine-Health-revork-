@@ -52,6 +52,11 @@ public final class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void onReloadListeners(net.minecraftforge.client.event.RegisterClientReloadListenersEvent e) {
+        e.registerReloadListener(faygolover.rpmedicine.client.geo.GeoLibrary.INSTANCE);
+    }
+
+    @SubscribeEvent
     public static void onRenderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModEntities.BODY_STUB.get(), BodyStubRenderer::new);
         e.registerEntityRenderer(ModEntities.VOMIT.get(), faygolover.rpmedicine.client.render.VomitRenderer::new);
@@ -62,6 +67,26 @@ public final class ClientSetup {
         e.enqueueWork(() -> {
             MenuScreens.register(ModMenus.MEDICAL_CONTAINER.get(), MedicalContainerScreen::new);
             MenuScreens.register(ModMenus.SEARCH.get(), SearchScreen::new);
+            // Варианты иконок по NBT: какой орган (испорченный — отдельно) и какая конечность.
+            net.minecraft.client.renderer.item.ItemProperties.register(faygolover.rpmedicine.registry.ModItems.ORGAN.get(),
+                    new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "organ"), (st, level, entity, seed) -> {
+                        var o = faygolover.rpmedicine.item.OrganItem.organ(st);
+                        if (o == null) return 0f;
+                        var lvl = net.minecraft.client.Minecraft.getInstance().level;
+                        if (lvl != null && faygolover.rpmedicine.item.OrganItem.spoiled(st, lvl.getGameTime())) return 0.9f;
+                        return (o.ordinal() + 1) / 10f;
+                    });
+            net.minecraft.client.renderer.item.ItemProperties.register(faygolover.rpmedicine.registry.ModItems.SEVERED_LIMB.get(),
+                    new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "part"), (st, level, entity, seed) -> {
+                        var p = faygolover.rpmedicine.item.SeveredLimbItem.part(st);
+                        if (p == null) return 0f;
+                        return switch (p.kind) {
+                            case ARM -> 0.1f;
+                            case LEG -> 0.2f;
+                            case FOOT -> 0.3f;
+                            default -> 0f;
+                        };
+                    });
         });
         // Кнопка «Настройки» в списке модов.
         net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class,

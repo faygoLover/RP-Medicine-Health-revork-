@@ -2,5 +2,25 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "rpmedicine:item/severed_limb"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "rpmedicine:part": 0.1
+      },
+      "model": "rpmedicine:item/severed_arm"
+    },
+    {
+      "predicate": {
+        "rpmedicine:part": 0.2
+      },
+      "model": "rpmedicine:item/severed_leg"
+    },
+    {
+      "predicate": {
+        "rpmedicine:part": 0.3
+      },
+      "model": "rpmedicine:item/severed_foot"
+    }
+  ]
 }

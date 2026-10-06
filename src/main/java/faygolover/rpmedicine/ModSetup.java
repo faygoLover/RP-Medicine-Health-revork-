@@ -213,6 +213,7 @@ public final class ModSetup {
     private static void onReloadListeners(AddReloadListenerEvent e) {
         e.addListener(DamageRules.INSTANCE);
         e.addListener(ItemRules.ITEMS);
+        e.addListener(faygolover.rpmedicine.data.UseTimes.LOADER);
         e.addListener(ItemRules.ALIASES);
         e.addListener(MobRules.INSTANCE);
         e.addListener(HospitalBlocks.LOADER);

@@ -1,0 +1,158 @@
+{
+  "rpmedicine:bandage": {
+    "geo": "rpmedicine:rpgeo/bandage.geo.json",
+    "texture": "rpmedicine:textures/geo/bandage.png",
+    "animations": "rpmedicine:rpgeo/bandage.anim.json",
+    "use": "dress"
+  },
+  "rpmedicine:splint": {
+    "geo": "rpmedicine:rpgeo/splint.geo.json",
+    "texture": "rpmedicine:textures/geo/splint.png",
+    "animations": "rpmedicine:rpgeo/splint.anim.json",
+    "use": "bonefix"
+  },
+  "rpmedicine:field_surgery_kit": {
+    "geo": "rpmedicine:rpgeo/field_surgery_kit.geo.json",
+    "texture": "rpmedicine:textures/geo/field_surgery_kit.png",
+    "animations": "rpmedicine:rpgeo/field_surgery_kit.anim.json",
+    "use": "surg"
+  },
+  "rpmedicine:ibuprofen": {
+    "geo": "rpmedicine:rpgeo/ibuprofen.geo.json",
+    "texture": "rpmedicine:textures/geo/ibuprofen.png",
+    "animations": "rpmedicine:rpgeo/ibuprofen.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:tramadol": {
+    "geo": "rpmedicine:rpgeo/tramadol.geo.json",
+    "texture": "rpmedicine:textures/geo/tramadol.png",
+    "animations": "rpmedicine:rpgeo/tramadol.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:paracetamol": {
+    "geo": "rpmedicine:rpgeo/paracetamol.geo.json",
+    "texture": "rpmedicine:textures/geo/paracetamol.png",
+    "animations": "rpmedicine:rpgeo/paracetamol.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:amoxicillin": {
+    "geo": "rpmedicine:rpgeo/amoxicillin.geo.json",
+    "texture": "rpmedicine:textures/geo/amoxicillin.png",
+    "animations": "rpmedicine:rpgeo/amoxicillin.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:glucose_tablets": {
+    "geo": "rpmedicine:rpgeo/glucose_tablets.geo.json",
+    "texture": "rpmedicine:textures/geo/glucose_tablets.png",
+    "animations": "rpmedicine:rpgeo/glucose_tablets.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:syringe": {
+    "geo": "rpmedicine:rpgeo/syringe.geo.json",
+    "texture": "rpmedicine:textures/geo/syringe.png",
+    "animations": "rpmedicine:rpgeo/syringe.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:blood_draw_syringe": {
+    "geo": "rpmedicine:rpgeo/blood_draw_syringe.geo.json",
+    "texture": "rpmedicine:textures/geo/blood_draw_syringe.png",
+    "animations": "rpmedicine:rpgeo/blood_draw_syringe.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:insulin": {
+    "geo": "rpmedicine:rpgeo/insulin.geo.json",
+    "texture": "rpmedicine:textures/geo/insulin.png",
+    "animations": "rpmedicine:rpgeo/insulin.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:adrenaline": {
+    "geo": "rpmedicine:rpgeo/adrenaline.geo.json",
+    "texture": "rpmedicine:textures/geo/adrenaline.png",
+    "animations": "rpmedicine:rpgeo/adrenaline.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:txa": {
+    "geo": "rpmedicine:rpgeo/txa.geo.json",
+    "texture": "rpmedicine:textures/geo/txa.png",
+    "animations": "rpmedicine:rpgeo/txa.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:ketorolac": {
+    "geo": "rpmedicine:rpgeo/ketorolac.geo.json",
+    "texture": "rpmedicine:textures/geo/ketorolac.png",
+    "animations": "rpmedicine:rpgeo/ketorolac.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:naloxone": {
+    "geo": "rpmedicine:rpgeo/naloxone.geo.json",
+    "texture": "rpmedicine:textures/geo/naloxone.png",
+    "animations": "rpmedicine:rpgeo/naloxone.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:diazepam": {
+    "geo": "rpmedicine:rpgeo/diazepam.geo.json",
+    "texture": "rpmedicine:textures/geo/diazepam.png",
+    "animations": "rpmedicine:rpgeo/diazepam.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:atropine": {
+    "geo": "rpmedicine:rpgeo/atropine.geo.json",
+    "texture": "rpmedicine:textures/geo/atropine.png",
+    "animations": "rpmedicine:rpgeo/atropine.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:ketamine": {
+    "geo": "rpmedicine:rpgeo/ketamine.geo.json",
+    "texture": "rpmedicine:textures/geo/ketamine.png",
+    "animations": "rpmedicine:rpgeo/ketamine.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:lidocaine": {
+    "geo": "rpmedicine:rpgeo/lidocaine.geo.json",
+    "texture": "rpmedicine:textures/geo/lidocaine.png",
+    "animations": "rpmedicine:rpgeo/lidocaine.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:norepinephrine": {
+    "geo": "rpmedicine:rpgeo/norepinephrine.geo.json",
+    "texture": "rpmedicine:textures/geo/norepinephrine.png",
+    "animations": "rpmedicine:rpgeo/norepinephrine.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:ceftriaxone": {
+    "geo": "rpmedicine:rpgeo/ceftriaxone.geo.json",
+    "texture": "rpmedicine:textures/geo/ceftriaxone.png",
+    "animations": "rpmedicine:rpgeo/ceftriaxone.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:morphine": {
+    "geo": "rpmedicine:rpgeo/morphine.geo.json",
+    "texture": "rpmedicine:textures/geo/morphine.png",
+    "animations": "rpmedicine:rpgeo/morphine.anim.json",
+    "use": "injectpush"
+  },
+  "rpmedicine:first_aid_kit": {
+    "geo": "rpmedicine:rpgeo/first_aid_kit.geo.json",
+    "texture": "rpmedicine:textures/geo/first_aid_kit.png",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:blood_bag": {
+    "geo": "rpmedicine:rpgeo/blood_bag.geo.json",
+    "texture": "rpmedicine:textures/geo/blood_bag.png",
+    "fit": true,
+    "size": 0.75,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  }
+}
