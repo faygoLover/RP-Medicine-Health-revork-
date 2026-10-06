@@ -63,6 +63,17 @@ public final class ClientSetup {
         e.registerBlockEntityRenderer(faygolover.rpmedicine.registry.ModBlocks.IV_STAND_BE.get(), faygolover.rpmedicine.client.render.IvStandRenderer::new);
     }
 
+    /** Стетоскоп в руке: трубки от ушей к руке. */
+    @SubscribeEvent
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void onLayers(EntityRenderersEvent.AddLayers e) {
+        for (String skin : e.getSkins()) {
+            var r = e.getSkin(skin);
+            if (r instanceof net.minecraft.client.renderer.entity.player.PlayerRenderer pr)
+                pr.addLayer(new faygolover.rpmedicine.client.render.StethoscopeLayer(pr));
+        }
+    }
+
     /** Пакеты на стойке капельницы — отдельные модели (рисует IvStandRenderer). */
     @SubscribeEvent
     public static void onModels(net.minecraftforge.client.event.ModelEvent.RegisterAdditional e) {

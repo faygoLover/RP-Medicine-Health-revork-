@@ -405,6 +405,42 @@ def main():
         "base": flat_mask,
         "perspectives": {"head": {"parent": "rpmedicine:item/surgical_mask_worn"}}})
 
+    # Стетоскоп в руке (замечание 06.10): головка 3D, трубки к ушам рисует StethoscopeLayer; в инвентаре — иконка.
+    stex = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y in range(16):
+        for x in range(16):
+            if y < 6:
+                c = (205, 210, 218) if (x + y) % 5 else (232, 236, 240)    # металл головки
+            elif y < 10:
+                c = (150, 156, 166)                                        # обод
+            else:
+                c = (48, 48, 54) if x % 4 else (62, 62, 70)                # трубка
+            stex.putpixel((x, y), c + (255,))
+    stex.save(os.path.join(ASSETS, "textures", "item", "stethoscope_3d.png"))
+
+    def sbox(a, b, uv):
+        return {"from": a, "to": b, "faces": {f: {"uv": list(uv), "texture": "#s"} for f in ("north", "south", "east", "west", "up", "down")}}
+    head3d = {"textures": {"s": "rpmedicine:item/stethoscope_3d", "particle": "rpmedicine:item/stethoscope"},
+              "elements": [
+                  sbox([6, 5, 7.4], [10, 11, 8.6], (0, 0, 16, 6)),              # мембрана (восьмиугольник из двух плашек)
+                  sbox([5, 6, 7.4], [11, 10, 8.6], (0, 0, 16, 6)),
+                  sbox([6.5, 6.5, 8.6], [9.5, 9.5, 9.4], (0, 6, 16, 10)),       # чашечка
+                  sbox([7.5, 10.5, 7.6], [8.5, 12.5, 8.4], (0, 6, 16, 10)),     # ножка
+                  sbox([7.6, 12.5, 7.6], [8.4, 16, 8.4], (0, 10, 16, 16)),      # трубка
+              ],
+              "display": {
+                  "thirdperson_righthand": {"rotation": [0, 0, 0], "translation": [0, 1, 1.5], "scale": [0.4, 0.4, 0.4]},
+                  "thirdperson_lefthand": {"rotation": [0, 0, 0], "translation": [0, 1, 1.5], "scale": [0.4, 0.4, 0.4]},
+                  "firstperson_righthand": {"rotation": [-10, 110, 0], "translation": [1, 3.5, -1], "scale": [0.3, 0.3, 0.3]},
+                  "firstperson_lefthand": {"rotation": [-10, -110, 0], "translation": [-1, 3.5, -1], "scale": [0.3, 0.3, 0.3]},
+                  "ground": {"translation": [0, 2, 0], "scale": [0.4, 0.4, 0.4]},
+                  "fixed": {"scale": [0.6, 0.6, 0.6]}}}
+    write(os.path.join(ASSETS, "models", "item", "stethoscope_held.json"), head3d)
+    write(os.path.join(ASSETS, "models", "item", "stethoscope.json"), {
+        "loader": "forge:separate_transforms", "gui_light": "front",
+        "base": {"parent": "rpmedicine:item/stethoscope_held"},
+        "perspectives": {"gui": flat("rpmedicine:item/stethoscope")}})
+
     # 3D-модели
     index, times = {}, {}
     for item, g in GEO.items():
