@@ -49,6 +49,17 @@ public final class ExamService {
         return le;
     }
 
+    /** Общее состояние 0–100: целостность частей (голова и грудь вдвое весомее) с поправкой на кровь. */
+    public static double overall(MedicalState m, MedicalSettings s) {
+        double sum = 0, weight = 0;
+        for (BodyPartState ps : m.parts) {
+            double w = ps.part == faygolover.rpmedicine.core.BodyPart.HEAD || ps.part == faygolover.rpmedicine.core.BodyPart.CHEST ? 2 : 1;
+            sum += ps.integrity() * w;
+            weight += w;
+        }
+        return sum / weight * Math.min(1.0, m.bloodFraction(s) / 0.9);
+    }
+
     public static void request(ServerPlayer viewer, int targetId, boolean open) {
         if (!open) {
             PANELS.remove(viewer.getUUID());
@@ -60,6 +71,8 @@ public final class ExamService {
         sub.targetId = target == viewer ? -1 : target.getId();
         PANELS.put(viewer.getUUID(), sub);
         sendExam(viewer, target, sub);
+        // Осмотр врачом с медкартой — выявленное попадает в медкарту.
+        if (target != viewer) MedcardHooks.examined(viewer, target);
     }
 
     private static void sendExam(ServerPlayer viewer, LivingEntity target, Sub sub) {
@@ -102,7 +115,7 @@ public final class ExamService {
             sum += integ * w;
             weight += w;
         }
-        double overall = sum / weight * Math.min(1.0, m.bloodFraction(s) / 0.9);
+        double overall = overall(m, s);
         boolean gm = viewer.hasPermissions(2) && viewer.isCreative();
         boolean numbers = gm || level >= s.numbersMinLevel;
         short kd = -1;

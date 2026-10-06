@@ -44,6 +44,8 @@ public final class SelfView {
     public byte tunnel;
     public byte gray;
     public byte ringing;
+    /** Общее состояние 0–100, как полоска «общее» в панели тела (замечание 61). */
+    public byte overall = 100;
     /** Глухота после взрыва, секунд осталось. */
     public byte deaf;
     /** Стук сердца: 0 — не слышно, 1–3 — учащённый … очень частый. */
@@ -93,6 +95,7 @@ public final class SelfView {
         buf.writeByte(tunnel);
         buf.writeByte(gray);
         buf.writeByte(ringing);
+        buf.writeByte(overall);
         buf.writeByte(deaf);
         buf.writeShort(heartbeat);
         buf.writeByte(sway);
@@ -142,6 +145,7 @@ public final class SelfView {
         v.tunnel = buf.readByte();
         v.gray = buf.readByte();
         v.ringing = buf.readByte();
+        v.overall = buf.readByte();
         v.deaf = buf.readByte();
         v.heartbeat = buf.readShort();
         v.sway = buf.readByte();
@@ -188,7 +192,7 @@ public final class SelfView {
         return down == v.down && knockdownSeconds == v.knockdownSeconds && Arrays.equals(partColors, v.partColors)
                 && bleed == v.bleed && pain == v.pain && fracture == v.fracture && analgesia == v.analgesia
                 && dyspnea == v.dyspnea && vignette == v.vignette && blur == v.blur && darken == v.darken
-                && tunnel == v.tunnel && gray == v.gray && ringing == v.ringing && deaf == v.deaf && heartbeat == v.heartbeat
+                && tunnel == v.tunnel && gray == v.gray && ringing == v.ringing && overall == v.overall && deaf == v.deaf && heartbeat == v.heartbeat
                 && heavyBreathing == v.heavyBreathing && sway == v.sway && high == v.high && noSprint == v.noSprint && noJump == v.noJump
                 && crawl == v.crawl && armsDisabled == v.armsDisabled && carrying == v.carrying && carried == v.carried
                 && breakSpeedPct == v.breakSpeedPct && useTimePct == v.useTimePct && medLevel == v.medLevel

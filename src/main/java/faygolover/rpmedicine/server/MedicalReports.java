@@ -31,6 +31,35 @@ public final class MedicalReports {
         return report(target, true);
     }
 
+    /** Полный отчёт столбиком: по одному показателю с иконкой раздела на строку (панель ГМа). */
+    public static List<Component> vertical(LivingEntity target) {
+        List<Component> out = new ArrayList<>();
+        for (Component line : report(target, true)) {
+            String icon = line.getContents() instanceof net.minecraft.network.chat.contents.LiteralContents lc ? lc.text() : "";
+            List<Component> sib = line.getSiblings();
+            boolean rowLike = icon.length() <= 2 && !icon.isBlank() && sib.size() >= 3
+                    && " ".equals(sib.get(0).getString());
+            if (!rowLike) {
+                out.add(line);
+                continue;
+            }
+            // Строки вида «❤ метка значение  метка значение»: разделители — пробелы тёмно-серым.
+            MutableComponent cur = null;
+            for (Component c : sib) {
+                String t = c.getString();
+                if (t.equals(" ") || t.equals("  ")) {
+                    if (cur != null) out.add(cur);
+                    cur = Component.literal(icon + " ").withStyle(ChatFormatting.DARK_AQUA);
+                    continue;
+                }
+                if (cur == null) cur = Component.literal(icon + " ").withStyle(ChatFormatting.DARK_AQUA);
+                cur.append(c.copy());
+            }
+            if (cur != null) out.add(cur);
+        }
+        return out;
+    }
+
     /** Строка «метка значение · метка значение …». */
     private static final class Row {
         final MutableComponent c;

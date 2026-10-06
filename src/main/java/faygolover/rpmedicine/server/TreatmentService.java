@@ -544,6 +544,7 @@ public final class TreatmentService {
                 return;
             }
             boolean error;
+            if (spec.action().isDiagnostic()) MedcardHooks.examined(actor, target);
             if (spec.action().isDiagnostic()) {
                 // Прибор работает у любого, но без нужного уровня показания не разобрать.
                 error = RANDOM.nextDouble() < Math.min(s.maxErrorChance, Math.max(0, spec.minLevel() - level) * s.underLevelErrorPerLevel);

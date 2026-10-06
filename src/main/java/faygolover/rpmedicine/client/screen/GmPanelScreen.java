@@ -47,6 +47,10 @@ public class GmPanelScreen extends Screen {
     private int severity = 1;
     private int drug;
     private int dose = 1;
+    /** Вкладка справа: 0 — осмотр, 1 — тело (силуэт и правка), 2 — показатели (замечание 57). */
+    private int tab;
+    private final java.util.Map<String, net.minecraft.client.gui.components.EditBox> values = new java.util.HashMap<>();
+    private static final String[] TABS = {"exam", "body", "values"};
 
     public GmPanelScreen(GmPanelPacket panel) {
         super(Component.translatable("rpmedicine.gm.title"));
@@ -73,12 +77,16 @@ public class GmPanelScreen extends Screen {
         return (height - H) / 2;
     }
 
+    private int contentX() {
+        return left() + LIST_W + 10;
+    }
+
     private int bodyX() {
-        return left() + LIST_W + 8;
+        return contentX();
     }
 
     private int bodyY() {
-        return top() + 22;
+        return top() + 36;
     }
 
     private void edit(GmEditPacket.Op op, String arg, double value) {
@@ -87,49 +95,92 @@ public class GmPanelScreen extends Screen {
 
     @Override
     protected void init() {
-        // Правка тела: под силуэтом, когда выбрана часть.
-        int bx = bodyX();
-        int by = bodyY() + faygolover.rpmedicine.client.Silhouette.GRID_H * UNIT + 14;
-        int bw = BODY_W - 4;
-        if (selected != null && part != null) {
-            var types = faygolover.rpmedicine.core.WoundType.VALUES;
-            addRenderableWidget(Button.builder(Component.translatable("rpmedicine.wound." + types[woundType].id), b -> {
-                woundType = (woundType + 1) % types.length;
-                b.setMessage(Component.translatable("rpmedicine.wound." + types[woundType].id));
-            }).bounds(bx, by, bw, 13).build());
-            addRenderableWidget(Button.builder(sevLabel(), b -> {
-                severity = (severity + 1) % SEVERITIES.length;
-                b.setMessage(sevLabel());
-            }).bounds(bx, by + 14, bw, 13).build());
-            addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.injure_btn"),
-                    b -> edit(GmEditPacket.Op.INJURE, types[woundType].id, SEVERITIES[severity])).bounds(bx, by + 28, bw, 13).build());
-            addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.heal_part_btn"),
-                    b -> edit(GmEditPacket.Op.HEAL_PART, "", 0)).bounds(bx, by + 42, bw, 13).build());
-            List<String> drugs = panel.drugs();
-            if (!drugs.isEmpty()) {
-                drug = Math.min(drug, drugs.size() - 1);
-                addRenderableWidget(Button.builder(Component.literal(drugs.get(drug)), b -> {
-                    drug = (drug + (hasShiftDown() ? drugs.size() - 1 : 1)) % drugs.size();
-                    b.setMessage(Component.literal(drugs.get(drug)));
-                }).bounds(bx, by + 60, bw, 13).build());
-                addRenderableWidget(Button.builder(doseLabel(), b -> {
-                    dose = (dose + 1) % DOSES.length;
-                    b.setMessage(doseLabel());
-                }).bounds(bx, by + 74, bw, 13).build());
-                addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.drug_btn"),
-                        b -> edit(GmEditPacket.Op.DRUG, drugs.get(drug), DOSES[dose])).bounds(bx, by + 88, bw, 13).build());
-            }
+        int cx = contentX();
+        // Вкладки.
+        for (int k = 0; k < TABS.length; k++) {
+            int idx = k;
+            addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.tab." + TABS[k])
+                    .withStyle(tab == k ? ChatFormatting.YELLOW : ChatFormatting.WHITE), b -> {
+                tab = idx;
+                rebuildWidgets();
+            }).bounds(cx + k * 96, top() + 18, 92, 14).build());
         }
-        int x = left() + LIST_W + BODY_W + 14;
+        if (selected != null && tab == 1) initBody();
+        if (selected != null && tab == 2) initValues();
+        // Действия — внизу.
+        int x = cx;
         int y = top() + H - 24;
         GmActionPacket.Action[] actions = {GmActionPacket.Action.HEAL, GmActionPacket.Action.REVIVE, GmActionPacket.Action.KILL,
                 GmActionPacket.Action.TELEPORT, GmActionPacket.Action.HISTORY, GmActionPacket.Action.INSPECT};
-        int aw = (W - LIST_W - BODY_W - 24) / actions.length;
+        int aw = (W - LIST_W - 16) / actions.length;
         for (int i = 0; i < actions.length; i++) {
             GmActionPacket.Action a = actions[i];
             addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm." + a.name().toLowerCase(java.util.Locale.ROOT)), b -> {
-                if (selected != null) Network.sendToServer(new GmActionPacket(selected, a));
+                if (selected == null) return;
+                if (a == GmActionPacket.Action.HISTORY || a == GmActionPacket.Action.INSPECT) {
+                    tab = 0;
+                    rebuildWidgets();
+                }
+                Network.sendToServer(new GmActionPacket(selected, a));
             }).bounds(x + i * aw, y, aw - 2, 18).build());
+        }
+    }
+
+    /** Тело: силуэт слева, правка выбранной части — справа, кнопки во всю ширину. */
+    private void initBody() {
+        if (part == null) return;
+        int bx = contentX() + BODY_W + 10;
+        int by = bodyY();
+        int bw = W - LIST_W - BODY_W - 30;
+        var types = faygolover.rpmedicine.core.WoundType.VALUES;
+        addRenderableWidget(Button.builder(Component.translatable("rpmedicine.wound." + types[woundType].id), b -> {
+            woundType = (woundType + 1) % types.length;
+            b.setMessage(Component.translatable("rpmedicine.wound." + types[woundType].id));
+        }).bounds(bx, by, bw, 14).build());
+        addRenderableWidget(Button.builder(sevLabel(), b -> {
+            severity = (severity + 1) % SEVERITIES.length;
+            b.setMessage(sevLabel());
+        }).bounds(bx, by + 16, bw, 14).build());
+        addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.injure_btn"),
+                b -> edit(GmEditPacket.Op.INJURE, types[woundType].id, SEVERITIES[severity])).bounds(bx, by + 32, bw, 14).build());
+        addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.heal_part_btn"),
+                b -> edit(GmEditPacket.Op.HEAL_PART, "", 0)).bounds(bx, by + 48, bw, 14).build());
+        List<String> drugs = panel.drugs();
+        if (!drugs.isEmpty()) {
+            drug = Math.min(drug, drugs.size() - 1);
+            addRenderableWidget(Button.builder(Component.literal(drugs.get(drug)), b -> {
+                drug = (drug + (hasShiftDown() ? drugs.size() - 1 : 1)) % drugs.size();
+                b.setMessage(Component.literal(drugs.get(drug)));
+            }).bounds(bx, by + 72, bw, 14).build());
+            addRenderableWidget(Button.builder(doseLabel(), b -> {
+                dose = (dose + 1) % DOSES.length;
+                b.setMessage(doseLabel());
+            }).bounds(bx, by + 88, bw, 14).build());
+            addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.drug_btn"),
+                    b -> edit(GmEditPacket.Op.DRUG, drugs.get(drug), DOSES[dose])).bounds(bx, by + 104, bw, 14).build());
+        }
+    }
+
+    /** Показатели: поле и «Поставить» для крови, SpO2, мозга и прочего (замечание 58). */
+    private void initValues() {
+        values.clear();
+        int x = contentX();
+        int y = bodyY();
+        for (String key : faygolover.rpmedicine.server.GmPanelService.SETTABLE) {
+            var box = addRenderableWidget(new net.minecraft.client.gui.components.EditBox(font, x + 150, y, 70, 14, Component.empty()));
+            box.setMaxLength(8);
+            box.setFilter(t -> t.matches("[0-9.]*"));
+            values.put(key, box);
+            addRenderableWidget(Button.builder(Component.translatable("rpmedicine.gm.set_btn"), b -> {
+                try {
+                    double v = Double.parseDouble(box.getValue());
+                    if (selected != null) Network.sendToServer(new GmEditPacket(selected, GmEditPacket.Op.SET,
+                            faygolover.rpmedicine.core.BodyPart.CHEST, key, (float) v));
+                } catch (NumberFormatException ignored) {
+                    // Пустое поле — ничего.
+                }
+            }).bounds(x + 224, y, 70, 14).build());
+            y += 18;
         }
     }
 
@@ -154,29 +205,34 @@ public class GmPanelScreen extends Screen {
         }
         if (rows.isEmpty()) g.drawString(font, Component.translatable("rpmedicine.gm.empty"), l + 6, t + 20, 0x808080, false);
         g.fill(l + LIST_W + 4, t + 18, l + LIST_W + 5, t + H - 6, 0xFF404850);
-        // Силуэт.
-        g.fill(l + LIST_W + BODY_W + 8, t + 18, l + LIST_W + BODY_W + 9, t + H - 6, 0xFF404850);
-        if (selected != null) {
+        GmPanelPacket.Row sel = selectedRow();
+        if (sel != null) {
+            g.drawString(font, Component.literal(sel.name() + "  " + sel.dimension() + " " + sel.x() + " " + sel.y() + " " + sel.z())
+                    .withStyle(ChatFormatting.GRAY), contentX(), t + 6, 0xFFFFFF, false);
+        }
+        if (selected == null) {
+            g.drawString(font, Component.translatable("rpmedicine.gm.pick"), contentX(), bodyY(), 0x808080, false);
+        } else if (tab == 0) {
+            // Осмотр: по строке на показатель, с прокруткой.
+            List<FormattedCharSequence> lines = new ArrayList<>();
+            for (Component c : report) lines.addAll(font.split(c, W - LIST_W - 22));
+            int maxLines = (H - 36 - 30) / 10;
+            for (int i = 0; i < maxLines && reportScroll + i < lines.size(); i++)
+                g.drawString(font, lines.get(reportScroll + i), contentX(), bodyY() + i * 10, 0xFFFFFF, false);
+        } else if (tab == 1) {
             byte[] c = colors.length == faygolover.rpmedicine.core.BodyPart.VALUES.length ? colors : new byte[faygolover.rpmedicine.core.BodyPart.VALUES.length];
             var hover = faygolover.rpmedicine.client.Silhouette.partAt(bodyX() + 6, bodyY(), UNIT, mx, my);
             faygolover.rpmedicine.client.Silhouette.draw(g, bodyX() + 6, bodyY(), UNIT, c, part, hover);
             Component cap = part != null ? Component.translatable(part.translationKey()) : Component.translatable("rpmedicine.gm.body_pick");
             g.drawCenteredString(font, cap, bodyX() + BODY_W / 2 - 2, bodyY() + faygolover.rpmedicine.client.Silhouette.GRID_H * UNIT + 3,
                     part != null ? 0xFFD700 : 0x808080);
+        } else {
+            int y = bodyY() + 3;
+            for (String key : faygolover.rpmedicine.server.GmPanelService.SETTABLE) {
+                g.drawString(font, Component.translatable("rpmedicine.gm.value." + key), contentX(), y, 0xC0C0C0, false);
+                y += 18;
+            }
         }
-        // Отчёт.
-        int rx = l + LIST_W + BODY_W + 14;
-        int ry = t + 20;
-        GmPanelPacket.Row sel = selectedRow();
-        if (sel != null) {
-            g.drawString(font, Component.literal(sel.name() + "  " + sel.dimension() + " " + sel.x() + " " + sel.y() + " " + sel.z())
-                    .withStyle(ChatFormatting.GRAY), rx, t + 6, 0xFFFFFF, false);
-        }
-        List<FormattedCharSequence> lines = new ArrayList<>();
-        for (Component c : report) lines.addAll(font.split(c, W - LIST_W - BODY_W - 22));
-        int maxLines = (H - 54) / 10;
-        for (int i = 0; i < maxLines && reportScroll + i < lines.size(); i++) g.drawString(font, lines.get(reportScroll + i), rx, ry + i * 10, 0xFFFFFF, false);
-        if (selected == null) g.drawString(font, Component.translatable("rpmedicine.gm.pick"), rx, ry, 0x808080, false);
         super.render(g, mx, my, pt);
     }
 
@@ -200,7 +256,7 @@ public class GmPanelScreen extends Screen {
         if (super.mouseClicked(mx, my, button)) return true;
         int l = left();
         int t = top();
-        if (button == 0 && selected != null) {
+        if (button == 0 && selected != null && tab == 1) {
             var p = faygolover.rpmedicine.client.Silhouette.partAt(bodyX() + 6, bodyY(), UNIT, mx, my);
             if (p != null) {
                 part = part == p ? null : p;

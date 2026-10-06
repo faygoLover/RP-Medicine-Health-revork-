@@ -631,6 +631,8 @@ public final class Physiology {
         double ceiling = spo2Ceiling(m, s);
         // Кислород возвращает часть потерянного потолка (второй этап, п. 2.1).
         if (in.oxygen && ceiling < s.spo2Normal) ceiling += (s.spo2Normal - ceiling) * clamp(s.oxygenTherapyFactor, 0, 1);
+        // Мешок Амбу — принудительные вдохи: тоже поднимает потолок, хоть и меньше кислорода (замечание 69).
+        if (m.ambuSeconds > 0 && ceiling < s.spo2Normal) ceiling += (s.spo2Normal - ceiling) * clamp(s.ambuCeilingFactor, 0, 1);
         double target;
         double fall;
         if (v <= 0.01) {

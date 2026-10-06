@@ -85,6 +85,7 @@ public final class SelfSync {
         v.breakSpeedPct = (byte) Math.round(Math.max(0, Math.min(1, mods.breakSpeed)) * 100);
         v.useTimePct = (short) Math.round(Math.min(1000, mods.useTimeFactor * 100));
         v.medLevel = (byte) Medical.medicineLevel(sp);
+        v.overall = (byte) Math.round(ExamService.overall(m, s));
         v.carrying = d.carrying;
         v.carried = CarryService.isCarried(sp);
         if (!m.isDown()) v.sensations.addAll(Examination.complaints(m, s));

@@ -124,7 +124,7 @@ public final class GmPanelService {
             MedicalSettings s = MedicalSettings.get();
             for (int i = 0; i < colors.length; i++) colors[i] = (byte) faygolover.rpmedicine.core.Examination.partColor(m, m.parts[i], s);
         }
-        Network.send(gm, new GmReportPacket(uuid, MedicalReports.full(t), colors));
+        Network.send(gm, new GmReportPacket(uuid, MedicalReports.vertical(t), colors));
     }
 
     /** Правка тела с силуэта: рана, лечение части, препарат. */
@@ -141,6 +141,11 @@ public final class GmPanelService {
                         + String.format(java.util.Locale.ROOT, "%.0f", Math.max(1, Math.min(100, p.value()))));
             }
             case HEAL_PART -> command(gm, "rpmedicine heal " + t.getStringUUID() + " " + part);
+            // Общие показатели (замечание 58): та же команда set, что у ГМа в чате.
+            case SET -> {
+                if (!SETTABLE.contains(p.arg())) return;
+                command(gm, "rpmedicine set " + t.getStringUUID() + " " + p.arg() + " " + String.format(java.util.Locale.ROOT, "%.1f", p.value()));
+            }
             case DRUG -> {
                 faygolover.rpmedicine.core.Drug d = faygolover.rpmedicine.data.DrugRules.byId(p.arg());
                 if (d == null) return;
@@ -154,6 +159,10 @@ public final class GmPanelService {
         open(gm);
         sendReport(gm, p.uuid(), t);
     }
+
+    /** Что можно поставить числом из панели ГМа. */
+    public static final java.util.List<String> SETTABLE = java.util.List.of("blood", "spo2", "brain", "concussion", "sepsis",
+            "sugar", "temperature", "intoxication");
 
     private static void command(ServerPlayer gm, String cmd) {
         gm.server.getCommands().performPrefixedCommand(gm.createCommandSourceStack(), cmd);

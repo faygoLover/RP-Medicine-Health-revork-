@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * вылечить часть, ввести препарат ({@code arg} — id препарата, {@code value} — доза). Только операторам.
  */
 public record GmEditPacket(UUID uuid, Op op, BodyPart part, String arg, float value) {
-    public enum Op { INJURE, HEAL_PART, DRUG }
+    public enum Op { INJURE, HEAL_PART, DRUG, SET }
 
     public static void encode(GmEditPacket p, FriendlyByteBuf buf) {
         buf.writeUUID(p.uuid);

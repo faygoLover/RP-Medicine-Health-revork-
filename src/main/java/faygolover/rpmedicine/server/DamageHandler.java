@@ -73,6 +73,16 @@ public final class DamageHandler {
             return;
         }
 
+        // Запас поглощения (золотое яблоко) принимает часть урона до травм.
+        if (target.getAbsorptionAmount() > 0 && !src.is(net.minecraft.tags.DamageTypeTags.BYPASSES_EFFECTS)) {
+            float absorbed = Math.min(target.getAbsorptionAmount(), amount);
+            target.setAbsorptionAmount(target.getAbsorptionAmount() - absorbed);
+            amount -= absorbed;
+            if (amount <= 0) {
+                Profiler.recordOther(System.nanoTime() - t0);
+                return;
+            }
+        }
         InjuryProfile prof = DamageRules.INSTANCE.profileFor(src);
         BodyPart part = null;
         double side = 0;

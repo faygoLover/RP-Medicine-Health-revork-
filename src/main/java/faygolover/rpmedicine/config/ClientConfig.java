@@ -39,7 +39,9 @@ public final class ClientConfig {
         PROGRESS("progress", Anchor.CENTER, -50, 18, 1.0),
         KNOCKDOWN_TIMER("knockdown_timer", Anchor.TOP_CENTER, 0, 30, 1.0),
         HOVER("hover", Anchor.CENTER, 77, 0, 1.0),
-        MONITOR("monitor", Anchor.CENTER, 67, 0, 1.0);
+        MONITOR("monitor", Anchor.CENTER, 67, 0, 1.0),
+        /** Общее состояние вместо ванильных сердец; запас (золотое яблоко) — золотом поверх. */
+        HEALTH("health", Anchor.BOTTOM_CENTER, -51, -30, 1.0);
 
         public final String id;
         public final Anchor defAnchor;

@@ -354,6 +354,8 @@ public final class MedicalSettings {
     public boolean minigamesInCombat = true;
     /** Переливание крови лежачему (нокдаун, клиническая смерть) быстрее во столько раз. */
     public double dripDownedFactor = 2.5;
+    /** Мешок Амбу возвращает такую долю потерянного «потолка» SpO2 (при повреждённых лёгких, шоке). */
+    public double ambuCeilingFactor = 0.5;
     /** Разряд дефибриллятора возможен столько секунд после последней компрессии СЛР. */
     public double defibAfterCprSeconds = 30;
     /** Урон по медику или пациенту за столько секунд — «бой»: только прогресс-бар. */

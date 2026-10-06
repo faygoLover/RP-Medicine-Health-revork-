@@ -32,6 +32,7 @@ public final class MedicalHud {
             case KNOCKDOWN_TIMER -> 160;
             case HOVER -> 130;
             case MONITOR -> 110;
+            case HEALTH -> 81;
         };
     }
 
@@ -43,6 +44,7 @@ public final class MedicalHud {
             case KNOCKDOWN_TIMER -> 26;
             case HOVER -> 50;
             case MONITOR -> 62;
+            case HEALTH -> 9;
         };
     }
 
@@ -97,6 +99,7 @@ public final class MedicalHud {
             case KNOCKDOWN_TIMER -> drawKnockdown(g, font, v, preview);
             case HOVER -> drawHover(g, font, preview);
             case MONITOR -> drawMonitor(g, font, preview);
+            case HEALTH -> drawHealth(g, v, preview);
         }
     }
 
@@ -133,6 +136,22 @@ public final class MedicalHud {
         if (v.stabilized) out.add(new Icon("stabilized", "", 0, false));
         if (v.sedated) out.add(new Icon("sedated", "", 0, false));
         return out;
+    }
+
+    /** Общее состояние полоской (как в панели тела) и запас от поглощения — золотом поверх (замечания 60, 61). */
+    private static void drawHealth(GuiGraphics g, SelfView v, boolean preview) {
+        var mc = net.minecraft.client.Minecraft.getInstance();
+        if (mc.player == null || (!preview && (mc.player.isCreative() || mc.player.isSpectator()))) return;
+        int overall = preview ? 80 : Math.max(0, Math.min(100, v.overall));
+        int oc = overall >= 80 ? 0 : overall >= 60 ? 1 : overall >= 40 ? 2 : overall >= 20 ? 3 : 4;
+        g.fill(0, 0, 81, 9, 0xA0000000);
+        g.fill(1, 1, 1 + 79 * overall / 100, 8, Silhouette.color(oc, false));
+        float abs = preview ? 4f : mc.player.getAbsorptionAmount();
+        if (abs > 0) {
+            int w = (int) Math.min(79, Math.round(abs * 5 * 79 / 100.0));
+            g.fill(1, 1, 1 + w, 4, 0xFFE8C040);
+        }
+        g.renderOutline(0, 0, 81, 9, 0xC0303030);
     }
 
     private static void drawStatus(GuiGraphics g, Font font, SelfView v, boolean preview) {

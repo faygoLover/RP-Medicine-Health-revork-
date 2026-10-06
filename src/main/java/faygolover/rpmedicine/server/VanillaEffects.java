@@ -154,6 +154,9 @@ public final class VanillaEffects {
         MedicalSettings s = MedicalSettings.get();
         boolean wasDown = Physiology.rescue(m, s, s.totemBloodFraction);
         for (BodyPartState ps : m.parts) ps.arterial = false;
+        // Тотем держит давление: как укол адреналина и стабилизация, чтобы спасённый не упал сразу (замечание 62).
+        m.adrenalineInjectionSeconds = Math.max(m.adrenalineInjectionSeconds, s.adrenalineInjectionSeconds);
+        m.stabilizedSeconds = Math.max(m.stabilizedSeconds, s.stabilizationSeconds);
         // Каждая рана: бросок плюс медицина держащего — чем выше, тем сильнее лечится (решения, п. 1.13).
         int level = Medical.medicineLevel(sp);
         var rnd = sp.getRandom();

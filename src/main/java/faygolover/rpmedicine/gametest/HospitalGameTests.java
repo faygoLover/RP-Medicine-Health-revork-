@@ -295,7 +295,9 @@ public final class HospitalGameTests {
             inv.selected = 0;
             h.assertTrue(faygolover.rpmedicine.server.LabService.onUseBlock(medic, lab), "анализ на лабораторном столе начался");
             h.runAfterDelay(1250, () -> {
-                h.assertTrue(inv.getItem(0).isEmpty(), "пробирка ушла в анализ");
+                h.assertTrue(!inv.getItem(0).is(faygolover.rpmedicine.registry.ModItems.BLOOD_SAMPLE.get()), "пробирка ушла в анализ");
+                h.assertTrue(inv.contains(new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.DIRTY_TEST_TUBE.get())),
+                        "после анализа осталась использованная пробирка");
                 remove(h, medic, patient);
                 h.succeed();
             });
@@ -414,6 +416,9 @@ public final class HospitalGameTests {
         faygolover.rpmedicine.server.MedcardHooks.injury(patient, rep, faygolover.rpmedicine.core.BodyPart.LEFT_LEG);
         var server = h.getLevel().getServer();
         var mc = faygolover.rpmedicine.medcard.MedcardStore.get(server, patient.getUUID());
+        // Пока врач с медкартой не осмотрел — в карте ничего (замечание 65).
+        h.assertTrue(mc.entries.isEmpty(), "без осмотра врачом записей нет");
+        faygolover.rpmedicine.server.MedcardHooks.examined(medic, patient);
         h.assertTrue(mc.entries.size() == 1 && mc.entries.get(0).proposed && mc.entries.get(0).key.equals("gunshot"), "одно предложение «огнестрел»");
         int id = mc.entries.get(0).id;
         medic.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, card.get().copy());
