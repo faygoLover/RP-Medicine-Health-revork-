@@ -137,9 +137,19 @@ public final class FirstPersonGeo {
         pose.translate(-cam.px, -cam.py, -cam.pz);
         ResourceLocation skin = player.getSkinTextureLocation();
         boolean slim = "slim".equals(player.getModelName());
-        VertexConsumer skinVc = buffers.getBuffer(RenderType.entitySolid(skin));
+        // Два прохода: буферы разных текстур нельзя заполнять вперемешку — сначала модель (запомнить, где руки), потом руки.
+        java.util.List<Object[]> arms = new java.util.ArrayList<>();
         GeoItemRenderer.renderWithArms(e, clip, t, pose, buffers.getBuffer(RenderType.entityTranslucent(e.texture())), light,
-                OverlayTexture.NO_OVERLAY, (bone, ps, lt) -> arm(bone, ps, skinVc, lt, bone.name.startsWith("right"), slim));
+                OverlayTexture.NO_OVERLAY, (bone, ps, lt) -> arms.add(new Object[]{bone, new Matrix4f(ps.last().pose()),
+                        new Matrix3f(ps.last().normal())}));
+        VertexConsumer skinVc = buffers.getBuffer(RenderType.entityCutoutNoCull(skin));
+        for (Object[] a : arms) {
+            GeoModel.Bone bone = (GeoModel.Bone) a[0];
+            PoseStack one = new PoseStack();
+            one.last().pose().set((Matrix4f) a[1]);
+            one.last().normal().set((Matrix3f) a[2]);
+            arm(bone, one, skinVc, light, bone.name.startsWith("right"), slim);
+        }
         pose.popPose();
     }
 
