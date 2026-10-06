@@ -372,6 +372,39 @@ def main():
         shutil.copyfile(src_path(BC + f"textures/gui/surgery_{name}.png"), os.path.join(ASSETS, dst))
         note(dst, BC + f"textures/gui/surgery_{name}.png")
 
+    # Хирургическая маска на голове (замечание 06.10: была над головой) — объёмная, на лице, с завязками;
+    # в руке и в инвентаре — плоская иконка.
+    mtex = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y in range(16):
+        for x in range(16):
+            if y < 12:
+                c = (150, 205, 228) if y % 3 else (118, 172, 200)   # складки ткани
+                mtex.putpixel((x, y), c + (255,))
+            else:
+                mtex.putpixel((x, y), (238, 242, 246, 255))           # завязки
+    mtex.save(os.path.join(ASSETS, "textures", "item", "surgical_mask_3d.png"))
+
+    def box(a, b, uv_front, uv_side=(0, 13, 16, 14)):
+        faces = {f: {"uv": list(uv_side), "texture": "#m"} for f in ("east", "west", "up", "down", "south")}
+        faces["north"] = {"uv": list(uv_front), "texture": "#m"}
+        return {"from": a, "to": b, "faces": faces}
+    mask3d = {"textures": {"m": "rpmedicine:item/surgical_mask_3d", "particle": "rpmedicine:item/surgical_mask"},
+              "elements": [
+                  box([3.6, 2.1, 0.9], [12.4, 6.0, 1.6], (0, 0, 16, 11)),           # полотно маски
+                  box([4.6, 6.0, 1.1], [11.4, 6.7, 1.6], (0, 0, 16, 2)),            # верх у носа
+                  box([1.3, 5.2, 1.2], [1.6, 5.7, 9.0], (0, 13, 16, 14)),           # завязка слева
+                  box([14.4, 5.2, 1.2], [14.7, 5.7, 9.0], (0, 13, 16, 14)),         # завязка справа
+                  box([1.3, 2.6, 1.2], [1.6, 3.1, 8.0], (0, 13, 16, 14)),
+                  box([14.4, 2.6, 1.2], [14.7, 3.1, 8.0], (0, 13, 16, 14)),
+              ],
+              "display": {"head": {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [1, 1, 1]}}}
+    write(os.path.join(ASSETS, "models", "item", "surgical_mask_worn.json"), mask3d)
+    flat_mask = flat("rpmedicine:item/surgical_mask")
+    write(os.path.join(ASSETS, "models", "item", "surgical_mask.json"), {
+        "loader": "forge:separate_transforms", "gui_light": "front",
+        "base": flat_mask,
+        "perspectives": {"head": {"parent": "rpmedicine:item/surgical_mask_worn"}}})
+
     # 3D-модели
     index, times = {}, {}
     for item, g in GEO.items():
