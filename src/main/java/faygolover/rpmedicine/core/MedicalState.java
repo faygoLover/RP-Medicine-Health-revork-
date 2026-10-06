@@ -65,6 +65,8 @@ public final class MedicalState {
     /** Осталось секунд вентиляции мешком Амбу и СЛР (продлеваются, пока медик удерживает действие). */
     public double ambuSeconds;
     public double cprSeconds;
+    /** Секунд после последней компрессии: разряд дефибриллятора — после цикла СЛР, не одновременно (замечание 15). */
+    public double cprRecentSeconds;
     /** Накоплено секунд СЛР для броска на запуск сердца. */
     public double cprAccum;
     public double hypoxiaSeconds;

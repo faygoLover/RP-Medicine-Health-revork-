@@ -59,6 +59,8 @@ ICONS = {
                         {(175, 205, 230): (232, 234, 238), (140, 175, 205): (206, 210, 216), (210, 225, 235): (244, 245, 247),
                          (200, 45, 45): (170, 30, 40)}),
     "test_tube": ("drawn", "test_tube"),
+    "dirty_test_tube": ("drawn", "dirty_test_tube"),
+    "dirty_syringe": ("recolor", MH + "textures/item/syringe_empty.png", None),
     "blood_sample": ("drawn", "blood_sample"),
     "lancet": ("drawn", "lancet"),
     # Диагностика
@@ -171,6 +173,16 @@ def load(spec):
         if kind == "drawn":
             return art_drawn.ICONS[spec[1]]
         im = Image.open(src_path(spec[1])).convert("RGBA")
+        if kind == "recolor" and spec[2] is None:
+            # Грязный: обесцветить и чуть затемнить в бурый.
+            px = im.load()
+            for y in range(im.size[1]):
+                for x in range(im.size[0]):
+                    r, g, b, a = px[x, y]
+                    if a:
+                        l = (r * 30 + g * 59 + b * 11) // 100
+                        px[x, y] = (min(255, l * 92 // 100 + 12), l * 88 // 100, l * 80 // 100, a)
+            return im
         if kind == "recolor":
             px = im.load()
             for y in range(im.size[1]):
@@ -260,6 +272,8 @@ def main():
     # Иконки
     for item, spec in ICONS.items():
         save_png(spec, f"textures/item/{item}.png")
+        if item not in GEO and item not in ("organ", "severed_limb"):
+            write(os.path.join(ASSETS, "models", "item", f"{item}.json"), flat(f"rpmedicine:item/{item}"))
     for _, name, spec in ORGAN_VARIANTS + LIMB_VARIANTS:
         save_png(spec, f"textures/item/{name}.png")
         write(os.path.join(ASSETS, "models", "item", f"{name}.json"), flat(f"rpmedicine:item/{name}"))
@@ -269,6 +283,13 @@ def main():
         {"predicate": {"rpmedicine:organ": i / 10}, "model": f"rpmedicine:item/{n}"} for i, n, _ in ORGAN_VARIANTS]))
     write(os.path.join(ASSETS, "models", "item", "severed_limb.json"), dict(flat("rpmedicine:item/severed_limb"), overrides=[
         {"predicate": {"rpmedicine:part": i / 10}, "model": f"rpmedicine:item/{n}"} for i, n, _ in LIMB_VARIANTS]))
+
+    # Фоны подсумка и аптечки (замечание 48): рисунки Tactical Medicine как есть, 1024×1024.
+    for dst, src in {"textures/gui/medical_pouch.png": TM + "textures/gui/ifak_pouch.png",
+                     "textures/gui/first_aid_kit.png": TM + "textures/gui/paramedic_backpack.png"}.items():
+        os.makedirs(os.path.dirname(os.path.join(ASSETS, dst)), exist_ok=True)
+        shutil.copyfile(src_path(src), os.path.join(ASSETS, dst))
+        note(dst, src)
 
     # 3D-модели
     index, times = {}, {}

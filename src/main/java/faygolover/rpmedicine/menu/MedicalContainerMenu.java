@@ -64,13 +64,21 @@ public class MedicalContainerMenu extends AbstractContainerMenu {
             handler.deserializeNBT(invTag);
         }
 
-        int cols = Math.min(9, size);
-        int rows = (size + 8) / 9;
-        int left = 8 + (9 - cols) * 9;
-        for (int i = 0; i < size; i++) {
-            addSlot(new SlotItemHandler(handler, i, left + (i % 9) * 18, 18 + (i / 9) * 18));
+        int top;
+        Layout lay = Layout.of(size);
+        if (lay != null) {
+            // Раскладка под фон из Tactical Medicine: подсумок IFAK (8) и рюкзак парамедика (20).
+            for (int i = 0; i < size; i++) addSlot(new SlotItemHandler(handler, i, lay.xs[i % lay.xs.length], lay.ys[i / lay.xs.length]));
+            top = lay.invTop;
+        } else {
+            int cols = Math.min(9, size);
+            int rows = (size + 8) / 9;
+            int left = 8 + (9 - cols) * 9;
+            for (int i = 0; i < size; i++) {
+                addSlot(new SlotItemHandler(handler, i, left + (i % 9) * 18, 18 + (i / 9) * 18));
+            }
+            top = 18 + rows * 18 + 14;
         }
-        int top = 18 + rows * 18 + 14;
         for (int r = 0; r < 3; r++)
             for (int c = 0; c < 9; c++)
                 addSlot(new Slot(inv, c + r * 9 + 9, 8 + c * 18, top + r * 18));
@@ -83,6 +91,19 @@ public class MedicalContainerMenu extends AbstractContainerMenu {
                 }
             });
         }
+    }
+
+    /** Раскладка ячеек под нарисованный фон: столбцы, строки, где начинается инвентарь, высота окна. */
+    public record Layout(int[] xs, int[] ys, int invTop, int height, int imageHeight, int texHeight, String texture) {
+        public static Layout of(int size) {
+            if (size == 8) return new Layout(new int[]{32, 64, 96, 128}, new int[]{50, 79}, 140, 223, 132, 770, "medical_pouch");
+            if (size == 20) return new Layout(new int[]{36, 58, 80, 102, 124}, new int[]{62, 83, 104, 125}, 163, 246, 155, 900, "first_aid_kit");
+            return null;
+        }
+    }
+
+    public int size() {
+        return handler.getSlots();
     }
 
     public int containerRows() {

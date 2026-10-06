@@ -97,7 +97,12 @@ public final class LabService {
         @Override
         public void complete() {
             ItemStack tube = actor.getMainHandItem();
-            if (!actor.getAbilities().instabuild) tube.shrink(1);
+            if (!actor.getAbilities().instabuild) {
+                tube.shrink(1);
+                // После анализа — использованная пробирка (стерилизатор вернёт чистую).
+                ItemStack used = new ItemStack(ModItems.DIRTY_TEST_TUBE.get());
+                if (!actor.getInventory().add(used)) actor.drop(used, false);
+            }
             MedicalSettings s = MedicalSettings.get();
             double err = Math.min(s.maxErrorChance, Math.max(0, LAB_MIN_LEVEL - level) * s.underLevelErrorPerLevel);
             if (RANDOM.nextDouble() < err) {

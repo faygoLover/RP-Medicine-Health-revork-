@@ -1,5 +1,7 @@
 package faygolover.rpmedicine.server;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import faygolover.rpmedicine.core.MedicalState;
 import faygolover.rpmedicine.core.Treatments;
 import faygolover.rpmedicine.network.PanelActionPacket;
@@ -27,8 +29,11 @@ public final class PanelActions {
         if (m == null) return;
         switch (p.kind()) {
             case APPLY_ITEM -> {
-                if (p.slot() < 0 || p.slot() >= sp.getInventory().getContainerSize()) return;
-                TreatmentService.startWithItem(sp, target, p.slot(), p.part());
+                int slot = p.slot();
+                // Из аптечки или подсумка: достать одну штуку в инвентарь и применить (замечание 47).
+                if (slot >= 10000) slot = takeFromContainer(sp, slot - 10000);
+                if (slot < 0 || slot >= sp.getInventory().getContainerSize()) return;
+                TreatmentService.startWithItem(sp, target, slot, p.part());
             }
             case REMOVE_DRESSING -> remove(sp, target, m, p, Treatments.Removal.DRESSING);
             case REMOVE_TOURNIQUET -> remove(sp, target, m, p, Treatments.Removal.TOURNIQUET);
@@ -48,6 +53,42 @@ public final class PanelActions {
             }
             default -> { }
         }
+    }
+
+    /** Достать одну штуку из ячейки контейнера в инвентарь; слот, куда легла, или −1. */
+    private static int takeFromContainer(ServerPlayer sp, int code) {
+        int invSlot = code / 100;
+        int inner = code % 100;
+        var inv = sp.getInventory();
+        if (invSlot < 0 || invSlot >= inv.getContainerSize()) return -1;
+        ItemStack bag = inv.getItem(invSlot);
+        if (!(bag.getItem() instanceof faygolover.rpmedicine.item.MedicalContainerItem) || !bag.hasTag()
+                || !bag.getTag().contains("Inventory")) return -1;
+        var invTag = bag.getTag().getCompound("Inventory");
+        var list = invTag.getList("Items", net.minecraft.nbt.Tag.TAG_COMPOUND);
+        for (int k = 0; k < list.size(); k++) {
+            var it = list.getCompound(k);
+            if (it.getInt("Slot") != inner) continue;
+            ItemStack st = ItemStack.of(it);
+            if (st.isEmpty()) return -1;
+            ItemStack one = st.split(1);
+            int free = inv.getFreeSlot();
+            if (free < 0) {
+                sp.displayClientMessage(Component.translatable("rpmedicine.refuse.inventory_full").withStyle(ChatFormatting.YELLOW), true);
+                return -1;
+            }
+            inv.setItem(free, one);
+            if (st.isEmpty()) list.remove(k);
+            else {
+                CompoundTag nt = st.save(new CompoundTag());
+                nt.putInt("Slot", inner);
+                list.set(k, nt);
+            }
+            invTag.put("Items", list);
+            bag.getTag().put("Inventory", invTag);
+            return free;
+        }
+        return -1;
     }
 
     /** Остановить капельницу: несовместимую кровь надо снять (второй этап, п. 4.2). */

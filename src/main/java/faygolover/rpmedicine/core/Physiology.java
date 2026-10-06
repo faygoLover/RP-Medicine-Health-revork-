@@ -57,6 +57,7 @@ public final class Physiology {
         m.txaSeconds = dec(m.txaSeconds, dt);
         m.ambuSeconds = dec(m.ambuSeconds, dt);
         m.cprSeconds = dec(m.cprSeconds, dt);
+        m.cprRecentSeconds = dec(m.cprRecentSeconds, dt);
         m.healBoostSeconds = dec(m.healBoostSeconds, dt);
         m.concussionKoSeconds = dec(m.concussionKoSeconds, dt);
         m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * (1 + m.effect(DrugEffect.CONCUSSION_RELIEF)) * dt);
@@ -255,7 +256,9 @@ public final class Physiology {
         }
         // Переливание крови: настоящая кровь, несёт кислород.
         if (m.bloodDripRemaining > 0 && in.still) {
-            double add = Math.min(m.bloodDripRemaining, m.bloodDripRate * in.dripFactor * dt);
+            // У лежачего в шоке кровь льют струйно — быстрее (замечание 19).
+            double fast = m.down != Down.NONE ? s.dripDownedFactor : 1.0;
+            double add = Math.min(m.bloodDripRemaining, m.bloodDripRate * in.dripFactor * fast * dt);
             m.bloodDripRemaining -= add;
             transfuse(m, add, in, s, r);
         }
@@ -540,6 +543,19 @@ public final class Physiology {
     }
 
     /** Можно ли запустить сердце: объём крови, напряжённый пневмоторакс, массивное кровотечение. */
+    /**
+     * Что мешает запустить сердце (ключ для подсказки медику) или null. Причины, как в {@link #canRestartHeart}.
+     */
+    public static String restartBlocker(MedicalState m, MedicalSettings s) {
+        if (m.bloodFraction(s) <= 1 - s.arrestBloodLossFraction + 0.05) return "low_blood";
+        if (m.pneumo == Pneumo.TENSION) return "tension_pneumo";
+        if (m.organ(Organ.HEART) >= 100) return "heart_destroyed";
+        for (BodyPartState ps : m.parts) {
+            if (ps.arterial && !isUnderTourniquet(m, ps.part)) return "arterial";
+        }
+        return null;
+    }
+
     public static boolean canRestartHeart(MedicalState m, MedicalSettings s) {
         if (m.bloodFraction(s) <= 1 - s.arrestBloodLossFraction + 0.05) return false;
         if (m.pneumo == Pneumo.TENSION) return false;

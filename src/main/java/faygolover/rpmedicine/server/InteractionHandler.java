@@ -150,6 +150,21 @@ public final class InteractionHandler {
             event.setCancellationResult(InteractionResult.SUCCESS);
             return;
         }
+        // Стерилизатор: грязные шприцы и пробирки (вся стопка) снова чистые.
+        if ((p.getMainHandItem().is(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get())
+                || p.getMainHandItem().is(faygolover.rpmedicine.registry.ModItems.DIRTY_TEST_TUBE.get()))
+                && HospitalBlocks.is(event.getLevel().getBlockState(event.getPos()), faygolover.rpmedicine.hospital.HospitalFunction.STERILIZER)) {
+            if (!event.getLevel().isClientSide) {
+                ItemStack dirty = p.getMainHandItem();
+                var clean = dirty.is(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get())
+                        ? faygolover.rpmedicine.registry.ModItems.SYRINGE.get() : faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get();
+                p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(clean, dirty.getCount()));
+                p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.sterilized"), true);
+            }
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            return;
+        }
         // Стерилизатор: инструмент в руке снова стерилен (второй этап, п. 2.1).
         if (p.getMainHandItem().getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem
                 && HospitalBlocks.is(event.getLevel().getBlockState(event.getPos()), faygolover.rpmedicine.hospital.HospitalFunction.STERILIZER)) {

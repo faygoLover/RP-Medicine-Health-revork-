@@ -46,8 +46,8 @@ public final class ModItems {
     public static final RegistryObject<Item> DEFIBRILLATOR = tool("defibrillator", () -> new MedicalItem(new Item.Properties().durability(10)));
     public static final RegistryObject<Item> PULSE_OXIMETER = tool("pulse_oximeter", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> TONOMETER = tool("tonometer", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> MEDICAL_POUCH = tool("medical_pouch", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 6));
-    public static final RegistryObject<Item> FIRST_AID_KIT = tool("first_aid_kit", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 15));
+    public static final RegistryObject<Item> MEDICAL_POUCH = tool("medical_pouch", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 8));
+    public static final RegistryObject<Item> FIRST_AID_KIT = tool("first_aid_kit", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 20));
     // Второй этап
     public static final RegistryObject<Item> EMPTY_BLOOD_BAG = medical("empty_blood_bag", 16);
     public static final RegistryObject<Item> BLOOD_BAG = tool("blood_bag", () -> new faygolover.rpmedicine.item.BloodBagItem(new Item.Properties().stacksTo(1)));
@@ -74,6 +74,9 @@ public final class ModItems {
     /** Пустой шприц: с ним медик (4+) сам выбирает дозу препарата для укола или капельницы. */
     public static final RegistryObject<Item> SYRINGE = medical("syringe", 16);
     public static final RegistryObject<Item> BLOOD_DRAW_SYRINGE = medical("blood_draw_syringe", 16);
+    /** Использованные: стерилизатор возвращает чистыми (замечание 42). */
+    public static final RegistryObject<Item> DIRTY_SYRINGE = medical("dirty_syringe", 16);
+    public static final RegistryObject<Item> DIRTY_TEST_TUBE = medical("dirty_test_tube", 16);
     public static final RegistryObject<Item> BLOOD_SAMPLE = tool("blood_sample", () -> new faygolover.rpmedicine.item.BloodSampleItem(new Item.Properties().stacksTo(1)));
     // Пули, швы (второй этап, п. 8)
     public static final RegistryObject<Item> SURGICAL_TWEEZERS = tool("surgical_tweezers", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
@@ -138,8 +141,8 @@ public final class ModItems {
             "decompression_needle", "airway", "ambu_bag", "laryngoscope", "endotracheal_tube", "defibrillator", "ammonia",
             "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
-            "propofol", "insulin", "syringe",
-            "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "blood_draw_syringe", "test_tube", "blood_sample", "lancet",
+            "propofol", "insulin", "syringe", "dirty_syringe",
+            "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "blood_draw_syringe", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
             "surgical_drill", "osteosynthesis_kit", "chest_drain", "bone_saw",

@@ -936,6 +936,26 @@ t("rpmedicine.medcard.entry.lab_nutrition", "Анализ крови: альбу
 # --- конец пачки 05.10 ---
 # --- пачка 06.10: совместная проверка и внешний вид ---
 t("rpmedicine.medcard.vitals", "Кровь, рост, вес (меняет ГМ)", "Blood, height, weight (set by the GM)")
+t("rpmedicine.settings.no_minigames", "Без мини-игр (прогресс-бар)", "No minigames (progress bar)")
+t("item.rpmedicine.dirty_syringe", "Использованный шприц", "Used syringe")
+t("item.rpmedicine.dirty_syringe.desc", "Нестерильный. Стерилизатор (ПКМ) вернёт чистым.", "Not sterile. A sterilizer (right-click) makes it clean again.")
+t("item.rpmedicine.dirty_test_tube", "Использованная пробирка", "Used test tube")
+t("item.rpmedicine.dirty_test_tube.desc", "После анализа. Стерилизатор (ПКМ) вернёт чистой.", "After a test. A sterilizer (right-click) makes it clean again.")
+t("rpmedicine.tooltip.shelf_cold", "В холоде: годен ещё ~%s", "Chilled: good for ~%s more")
+t("rpmedicine.tooltip.shelf_warm", "В тепле: годен ещё ~%s (без холодильника — %s)", "Warm: good for ~%s more (%s without a fridge)")
+t("rpmedicine.unit.days", "дн.", "d")
+t("rpmedicine.unit.hours", "ч", "h")
+t("rpmedicine.unit.minutes", "мин", "min")
+t("rpmedicine.refuse.defib_cpr_first", "Сердце остановлено: сначала СЛР, разряд — сразу после компрессий", "Cardiac arrest: CPR first, shock right after compressions")
+t("rpmedicine.hint.restart_low_blood", "Сердце не заведётся: слишком мало крови — перелейте кровь", "The heart won"t restart: too little blood — transfuse")
+t("rpmedicine.hint.restart_tension_pneumo", "Сердце не заведётся: напряжённый пневмоторакс — декомпрессия", "The heart won"t restart: tension pneumothorax — decompress")
+t("rpmedicine.hint.restart_heart_destroyed", "Сердце разрушено — запустить нельзя", "The heart is destroyed — it can"t be restarted")
+t("rpmedicine.hint.restart_arterial", "Сердце не заведётся: артериальное кровотечение — остановите его", "The heart won"t restart: arterial bleeding — stop it first")
+t("rpmedicine.treat.shock_blocked_low_blood", "Разряд без толку: слишком мало крови — перелейте кровь", "Shock had no effect: too little blood — transfuse")
+t("rpmedicine.treat.shock_blocked_tension_pneumo", "Разряд без толку: напряжённый пневмоторакс — декомпрессия", "Shock had no effect: tension pneumothorax — decompress")
+t("rpmedicine.treat.shock_blocked_heart_destroyed", "Разряд без толку: сердце разрушено", "Shock had no effect: the heart is destroyed")
+t("rpmedicine.treat.shock_blocked_arterial", "Разряд без толку: артериальное кровотечение — остановите его", "Shock had no effect: arterial bleeding — stop it first")
+t("rpmedicine.refuse.inventory_full", "Нет места в инвентаре, чтобы достать из аптечки", "No inventory space to take it out of the kit")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

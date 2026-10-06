@@ -88,8 +88,10 @@ public final class TreatmentService {
         TreatmentAction action = spec.action();
         Treatments.Extra extra = extraFor(stack, actor, target, action);
         // Шприц и ампула: медик с нужным уровнем сам выбирает дозу укола или капельницы.
-        if (dose == null && extra instanceof faygolover.rpmedicine.core.Drug drug
+        boolean dosable = extra instanceof faygolover.rpmedicine.core.Drug drug
                 && (drug.form() == faygolover.rpmedicine.core.Drug.Form.INJECTION || drug.form() == faygolover.rpmedicine.core.Drug.Form.DRIP)
+                || Treatments.DOSE_ACTIONS.contains(action);
+        if (dose == null && dosable
                 && Medical.medicineLevel(actor) >= MedicalSettings.get().dosingMinLevel
                 && hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
             faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.DosePacket.Request(
@@ -97,6 +99,7 @@ public final class TreatmentService {
             return true;
         }
         if (dose != null && extra instanceof faygolover.rpmedicine.core.Drug drug) extra = new Treatments.Dosed(drug, dose);
+        else if (dose != null && Treatments.DOSE_ACTIONS.contains(action)) extra = new Treatments.ActionDose(dose);
         if (action.target == TreatmentAction.Target.HOLD) {
             hold(actor, target, action, spec.minLevel());
             return true;
@@ -164,7 +167,7 @@ public final class TreatmentService {
         // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
         // Операция — всегда мини-игрой на сцене тела (решения, п. 1.14), даже в бою.
         Minigames.Type surgical = p != null ? Minigames.surgeryType(action, m, m.part(p)) : null;
-        Minigames.Type mg = forced ? null : surgical != null ? (s.minigamesEnabled ? surgical : null) : MinigameService.minigameFor(actor, target, m,
+        Minigames.Type mg = forced ? null : surgical != null ? (s.minigamesEnabled && !MinigameService.prefersBar(actor) ? surgical : null) : MinigameService.minigameFor(actor, target, m,
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
         Minigames.Scene scene = surgical != null ? Minigames.Scene.of(m, p, target.getUUID().getLeastSignificantBits() ^ p.ordinal() * 0x9E3779B97F4A7C15L)
                 : Minigames.Scene.NONE;
@@ -176,7 +179,9 @@ public final class TreatmentService {
             TreatmentTimedAction probe = new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand);
             final Double dose0 = dose;
             MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), scene, q -> {
-                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand).withQuality(q).withDose(dose0);
+                // Забор крови: игла в вене — дальше кровь набирается сама, стоять на месте (замечание 38).
+                int after = action == TreatmentAction.BLOOD_COLLECT ? (int) Math.round(seconds * 20) : 1;
+                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, after, level, fromHand).withQuality(q).withDose(dose0);
                 return new TreatmentTimedAction(actor, target, part0, spec, slot, copy,
                         (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor).withDose(dose0);
             }, probe::checkItem);
@@ -212,6 +217,13 @@ public final class TreatmentService {
     }
 
     /** Потратить один предмет из инвентаря (в творческом — не тратится). */
+    /** Отдать использованный предмет (грязный шприц, пробирку) — в инвентарь или под ноги. */
+    static void giveWaste(ServerPlayer actor, net.minecraft.world.item.Item item) {
+        if (actor.getAbilities().instabuild) return;
+        ItemStack st = new ItemStack(item);
+        if (!actor.getInventory().add(st)) actor.drop(st, false);
+    }
+
     static boolean consumeItem(ServerPlayer actor, net.minecraft.world.item.Item item) {
         if (actor.getAbilities().instabuild) return true;
         var inv = actor.getInventory();
@@ -488,6 +500,15 @@ public final class TreatmentService {
             if (fromHand && slot < 9 && actor.getInventory().selected != slot) return "rpmedicine.action.item_changed";
             if (still && !Medical.isDown(target) && target.position().distanceToSqr(startPos) > 0.35 * 0.35)
                 return "rpmedicine.action.target_moved";
+            // Состояние изменилось по ходу (поставили другую капельницу, кончилась СЛР) — прервать сразу.
+            if (!forced) {
+                MedicalState m = Medical.state(target);
+                if (m != null) {
+                    String why = Treatments.check(m, part, spec.action(), MedicalSettings.get(),
+                            extraFor(actor.getInventory().getItem(slot), actor, target, spec.action()));
+                    if (why != null && !why.equals("not_needed")) return "rpmedicine.refuse." + why;
+                }
+            }
             return actorRefusal(actor, target);
         }
 
@@ -498,13 +519,14 @@ public final class TreatmentService {
             MedicalSettings s = MedicalSettings.get();
             // Повторная проверка: за время применения состояние могло измениться.
             Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor, target, spec.action());
-            if (dose != null && extra instanceof faygolover.rpmedicine.core.Drug drug) {
-                // Шприц тратится на каждый укол с выбранной дозой.
+            if (dose != null && (extra instanceof faygolover.rpmedicine.core.Drug || Treatments.DOSE_ACTIONS.contains(spec.action()))) {
+                // Шприц тратится на каждый укол с выбранной дозой (и в творческом режиме — для проверки расхода).
                 if (!consumeItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
                     actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_syringe").withStyle(ChatFormatting.YELLOW), true);
                     return;
                 }
-                extra = new Treatments.Dosed(drug, dose);
+                giveWaste(actor, faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
+                extra = extra instanceof faygolover.rpmedicine.core.Drug drug ? new Treatments.Dosed(drug, dose) : new Treatments.ActionDose(dose);
             }
             String why = Treatments.check(m, part, spec.action(), s, extra);
             if (forced && why != null && Treatments.FORCEABLE.contains(why)) {
@@ -555,7 +577,12 @@ public final class TreatmentService {
             }
             faygolover.rpmedicine.stats.StatsService.treatment(actor, target, String.valueOf(net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(original.getItem())),
                     spec.action().id, part, r.key, error);
-            if (r.consumed && spec.consume()) consume();
+            if (r.consumed && spec.consume()) {
+                consume();
+                // Шприц для забора после укола — грязный, а не исчезает.
+                if (original.is(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get()))
+                    giveWaste(actor, faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
+            }
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
             if (spec.action() == TreatmentAction.BLOOD_SAMPLE && r.applied) {
                 // Пустая пробирка становится пробиркой с кровью.
@@ -681,6 +708,9 @@ public final class TreatmentService {
         }
     }
 
+    /** Когда в последний раз подсказывали медику, что мешает запустить сердце (тики). */
+    private static final Map<UUID, Long> LAST_HINT = new HashMap<>();
+
     private record HoldInfo(LivingEntity target, TreatmentAction action, int minLevel) {}
 
     private static final Map<UUID, HoldInfo> HOLD_INFO = new HashMap<>();
@@ -702,6 +732,14 @@ public final class TreatmentService {
         if (ambu) m.ambuSeconds = Math.max(m.ambuSeconds, 1.5 + 3.5 * q);
         else {
             m.cprSeconds = Math.max(m.cprSeconds, 0.35 + 0.9 * q);
+            m.cprRecentSeconds = s.defibAfterCprSeconds;
+            // Сердце не заведётся, пока есть причина: подсказать медику, что мешает (замечание 11).
+            String blocker = m.heart != MedicalState.Heart.NORMAL ? faygolover.rpmedicine.core.Physiology.restartBlocker(m, s) : null;
+            long now = actor.serverLevel().getGameTime();
+            if (blocker != null && now - LAST_HINT.getOrDefault(actor.getUUID(), 0L) > 120) {
+                LAST_HINT.put(actor.getUUID(), now);
+                actor.displayClientMessage(Component.translatable("rpmedicine.hint.restart_" + blocker).withStyle(ChatFormatting.GOLD), true);
+            }
             // Компрессия видна: рука опускается только на нажатие пробела (замечание 16).
             actor.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
         }

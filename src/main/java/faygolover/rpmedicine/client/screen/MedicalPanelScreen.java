@@ -242,7 +242,7 @@ public class MedicalPanelScreen extends Screen {
         }
         super.render(g, mx, my, pt);
         if (dragSlot >= 0) {
-            ItemStack s = minecraft.player.getInventory().getItem(dragSlot);
+            ItemStack s = dragStack();
             g.renderItem(s, mx - 8, my - 8);
         } else {
             int slot = itemAt(mx, my);
@@ -303,14 +303,49 @@ public class MedicalPanelScreen extends Screen {
         return null;
     }
 
-    private List<Integer> medicalSlots() {
-        List<Integer> out = new ArrayList<>();
+    /**
+     * Медпредмет в панели: одна ячейка на одинаковые предметы с общим количеством (замечание 46),
+     * включая содержимое аптечек и подсумков (замечание 47). {@code ref} — слот инвентаря или
+     * {@link #CONTAINER_REF} + слот_контейнера × 100 + ячейка внутри.
+     */
+    private record PanelItem(ItemStack stack, int count, int ref) {}
+
+    public static final int CONTAINER_REF = 10000;
+
+    private List<PanelItem> medicalItems() {
+        List<PanelItem> out = new ArrayList<>();
         Inventory inv = minecraft.player.getInventory();
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
-            if (!s.isEmpty() && s.is(MedicalContainerMenu.MEDICAL_ITEMS)) out.add(i);
+            if (s.isEmpty()) continue;
+            if (s.getItem() instanceof faygolover.rpmedicine.item.MedicalContainerItem) {
+                var tag = s.getTag();
+                if (tag != null && tag.contains("Inventory")) {
+                    var items = tag.getCompound("Inventory").getList("Items", net.minecraft.nbt.Tag.TAG_COMPOUND);
+                    for (int k = 0; k < items.size(); k++) {
+                        var it = items.getCompound(k);
+                        ItemStack inner = ItemStack.of(it);
+                        if (!inner.isEmpty()) add(out, inner, CONTAINER_REF + i * 100 + it.getInt("Slot"));
+                    }
+                }
+                continue;
+            }
+            if (s.is(MedicalContainerMenu.MEDICAL_ITEMS)) add(out, s, i);
         }
         return out;
+    }
+
+    private static void add(List<PanelItem> out, ItemStack s, int ref) {
+        for (int k = 0; k < out.size(); k++) {
+            PanelItem e = out.get(k);
+            if (ItemStack.isSameItemSameTags(e.stack(), s)) {
+                // Предпочитаем слот инвентаря: из него быстрее.
+                int r = e.ref() < CONTAINER_REF ? e.ref() : ref;
+                out.set(k, new PanelItem(e.stack(), e.count() + s.getCount(), r));
+                return;
+            }
+        }
+        out.add(new PanelItem(s.copy(), s.getCount(), ref));
     }
 
     private int itemsX() {
@@ -322,30 +357,51 @@ public class MedicalPanelScreen extends Screen {
     }
 
     private static final int MAX_ITEMS = 15;
+    /** Прокрутка ряда предметов колёсиком (замечание 45). */
+    private int itemScroll;
 
     private void drawItems(GuiGraphics g, int mx, int my) {
-        List<Integer> slots = medicalSlots();
+        List<PanelItem> items = medicalItems();
+        itemScroll = Math.max(0, Math.min(itemScroll, items.size() - MAX_ITEMS));
         int x = itemsX();
         int y = itemsY() - 10;
         g.drawString(font, Component.translatable("rpmedicine.panel.drag_hint").withStyle(ChatFormatting.DARK_GRAY), x, y, 0xFFFFFF);
-        for (int i = 0; i < slots.size() && i < MAX_ITEMS; i++) {
+        for (int i = 0; i < MAX_ITEMS && i + itemScroll < items.size(); i++) {
+            PanelItem it = items.get(i + itemScroll);
             int sx = x + i * 19;
-            g.fill(sx - 1, itemsY() - 1, sx + 17, itemsY() + 17, 0x80303840);
-            ItemStack s = minecraft.player.getInventory().getItem(slots.get(i));
-            if (slots.get(i) != dragSlot) {
-                g.renderItem(s, sx, itemsY());
-                g.renderItemDecorations(font, s, sx, itemsY());
+            g.fill(sx - 1, itemsY() - 1, sx + 17, itemsY() + 17, it.ref() >= CONTAINER_REF ? 0x80403828 : 0x80303840);
+            if (it.ref() != dragSlot) {
+                g.renderItem(it.stack(), sx, itemsY());
+                g.renderItemDecorations(font, it.stack(), sx, itemsY(), it.count() > 1 ? String.valueOf(it.count()) : null);
             }
         }
+        // Стрелки прокрутки.
+        if (itemScroll > 0) g.drawString(font, "◀", x - 9, itemsY() + 4, 0xC0C0C0);
+        if (itemScroll + MAX_ITEMS < items.size()) g.drawString(font, "▶", x + MAX_ITEMS * 19, itemsY() + 4, 0xC0C0C0);
     }
 
     private int itemAt(double mx, double my) {
-        List<Integer> slots = medicalSlots();
-        for (int i = 0; i < slots.size() && i < MAX_ITEMS; i++) {
+        List<PanelItem> items = medicalItems();
+        for (int i = 0; i < MAX_ITEMS && i + itemScroll < items.size(); i++) {
             int sx = itemsX() + i * 19;
-            if (mx >= sx && mx < sx + 16 && my >= itemsY() && my < itemsY() + 16) return slots.get(i);
+            if (mx >= sx && mx < sx + 16 && my >= itemsY() && my < itemsY() + 16) return items.get(i + itemScroll).ref();
         }
         return -1;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mx, double my, double delta) {
+        if (my >= itemsY() - 12 && my < itemsY() + 18) {
+            itemScroll = Math.max(0, itemScroll - (int) Math.signum(delta));
+            return true;
+        }
+        return super.mouseScrolled(mx, my, delta);
+    }
+
+    /** Предмет под курсором при перетаскивании (для иконки у мыши). */
+    private ItemStack dragStack() {
+        for (PanelItem it : medicalItems()) if (it.ref() == dragSlot) return it.stack();
+        return ItemStack.EMPTY;
     }
 
     @Override

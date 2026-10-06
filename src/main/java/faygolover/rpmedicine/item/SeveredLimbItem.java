@@ -58,7 +58,13 @@ public class SeveredLimbItem extends MedicalItem implements Perishable.Item {
         super.appendHoverText(st, level, tooltip, flag);
         if (st.hasTag() && st.getTag().contains("OwnerName"))
             tooltip.add(Component.translatable("rpmedicine.tooltip.limb_owner", st.getTag().getString("OwnerName")).withStyle(ChatFormatting.GRAY));
-        if (level != null && spoiled(st, level.getGameTime()))
+        if (level != null && spoiled(st, level.getGameTime())) {
             tooltip.add(Component.translatable("rpmedicine.tooltip.organ_spoiled").withStyle(ChatFormatting.DARK_RED));
+        } else if (level != null && Perishable.started(st)) {
+            var s = faygolover.rpmedicine.core.MedicalSettings.get();
+            long now = level.getGameTime();
+            tooltip.add(Perishable.shelfLine(Perishable.cold(st), Perishable.warmTicks(st, now), Perishable.ageTicks(st, now),
+                    s.organSpoilWarmHours, s.limbReattachHours));
+        }
     }
 }

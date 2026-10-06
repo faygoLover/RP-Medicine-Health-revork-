@@ -84,6 +84,19 @@ public final class Treatments {
     /** Препарат с выбранной дозой (шприц и ампула, медицина 4+): 1 — стандартная доза инъектора. */
     public record Dosed(Drug drug, double dose) implements Extra {}
 
+    /** Доза шприцем для встроенных уколов (морфин, адреналин, ТХК): доля стандартной, 0,5–2 (замечание 66). */
+    public record ActionDose(double dose) implements Extra {}
+
+    /** Действия, для которых медик со шприцем выбирает дозу. */
+    public static final java.util.Set<TreatmentAction> DOSE_ACTIONS = java.util.EnumSet.of(TreatmentAction.MORPHINE,
+            TreatmentAction.ADRENALINE, TreatmentAction.TXA);
+
+    /** Действующая доза с поправкой на вес: стандартная рассчитана на 70 кг. */
+    static double effectiveDose(MedicalState m, Extra extra) {
+        if (!(extra instanceof ActionDose ad)) return 1.0;
+        return ad.dose() * 70.0 / Math.max(30.0, m.weightKg);
+    }
+
     /** Препарат из «содержимого» предмета (с дозой или без). */
     public static Drug drugOf(Extra extra) {
         if (extra instanceof Drug d) return d;
@@ -201,8 +214,9 @@ public final class Treatments {
             }
             case DEFIBRILLATOR -> {
                 if (m.heart == Heart.FIBRILLATION) return null;
-                if (m.down == Down.CLINICAL && m.cprSeconds > 0) return null;
-                return "no_shockable";
+                // Остановка: разряд после цикла СЛР (компрессии были недавно), а не одновременно с ней.
+                if (m.heart != Heart.NORMAL && (m.cprSeconds > 0 || m.cprRecentSeconds > 0)) return null;
+                return m.heart != Heart.NORMAL ? "defib_cpr_first" : "no_shockable";
             }
             case CPR -> {
                 return m.heart != Heart.NORMAL ? null : "pulse_present";
@@ -451,10 +465,12 @@ public final class Treatments {
                 return error ? Result.failed("dose_partial") : Result.ok("painkiller_taken");
             }
             case MORPHINE -> {
-                boolean overdose = m.morphineSeconds > 0;
+                double dz = effectiveDose(m, extra);
+                // Повторная доза или больше полуторной на вес пациента — передозировка.
+                boolean overdose = m.morphineSeconds > 0 || dz >= 1.5;
                 m.morphineDelay = m.morphineSeconds > 0 ? 0 : s.morphineDelaySeconds;
-                m.morphineSeconds = s.morphineMinutes * 60.0 * (error ? 0.5 : 1.0) * Substances.durationFactor(m, Substance.OPIOID);
-                Substances.dose(m, Substance.OPIOID, 1.0, PatientTraits.NONE, rnd, s);
+                m.morphineSeconds = s.morphineMinutes * 60.0 * (error ? 0.5 : 1.0) * Math.min(2.0, dz) * Substances.durationFactor(m, Substance.OPIOID);
+                Substances.dose(m, Substance.OPIOID, dz, PatientTraits.NONE, rnd, s);
                 if (overdose) {
                     m.morphineOverdoseSeconds = s.morphineMinutes * 30.0;
                     if (rnd.nextDouble() < s.morphineOverdoseArrestChance) m.respiratoryArrest = true;
@@ -464,8 +480,12 @@ public final class Treatments {
             }
             case ADRENALINE -> {
                 boolean healthy = m.heart == Heart.NORMAL && m.down == Down.NONE && m.pressure >= 90;
-                m.adrenalineInjectionSeconds = s.adrenalineInjectionSeconds * (error ? 0.5 : 1.0);
-                if (healthy && rnd.nextDouble() < s.adrenalineHealthyFibrillationChance) {
+                double dz = effectiveDose(m, extra);
+                m.adrenalineInjectionSeconds = s.adrenalineInjectionSeconds * (error ? 0.5 : 1.0) * Math.min(2.0, dz);
+                // Двойная доза на вес может сорвать ритм и у лежачего.
+                double fib = healthy ? s.adrenalineHealthyFibrillationChance : 0;
+                if (dz >= 1.75 && m.heart == Heart.NORMAL) fib = Math.max(fib, s.adrenalineHealthyFibrillationChance * dz);
+                if (rnd.nextDouble() < fib) {
                     m.heart = Heart.FIBRILLATION;
                     m.fibrillationSeconds = 0;
                     return Result.ok("adrenaline_harm");
@@ -473,7 +493,7 @@ public final class Treatments {
                 return error ? Result.failed("dose_partial") : Result.ok("adrenaline_injected");
             }
             case TXA -> {
-                m.txaSeconds = s.txaMinutes * 60.0 * (error ? 0.5 : 1.0);
+                m.txaSeconds = s.txaMinutes * 60.0 * (error ? 0.5 : 1.0) * Math.min(2.0, effectiveDose(m, extra));
                 return error ? Result.failed("dose_partial") : Result.ok("txa_injected");
             }
             case SURGICAL_KIT -> {
@@ -536,7 +556,9 @@ public final class Treatments {
                     Physiology.restartHeart(m, s);
                     return Result.ok("rhythm_restored");
                 }
-                return Result.ok("shock_no_effect");
+                // Не завелось: если есть причина — назвать её (замечание 11).
+                String blocker = m.heart == Heart.FIBRILLATION ? null : Physiology.restartBlocker(m, s);
+                return Result.ok(blocker != null ? "shock_blocked_" + blocker : "shock_no_effect");
             }
             case PULSE_OXIMETER -> {
                 boolean pulse = m.heart == Heart.NORMAL;

@@ -58,6 +58,34 @@ public final class Perishable {
         t.putBoolean(COLD, cold);
     }
 
+    /**
+     * Строка подсказки о сроке: «в холоде, ещё ~N» или «осталось ~N в тепле» (замечание 37).
+     * Время — реальное (тики сервера), как и порча.
+     */
+    public static net.minecraft.network.chat.Component shelfLine(boolean cold, long warmTicks, long ageTicks, double warmHours, double maxHours) {
+        long warmLeft = Math.max(0, (long) (warmHours * 72000) - warmTicks);
+        long totalLeft = Math.max(0, (long) (maxHours * 72000) - ageTicks);
+        long left = cold ? totalLeft : Math.min(warmLeft, totalLeft);
+        String time = duration(left);
+        return cold
+                ? net.minecraft.network.chat.Component.translatable("rpmedicine.tooltip.shelf_cold", time).withStyle(net.minecraft.ChatFormatting.AQUA)
+                : net.minecraft.network.chat.Component.translatable("rpmedicine.tooltip.shelf_warm", time,
+                duration(warmLeft)).withStyle(net.minecraft.ChatFormatting.GRAY);
+    }
+
+    /** Тики → «2 ч 15 мин» / «40 мин» / «3 дн». */
+    public static String duration(long ticks) {
+        long min = ticks / 1200;
+        if (min >= 48 * 60) return (min / (24 * 60)) + " " + net.minecraft.network.chat.Component.translatable("rpmedicine.unit.days").getString();
+        if (min >= 60) return (min / 60) + " " + net.minecraft.network.chat.Component.translatable("rpmedicine.unit.hours").getString()
+                + (min % 60 > 0 ? " " + (min % 60) + " " + net.minecraft.network.chat.Component.translatable("rpmedicine.unit.minutes").getString() : "");
+        return Math.max(1, min) + " " + net.minecraft.network.chat.Component.translatable("rpmedicine.unit.minutes").getString();
+    }
+
+    public static boolean cold(ItemStack st) {
+        return st.hasTag() && st.getTag().getBoolean(COLD);
+    }
+
     /** В инвентаре — снова тепло. */
     public static void inventoryTick(ItemStack st, long now) {
         if (st.hasTag() && st.getTag().getBoolean(COLD)) setCold(st, false, now);

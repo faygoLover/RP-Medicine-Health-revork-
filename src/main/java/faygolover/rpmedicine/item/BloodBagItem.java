@@ -102,9 +102,14 @@ public class BloodBagItem extends MedicalItem {
         if (!stack.hasTag() || !stack.getTag().contains(COLLECTED)) return;
         BloodType type = type(stack);
         tooltip.add(Component.translatable("rpmedicine.tooltip.blood_type", type != null ? type.label : "?").withStyle(ChatFormatting.RED));
-        if (level != null && isSpoiled(stack, level.getGameTime()))
+        if (level != null && isSpoiled(stack, level.getGameTime())) {
             tooltip.add(Component.translatable("rpmedicine.tooltip.blood_spoiled").withStyle(ChatFormatting.DARK_RED));
-        else
-            tooltip.add(Component.translatable("rpmedicine.tooltip.blood_fresh").withStyle(ChatFormatting.GRAY));
+        } else if (level != null) {
+            // Срок хранения и холод (замечание 37).
+            MedicalSettings s = MedicalSettings.get();
+            long now = level.getGameTime();
+            tooltip.add(Perishable.shelfLine(stack.getTag().getBoolean(COLD), warmTicks(stack, now), now - stack.getTag().getLong(COLLECTED),
+                    s.bloodSpoilWarmHours, s.bloodSpoilFridgeDays * 24));
+        }
     }
 }

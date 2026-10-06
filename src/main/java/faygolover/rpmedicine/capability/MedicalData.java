@@ -69,6 +69,8 @@ public final class MedicalData {
     public int skillOverride = -1;
     /** Личная настройка игрока: оставлять тело-заглушку при выходе (приходит с клиента, не сохраняется). */
     public boolean leaveBody = true;
+    /** Личная настройка «без мини-игр»: всегда прогресс-бар. */
+    public boolean noMinigames;
     /** Последняя разосланная маска невидимых конечностей (−1 — ещё не рассылали). */
     public int sentLimbMask = -1;
 

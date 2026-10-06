@@ -37,8 +37,16 @@ public final class MinigameService {
     public static Minigames.Type minigameFor(ServerPlayer actor, LivingEntity target, MedicalState m, @Nullable Minigames.Type type) {
         MedicalSettings s = MedicalSettings.get();
         if (!s.minigamesEnabled || type == null) return null;
-        if (Minigames.combat(m, recentlyHurt(actor) || recentlyHurt(target), s)) return null;
+        if (!s.minigamesInCombat && Minigames.combat(m, recentlyHurt(actor) || recentlyHurt(target), s)) return null;
+        if (prefersBar(actor)) return null;
         return type;
+    }
+
+    /** Игрок выбрал «без мини-игр» — прогресс-бар, если сервер разрешает отказ от мини-игр. */
+    public static boolean prefersBar(ServerPlayer actor) {
+        if (!MedicalSettings.get().minigameRefuseAllowed) return false;
+        var d = Medical.data(actor);
+        return d != null && d.noMinigames;
     }
 
     /**

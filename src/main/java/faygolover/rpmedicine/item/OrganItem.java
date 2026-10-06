@@ -72,7 +72,13 @@ public class OrganItem extends MedicalItem implements Perishable.Item {
         var t = st.getTag();
         tooltip.add(Component.translatable("rpmedicine.tooltip.organ_donor", t.getString("Donor"),
                 t.contains("Blood") ? BloodType.byId(t.getString("Blood")).map(b -> b.label).orElse("?") : "?").withStyle(ChatFormatting.GRAY));
-        if (level != null && spoiled(st, level.getGameTime()))
+        if (level != null && spoiled(st, level.getGameTime())) {
             tooltip.add(Component.translatable("rpmedicine.tooltip.organ_spoiled").withStyle(ChatFormatting.DARK_RED));
+        } else if (level != null && Perishable.started(st)) {
+            var s = faygolover.rpmedicine.core.MedicalSettings.get();
+            long now = level.getGameTime();
+            tooltip.add(Perishable.shelfLine(Perishable.cold(st), Perishable.warmTicks(st, now), Perishable.ageTicks(st, now),
+                    s.organSpoilWarmHours, s.organSpoilFridgeDays * 24));
+        }
     }
 }

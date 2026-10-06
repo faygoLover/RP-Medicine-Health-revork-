@@ -112,6 +112,7 @@ SOFTWARE.
 | `textures/item/insulin.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/insulin_syringe.png` | VKM | MIT |
 | `textures/item/blood_bag.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/item/saline.png` (перекрашено) | Lector | MIT |
 | `textures/item/empty_blood_bag.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/item/saline.png` (перекрашено) | Lector | MIT |
+| `textures/item/dirty_syringe.png` | Meds and Herbs 2.0.3: `assets/meds_and_herbs/textures/item/syringe_empty.png` (перекрашено) | ChebyPattern | MIT |
 | `textures/item/surgical_gloves.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/gloves.png` (перекрашено) | VKM | MIT |
 | `textures/item/field_surgery_kit.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/surgicalinstrument.png` | JEDIGD | MIT |
 | `textures/item/organ.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_heart.png` | VKM | MIT |
@@ -124,6 +125,8 @@ SOFTWARE.
 | `textures/item/organ_spleen.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_spleen.png` | VKM | MIT |
 | `textures/item/organ_stomach.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_stomach.png` | VKM | MIT |
 | `textures/item/organ_pancreas.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_pancreas.png` | VKM | MIT |
+| `textures/gui/medical_pouch.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/gui/ifak_pouch.png` | Lector | MIT |
+| `textures/gui/first_aid_kit.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/gui/paramedic_backpack.png` | Lector | MIT |
 | `rpgeo/bandage.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/bengdai.geo.json` | JEDIGD | MIT |
 | `textures/geo/bandage.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/bengdai.png` | JEDIGD | MIT |
 | `rpgeo/bandage.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/bengdai.animation.json` | JEDIGD | MIT |
