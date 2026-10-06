@@ -56,6 +56,10 @@ public final class LabService {
     /** ПКМ по лабораторному столу с пробиркой в руке. */
     public static boolean onUseBlock(ServerPlayer sp, BlockPos pos) {
         if (!HospitalBlocks.is(sp.level().getBlockState(pos), HospitalFunction.LAB)) return false;
+        if (sp.getMainHandItem().is(ModItems.BLOOD_SAMPLE.get()) && Medical.medicineLevel(sp) < MedicalSettings.get().labMinLevel) {
+            sp.displayClientMessage(Component.translatable("rpmedicine.lab.need_level", MedicalSettings.get().labMinLevel).withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
         if (faygolover.rpmedicine.item.BloodSampleItem.spoiled(sp.getMainHandItem(), sp.level().getGameTime())) {
             sp.displayClientMessage(Component.translatable("rpmedicine.lab.spoiled").withStyle(ChatFormatting.YELLOW), true);
             return true;
@@ -84,6 +88,18 @@ public final class LabService {
         @Override
         public String label() {
             return "rpmedicine.action.lab";
+        }
+
+        /** Под «Анализ…» — чья проба (замечание 06.10). */
+        @Override
+        public Component subtitle() {
+            String name = patientName(original);
+            return Component.translatable("rpmedicine.tooltip.sample_of", name != null ? name : "?");
+        }
+
+        @Override
+        public ItemStack icon() {
+            return original;
         }
 
         @Override
@@ -117,9 +133,13 @@ public final class LabService {
             MedicalState m = new MedicalState(s);
             MedicalNbt.read(m, original.getTag().getCompound("Medical"), s);
             Diagnostics.Lab lab = Diagnostics.lab(m, s);
-            // Бланк в окне (замечание 06.10), а не строки в чате.
-            faygolover.rpmedicine.network.Network.send(actor, form(original, lab, actor.getOffhandItem()));
-            MedcardHooks.labResult(actor, original, lab);
+            // Бланк в окне и предметом — перечитать; в медкарту — только если вложить (замечание 06.10).
+            var form = form(original, lab, actor.getOffhandItem());
+            faygolover.rpmedicine.network.Network.send(actor, form);
+            var t = original.getTag();
+            ItemStack report = faygolover.rpmedicine.item.LabReportItem.of(form, t != null && t.hasUUID("PatientId") ? t.getUUID("PatientId") : null,
+                    System.currentTimeMillis());
+            if (!actor.getInventory().add(report)) actor.drop(report, false);
         }
     }
 

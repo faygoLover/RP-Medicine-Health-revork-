@@ -93,6 +93,8 @@ public final class Perishable {
 
     /** В инвентаре — снова тепло. */
     public static void inventoryTick(ItemStack st, long now) {
+        // Взяли из вкладки творческого — срок пошёл.
+        if (st.hasTag() && !started(st)) start(st, now);
         if (st.hasTag() && st.getTag().getBoolean(COLD)) setCold(st, false, now);
     }
 }

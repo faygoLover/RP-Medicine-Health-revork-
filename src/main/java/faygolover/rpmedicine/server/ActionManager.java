@@ -58,6 +58,12 @@ public final class ActionManager {
             return null;
         }
 
+        /** Своя строка под названием (null — «на ком»). */
+        @Nullable
+        public Component subtitle() {
+            return null;
+        }
+
         /** Показывать ли пациенту прогресс (лечение — да, обыск и добивание — нет). */
         public boolean showToPatient() {
             return true;
@@ -80,7 +86,8 @@ public final class ActionManager {
         ACTIONS.put(a.actor.getUUID(), a);
         setTreating(a.actor, a.slowsActor());
         var patient = a.patient();
-        Component sub = patient == null ? Component.empty()
+        Component own = a.subtitle();
+        Component sub = own != null ? own : patient == null ? Component.empty()
                 : patient == a.actor ? Component.translatable("rpmedicine.progress.self")
                 : Component.translatable("rpmedicine.progress.on", patient.getDisplayName());
         Network.send(a.actor, new ProgressPacket(a.label(), a.totalTicks, 0, a.icon(), sub, false));

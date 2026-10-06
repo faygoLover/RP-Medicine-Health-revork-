@@ -98,6 +98,12 @@ public final class ClientSetup {
                         if (lvl != null && faygolover.rpmedicine.item.OrganItem.spoiled(st, lvl.getGameTime())) return 0.9f;
                         return (o.ordinal() + 1) / 10f;
                     });
+            // Испорченная кровь — своя иконка.
+            net.minecraft.client.renderer.item.ItemProperties.register(faygolover.rpmedicine.registry.ModItems.BLOOD_BAG.get(),
+                    new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "spoiled"), (st, level, entity, seed) -> {
+                        var lvl = net.minecraft.client.Minecraft.getInstance().level;
+                        return lvl != null && faygolover.rpmedicine.item.BloodBagItem.isSpoiled(st, lvl.getGameTime()) ? 1f : 0f;
+                    });
             net.minecraft.client.renderer.item.ItemProperties.register(faygolover.rpmedicine.registry.ModItems.SEVERED_LIMB.get(),
                     new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "part"), (st, level, entity, seed) -> {
                         var p = faygolover.rpmedicine.item.SeveredLimbItem.part(st);

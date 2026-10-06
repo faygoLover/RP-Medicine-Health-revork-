@@ -44,6 +44,8 @@ public final class ModItems {
     public static final RegistryObject<Item> IV_CATHETER = medical("iv_catheter", 16);
     /** Опустевший пакет капельницы — мусор (решения, п. 1.16). */
     public static final RegistryObject<Item> USED_IV_BAG = medical("used_iv_bag", 16);
+    /** Бланк анализа крови (замечание 06.10). */
+    public static final RegistryObject<Item> LAB_REPORT = tool("lab_report", () -> new faygolover.rpmedicine.item.LabReportItem(new Item.Properties().stacksTo(1)));
     // Мебель госпиталя — свои блоки (решения, п. 1.16).
     public static final RegistryObject<Item> HOSPITAL_BED = block("hospital_bed", ModBlocks.HOSPITAL_BED, false);
     public static final RegistryObject<Item> OPERATING_TABLE = block("operating_table", ModBlocks.OPERATING_TABLE, false);
@@ -171,6 +173,18 @@ public final class ModItems {
                 // По смыслу, в порядке оказания помощи; не попавшее в список — в конце.
                 java.util.Set<String> shown = new java.util.HashSet<>();
                 for (String id : ModItems.TAB_ORDER) {
+                    // Органы и конечности — каждый вид отдельно (замечание 10 второй проверки).
+                    if (id.equals("organ") && shown.add(id)) {
+                        for (var o : faygolover.rpmedicine.core.Organ.VALUES) out.accept(unstarted(
+                                faygolover.rpmedicine.item.OrganItem.create(ORGAN.get(), o, 0, null, "", 0)));
+                        continue;
+                    }
+                    if (id.equals("severed_limb") && shown.add(id)) {
+                        for (var p : new faygolover.rpmedicine.core.BodyPart[]{faygolover.rpmedicine.core.BodyPart.LEFT_ARM,
+                                faygolover.rpmedicine.core.BodyPart.LEFT_LEG, faygolover.rpmedicine.core.BodyPart.LEFT_FOOT})
+                            out.accept(unstarted(faygolover.rpmedicine.item.SeveredLimbItem.create(SEVERED_LIMB.get(), p, new java.util.UUID(0, 0), "", 0)));
+                        continue;
+                    }
                     for (RegistryObject<? extends Item> ro : ALL) {
                         if (ro.getId().getPath().equals(id) && shown.add(id)) out.accept(ro.get());
                     }
@@ -180,6 +194,12 @@ public final class ModItems {
                     if (!ro.getId().getPath().equals("blood_draw_syringe") && shown.add(ro.getId().getPath())) out.accept(ro.get());
             })
             .build());
+
+    /** Предмет из вкладки: срок хранения пойдёт, когда возьмут в инвентарь. */
+    private static net.minecraft.world.item.ItemStack unstarted(net.minecraft.world.item.ItemStack st) {
+        if (st.getTag() != null) st.getTag().remove("Taken");
+        return st;
+    }
 
     /** Порядок во вкладке: наборы, раны, дыхание, таблетки, уколы, капельницы и кровь, диагностика, хирургия, протезы и органы, документы. */
     private static final String[] TAB_ORDER = {
@@ -191,7 +211,7 @@ public final class ModItems {
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
             "propofol", "insulin", "syringe", "filled_syringe", "dirty_syringe", "used_pen",
             "hospital_bed", "operating_table", "vitals_monitor", "medicine_cabinet", "medicine_crate", "sterilizer", "lab_table", "thermostat", "oxygen_tank",
-            "iv_stand", "iv_catheter", "saline", "used_iv_bag", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
+            "iv_stand", "iv_catheter", "saline", "used_iv_bag", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet", "lab_report",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
             "surgical_drill", "osteosynthesis_kit", "chest_drain", "bone_saw",

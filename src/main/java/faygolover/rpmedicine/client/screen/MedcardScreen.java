@@ -260,6 +260,17 @@ public class MedcardScreen extends Screen {
         return new TitleBlock(Component.translatable(key), font.split(Component.literal(empty ? "—" : value), w), empty ? FADED : INK);
     }
 
+    private boolean hasReport() {
+        var p = net.minecraft.client.Minecraft.getInstance().player;
+        if (p == null) return false;
+        for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
+            var st = p.getInventory().getItem(i);
+            if (st.is(faygolover.rpmedicine.registry.ModItems.LAB_REPORT.get()) && card.uuid.equals(faygolover.rpmedicine.item.LabReportItem.patient(st)))
+                return true;
+        }
+        return false;
+    }
+
     private void initHistory(int l, int t) {
         int y = t + H - 56;
         // Правка выбранной записи или новая: диагноз слева, обстоятельства и последствия справа.
@@ -282,6 +293,10 @@ public class MedcardScreen extends Screen {
             editing = -1;
             rebuildWidgets();
         }).bounds(l + 104, y + 26, 60, 14).build());
+        // Бланк анализа этого пациента в инвентаре — вложить в карту (замечание 06.10).
+        if (!edit && hasReport()) addRenderableWidget(Button.builder(Component.translatable("rpmedicine.medcard.attach_lab"), b ->
+                send(new MedcardActionPacket(card.uuid, MedcardActionPacket.Op.ATTACH_LAB, -1, "", List.of())))
+                .bounds(l + 104, y + 26, 90, 14).build());
         if (sel != null && !edit) {
             int id = sel.id;
             int bx = l + PAGE - 10;

@@ -123,6 +123,7 @@ SOFTWARE.
 | `textures/item/ceftriaxone.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/norepinephrine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/oil_vial.png` | VKM | MIT |
 | `textures/item/used_iv_bag.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/item/saline.png` (перекрашено) | Lector | MIT |
+| `textures/item/blood_bag_spoiled.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/item/saline.png` (перекрашено) | Lector | MIT |
 | `textures/item/filled_syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/brinject.png` | JEDIGD | MIT |
 | `textures/item/ketamine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/lidocaine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |

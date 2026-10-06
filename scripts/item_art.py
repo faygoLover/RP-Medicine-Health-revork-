@@ -74,6 +74,10 @@ ICONS = {
     "norepinephrine": BC + "textures/item/oil_vial.png",
     "used_iv_bag": ("recolor", TM + "textures/item/saline.png",
                     {(175, 205, 230): (214, 220, 226), (140, 175, 205): (196, 202, 210), (210, 225, 235): (232, 236, 240)}),
+    "lab_report": ("drawn", "lab_report"),
+    # Испорченная кровь — бурая (решения, п. 1.16).
+    "blood_bag_spoiled": ("recolor", TM + "textures/item/saline.png",
+                          {(175, 205, 230): (96, 52, 30), (140, 175, 205): (70, 36, 20), (210, 225, 235): (120, 72, 44)}),
     "filled_syringe": ("liquidicon", HD + "textures/item/brinject.png", (236, 234, 224)),
     "ketamine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.5),
     "lidocaine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.12),
@@ -561,6 +565,17 @@ def main():
             "perspectives": {"gui": flat(f"rpmedicine:item/{item}")},
         }
         write(os.path.join(ASSETS, "models", "item", f"{item}.json"), model)
+    # Испорченный пакет крови — своя иконка (предикат rpmedicine:spoiled).
+    bb = os.path.join(ASSETS, "models", "item", "blood_bag.json")
+    if os.path.exists(bb):
+        m = json.load(open(bb, encoding="utf-8"))
+        spoiled = json.loads(json.dumps(m))
+        spoiled["perspectives"] = {"gui": flat("rpmedicine:item/blood_bag_spoiled")}
+        spoiled.pop("overrides", None)
+        write(os.path.join(ASSETS, "models", "item", "blood_bag_spoiled.json"), spoiled)
+        m["overrides"] = [{"predicate": {"rpmedicine:spoiled": 1}, "model": "rpmedicine:item/blood_bag_spoiled"}]
+        write(bb, m)
+
     # Шприц-ручки (замечание 06.10): своя модель на основе инжектора H&D — игла короче и стальная, окошко длиннее вниз,
     # внутри жидкость (уровень — по оставшимся дозам, рисует GeoItemRenderer: кость liquid), на ней основание поршня
     # (кость stopper), пятка поршня (кость pad) опущена и поднимается только в анимации.

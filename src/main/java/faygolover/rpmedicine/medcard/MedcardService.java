@@ -153,6 +153,24 @@ public final class MedcardService {
                 if (!EDITABLE.contains(p.field())) return;
                 setField(c, p.field(), clip(p.value(0)));
             }
+            case ATTACH_LAB -> {
+                // Вложить бланк анализа этого пациента из инвентаря (замечание 06.10).
+                var inv = sp.getInventory();
+                for (int i = 0; i < inv.getContainerSize(); i++) {
+                    var st = inv.getItem(i);
+                    if (!st.is(faygolover.rpmedicine.registry.ModItems.LAB_REPORT.get()) || !p.uuid().equals(faygolover.rpmedicine.item.LabReportItem.patient(st)))
+                        continue;
+                    var r = faygolover.rpmedicine.item.LabReportItem.read(st);
+                    if (r == null) continue;
+                    double[] v = r.values();
+                    c.add("lab", List.of(r.bloodType().isEmpty() ? "?" : r.bloodType(), String.valueOf(Math.round(v[0])),
+                            String.format(java.util.Locale.ROOT, "%.1f", v[1]), r.sepsis() ? "#rpmedicine.medcard.yes" : "#rpmedicine.medcard.no"), "", me, false);
+                    c.add("lab_nutrition", List.of(String.valueOf(Math.round(v[5])), String.format(java.util.Locale.ROOT, "%.1f", v[6]),
+                            String.format(java.util.Locale.ROOT, "%.1f", v[7]), String.valueOf(Math.round(v[8]))), "", me, false);
+                    st.shrink(1);
+                    break;
+                }
+            }
         }
         MedcardStore.save(sp.server, c);
         Network.send(sp, MedcardDataPacket.of(c));

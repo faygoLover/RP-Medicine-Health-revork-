@@ -1119,6 +1119,10 @@ t("block.rpmedicine.oxygen_tank", "Кислородный баллон", "Oxygen
 t("rpmedicine.tooltip.shelf_frozen", "В холоде — не портится", "Cold — does not spoil")
 t("rpmedicine.tooltip.sample_spoiled", "Проба испортилась", "The sample has spoiled")
 t("rpmedicine.lab.spoiled", "Проба испортилась — нужна свежая кровь", "The sample has spoiled — take fresh blood")
+t("item.rpmedicine.lab_report", "Бланк анализа крови", "Blood test report")
+t("item.rpmedicine.lab_report.desc", "ПКМ — прочитать. В медкарту — кнопкой «Вложить анализ» в карте пациента.", "Right-click to read. To the medical record — the “Attach test” button in the patient's record.")
+t("rpmedicine.medcard.attach_lab", "Вложить анализ", "Attach test")
+t("rpmedicine.lab.need_level", "Анализ крови — с уровня медицины %s", "Blood tests need Medicine %s")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

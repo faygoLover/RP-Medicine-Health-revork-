@@ -117,16 +117,8 @@
     "gui": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "rpmedicine:item/blood_bag"
+        "layer0": "rpmedicine:item/blood_bag_spoiled"
       }
     }
-  },
-  "overrides": [
-    {
-      "predicate": {
-        "rpmedicine:spoiled": 1
-      },
-      "model": "rpmedicine:item/blood_bag_spoiled"
-    }
-  ]
+  }
 }

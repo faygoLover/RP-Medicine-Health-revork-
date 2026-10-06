@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * {@code ADD} и {@code EDIT}: значения — диагноз, обстоятельства, последствия; {@code SET}: поле титула и значение.
  */
 public record MedcardActionPacket(UUID uuid, Op op, int entryId, String field, List<String> values) {
-    public enum Op { ADD, EDIT, ACCEPT, DECLINE, SET }
+    public enum Op { ADD, EDIT, ACCEPT, DECLINE, SET, ATTACH_LAB }
 
     public static MedcardActionPacket set(UUID uuid, String field, String value) {
         return new MedcardActionPacket(uuid, Op.SET, -1, field, List.of(value));
