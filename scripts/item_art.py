@@ -50,18 +50,28 @@ ICONS = {
     "amoxicillin": ("hue", HD + "textures/item/ibru.png", 0.45),
     "glucose_tablets": ("hue", HD + "textures/item/ibru.png", 0.07),
     # Уколы
-    "syringe": MH + "textures/item/syringe_empty.png",
-    "insulin": BC + "textures/item/insulin_syringe.png",
+
     # Капельницы и кровь (#43: пустая пробирка — как с кровью, но пустая)
     "blood_bag": ("recolor", TM + "textures/item/saline.png",
                   {(175, 205, 230): (196, 36, 46), (140, 175, 205): (150, 20, 30), (210, 225, 235): (226, 90, 96)}),
     "empty_blood_bag": ("recolor", TM + "textures/item/saline.png",
                         {(175, 205, 230): (232, 234, 238), (140, 175, 205): (206, 210, 216), (210, 225, 235): (244, 245, 247),
                          (200, 45, 45): (170, 30, 40)}),
-    "test_tube": ("drawn", "test_tube"),
-    "dirty_test_tube": ("drawn", "dirty_test_tube"),
-    "dirty_syringe": ("recolor", MH + "textures/item/syringe_empty.png", None),
-    "blood_sample": ("drawn", "blood_sample"),
+    # Пробирки и шприцы — H&D, как просил автор: с кровью bloodc, пустая tubes, грязная — из tubes.
+    "test_tube": HD + "textures/item/tubes.png",
+    "blood_sample": HD + "textures/item/bloodc.png",
+    "dirty_test_tube": ("residue", HD + "textures/item/tubes.png"),
+    "syringe": HD + "textures/item/emptyinject.png",
+    "blood_draw_syringe": HD + "textures/item/emptyinject.png",
+    "dirty_syringe": HD + "textures/item/cinject.png",
+    "used_pen": ("recolor", TA + "textures/item/adrenaline.png", None),
+    "insulin": ("hue", TA + "textures/item/metabolize.png", 0.33),
+    # Все уколы-ручки — ручки (Tactical Aid), флаконы — флаконы (Body Control).
+    "morphine": TA + "textures/item/glucose.png",
+    "atropine": ("hue", TA + "textures/item/aggressiveness.png", 0.2),
+    "ceftriaxone": ("hue", BC + "textures/item/hypnotic_vial.png", -0.3),
+    "norepinephrine": BC + "textures/item/oil_vial.png",
+
     "lancet": ("drawn", "lancet"),
     # Диагностика
     "stethoscope": ("drawn", "stethoscope"),
@@ -136,11 +146,12 @@ GEO = {
     # Шприцы
     "syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", None)),
     "blood_draw_syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", (150, 20, 30))),
-    "insulin": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", (200, 225, 245))),
-    # Автоинъекторы
-    **{k: dict(HD_EINJECT, tex=HD + "textures/item/einject.png") for k in (
-        "adrenaline", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "ketamine", "lidocaine", "norepinephrine",
-        "ceftriaxone", "morphine")},
+
+    # Шприц-ручки: инжектор H&D в цвет своей иконки (цвет считается по иконке ниже, в main)
+    **{k: dict(HD_EINJECT, tex=("tint", HD + "textures/item/einject.png", None)) for k in (
+        "adrenaline", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "ketamine", "lidocaine", "morphine", "insulin")},
+    "used_pen": dict(HD_EINJECT, tex=("tint", HD + "textures/item/einject.png", (120, 110, 100))),
+    "dirty_syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", (110, 40, 34))),
     # Наборы и кровь из LR Tactical (модели TaCZ — вписываются в куб предмета, руки скрыты)
     "first_aid_kit": dict(geo=LR + "geo_models/consumable/carfak_geo.json", tex=LR + "textures/consumable/carfak_uv.png", fit=True, size=0.8,
                           fp={"rotation": [5, -40, 0], "translation": [1.5, 3, -1], "scale": [0.42, 0.42, 0.42]}),
@@ -200,6 +211,37 @@ def load(spec):
                     if a and s > 0.25:
                         nr, ng, nb = colorsys.hls_to_rgb((h + spec[2]) % 1, l, s)
                         px[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a)
+            return im
+        if kind == "residue":
+            # Использованная: стекло мутнее, внизу бурый налёт.
+            px = im.load()
+            h = im.size[1]
+            for y in range(h):
+                for x in range(im.size[0]):
+                    r, g, b, a = px[x, y]
+                    if not a:
+                        continue
+                    lum = (r * 30 + g * 59 + b * 11) // 100
+                    if y > h * 0.55 and lum > 120:
+                        px[x, y] = (150, 92, 70, a)
+                    else:
+                        px[x, y] = (min(255, lum * 95 // 100 + 8), lum * 92 // 100, lum * 86 // 100, a)
+            return im
+        if kind == "tint":
+            # Окрасить серую текстуру модели в цвет (яркость сохраняется, блики остаются светлыми).
+            px = im.load()
+            tr, tg, tb = spec[2]
+            for y in range(im.size[1]):
+                for x in range(im.size[0]):
+                    r, g, b, a = px[x, y]
+                    if not a:
+                        continue
+                    h_, l_, s_ = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+                    if s_ > 0.35:
+                        continue
+                    k = 0.7 if l_ < 0.85 else 0.25
+                    nr, ng, nb = (r * (1 - k) + r * tr / 255 * k, g * (1 - k) + g * tg / 255 * k, b * (1 - k) + b * tb / 255 * k)
+                    px[x, y] = (round(nr), round(ng), round(nb), a)
             return im
         if kind == "liquid":
             # Жидкость в шприце (жёлтая в оригинале): другой цвет или прозрачное стекло.
@@ -268,6 +310,20 @@ def anim_length(path, name):
     return t
 
 
+def icon_color(item):
+    """Основной цвет иконки предмета (насыщенные пиксели), для окраски 3D-модели в тон иконки."""
+    path = os.path.join(ASSETS, "textures", "item", item + ".png")
+    if not os.path.exists(path):
+        return (200, 200, 200)
+    im = Image.open(path).convert("RGBA")
+    acc, n = [0, 0, 0], 0
+    for r, g, b, a in im.getdata():
+        h, l, s_ = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+        if a > 128 and s_ > 0.35 and 0.2 < l < 0.85:
+            acc[0] += r; acc[1] += g; acc[2] += b; n += 1
+    return tuple(c // n for c in acc) if n else (200, 200, 200)
+
+
 def main():
     # Иконки
     for item, spec in ICONS.items():
@@ -306,7 +362,10 @@ def main():
         os.makedirs(os.path.join(ASSETS, "rpgeo"), exist_ok=True)
         shutil.copyfile(src_path(g["geo"]), os.path.join(ASSETS, "rpgeo", f"{name}.geo.json"))
         note(f"rpgeo/{name}.geo.json", g["geo"])
-        save_png(g["tex"], f"textures/geo/{name}.png")
+        tex = g["tex"]
+        if isinstance(tex, tuple) and tex[0] == "tint" and tex[2] is None:
+            tex = ("tint", tex[1], icon_color(item))
+        save_png(tex, f"textures/geo/{name}.png")
         entry = {"geo": f"rpmedicine:rpgeo/{name}.geo.json", "texture": f"rpmedicine:textures/geo/{name}.png"}
         if g.get("anim"):
             shutil.copyfile(src_path(g["anim"]), os.path.join(ASSETS, "rpgeo", f"{name}.anim.json"))

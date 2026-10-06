@@ -10,7 +10,6 @@
     "rpmedicine:glucose_tablets": 1.5,
     "rpmedicine:syringe": 1.0,
     "rpmedicine:blood_draw_syringe": 1.0,
-    "rpmedicine:insulin": 1.0,
     "rpmedicine:adrenaline": 1.0,
     "rpmedicine:txa": 1.0,
     "rpmedicine:ketorolac": 1.0,
@@ -19,8 +18,9 @@
     "rpmedicine:atropine": 1.0,
     "rpmedicine:ketamine": 1.0,
     "rpmedicine:lidocaine": 1.0,
-    "rpmedicine:norepinephrine": 1.0,
-    "rpmedicine:ceftriaxone": 1.0,
-    "rpmedicine:morphine": 1.0
+    "rpmedicine:morphine": 1.0,
+    "rpmedicine:insulin": 1.0,
+    "rpmedicine:used_pen": 1.0,
+    "rpmedicine:dirty_syringe": 1.0
   }
 }

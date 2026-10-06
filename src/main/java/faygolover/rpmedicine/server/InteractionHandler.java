@@ -115,7 +115,8 @@ public final class InteractionHandler {
         if (event.getLevel().isClientSide) {
             if (stack.is(faygolover.rpmedicine.menu.MedicalContainerMenu.MEDICAL_ITEMS)) {
                 event.setCanceled(true);
-                event.setCancellationResult(InteractionResult.SUCCESS);
+                // CONSUME: рука не «бьёт» перед анимацией применения (замечание автора 06.10).
+                event.setCancellationResult(InteractionResult.CONSUME);
             }
             return;
         }

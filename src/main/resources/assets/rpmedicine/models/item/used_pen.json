@@ -78,14 +78,14 @@
       }
     },
     "textures": {
-      "particle": "rpmedicine:item/dirty_syringe"
+      "particle": "rpmedicine:item/used_pen"
     }
   },
   "perspectives": {
     "gui": {
       "parent": "minecraft:item/generated",
       "textures": {
-        "layer0": "rpmedicine:item/dirty_syringe"
+        "layer0": "rpmedicine:item/used_pen"
       }
     }
   }

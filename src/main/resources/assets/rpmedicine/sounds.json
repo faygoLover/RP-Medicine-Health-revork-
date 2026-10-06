@@ -41,7 +41,8 @@
     "subtitle": "subtitles.rpmedicine.injection",
     "sounds": [
       {
-        "name": "rpmedicine:bc/insulin_shot"
+        "name": "rpmedicine:bc/mark_done",
+        "volume": 0.35
       }
     ]
   },

@@ -64,7 +64,11 @@ public final class TreatmentService {
         if (dose <= 0 || slot < 0 || slot >= actor.getInventory().getContainerSize()) return;
         net.minecraft.world.entity.Entity e = targetId < 0 ? actor : actor.level().getEntity(targetId);
         if (!(e instanceof LivingEntity target) || !Medical.isPatient(target)) return;
-        startWithItem(actor, target, slot, part, (double) Math.max(0.25f, Math.min(3f, dose)));
+        ItemStack st = actor.getInventory().getItem(slot);
+        double max = 3;
+        if (st.isDamageableItem() && (faygolover.rpmedicine.registry.ModItems.isPen(st) || faygolover.rpmedicine.registry.ModItems.isVial(st)))
+            max = (st.getMaxDamage() - st.getDamageValue()) / 2.0;
+        startWithItem(actor, target, slot, part, (double) Math.max(0.25f, Math.min(max, dose)));
     }
 
     /** {@code dose} — выбранная доза шприцем (null — стандартная доза инъектора или спросить). */
@@ -86,6 +90,11 @@ public final class TreatmentService {
             return true;
         }
         TreatmentAction action = spec.action();
+        // Флакон без шприца не набрать.
+        if (faygolover.rpmedicine.registry.ModItems.isVial(stack) && !hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_syringe").withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
         Treatments.Extra extra = extraFor(stack, actor, target, action);
         // Шприц и ампула: медик с нужным уровнем сам выбирает дозу укола или капельницы.
         boolean dosable = extra instanceof faygolover.rpmedicine.core.Drug drug
@@ -93,7 +102,7 @@ public final class TreatmentService {
                 || Treatments.DOSE_ACTIONS.contains(action);
         if (dose == null && dosable
                 && Medical.medicineLevel(actor) >= MedicalSettings.get().dosingMinLevel
-                && hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
+                && (faygolover.rpmedicine.registry.ModItems.isPen(stack) || hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get()))) {
             faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.DosePacket.Request(
                     target == actor ? -1 : target.getId(), slot, part == null ? -1 : part.ordinal(), stack.getHoverName(), (int) Math.round(m.weightKg)));
             return true;
@@ -186,6 +195,8 @@ public final class TreatmentService {
             MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), scene, q -> {
                 // Забор крови: игла в вене — дальше кровь набирается сама, стоять на месте (замечание 38).
                 int after = action == TreatmentAction.BLOOD_COLLECT ? (int) Math.round(seconds * 20) : 1;
+                // После мини-игры — всегда короткое введение под анимацию предмета в руке (одинаково у всех).
+                after = Math.max(after, (int) Math.round(faygolover.rpmedicine.data.UseTimes.min(copy) * 20));
                 if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, after, level, fromHand).withQuality(q).withDose(dose0);
                 return new TreatmentTimedAction(actor, target, part0, spec, slot, copy,
                         (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor).withDose(dose0);
@@ -524,15 +535,18 @@ public final class TreatmentService {
             MedicalSettings s = MedicalSettings.get();
             // Повторная проверка: за время применения состояние могло измениться.
             Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor, target, spec.action());
-            if (dose != null && (extra instanceof faygolover.rpmedicine.core.Drug || Treatments.DOSE_ACTIONS.contains(spec.action()))) {
-                // Шприц тратится на каждый укол с выбранной дозой (и в творческом режиме — для проверки расхода).
+            // Флакон: набрать многоразовым шприцем — шприц после укола грязный. Ручка колет сама.
+            boolean needSyringe = faygolover.rpmedicine.registry.ModItems.isVial(original)
+                    || dose != null && !faygolover.rpmedicine.registry.ModItems.isPen(original);
+            if (needSyringe && (extra instanceof faygolover.rpmedicine.core.Drug || Treatments.DOSE_ACTIONS.contains(spec.action()))) {
                 if (!consumeItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
                     actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_syringe").withStyle(ChatFormatting.YELLOW), true);
                     return;
                 }
                 giveWaste(actor, faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
-                extra = extra instanceof faygolover.rpmedicine.core.Drug drug ? new Treatments.Dosed(drug, dose) : new Treatments.ActionDose(dose);
             }
+            if (dose != null && (extra instanceof faygolover.rpmedicine.core.Drug || Treatments.DOSE_ACTIONS.contains(spec.action())))
+                extra = extra instanceof faygolover.rpmedicine.core.Drug drug ? new Treatments.Dosed(drug, dose) : new Treatments.ActionDose(dose);
             String why = Treatments.check(m, part, spec.action(), s, extra);
             if (forced && why != null && Treatments.FORCEABLE.contains(why)) {
                 Treatments.Result fr = Treatments.applyForced(m, part, spec.action(), RANDOM.split(), s, extra);
@@ -586,7 +600,8 @@ public final class TreatmentService {
             if (r.consumed && spec.consume()) {
                 consume();
                 // Шприц для забора после укола — грязный, а не исчезает.
-                if (original.is(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get()))
+                if (original.is(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get())
+                        || original.is(faygolover.rpmedicine.registry.ModItems.SYRINGE.get()))
                     giveWaste(actor, faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
             }
             if (spec.action() == TreatmentAction.BLOOD_COLLECT && r.applied) BloodService.giveFilledBag(actor, target);
@@ -627,8 +642,17 @@ public final class TreatmentService {
         private void consume() {
             ItemStack stack = actor.getInventory().getItem(slot);
             if (actor.getAbilities().instabuild) return;
-            if (stack.isDamageableItem()) stack.hurtAndBreak(1, actor, p -> {});
-            else stack.shrink(1);
+            if (stack.isDamageableItem()) {
+                // Ручки и флаконы считают половинки доз: стандартная доза — 2.
+                boolean dosed = faygolover.rpmedicine.registry.ModItems.isPen(stack) || faygolover.rpmedicine.registry.ModItems.isVial(stack);
+                int units = dosed ? Math.max(1, (int) Math.round((dose != null ? dose : 1.0) * 2)) : 1;
+                boolean pen = faygolover.rpmedicine.registry.ModItems.isPen(stack);
+                stack.hurtAndBreak(units, actor, p -> {
+                    if (pen) giveWaste(actor, faygolover.rpmedicine.registry.ModItems.USED_PEN.get());
+                });
+            } else {
+                stack.shrink(1);
+            }
         }
 
         private void sound(TreatmentAction a) {

@@ -62,9 +62,14 @@ public final class DownedPose {
     /** Сдвиг и поворот, которые применили к модели (для ника — снять их обратно). */
     private static final Map<Integer, Object[]> APPLIED = new HashMap<>();
 
-    /** Лежит ли игрок на этом клиенте (не на койке: там своя поза сна). */
+    /** Лежит ли игрок на этом клиенте: лежачий или на койке (на койке — вдоль неё). */
     public static boolean isDowned(Player p) {
-        return ClientState.DOWNED.contains(p.getId()) && !BedPose.CLIENT_ON_BED.contains(p.getId());
+        return ClientState.DOWNED.contains(p.getId()) || BedPose.CLIENT_ON_BED.contains(p.getId());
+    }
+
+    private static float yawFor(Player p, float fallback) {
+        Float bed = BedPose.CLIENT_BED_YAW.get(p.getId());
+        return bed != null ? bed : fallback;
     }
 
     /** Каждый тик клиента: начать падение или подъём, обновить размеры. */
@@ -77,7 +82,7 @@ public final class DownedPose {
             if (d && (s == null || !s.down)) {
                 State n = new State();
                 n.from = s == null ? 0f : s.progress(now);
-                n.yaw = s == null ? p.yBodyRot : s.yaw;
+                n.yaw = yawFor(p, s == null ? p.yBodyRot : s.yaw);
                 n.down = true;
                 n.startMs = now;
                 STATES.put(p.getId(), n);

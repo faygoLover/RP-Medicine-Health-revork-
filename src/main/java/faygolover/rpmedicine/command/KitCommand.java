@@ -34,28 +34,28 @@ public final class KitCommand {
         KITS.put("field", new Kit("полевой медик", List.of(
                 "first_aid_kit:2", "medical_pouch", "bandage:16", "pressure_dressing:8", "hemostatic_gauze:8", "tourniquet:4",
                 "esmarch:2", "occlusive_dressing:4", "antiseptic:4", "antibiotic_ointment:2", "splint:4", "scissors",
-                "decompression_needle:2", "airway:2", "ammonia:2", "painkillers:8", "morphine:4", "adrenaline:4", "txa:4", "syringe:8")));
+                "decompression_needle:2", "airway:2", "ammonia:2", "painkillers:8", "morphine", "adrenaline", "txa", "syringe:8")));
         KITS.put("resus", new Kit("реанимация и капельницы", List.of(
-                "ambu_bag", "laryngoscope", "endotracheal_tube:4", "defibrillator", "adrenaline:4", "atropine:4", "naloxone:2",
-                "saline:4", "norepinephrine:2", "empty_blood_bag:4", "blood_bag:4", "blood_draw_syringe:2", "syringe:8")));
+                "ambu_bag", "laryngoscope", "endotracheal_tube:4", "defibrillator", "adrenaline", "atropine", "naloxone",
+                "saline:4", "norepinephrine", "empty_blood_bag:4", "blood_bag:4", "syringe:8")));
         KITS.put("diag", new Kit("диагностика и лаборатория", List.of(
                 "stethoscope", "thermometer", "pulse_oximeter", "tonometer", "glucometer", "hemoanalyzer", "portable_scanner",
-                "test_tube:8", "lancet:8", "blood_draw_syringe:2", "medcard:2")));
+                "test_tube:8", "lancet:8", "medcard:2")));
         KITS.put("surgeon", new Kit("хирург", List.of(
                 "field_surgery_kit", "stabilization_kit", "surgical_mask", "surgical_gloves:4", "scalpel", "hemostat", "retractor",
                 "surgical_tweezers", "vascular_suture:4", "suture_kit:4", "surgical_drill", "osteosynthesis_kit:2", "chest_drain:2",
-                "bone_saw", "lidocaine:4", "ketamine:4", "propofol:4", "ketorolac:4", "ceftriaxone:4", "antiseptic:4", "syringe:16",
+                "bone_saw", "lidocaine", "ketamine", "propofol", "ketorolac", "ceftriaxone", "antiseptic:4", "syringe:16",
                 "laryngoscope", "endotracheal_tube:2")));
         KITS.put("transplant", new Kit("органы и протезы", List.of(
                 "organ_container:2", "cyclosporine:8", "prosthetic_foot", "peg_leg", "prosthetic_hook", "bone_saw", "syringe:8")));
         KITS.put("drugs", new Kit("все лекарства", List.of(
                 "painkillers:4", "paracetamol:4", "ibuprofen:4", "tramadol:4", "amoxicillin:4", "cyclosporine:4", "glucose_tablets:4",
-                "morphine:4", "adrenaline:4", "txa:4", "ketorolac:4", "naloxone:4", "ceftriaxone:4", "diazepam:4", "atropine:4",
-                "lidocaine:4", "ketamine:4", "propofol:4", "insulin:4", "norepinephrine:4", "syringe:32")));
+                "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine",
+                "lidocaine", "ketamine", "propofol", "insulin", "norepinephrine", "syringe:32")));
         // Вещества: в тестовом датапаке rpm_test мёд = алкоголь, свекольный суп = кофе, бумага = сигарета.
         KITS.put("substances", new Kit("вещества (тест: мёд — алкоголь, борщ — кофе, бумага — сигарета)", List.of(
                 "minecraft:honey_bottle:8", "minecraft:beetroot_soup:4", "minecraft:paper:16",
-                "tramadol:8", "morphine:4", "diazepam:4", "naloxone:4", "syringe:8")));
+                "tramadol:8", "morphine", "diazepam", "naloxone", "syringe:8")));
         KITS.put("food", new Kit("еда (питание, «приелось»)", List.of(
                 "minecraft:bread:16", "minecraft:cooked_beef:8", "minecraft:cooked_chicken:8", "minecraft:cooked_salmon:8",
                 "minecraft:baked_potato:8", "minecraft:apple:8", "minecraft:carrot:8", "minecraft:golden_carrot:4",

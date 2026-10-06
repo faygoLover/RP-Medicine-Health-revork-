@@ -48,7 +48,30 @@ public final class HospitalService {
         BlockState st = level.getBlockState(pos);
         VoxelShape shape = st.getCollisionShape(level, pos);
         double top = shape.isEmpty() ? 0.5625 : Math.min(1.5, shape.max(Direction.Axis.Y));
-        return new Vec3(pos.getX() + 0.5, pos.getY() + top, pos.getZ() + 0.5);
+        // Двухблочная койка (Industrial Hellscape и т. п.): середина между половинами.
+        Direction other = otherHalf(level, pos);
+        double ox = other != null ? other.getStepX() * 0.5 : 0, oz = other != null ? other.getStepZ() * 0.5 : 0;
+        return new Vec3(pos.getX() + 0.5 + ox, pos.getY() + top, pos.getZ() + 0.5 + oz);
+    }
+
+    /** Где вторая половина двухблочной койки: соседний блок того же типа, или null. */
+    @Nullable
+    public static Direction otherHalf(Level level, BlockPos pos) {
+        var block = level.getBlockState(pos).getBlock();
+        for (Direction d : Direction.Plane.HORIZONTAL) if (level.getBlockState(pos.relative(d)).is(block)) return d;
+        return null;
+    }
+
+    /** Четверть поворота лежащего: вдоль двухблочной койки, иначе по взгляду. */
+    public static byte bedQuarter(Level level, BlockPos pos, float yRot) {
+        Direction other = otherHalf(level, pos);
+        if (other != null) return (byte) Math.floorMod(Math.round(other.toYRot() / 90f), 4);
+        BlockState st = level.getBlockState(pos);
+        for (var prop : st.getProperties()) {
+            if (prop.getName().equals("facing") && st.getValue(prop) instanceof Direction f && f.getAxis().isHorizontal())
+                return (byte) Math.floorMod(Math.round(f.toYRot() / 90f), 4);
+        }
+        return (byte) Math.floorMod(Math.round(yRot / 90f), 4);
     }
 
     /** Койка, на которой лежит человек, или null. */
@@ -116,7 +139,7 @@ public final class HospitalService {
             sp.stopUsingItem();
             sp.setSprinting(false);
             d.bedPos = pos.immutable();
-            d.bedQuarter = (byte) (Math.floorMod(Math.round(sp.getYRot() / 90f), 4));
+            d.bedQuarter = bedQuarter(sp.level(), pos, sp.getYRot());
             d.hospitalScanTick = Long.MIN_VALUE / 2;
             sp.teleportTo(spot.x, spot.y, spot.z);
             sp.setDeltaMovement(Vec3.ZERO);

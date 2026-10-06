@@ -26,7 +26,13 @@ public class MedicalItem extends Item {
                 .withStyle(net.minecraft.ChatFormatting.GRAY));
         if (stack.isDamageableItem()) {
             int left = stack.getMaxDamage() - stack.getDamageValue();
-            tooltip.add(Component.translatable("rpmedicine.tooltip.charges", left).withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+            if (faygolover.rpmedicine.registry.ModItems.isPen(stack) || faygolover.rpmedicine.registry.ModItems.isVial(stack)) {
+                String doses = left % 2 == 0 ? String.valueOf(left / 2) : String.format(java.util.Locale.ROOT, "%.1f", left / 2.0);
+                tooltip.add(Component.translatable(faygolover.rpmedicine.registry.ModItems.isPen(stack) ? "rpmedicine.tooltip.pen_doses"
+                        : "rpmedicine.tooltip.vial_doses", doses, stack.getMaxDamage() / 2).withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+            } else {
+                tooltip.add(Component.translatable("rpmedicine.tooltip.charges", left).withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+            }
         }
     }
 

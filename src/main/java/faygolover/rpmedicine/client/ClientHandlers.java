@@ -132,7 +132,9 @@ public final class ClientHandlers {
      * {@link faygolover.rpmedicine.client.render.DownedPose}); ползущий в сознании — горизонтально лицом вниз.
      */
     public static Pose poseFor(int entityId, boolean crawl) {
-        if (BedPose.CLIENT_ON_BED.contains(entityId)) return Pose.SLEEPING;
+        // На койке — как лежачий: поза стоя, на спину кладёт DownedPose (ванильная поза сна на клиенте
+        // без настоящей кровати не держится — замечание 31).
+        if (BedPose.CLIENT_ON_BED.contains(entityId)) return Pose.STANDING;
         if (ClientState.DOWNED.contains(entityId)) return Pose.STANDING;
         return crawl ? Pose.SWIMMING : null;
     }

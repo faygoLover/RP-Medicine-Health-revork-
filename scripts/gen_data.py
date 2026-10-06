@@ -148,7 +148,7 @@ ITEMS = [
     ("empty_blood_bag", "blood_collect", 30, 3, True), ("blood_bag", "blood_bag", 10, 3, True),
     ("stethoscope", "stethoscope", 4, 2, False), ("thermometer", "thermometer", 5, 0, False),
     ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
-    ("blood_draw_syringe", "blood_sample", 3, 2, True),
+    ("blood_draw_syringe", "blood_sample", 3, 2, True), ("syringe", "blood_sample", 3, 2, True),
     ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
     # третий этап
     ("endotracheal_tube", "intubate", 6, 6, True),
@@ -456,7 +456,7 @@ BC_SOUNDS = {
     "pain_moan": ["old_groan_1", "old_groan_2", "old_groan_3", "old_groan_4", "old_groan_5"],
     "bone_break": ["fracture1", "fracture2", "fracture3", "fracture4"],
     "vomit": ["vomit_1", "vomit_2", "vomit_3", "vomit_4", "x:hbm_vomit"],
-    "pills": ["pill_swallow"], "injection": ["insulin_shot"],
+    "pills": ["pill_swallow"], "injection": ["mark_done"],
     "bandage": ["bandage_wrap_1", "bandage_wrap_2", "bandage_wrap_3"], "splint": ["splint_wrap"],
     "monitor_alarm": ["alarm_beep"], "ear_ringing": ["ear_ring"], "eardrum_burst": ["eardrum_burst"],
     "flatline": ["heart_flatline"], "heart_stopping": ["heart_stopping"], "scanner": ["scanner_blip"],
@@ -474,6 +474,8 @@ BC_SOUNDS = {
     "bone_drill": ["bone_drill_1", "bone_drill_2", "bone_drill_3"], "organ_move": ["organ_move_1", "organ_move_2", "organ_move_3", "organ_move_4"],
     "minigame_ok": ["mark_done"], "minigame_slip": ["item_slip"], "body_fall": ["fall"],
 }
+# Укол — короткая тихая отметка, а не писк (замечание автора 06.10).
+QUIET = {"injection": 0.35}
 for k in BC_SOUNDS:
     SOUNDS.setdefault(k, "minecraft:ui.button.click")
 import shutil
@@ -487,7 +489,10 @@ def bc_entries(k):
         if os.path.exists(src):
             shutil.copyfile(src, dst)
         if os.path.exists(dst):
-            out.append({"name": f"rpmedicine:bc/{base}"})
+            e = {"name": f"rpmedicine:bc/{base}"}
+            if k in QUIET:
+                e["volume"] = QUIET[k]
+            out.append(e)
     return out
 def sound_entries(k, v):
     # BodyControl → Tactical Medicine / Health & Disease → ссылка на ванильное событие.

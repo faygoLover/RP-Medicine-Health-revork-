@@ -361,7 +361,7 @@ public final class HospitalGameTests {
         h.assertTrue(session > 0, "вне боя — мини-игра");
         // Ответ мгновенно — подделка: провал (повязка плохая).
         faygolover.rpmedicine.server.MinigameService.onResult(medic, session, 1f);
-        h.runAfterDelay(3, () -> {
+        h.runAfterDelay(40, () -> {
             h.assertTrue(w.isDressed() && w.dressingQuality < 0.75, "слишком быстрый ответ — ошибка, качество " + w.dressingQuality);
             w.removeDressing();
             faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
@@ -372,7 +372,7 @@ public final class HospitalGameTests {
                 h.assertTrue(faygolover.rpmedicine.server.MinigameService.currentSession(medic) == s2,
                         "мини-игра ещё идёт, сейчас " + faygolover.rpmedicine.server.ActionManager.current(medic));
                 faygolover.rpmedicine.server.MinigameService.onResult(medic, s2, 0.9f);
-                h.runAfterDelay(3, () -> {
+                h.runAfterDelay(40, () -> {
                     h.assertTrue(w.isDressed() && w.dressingQuality > 0.9, "хорошая мини-игра — хорошая повязка, " + w.dressingQuality);
                     w.removeDressing();
                     faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);

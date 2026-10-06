@@ -2,6 +2,8 @@
 #   python scripts/test_site.py         — датапак rpm_test: вещества-заглушки и функция rpm_test:site
 #   python scripts/test_site.py --pack  — ещё и скопировать моды мебели из сборки автора в libs/pack
 # Сервер запускать с мебелью: gradlew runServer -Pwith_optional=true -Pwith_pack=true
+# Койка Industrial Hellscape по умолчанию «залита водой» — ставим waterlogged=false.
+# Для чистого опыта температура LSO в run/config выключена (жажда работает).
 # Площадка строится от ног игрока: /execute at Dev run function rpm_test:site
 import json
 import os
@@ -86,10 +88,10 @@ def main():
          "fill ~-1 ~-1 ~-1 ~30 ~-1 ~-1 minecraft:polished_deepslate"]
     # Палата: две медицинские койки с мониторами и стойками, койка MOA с её монитором, раскладушка.
     L += ["# --- Палата"]
-    L += two_forward("industrialhellscape:medical_bed", 1, 3)
+    L += two_forward("industrialhellscape:medical_bed", 1, 3, "waterlogged=false")
     L += two_vertical("industrialhellscape:vitals_monitor", 0, 3)
     L += two_vertical("industrialhellscape:iv_dripstand", 2, 3)
-    L += two_forward("industrialhellscape:medical_bed", 5, 3)
+    L += two_forward("industrialhellscape:medical_bed", 5, 3, "waterlogged=false")
     L += two_vertical("industrialhellscape:vitals_monitor", 4, 3)
     L += two_vertical("industrialhellscape:iv_dripstand", 6, 3)
     L += ["setblock ~1 ~ ~7 moa_decor_science:camahblanca[facing=north] replace",

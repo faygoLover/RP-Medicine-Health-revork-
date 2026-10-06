@@ -34,9 +34,9 @@ public final class ModItems {
     public static final RegistryObject<Item> OCCLUSIVE_DRESSING = medical("occlusive_dressing", 8);
     public static final RegistryObject<Item> DECOMPRESSION_NEEDLE = medical("decompression_needle", 8);
     public static final RegistryObject<Item> PAINKILLERS = medical("painkillers", 16);
-    public static final RegistryObject<Item> MORPHINE = medical("morphine", 8);
-    public static final RegistryObject<Item> ADRENALINE = medical("adrenaline", 8);
-    public static final RegistryObject<Item> TXA = medical("txa", 8);
+    public static final RegistryObject<Item> MORPHINE = pen("morphine");
+    public static final RegistryObject<Item> ADRENALINE = pen("adrenaline");
+    public static final RegistryObject<Item> TXA = pen("txa");
     public static final RegistryObject<Item> STABILIZATION_KIT = medical("stabilization_kit", 4);
     public static final RegistryObject<Item> FIELD_SURGERY_KIT = medical("field_surgery_kit", 1);
     public static final RegistryObject<Item> SALINE = medical("saline", 4);
@@ -54,14 +54,14 @@ public final class ModItems {
     // Препараты (датапак drugs)
     public static final RegistryObject<Item> PARACETAMOL = medical("paracetamol", 16);
     public static final RegistryObject<Item> IBUPROFEN = medical("ibuprofen", 16);
-    public static final RegistryObject<Item> KETOROLAC = medical("ketorolac", 8);
+    public static final RegistryObject<Item> KETOROLAC = pen("ketorolac");
     public static final RegistryObject<Item> TRAMADOL = medical("tramadol", 16);
-    public static final RegistryObject<Item> NALOXONE = medical("naloxone", 8);
+    public static final RegistryObject<Item> NALOXONE = pen("naloxone");
     public static final RegistryObject<Item> AMOXICILLIN = medical("amoxicillin", 16);
-    public static final RegistryObject<Item> CEFTRIAXONE = medical("ceftriaxone", 8);
-    public static final RegistryObject<Item> DIAZEPAM = medical("diazepam", 8);
-    public static final RegistryObject<Item> NOREPINEPHRINE = medical("norepinephrine", 4);
-    public static final RegistryObject<Item> ATROPINE = medical("atropine", 8);
+    public static final RegistryObject<Item> CEFTRIAXONE = vial("ceftriaxone");
+    public static final RegistryObject<Item> DIAZEPAM = pen("diazepam");
+    public static final RegistryObject<Item> NOREPINEPHRINE = vial("norepinephrine");
+    public static final RegistryObject<Item> ATROPINE = pen("atropine");
     public static final RegistryObject<Item> ANTISEPTIC = tool("antiseptic", () -> new MedicalItem(new Item.Properties().durability(20)));
     public static final RegistryObject<Item> ANTIBIOTIC_OINTMENT = tool("antibiotic_ointment", () -> new MedicalItem(new Item.Properties().durability(10)));
     // Диагностика
@@ -77,15 +77,31 @@ public final class ModItems {
     /** Использованные: стерилизатор возвращает чистыми (замечание 42). */
     public static final RegistryObject<Item> DIRTY_SYRINGE = medical("dirty_syringe", 16);
     public static final RegistryObject<Item> DIRTY_TEST_TUBE = medical("dirty_test_tube", 16);
+    /** Пустая шприц-ручка — на выброс. */
+    public static final RegistryObject<Item> USED_PEN = medical("used_pen", 16);
+
+    /** Шприц-ручки и флаконы (решение 06.10): ручка колет сама, флакон — через многоразовый шприц. */
+    public static final java.util.Set<String> PEN_IDS = java.util.Set.of("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "ketamine", "lidocaine", "insulin");
+    public static final java.util.Set<String> VIAL_IDS = java.util.Set.of("ceftriaxone", "propofol", "norepinephrine");
+
+    public static boolean isPen(net.minecraft.world.item.ItemStack st) {
+        var id = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(st.getItem());
+        return id != null && id.getNamespace().equals(faygolover.rpmedicine.RpMedicine.MODID) && PEN_IDS.contains(id.getPath());
+    }
+
+    public static boolean isVial(net.minecraft.world.item.ItemStack st) {
+        var id = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(st.getItem());
+        return id != null && id.getNamespace().equals(faygolover.rpmedicine.RpMedicine.MODID) && VIAL_IDS.contains(id.getPath());
+    }
     public static final RegistryObject<Item> BLOOD_SAMPLE = tool("blood_sample", () -> new faygolover.rpmedicine.item.BloodSampleItem(new Item.Properties().stacksTo(1)));
     // Пули, швы (второй этап, п. 8)
     public static final RegistryObject<Item> SURGICAL_TWEEZERS = tool("surgical_tweezers", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> SUTURE_KIT = tool("suture_kit", () -> new MedicalItem(new Item.Properties().durability(5)));
     public static final RegistryObject<Item> SCISSORS = tool("scissors", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     // Третий этап: анестезия (п. 3)
-    public static final RegistryObject<Item> LIDOCAINE = medical("lidocaine", 8);
-    public static final RegistryObject<Item> KETAMINE = medical("ketamine", 8);
-    public static final RegistryObject<Item> PROPOFOL = medical("propofol", 8);
+    public static final RegistryObject<Item> LIDOCAINE = pen("lidocaine");
+    public static final RegistryObject<Item> KETAMINE = pen("ketamine");
+    public static final RegistryObject<Item> PROPOFOL = vial("propofol");
     // Хирургия (третий этап, п. 4.4)
     public static final RegistryObject<Item> SCALPEL = tool("scalpel", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> HEMOSTAT = tool("hemostat", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
@@ -109,7 +125,7 @@ public final class ModItems {
     public static final RegistryObject<Item> ORGAN = tool("organ", () -> new faygolover.rpmedicine.item.OrganItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CYCLOSPORINE = medical("cyclosporine", 16);
     // Диабет (п. 8)
-    public static final RegistryObject<Item> INSULIN = medical("insulin", 8);
+    public static final RegistryObject<Item> INSULIN = pen("insulin");
     public static final RegistryObject<Item> GLUCOSE_TABLETS = medical("glucose_tablets", 16);
     public static final RegistryObject<Item> GLUCOMETER = tool("glucometer", () -> new faygolover.rpmedicine.item.MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> SEVERED_LIMB = tool("severed_limb", () -> new faygolover.rpmedicine.item.SeveredLimbItem(new Item.Properties().stacksTo(1)));
@@ -129,7 +145,9 @@ public final class ModItems {
                         if (ro.getId().getPath().equals(id) && shown.add(id)) out.accept(ro.get());
                     }
                 }
-                for (RegistryObject<? extends Item> ro : ALL) if (shown.add(ro.getId().getPath())) out.accept(ro.get());
+                // Шприц для забора крови устарел (его заменил обычный шприц) — во вкладке не показываем.
+                for (RegistryObject<? extends Item> ro : ALL)
+                    if (!ro.getId().getPath().equals("blood_draw_syringe") && shown.add(ro.getId().getPath())) out.accept(ro.get());
             })
             .build());
 
@@ -141,13 +159,23 @@ public final class ModItems {
             "decompression_needle", "airway", "ambu_bag", "laryngoscope", "endotracheal_tube", "defibrillator", "ammonia",
             "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
-            "propofol", "insulin", "syringe", "dirty_syringe",
-            "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "blood_draw_syringe", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
+            "propofol", "insulin", "syringe", "dirty_syringe", "used_pen",
+            "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
             "surgical_drill", "osteosynthesis_kit", "chest_drain", "bone_saw",
             "prosthetic_foot", "peg_leg", "prosthetic_hook", "organ_container", "organ", "severed_limb",
             "medcard", "gm_scanner"};
+
+    /** Шприц-ручка: 4 дозы (8 половинок), пустая становится использованной (решение 06.10). */
+    private static RegistryObject<Item> pen(String name) {
+        return tool(name, () -> new MedicalItem(new Item.Properties().durability(8)));
+    }
+
+    /** Флакон препарата: 2 дозы (4 половинки), набирается многоразовым шприцем. */
+    private static RegistryObject<Item> vial(String name) {
+        return tool(name, () -> new MedicalItem(new Item.Properties().durability(4)));
+    }
 
     private static RegistryObject<Item> medical(String name, int stack) {
         return tool(name, () -> new MedicalItem(new Item.Properties().stacksTo(stack)));

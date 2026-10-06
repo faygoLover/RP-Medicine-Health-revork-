@@ -981,6 +981,10 @@ t("rpmedicine.exam.next_step_bleed_suture", "  Дальше: набор для �
 t("rpmedicine.exam.next_step_drain", "  Дальше: дренаж плевральной полости", "  Next: chest drain")
 t("rpmedicine.exam.next_step_organ_suture", "  Дальше: набор для швов — шов органа", "  Next: suture kit — repair the organ")
 t("rpmedicine.exam.next_step_close", "  Дальше: набор для швов — закрыть рану", "  Next: suture kit — close the wound")
+t("item.rpmedicine.used_pen", "Использованная шприц-ручка", "Used injector pen")
+t("item.rpmedicine.used_pen.desc", "Пустая. Только выбросить.", "Empty. Throw it away.")
+t("rpmedicine.tooltip.pen_doses", "Шприц-ручка: доз %s из %s", "Injector pen: %s of %s doses")
+t("rpmedicine.tooltip.vial_doses", "Флакон: доз %s из %s (набрать шприцем)", "Vial: %s of %s doses (draw with a syringe)")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
