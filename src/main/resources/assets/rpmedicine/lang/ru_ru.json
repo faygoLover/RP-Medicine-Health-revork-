@@ -619,7 +619,7 @@
   "rpmedicine.iv.no_bags": "На стойке нет пакетов",
   "rpmedicine.iv.no_hook": "Свободных крючков нет",
   "rpmedicine.iv.no_saline_for_drug": "На стойке нет пакета физраствора для препарата",
-  "rpmedicine.iv.players_only": "Подключить можно только к игроку",
+  "rpmedicine.iv.players_only": "Подключить можно только к пациенту",
   "rpmedicine.iv.stand_gone": "Стойки больше нет",
   "rpmedicine.iv.too_far": "Пациент слишком далеко от стойки",
   "rpmedicine.iv.torn": "Катетер вырвало из руки!",

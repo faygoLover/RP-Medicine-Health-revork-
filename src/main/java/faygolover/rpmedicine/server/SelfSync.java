@@ -64,12 +64,13 @@ public final class SelfSync {
         v.blur = pct(Math.max((m.pain - 75) / 25.0, (m.concussion - 25) / 75.0));
         v.darken = pct((90 - m.pressure) / 50.0);
         v.tunnel = pct((loss - 0.15) / 0.3);
-        v.gray = pct((s.dazedConsciousness - m.consciousness) / 30.0);
-        v.ringing = pct((m.concussion - 15) / 60.0);
+        // Пороги заметнее (замечание 28, решения 1.16): серость с сознания < 80, звон с контузии 25.
+        v.gray = pct((s.grayConsciousness - m.consciousness) / 40.0);
+        v.ringing = pct((m.concussion - s.ringingConcussion) / 50.0);
         // Стук сердца — только ступень (1 — учащённый, 2 — частый, 3 — очень частый), без цифры пульса.
         boolean audible = m.heart == MedicalState.Heart.NORMAL && (m.heartRate > 110 || m.pressure < 80);
         v.heartbeat = (short) (!audible ? 0 : m.heartRate > 150 ? 3 : m.heartRate > 125 ? 2 : 1);
-        v.heavyBreathing = m.respRate > 24 || m.spo2 < 90;
+        v.heavyBreathing = m.respRate > s.heavyBreathingRespRate || m.spo2 < s.heavyBreathingSpo2;
         v.sway = pct(mods.aimSway);
         // Морфин и опиаты из датапака, седация — мир «плывёт».
         double high = 0;

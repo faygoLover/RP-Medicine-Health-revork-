@@ -165,7 +165,14 @@ public class IvStandBlockEntity extends BlockEntity {
         return "rpmedicine.iv.no_saline_for_drug";
     }
 
-    public void link(ServerPlayer target, int armPart) {
+    /** Пациент на шланге: игрок или тело-заглушка офлайн-игрока (решения, п. 1.16). */
+    @Nullable
+    private net.minecraft.world.entity.LivingEntity patientEntity() {
+        if (patient == null || !(level instanceof net.minecraft.server.level.ServerLevel sl)) return null;
+        return sl.getEntity(patient) instanceof net.minecraft.world.entity.LivingEntity le ? le : null;
+    }
+
+    public void link(net.minecraft.world.entity.LivingEntity target, int armPart) {
         patient = target.getUUID();
         arm = armPart;
         active = -1;
@@ -175,7 +182,7 @@ public class IvStandBlockEntity extends BlockEntity {
     /** Отсоединить шланг: недокапавшее вернуть в пакет, капельницу пациента остановить. */
     public void detach() {
         if (patient != null && level != null && level.getServer() != null) {
-            ServerPlayer p = level.getServer().getPlayerList().getPlayer(patient);
+            net.minecraft.world.entity.LivingEntity p = patientEntity();
             if (p != null && active >= 0) {
                 MedicalState m = Medical.state(p);
                 if (m != null) {
@@ -195,7 +202,7 @@ public class IvStandBlockEntity extends BlockEntity {
 
     private void restartActive() {
         if (patient == null || level == null || level.getServer() == null || active < 0) return;
-        ServerPlayer p = level.getServer().getPlayerList().getPlayer(patient);
+        net.minecraft.world.entity.LivingEntity p = patientEntity();
         MedicalState m = p != null ? Medical.state(p) : null;
         if (m == null) return;
         if (!bags[active].is(ModItems.BLOOD_BAG.get())) m.salineDripRate = rateFor(bags[active]);
@@ -240,7 +247,7 @@ public class IvStandBlockEntity extends BlockEntity {
 
     public void serverTick() {
         if (patient == null || level == null || level.getServer() == null || ++ticks % 10 != 0) return;
-        ServerPlayer p = level.getServer().getPlayerList().getPlayer(patient);
+        net.minecraft.world.entity.LivingEntity p = patientEntity();
         MedicalState m = p != null && p.level() == level ? Medical.state(p) : null;
         if (m == null || m.catheterPart < 0 || m.catheterPart != arm) {
             detach();
@@ -255,7 +262,7 @@ public class IvStandBlockEntity extends BlockEntity {
             Injuries.mergeWound(m.part(part), WoundType.CUT, s.ivTearWoundSeverity, s);
             Medical.markHurt(p);
             Medical.changed(p);
-            p.displayClientMessage(Component.translatable("rpmedicine.iv.torn").withStyle(ChatFormatting.RED), true);
+            if (p instanceof ServerPlayer sp) sp.displayClientMessage(Component.translatable("rpmedicine.iv.torn").withStyle(ChatFormatting.RED), true);
             return;
         }
         if (active >= 0) {
@@ -408,7 +415,7 @@ public class IvStandBlockEntity extends BlockEntity {
         t.put("Info", info);
         int id = -1;
         if (patient != null && level != null && level.getServer() != null) {
-            ServerPlayer p = level.getServer().getPlayerList().getPlayer(patient);
+            net.minecraft.world.entity.LivingEntity p = patientEntity();
             if (p != null) id = p.getId();
         }
         t.putInt("PatientId", id);

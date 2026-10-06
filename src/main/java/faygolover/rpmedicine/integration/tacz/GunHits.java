@@ -166,6 +166,8 @@ public final class GunHits {
             case HELMET -> DamageRules.GUN_HELMET;
         };
         InjuryProfile prof = DamageRules.INSTANCE.byId(rule);
+        // Запреградная травма (замечание 24): удар — от силы пули, слабее, чем в жизни.
+        if (outcome == Outcome.PLATE) amount = (float) Math.max(amount, p.originalBase * ServerConfig.ZC_PLATE_BLUNT_FACTOR.get());
         // Плита закрывает грудь и живот; попадание в конечность Zero Contact сейчас тоже гасит бронежилетом
         // (известное ограничение до ответа разработчика) — тогда ушиб на самой конечности.
         DamageHandler.applyInjury(target, m, prof, amount, part, 0, p.shooter);

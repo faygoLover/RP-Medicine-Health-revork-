@@ -194,7 +194,12 @@ public final class MedicalSettings {
     public double wakeMinSeconds = 20.0;
     public double wakeMaxSeconds = 60.0;
     public double postClinicalHours = 3.0;
-    public double concussionDecayPerSecond = 0.33;
+    public double concussionDecayPerSecond = 0.165;
+    /** Ощущения (замечание 28): серость экрана с сознания ниже, звон с контузии, тяжёлое дыхание с ЧД выше / SpO2 ниже. */
+    public double grayConsciousness = 80.0;
+    public double ringingConcussion = 25.0;
+    public double heavyBreathingRespRate = 20.0;
+    public double heavyBreathingSpo2 = 93.0;
     public double concussionKnockoutLevel = 70.0;
     public double concussionKnockoutMinSeconds = 5.0;
     public double concussionKnockoutMaxSeconds = 15.0;

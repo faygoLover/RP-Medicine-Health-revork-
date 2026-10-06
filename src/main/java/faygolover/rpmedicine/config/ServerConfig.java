@@ -40,6 +40,7 @@ public final class ServerConfig {
     // TaCZ и Zero Contact
     public static final ForgeConfigSpec.DoubleValue ZC_PENETRATION_RATIO;
     public static final ForgeConfigSpec.DoubleValue ZC_POWERFUL_ROUND_DAMAGE;
+    public static final ForgeConfigSpec.DoubleValue ZC_PLATE_BLUNT_FACTOR;
     public static final ForgeConfigSpec.DoubleValue ZC_HELMET_CONCUSSION;
     // Мобы
     public static final ForgeConfigSpec.DoubleValue MOB_BLEED_DAMAGE_PER_SEVERITY;
@@ -132,6 +133,10 @@ public final class ServerConfig {
         bind("sampleSpoilWarmHours", "Пробирка с кровью портится в тепле за столько часов (в термостате и холодильнике — не портится).");
         bind("spleenInternalBleed", "Селезёнка от 50 %: внутреннее кровотечение в живот (от 80 % — вдвое).");
         bind("aspleniaImmunityFactor", "Без селезёнки иммунитет слабее (множитель).");
+        bind("grayConsciousness", "Экран сереет, когда сознание ниже этого.");
+        bind("ringingConcussion", "Звон в ушах — с такой контузии.");
+        bind("heavyBreathingRespRate", "Тяжёлое дыхание (звук) — с такой частоты дыхания…");
+        bind("heavyBreathingSpo2", "… или когда SpO2 ниже этого.");
         bind("ivHoseLength", "Стойка капельницы: длина шланга, блоков. Пациент отошёл дальше — катетер вырван.");
         bind("ivAdditiveDripSeconds", "Пакет с добавленным препаратом (норадреналин, пропофол) капает столько секунд.");
         bind("ivTearWoundSeverity", "Рана от вырванного катетера (тяжесть пореза).");
@@ -281,6 +286,8 @@ public final class ServerConfig {
         B.comment("TaCZ и Zero Contact (п. 3.4). Пока в Zero Contact нет события с исходом, исход определяется сравнением урона до и после брони.").push("guns");
         ZC_PENETRATION_RATIO = B.comment("Урон после брони не меньше этой доли от урона до неё — пробитие; иначе пулю остановила плита.").defineInRange("penetration_ratio", 0.45, 0.0, 1.0);
         ZC_POWERFUL_ROUND_DAMAGE = B.comment("Пуля, остановленная плитой, при уроне до брони от этого значения даёт внутреннее кровотечение.").defineInRange("powerful_round_damage", 8.0, 0.0, 1000.0);
+        ZC_PLATE_BLUNT_FACTOR = B.comment("Запреградная травма: пуля, остановленная плитой, бьёт как эта доля её урона (ушиб, у тяжёлой — шанс перелома ребра).")
+                .defineInRange("plate_blunt_factor", 0.5, 0.0, 1.0);
         ZC_HELMET_CONCUSSION = B.comment("Пуля в шлем без пробития: контузия.").defineInRange("helmet_concussion", 25.0, 0.0, 100.0);
         B.pop();
 

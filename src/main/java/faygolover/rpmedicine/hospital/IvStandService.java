@@ -91,10 +91,11 @@ public final class IvStandService {
     public static boolean onPatient(ServerPlayer sp, LivingEntity target) {
         Hose h = HOSES.remove(sp.getUUID());
         if (h == null) return false;
-        if (!(target instanceof ServerPlayer patient)) {
+        if (!Medical.isPatient(target)) {
             msg(sp, "rpmedicine.iv.players_only", ChatFormatting.YELLOW);
             return true;
         }
+        LivingEntity patient = target;
         ServerLevel level = sp.server.getLevel(h.dim());
         if (level == null || level != sp.level() || !(level.getBlockEntity(h.pos()) instanceof IvStandBlockEntity be)) {
             msg(sp, "rpmedicine.iv.stand_gone", ChatFormatting.YELLOW);
@@ -120,8 +121,8 @@ public final class IvStandService {
     }
 
     /** Отсоединить пациента от стойки, к которой он подключён (снять капельницу в панели и т. п.). */
-    public static void detachPatient(ServerPlayer patient) {
-        ServerLevel level = patient.serverLevel();
+    public static void detachPatient(LivingEntity patient) {
+        if (!(patient.level() instanceof ServerLevel level)) return;
         BlockPos c = patient.blockPosition();
         int r = (int) Math.ceil(faygolover.rpmedicine.core.MedicalSettings.get().ivHoseLength) + 1;
         for (BlockPos p : BlockPos.betweenClosed(c.offset(-r, -2, -r), c.offset(r, 2, r))) {

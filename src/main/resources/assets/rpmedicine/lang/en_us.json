@@ -619,7 +619,7 @@
   "rpmedicine.iv.no_bags": "No bags on the stand",
   "rpmedicine.iv.no_hook": "No free hooks",
   "rpmedicine.iv.no_saline_for_drug": "No saline bag on the stand for the drug",
-  "rpmedicine.iv.players_only": "Only a player can be connected",
+  "rpmedicine.iv.players_only": "Only a patient can be connected",
   "rpmedicine.iv.stand_gone": "The stand is gone",
   "rpmedicine.iv.too_far": "The patient is too far from the stand",
   "rpmedicine.iv.torn": "The catheter got torn out of your arm!",
