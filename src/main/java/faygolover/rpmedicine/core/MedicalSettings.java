@@ -215,8 +215,8 @@ public final class MedicalSettings {
     public double dazedSpeedPenalty = 0.2;
     public double carrySpeedPenalty = 0.35;
     public double treatingSpeedPenalty = 0.5;
-    public double armUseSlowMain = 1.5;
-    public double armUseSlowOff = 1.25;
+    public double armUseSlowMain = 2.5;
+    public double armUseSlowOff = 1.75;
     public double armAttackPenaltyMain = 0.3;
     public double armAttackPenaltyOff = 0.1;
     /** С какого уровня медицины на панели видны цифры состояния частей тела (ГМ видит всегда). */
@@ -436,8 +436,8 @@ public final class MedicalSettings {
     public double vomitThirstLoss = 5.0;
     public double vomitLsoThirstLoss = 1.0;
     /** Мгновенный урон: острая боль за единицу урона и сколько секунд. */
-    public double instantDamagePainPerDamage = 12.0;
-    public double instantDamagePainSeconds = 20.0;
+    public double instantDamagePainPerDamage = 15.0;
+    public double instantDamagePainSeconds = 60.0;
     /** Золотое яблоко: адреналин, секунд. */
     public double goldenAppleAdrenalineSeconds = 60.0;
     /** Тотем бессмертия: кровь не ниже этой доли нормы. */
@@ -488,6 +488,8 @@ public final class MedicalSettings {
     public double stumpSeverity = 20;
     public boolean traumaticAmputation = true;
     public double traumaticAmputationDamage = 30;
+    /** Взрыв делит урон по частям тела — для отрыва взрывом свой порог доли урона (замечание 89). */
+    public double traumaticAmputationBlastDamage = 5;
     public double traumaticAmputationChance = 0.3;
     public double traumaticStumpSeverity = 60;
     public double traumaticAmputationPain = 90;

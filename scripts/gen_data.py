@@ -456,7 +456,7 @@ BC_SOUNDS = {
     "pain_moan": ["old_groan_1", "old_groan_2", "old_groan_3", "old_groan_4", "old_groan_5"],
     "bone_break": ["fracture1", "fracture2", "fracture3", "fracture4"],
     "vomit": ["vomit_1", "vomit_2", "vomit_3", "vomit_4", "x:hbm_vomit"],
-    "pills": ["pill_swallow"], "injection": ["insulin_shot", "surgery_inject"],
+    "pills": ["pill_swallow"], "injection": ["insulin_shot"],
     "bandage": ["bandage_wrap_1", "bandage_wrap_2", "bandage_wrap_3"], "splint": ["splint_wrap"],
     "monitor_alarm": ["alarm_beep"], "ear_ringing": ["ear_ring"], "eardrum_burst": ["eardrum_burst"],
     "flatline": ["heart_flatline"], "heart_stopping": ["heart_stopping"], "scanner": ["scanner_blip"],

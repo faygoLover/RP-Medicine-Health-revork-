@@ -45,6 +45,7 @@ public final class Medcard {
     // Сведения о пациенте.
     public String fullName = "";
     public String callsign = "";
+    /** Старое поле «вступил на службу» (убрано с формы — замечание 53), хранится для старых карт. */
     public String serviceDate = "";
     public String birthDate = "";
     /** Пол: {@code m}, {@code f} или пусто. Задаёт голос стонов. */
@@ -64,6 +65,12 @@ public final class Medcard {
     public String disability = "";
     public int marks;
     public String comment = "";
+    /**
+     * Фото: свойство {@code textures} профиля (base64) на момент заведения карты — снимок анфас по скину.
+     * Пусто — скин по умолчанию для uuid (офлайн-сервер).
+     */
+    public String photo = "";
+    public boolean photoTaken;
 
     public int nextId = 1;
     public List<Entry> entries = new ArrayList<>();
@@ -114,6 +121,7 @@ public final class Medcard {
         if (implants == null) implants = "";
         if (disability == null) disability = "";
         if (comment == null) comment = "";
+        if (photo == null) photo = "";
         if (entries == null) entries = new ArrayList<>();
         for (Entry e : entries) {
             if (e.circumstances == null) e.circumstances = "";

@@ -68,6 +68,17 @@ public class MedcardScreen extends Screen {
     private String department;
     private int marks;
     private boolean closed;
+    /** Титул в режиме правки (карандаш): видны поля ввода и кнопки (замечание 52). */
+    private boolean titleEdit;
+    /** Страницы титула в режиме просмотра: блоки по страницам (левая, правая, следующий разворот…). */
+    private List<List<TitleBlock>> titlePages = List.of();
+
+    /** Блок титула: подпись и значение, перенесённое по ширине страницы. */
+    private record TitleBlock(Component label, List<FormattedCharSequence> lines, int color) {
+        int height() {
+            return LINE + Math.max(1, lines.size()) * LINE + 3;
+        }
+    }
     /** Страницы анамнеза: строки каждого разворота. */
     private List<List<Row>> pages = List.of();
 
@@ -112,15 +123,21 @@ public class MedcardScreen extends Screen {
         for (var e : boxes.entrySet()) drafts.put(e.getKey(), e.getValue().getValue());
         boxes.clear();
         pages = paginate();
-        if (spread > pages.size()) spread = pages.size();
+        titlePages = titleEdit ? List.of() : paginateTitle();
+        int total = titleSpreads() + Math.max(1, pages.size());
+        if (spread >= total) spread = total - 1;
         int l = left();
         int t = top();
-        if (spread == 0) initTitle(l, t);
+        if (spread < titleSpreads()) initTitle(l, t);
         else initHistory(l, t);
         // Листать.
-        int total = 1 + Math.max(1, pages.size());
         if (spread > 0) addRenderableWidget(Button.builder(Component.literal("◀"), b -> turn(-1)).bounds(l + 4, t + H - 16, 16, 12).build());
         if (spread + 1 < total) addRenderableWidget(Button.builder(Component.literal("▶"), b -> turn(1)).bounds(l + W - 20, t + H - 16, 16, 12).build());
+    }
+
+    /** Сколько разворотов занимает титул: в правке — один, при просмотре — сколько нужно тексту. */
+    private int titleSpreads() {
+        return titleEdit ? 1 : Math.max(1, (titlePages.size() + 1) / 2);
     }
 
     private void turn(int d) {
@@ -140,27 +157,34 @@ public class MedcardScreen extends Screen {
     }
 
     private void initTitle(int l, int t) {
-        // Левая страница: регистрация и сведения.
+        // Карандаш: правка титула. Без него — только текст, без полей и кнопок.
+        addRenderableWidget(Button.builder(Component.literal(titleEdit ? "✔" : "✎"), b -> {
+            if (titleEdit) saveTitle();
+            titleEdit = !titleEdit;
+            spread = 0;
+            rebuildWidgets();
+        }).bounds(l + W - 20, t + 4, 16, 14).tooltip(Tooltip.create(Component.translatable(titleEdit ? "rpmedicine.medcard.save" : "rpmedicine.medcard.edit"))).build());
+        if (!titleEdit) return;
+        // Статус: открыта (обычным) / закрыта (красным) — переключение нажатием, как отдел (замечание 51).
         addRenderableWidget(Button.builder(statusLabel(), b -> {
             closed = !closed;
             b.setMessage(statusLabel());
             send(MedcardActionPacket.set(card.uuid, "closed", closed ? "1" : "0"));
-        }).bounds(l + 74, t + 66, 96, 12).build());
+        }).bounds(l + 60, t + 66, 70, 12).build());
         int fx = l + 82;
         int fw = PAGE - 92;
         box("fullName", fx, t + 108, fw, card.fullName.isEmpty() ? card.name : card.fullName, 64);
         box("callsign", fx, t + 122, fw, card.callsign, 32);
-        box("serviceDate", fx, t + 136, 70, card.serviceDate, 16);
-        box("birthDate", fx, t + 150, 70, card.birthDate, 16);
+        box("birthDate", fx, t + 136, 70, card.birthDate, 16);
         addRenderableWidget(Button.builder(genderLabel(), b -> {
             gender = gender.equals("m") ? "f" : gender.equals("f") ? "" : "m";
             b.setMessage(genderLabel());
-        }).bounds(fx, t + 164, 70, 12).build());
+        }).bounds(fx, t + 150, 70, 12).build());
         addRenderableWidget(Button.builder(departmentLabel(), b -> {
             int i = java.util.Arrays.asList(Medcard.DEPARTMENTS).indexOf(department);
             department = Medcard.DEPARTMENTS[(i + 1) % Medcard.DEPARTMENTS.length];
             b.setMessage(departmentLabel());
-        }).bounds(fx, t + 178, fw, 12).build());
+        }).bounds(fx, t + 164, fw, 12).build());
 
         // Правая страница: медицинские сведения, отметки, комментарий.
         int rx = l + PAGE + 10;
@@ -177,8 +201,63 @@ public class MedcardScreen extends Screen {
             }).bounds(rx, t + 164 + i * 14, rw, 12).build());
         }
         box("comment", rx, t + 220, rw, card.comment, 300);
-        addRenderableWidget(Button.builder(Component.translatable("rpmedicine.medcard.save"), b -> saveTitle())
-                .bounds(l + W - 96, t + H - 17, 70, 14).build());
+    }
+
+    /** Титул для просмотра: блоки «подпись — значение» с переносами, разложенные по страницам. */
+    private List<List<TitleBlock>> paginateTitle() {
+        int w = PAGE - 24;
+        List<TitleBlock> blocks = new ArrayList<>();
+        String[][] info = {{"full_name", card.fullName.isEmpty() ? card.name : card.fullName}, {"callsign", card.callsign},
+                {"birth_date", card.birthDate}, {"gender", genderLabel().getString()}, {"department", departmentLabel().getString()}};
+        for (String[] f : info) blocks.add(block("rpmedicine.medcard." + f[0], f[1], w));
+        blocks.add(new TitleBlock(Component.translatable("rpmedicine.medcard.vitals"),
+                font.split(Component.translatable("rpmedicine.medcard.blood").append(" " + bloodLong(card.bloodType) + "   ")
+                        .append(Component.translatable("rpmedicine.medcard.height")).append(" " + Math.round(card.height) + "   ")
+                        .append(Component.translatable("rpmedicine.medcard.weight")).append(" " + Math.round(card.weight)), w), INK));
+        // Медицинские сведения — с правой страницы.
+        blocks.add(null);
+        String[] med = {"allergies", "chronic", "medications", "implants", "disability"};
+        String[] vals = {card.allergies, card.chronic, card.medications, card.implants, card.disability};
+        for (int i = 0; i < med.length; i++) blocks.add(block("rpmedicine.medcard." + med[i], vals[i], w));
+        MutableComponent mk = Component.empty();
+        int[] bits = {Medcard.MARK_PSYCH, Medcard.MARK_INCAPACITY, Medcard.MARK_HIGH_RISK};
+        boolean any = false;
+        for (int bit : bits) {
+            if ((marks & bit) == 0) continue;
+            if (any) mk.append("; ");
+            mk.append(markText(bit));
+            any = true;
+        }
+        blocks.add(new TitleBlock(Component.translatable("rpmedicine.medcard.marks"),
+                font.split(any ? mk.withStyle(st -> st.withColor(0xA02020)) : Component.literal("—"), w), any ? INK : FADED));
+        blocks.add(block("rpmedicine.medcard.comment", card.comment, w));
+        // Раскладка: первая (левая) страница начинается ниже регистрации и фото, остальные — сверху.
+        List<List<TitleBlock>> out = new ArrayList<>();
+        List<TitleBlock> page = new ArrayList<>();
+        int y = 96;
+        int bottom = H - 34;
+        for (TitleBlock b : blocks) {
+            if (b == null) {
+                out.add(page);
+                page = new ArrayList<>();
+                y = 22;
+                continue;
+            }
+            if (y + b.height() > bottom && !page.isEmpty()) {
+                out.add(page);
+                page = new ArrayList<>();
+                y = 22;
+            }
+            page.add(b);
+            y += b.height();
+        }
+        out.add(page);
+        return out;
+    }
+
+    private TitleBlock block(String key, String value, int w) {
+        boolean empty = value == null || value.isBlank();
+        return new TitleBlock(Component.translatable(key), font.split(Component.literal(empty ? "—" : value), w), empty ? FADED : INK);
     }
 
     private void initHistory(int l, int t) {
@@ -225,8 +304,8 @@ public class MedcardScreen extends Screen {
     }
 
     private void saveTitle() {
-        String[] fields = {"fullName", "callsign", "serviceDate", "birthDate", "allergies", "chronic", "medications", "implants", "disability", "comment"};
-        String[] now = {card.fullName.isEmpty() ? card.name : card.fullName, card.callsign, card.serviceDate, card.birthDate, card.allergies,
+        String[] fields = {"fullName", "callsign", "birthDate", "allergies", "chronic", "medications", "implants", "disability", "comment"};
+        String[] now = {card.fullName.isEmpty() ? card.name : card.fullName, card.callsign, card.birthDate, card.allergies,
                 card.chronic, card.medications, card.implants, card.disability, card.comment};
         for (int i = 0; i < fields.length; i++) {
             EditBox b = boxes.get(fields[i]);
@@ -243,8 +322,8 @@ public class MedcardScreen extends Screen {
     }
 
     private Component statusLabel() {
-        return Component.literal(closed ? "☐ " : "☑ ").append(Component.translatable("rpmedicine.medcard.status_active"))
-                .append(Component.literal(closed ? "  ☑ " : "  ☐ ")).append(Component.translatable("rpmedicine.medcard.status_closed"));
+        return closed ? Component.translatable("rpmedicine.medcard.status_closed").withStyle(st -> st.withColor(0xD03030))
+                : Component.translatable("rpmedicine.medcard.status_active");
     }
 
     private Component genderLabel() {
@@ -253,6 +332,11 @@ public class MedcardScreen extends Screen {
 
     private Component departmentLabel() {
         return department.isEmpty() ? Component.literal("—") : Component.translatable("rpmedicine.medcard.dept." + department);
+    }
+
+    private Component markText(int bit) {
+        String key = bit == Medcard.MARK_PSYCH ? "mark_psych" : bit == Medcard.MARK_INCAPACITY ? "mark_incapacity" : "mark_high_risk";
+        return Component.translatable("rpmedicine.medcard." + key);
     }
 
     private Component markLabel(int bit) {
@@ -304,7 +388,7 @@ public class MedcardScreen extends Screen {
         int cap = (TABLE_BOTTOM - TABLE_TOP) / LINE;
         for (Medcard.Entry e : list) {
             Instant at = Instant.ofEpochMilli(e.time);
-            List<FormattedCharSequence> date = List.of(Component.literal(DAY.format(at)).getVisualOrderText(),
+            List<FormattedCharSequence> date = List.of(Component.literal(DAY_SHORT.format(at)).getVisualOrderText(),
                     Component.literal(TIME.format(at)).withStyle(s -> s.withColor(FADED)).getVisualOrderText());
             MutableComponent d = entryComponent(e).withStyle(s -> s.withColor(e.proposed ? GOLD : INK));
             if (!e.author.isEmpty()) d.append(Component.literal(" — " + e.author).withStyle(s -> s.withColor(FADED).withItalic(true)));
@@ -336,26 +420,63 @@ public class MedcardScreen extends Screen {
         g.fill(l, t, l + PAGE - 1, t + H, PAPER);
         g.fill(l + PAGE + 1, t, l + W, t + H, PAPER);
         g.fill(l + PAGE - 1, t, l + PAGE + 1, t + H, 0xFFB8AD96);
-        if (spread == 0) renderTitle(g, l, t, mx, my);
+        if (spread < titleSpreads()) renderTitle(g, l, t, mx, my);
         else renderHistory(g, l, t);
-        int total = 1 + Math.max(1, pages.size());
+        int total = titleSpreads() + Math.max(1, pages.size());
         text(g, Component.literal((spread + 1) + " / " + total), l + PAGE, t + H - 13, FADED, true);
         super.render(g, mx, my, pt);
     }
 
     private void renderTitle(GuiGraphics g, int l, int t, int mx, int my) {
+        if (titleEdit) {
+            renderTitleEdit(g, l, t, mx, my);
+            return;
+        }
+        if (spread == 0) {
+            text(g, Component.translatable("rpmedicine.medcard.form_title").withStyle(ChatFormatting.BOLD), l + PAGE / 2, t + 8, INK, true);
+            text(g, Component.literal(card.fullName.isEmpty() ? card.name : card.fullName), l + PAGE / 2, t + 20, INK, true);
+            g.fill(l + 10, t + 31, l + PAGE - 10, t + 32, 0xFFB8AD96);
+            text(g, Component.translatable("rpmedicine.medcard.registration").withStyle(ChatFormatting.UNDERLINE), l + 10, t + 36, INK, false);
+            field(g, "rpmedicine.medcard.number", card.cardNumber, l + 10, t + 48);
+            field(g, "rpmedicine.medcard.opened", card.created > 0 ? DAY_SHORT.format(Instant.ofEpochMilli(card.created)) : "—", l + 10, t + 58);
+            Component st = Component.translatable("rpmedicine.medcard.status");
+            g.drawString(font, st, l + 10, t + 68, FADED, false);
+            g.drawString(font, statusLabel(), l + 14 + font.width(st), t + 68, closed ? 0xB02020 : INK, false);
+            drawPhoto(g, l + PAGE - 62, t + 36);
+            text(g, Component.translatable("rpmedicine.medcard.patient_info").withStyle(ChatFormatting.UNDERLINE), l + 10, t + 84, INK, false);
+            text(g, Component.translatable("rpmedicine.medcard.medical_info").withStyle(ChatFormatting.BOLD), l + PAGE + PAGE / 2, t + 8, INK, true);
+        }
+        // Страницы этого разворота: левая и правая.
+        for (int side = 0; side < 2; side++) {
+            int idx = spread * 2 + side;
+            if (idx >= titlePages.size()) break;
+            int x = l + 10 + side * PAGE;
+            int y = t + (idx == 0 ? 96 : 22);
+            for (TitleBlock b : titlePages.get(idx)) {
+                g.drawString(font, b.label(), x, y, FADED, false);
+                y += LINE;
+                for (FormattedCharSequence line : b.lines()) {
+                    g.drawString(font, line, x + 4, y, b.color(), false);
+                    y += LINE;
+                }
+                y += 3;
+            }
+        }
+        text(g, Component.translatable("rpmedicine.medcard.confidential").withStyle(ChatFormatting.ITALIC), l + 10, t + H - 28, FADED, false);
+    }
+
+    /** Титул в режиме правки: подписи к полям ввода. */
+    private void renderTitleEdit(GuiGraphics g, int l, int t, int mx, int my) {
         text(g, Component.translatable("rpmedicine.medcard.form_title").withStyle(ChatFormatting.BOLD), l + PAGE / 2, t + 8, INK, true);
         text(g, Component.literal(card.fullName.isEmpty() ? card.name : card.fullName), l + PAGE / 2, t + 20, INK, true);
         g.fill(l + 10, t + 31, l + PAGE - 10, t + 32, 0xFFB8AD96);
-        // Регистрационные данные.
         text(g, Component.translatable("rpmedicine.medcard.registration").withStyle(ChatFormatting.UNDERLINE), l + 10, t + 36, INK, false);
         field(g, "rpmedicine.medcard.number", card.cardNumber, l + 10, t + 48);
         field(g, "rpmedicine.medcard.opened", card.created > 0 ? DAY_SHORT.format(Instant.ofEpochMilli(card.created)) : "—", l + 10, t + 58);
         text(g, Component.translatable("rpmedicine.medcard.status"), l + 10, t + 68, FADED, false);
         drawPhoto(g, l + PAGE - 62, t + 36);
-        // Сведения о пациенте.
         text(g, Component.translatable("rpmedicine.medcard.patient_info").withStyle(ChatFormatting.UNDERLINE), l + 10, t + 96, INK, false);
-        String[] labels = {"full_name", "callsign", "service_date", "birth_date", "gender", "department"};
+        String[] labels = {"full_name", "callsign", "birth_date", "gender", "department"};
         for (int i = 0; i < labels.length; i++)
             text(g, Component.translatable("rpmedicine.medcard." + labels[i]), l + 10, t + 110 + i * 14, FADED, false);
         int vy = t + 194;
@@ -364,15 +485,12 @@ public class MedcardScreen extends Screen {
         field(g, "rpmedicine.medcard.weight", String.valueOf(Math.round(card.weight)), l + 110, vy + 11);
         if (mx >= l + 10 && mx < l + PAGE - 10 && my >= vy && my < vy + 22)
             g.renderTooltip(font, Component.translatable("rpmedicine.medcard.gm_only"), mx, my);
-
-        // Медицинские сведения.
         int rx = l + PAGE + 10;
         text(g, Component.translatable("rpmedicine.medcard.medical_info").withStyle(ChatFormatting.BOLD), l + PAGE + PAGE / 2, t + 8, INK, true);
         String[] med = {"allergies", "chronic", "medications", "implants", "disability"};
         for (int i = 0; i < med.length; i++) text(g, Component.translatable("rpmedicine.medcard." + med[i]), rx, t + 22 + i * 24, FADED, false);
         text(g, Component.translatable("rpmedicine.medcard.marks").withStyle(ChatFormatting.UNDERLINE), rx, t + 153, INK, false);
         text(g, Component.translatable("rpmedicine.medcard.comment").withStyle(ChatFormatting.UNDERLINE), rx, t + 210, INK, false);
-        text(g, Component.translatable("rpmedicine.medcard.confidential").withStyle(ChatFormatting.ITALIC), l + 10, t + H - 28, FADED, false);
     }
 
     private void renderHistory(GuiGraphics g, int l, int t) {
@@ -385,7 +503,8 @@ public class MedcardScreen extends Screen {
         text(g, Component.translatable("rpmedicine.medcard.col_diag").withStyle(ChatFormatting.UNDERLINE), lx + COL_DATE + 4, t + 18, INK, false);
         text(g, Component.translatable("rpmedicine.medcard.col_circ").withStyle(ChatFormatting.UNDERLINE), rx, t + 18, INK, false);
         text(g, Component.translatable("rpmedicine.medcard.col_cons").withStyle(ChatFormatting.UNDERLINE), rx + halfW + 4, t + 18, INK, false);
-        List<Row> rows = spread - 1 < pages.size() ? pages.get(spread - 1) : List.of();
+        int hp = spread - titleSpreads();
+        List<Row> rows = hp >= 0 && hp < pages.size() ? pages.get(hp) : List.of();
         if (rows.isEmpty()) text(g, Component.translatable("rpmedicine.medcard.no_entries"), lx, t + TABLE_TOP, FADED, false);
         int y = t + TABLE_TOP;
         int cap = (TABLE_BOTTOM - TABLE_TOP) / LINE;
@@ -425,21 +544,47 @@ public class MedcardScreen extends Screen {
         g.drawString(font, value, x + font.width(k) + 4, y, INK, false);
     }
 
-    /** Фото: персонаж, если он рядом (виден клиенту), в приглушённом «снимочном» цвете; иначе пустая рамка. */
+    /** Скины для фото по карте: снимок делается один раз при заведении карты (замечание 50). */
+    private static final Map<UUID, net.minecraft.resources.ResourceLocation> PHOTO_SKINS = new HashMap<>();
+
+    private net.minecraft.resources.ResourceLocation photoSkin() {
+        return PHOTO_SKINS.computeIfAbsent(card.uuid, u -> {
+            if (!card.photo.isEmpty()) {
+                try {
+                    String json = new String(java.util.Base64.getDecoder().decode(card.photo), java.nio.charset.StandardCharsets.UTF_8);
+                    var o = com.google.gson.JsonParser.parseString(json).getAsJsonObject();
+                    var skin = o.getAsJsonObject("textures").getAsJsonObject("SKIN");
+                    var tex = new com.mojang.authlib.minecraft.MinecraftProfileTexture(skin.get("url").getAsString(), java.util.Map.of());
+                    return minecraft.getSkinManager().registerTexture(tex, com.mojang.authlib.minecraft.MinecraftProfileTexture.Type.SKIN);
+                } catch (Exception ignored) {
+                    // Нет снимка — скин по умолчанию.
+                }
+            }
+            return net.minecraft.client.resources.DefaultPlayerSkin.getDefaultSkin(u);
+        });
+    }
+
+    /** Фото анфас: голова и плечи со скина, приглушённо, как снимок на документе. */
     private void drawPhoto(GuiGraphics g, int x, int y) {
         int w = 52;
         int h = 62;
         g.fill(x - 2, y - 2, x + w + 2, y + h + 2, 0xFFFFFFFF);
-        g.fill(x, y, x + w, y + h, 0xFFB9B6AE);
-        Player p = minecraft.level != null ? minecraft.level.getPlayerByUUID(card.uuid) : null;
-        if (p == null) {
-            text(g, Component.translatable("rpmedicine.medcard.no_photo"), x + w / 2, y + h / 2 - 4, 0x5A5A5A, true);
-            return;
-        }
+        g.fill(x, y, x + w, y + h, 0xFFB9C0C6);
+        var skin = photoSkin();
         g.enableScissor(x, y, x + w, y + h);
-        RenderSystem.setShaderColor(0.62f, 0.6f, 0.56f, 1f);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(g, x + w / 2, y + h + 28, 34, x + w / 2f, y + 8, p);
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(0.86f, 0.84f, 0.8f, 1f);
+        int hx = x + 12;
+        int hy = y + 7;
+        // Плечи: туловище и руки спереди (64×64 скин).
+        g.blit(skin, x + 12, hy + 28, 28, 36, 20, 20, 8, 12, 64, 64);
+        g.blit(skin, x - 2, hy + 30, 14, 36, 44, 20, 4, 12, 64, 64);
+        g.blit(skin, x + 40, hy + 30, 14, 36, 36, 52, 4, 12, 64, 64);
+        // Голова и слой «шляпы».
+        g.blit(skin, hx, hy, 28, 28, 8, 8, 8, 8, 64, 64);
+        g.blit(skin, hx - 1, hy - 1, 30, 30, 40, 8, 8, 8, 64, 64);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        RenderSystem.disableBlend();
         g.disableScissor();
     }
 
@@ -448,13 +593,14 @@ public class MedcardScreen extends Screen {
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (super.mouseClicked(mx, my, button)) return true;
-        if (spread == 0 || spread - 1 >= pages.size()) return false;
+        int hp = spread - titleSpreads();
+        if (hp < 0 || hp >= pages.size()) return false;
         int l = left();
         int t = top();
         if (my < t + TABLE_TOP || my >= t + TABLE_BOTTOM || mx < l + 8 || mx >= l + W - 8) return false;
         int y = t + TABLE_TOP;
         int cap = (TABLE_BOTTOM - TABLE_TOP) / LINE;
-        for (Row r : pages.get(spread - 1)) {
+        for (Row r : pages.get(hp)) {
             int n = Math.min(r.lines(), cap);
             if (my >= y && my < y + n * LINE) {
                 selected = selected == r.e().id ? -1 : r.e().id;
@@ -469,7 +615,7 @@ public class MedcardScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mx, double my, double delta) {
-        int total = 1 + Math.max(1, pages.size());
+        int total = titleSpreads() + Math.max(1, pages.size());
         int ns = Math.max(0, Math.min(total - 1, spread - (int) Math.signum(delta)));
         if (ns != spread) turn(ns - spread);
         return true;

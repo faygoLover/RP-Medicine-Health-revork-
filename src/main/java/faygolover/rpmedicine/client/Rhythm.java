@@ -30,8 +30,10 @@ public final class Rhythm {
     /** 0 — нет, 1 — СЛР, 2 — Амбу. */
     static int mode;
     private static long start;
-    /** Период компрессий, мс (≈110 в минуту). */
-    private static final long CPR_PERIOD = 545;
+    /** Период компрессий, мс: ≈110 в минуту, у опытного чуть медленнее (замечание 18). */
+    private static long cprPeriod = 545;
+    /** Половина окна попадания в долях периода: новичку узко, опытному широко. */
+    private static double window = 0.12;
     private static float lastQuality = -1;
     private static long lastBeat;
     private static int streak;
@@ -42,7 +44,10 @@ public final class Rhythm {
     private static long lastFrame;
     private static long cooldownUntil;
 
-    public static void set(String label) {
+    public static void set(String label, int level) {
+        int lv = Math.max(0, Math.min(10, level));
+        cprPeriod = 545 + 6L * lv;
+        window = 0.10 + 0.025 * lv;
         int m = label.equals("rpmedicine.action.cpr") ? 1 : label.equals("rpmedicine.action.ambu") ? 2 : 0;
         if (m != mode) {
             mode = m;
@@ -70,9 +75,10 @@ public final class Rhythm {
         if (mc.screen != null || !mc.options.keyJump.matches(e.getKey(), e.getScanCode())) return;
         long now = System.currentTimeMillis();
         if (mode == 1 && e.getAction() == GLFW.GLFW_PRESS) {
-            double phase = ((now - start) % CPR_PERIOD) / (double) CPR_PERIOD;
+            // Такт — когда точка проходит центр (раньше точка была у края в момент такта — замечание 5).
+            double phase = ((now - start) % cprPeriod) / (double) cprPeriod;
             double dist = Math.min(phase, 1 - phase);
-            float q = (float) Math.max(0, Math.min(1, 1 - dist / 0.22));
+            float q = (float) Math.max(0, Math.min(1, 1 - dist / window));
             lastQuality = q;
             lastBeat = now;
             streak = q >= 0.5 ? streak + 1 : 0;
@@ -108,15 +114,17 @@ public final class Rhythm {
         g.fill(-3, -3, 103, 34, 0x90000000);
         if (mode == 1) {
             g.drawString(font, Component.translatable("rpmedicine.rhythm.cpr").withStyle(ChatFormatting.WHITE), 0, 0, 0xFFFFFF, true);
-            double phase = ((now - start) % CPR_PERIOD) / (double) CPR_PERIOD;
-            // Метроном: точка ходит туда-обратно, в центре — такт.
-            double pos = phase < 0.5 ? phase * 2 : 2 - phase * 2;
+            // Метроном: точка качается маятником и проходит центр ровно в такт (раз в период).
+            double t = (now - start) / (double) cprPeriod;
+            double phase = t % 1.0;
+            double pos = 0.5 + 0.5 * Math.sin(Math.PI * t);
             g.fill(0, 14, 100, 18, 0xFF303030);
-            g.fill(46, 12, 54, 20, 0xFF2E8B57);
-            int x = (int) (pos * 96);
+            // Зелёная зона — ширина окна попадания: за время window*период точка уходит от центра на столько.
+            int half = Math.max(2, (int) Math.round(50 * Math.sin(Math.PI * window)));
+            g.fill(50 - half, 12, 50 + half, 20, 0xFF2E8B57);
+            int x = (int) Math.round(pos * 100) - 2;
             g.fill(x, 11, x + 4, 21, 0xFFFFFFFF);
-            // Вспышка в момент такта.
-            if (phase < 0.08 || phase > 0.92) g.fill(46, 12, 54, 20, 0xFF7CFF9C);
+            if (phase < 0.06 || phase > 0.94) g.fill(50 - half, 12, 50 + half, 20, 0xFF7CFF9C);
         } else {
             g.drawString(font, Component.translatable("rpmedicine.rhythm.ambu").withStyle(ChatFormatting.WHITE), 0, 0, 0xFFFFFF, true);
             if (squeezing) {

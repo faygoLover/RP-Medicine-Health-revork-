@@ -214,6 +214,16 @@ public class MedicalPanelScreen extends Screen {
                 }
             }
         }
+        // Кнопки общего раздела — сразу под текстом, друг под другом (не наезжают на строки — замечание 17).
+        int by = Math.max(gy + 4, t + 60);
+        int bw = Math.min(140, W - (gx - l) - 8);
+        for (Button b : new Button[]{dripButton, tubeButton, airwayButton, restrainButton}) {
+            if (b == null || !b.visible) continue;
+            b.setX(gx);
+            b.setY(by);
+            b.setWidth(bw);
+            by += 18;
+        }
         // Медицинские предметы для перетаскивания.
         drawItems(g, mx, my);
         // Сообщение сервера — внутри панели (над панелью быстрого доступа его закрывает окно).
@@ -226,7 +236,7 @@ public class MedicalPanelScreen extends Screen {
         // Прогресс действия поверх панели (HUD рисуется под экраном).
         if (ClientState.progressActive() || ClientState.incomingActive()) {
             g.pose().pushPose();
-            g.pose().translate(generalX(), t + 162, 0);
+            g.pose().translate(generalX(), Math.max(t + 162, by + 2), 0);
             faygolover.rpmedicine.client.MedicalHud.drawElement(g, font, faygolover.rpmedicine.config.ClientConfig.HudElement.PROGRESS, ClientState.self, false);
             g.pose().popPose();
         }

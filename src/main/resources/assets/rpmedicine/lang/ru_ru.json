@@ -628,7 +628,7 @@
   "rpmedicine.medcard.status_closed": "закрыта",
   "rpmedicine.medcard.title": "Медкарта",
   "rpmedicine.medcard.title_of": "Медкарта: %s",
-  "rpmedicine.medcard.vitals": "Рост %s см   Вес %s кг   Группа крови %s",
+  "rpmedicine.medcard.vitals": "Кровь, рост, вес (меняет ГМ)",
   "rpmedicine.medcard.weight": "Вес, кг:",
   "rpmedicine.medcard.yes": "есть",
   "rpmedicine.minigame.amputation": "Ампутация",

@@ -628,7 +628,7 @@
   "rpmedicine.medcard.status_closed": "closed",
   "rpmedicine.medcard.title": "Medical record",
   "rpmedicine.medcard.title_of": "Medical record: %s",
-  "rpmedicine.medcard.vitals": "Height %s cm   Weight %s kg   Blood type %s",
+  "rpmedicine.medcard.vitals": "Blood, height, weight (set by the GM)",
   "rpmedicine.medcard.weight": "Weight, kg:",
   "rpmedicine.medcard.yes": "yes",
   "rpmedicine.minigame.amputation": "Amputation",

@@ -26,13 +26,13 @@ public final class SearchService {
 
     public static void start(ServerPlayer actor, LivingEntity target) {
         if (actor == target || !Medical.isDown(target) || Medical.isDown(actor)) return;
-        if (actor.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 0.5) return;
+        if (actor.distanceTo(target) > ServerConfig.CLOSE_DISTANCE.get() + 0.3) return;
         ActionManager.start(new SearchAction(actor, target, (int) (ServerConfig.SEARCH_SECONDS.get() * 20)));
     }
 
     static boolean valid(Player actor, LivingEntity target) {
         return !target.isRemoved() && Medical.isDown(target) && !Medical.isDown(actor)
-                && actor.distanceTo(target) <= ServerConfig.INTERACT_DISTANCE.get() + 1.5;
+                && actor.distanceTo(target) <= ServerConfig.CLOSE_DISTANCE.get() + 0.5;
     }
 
     static final class SearchAction extends ActionManager.TimedAction {

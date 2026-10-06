@@ -676,7 +676,8 @@ public final class TreatmentService {
         Long last = HOLDS.put(actor.getUUID(), now);
         if (last == null || now - last > 10) {
             String label = action == TreatmentAction.CPR ? "rpmedicine.action.cpr" : "rpmedicine.action.ambu";
-            faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.ProgressPacket(label, -1, 0));
+            // В «сделано» — уровень медицины: от него ширина окна попадания в ритм.
+            faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.ProgressPacket(label, -1, Medical.medicineLevel(actor)));
         }
     }
 
@@ -699,7 +700,11 @@ public final class TreatmentService {
         double q = Math.max(0, Math.min(1, quality));
         if (RANDOM.nextDouble() < Skill.errorChance(Medical.medicineLevel(actor), info.minLevel(), s)) q *= 0.5;
         if (ambu) m.ambuSeconds = Math.max(m.ambuSeconds, 1.5 + 3.5 * q);
-        else m.cprSeconds = Math.max(m.cprSeconds, 0.35 + 0.9 * q);
+        else {
+            m.cprSeconds = Math.max(m.cprSeconds, 0.35 + 0.9 * q);
+            // Компрессия видна: рука опускается только на нажатие пробела (замечание 16).
+            actor.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+        }
         Medical.changed(info.target());
     }
 

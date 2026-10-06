@@ -32,6 +32,8 @@ public final class ServerConfig {
     public static final ForgeConfigSpec.BooleanValue STUBS_ENABLED;
     public static final ForgeConfigSpec.BooleanValue BLOCK_CARRY_ON;
     public static final ForgeConfigSpec.DoubleValue INTERACT_DISTANCE;
+    /** Осмотр (панель) и обыск — только вплотную (замечание 7). */
+    public static final ForgeConfigSpec.DoubleValue CLOSE_DISTANCE;
     public static final ForgeConfigSpec.DoubleValue CARRY_STAMINA_PER_SECOND;
     public static final ForgeConfigSpec.DoubleValue VANILLA_HEAL_BOOST_SECONDS;
     public static final ForgeConfigSpec.DoubleValue PROTECTED_ARMOR_EFFECT;
@@ -67,6 +69,7 @@ public final class ServerConfig {
         STUBS_ENABLED = B.comment("Оставлять заглушку (тело) лежачего игрока при выходе из игры (п. 5.5).").define("stubs_enabled", true);
         BLOCK_CARRY_ON = B.comment("Запрещать Carry On поднимать игроков и заглушки (у мода своя переноска).").define("block_carry_on", true);
         INTERACT_DISTANCE = B.comment("Дальность лечения, обыска, переноски и добивания, блоки.").defineInRange("interact_distance", 3.5, 1.0, 16.0);
+        CLOSE_DISTANCE = B.comment("Дальность осмотра (панель по H) и обыска, блоки: только вплотную к пациенту.").defineInRange("close_distance", 2.0, 1.0, 16.0);
         CARRY_STAMINA_PER_SECOND = B.comment("Расход выносливости RP Stamina на переноску тела, в секунду.").defineInRange("carry_stamina_per_second", 4.0, 0.0, 10000.0);
         VANILLA_HEAL_BOOST_SECONDS = B.comment("Лечение от зелий и чужих модов не лечит, а ускоряет заживление: секунд ускорения на единицу лечения.").defineInRange("vanilla_heal_boost_seconds", 30.0, 0.0, 3600.0);
         PROTECTED_ARMOR_EFFECT = B.comment("Доля ванильного снижения урона броней, если попали в закрытую часть (1 — как в ванилле).").defineInRange("armor_effect", 1.0, 0.0, 2.0);
@@ -529,6 +532,49 @@ public final class ServerConfig {
         bind("sepsisFeverMin", "Лихорадка при сепсисе 10 %, °C над нормой.");
         bind("sepsisFeverMax", "Лихорадка при сепсисе 100 %, °C над нормой.");
         bind("feverHeartRatePerDegree", "Пульс чаще на столько за каждый градус выше 37.");
+        B.pop();
+
+        B.comment("Некроз, ампутации, протезы (третий этап, п. 6).").push("limbs");
+        bind("necrosisIrreversible", "Некроз от этого процента — необратим (только ампутация).");
+        bind("necrosisGrowthPerHour", "Некроз растёт на столько процентов в час, пока причина есть (жгут, ишемия, сепсис).");
+        bind("necrosisSelfGrowthPerHour", "Необратимый некроз растёт сам на столько процентов в час.");
+        bind("necrosisRecoveryPerHour", "Обратимый некроз под антибиотиком уходит на столько процентов в час.");
+        bind("necrosisSepsisThreshold", "Сепсис от этого процента может запустить некроз рук и стоп.");
+        bind("necrosisSepsisChancePerHour", "Шанс в час, что при таком сепсисе начнётся некроз конечности.");
+        bind("necrosisSepsisPerHour", "Каждая необратимо омертвевшая часть добавляет столько процентов сепсиса в час.");
+        bind("stumpSeverity", "Культя после ампутации: рана под швами такой тяжести.");
+        bind("traumaticAmputation", "Травматическая ампутация: сильный удар может оторвать сломанную конечность.");
+        bind("traumaticAmputationDamage", "Отрыв — при уроне по сломанной конечности больше этого (удар, пуля).");
+        bind("traumaticAmputationBlastDamage", "Отрыв взрывом — при доле урона взрыва на сломанную конечность больше этого.");
+        bind("traumaticAmputationChance", "Шанс отрыва при таком уроне.");
+        bind("traumaticStumpSeverity", "Рана культи при отрыве.");
+        bind("traumaticAmputationPain", "Острая боль при отрыве.");
+        bind("prostheticFootSpeedPenalty", "Протез стопы: медленнее на эту долю.");
+        bind("pegLegSpeedPenalty", "Деревянная нога: медленнее на эту долю (и без бега).");
+        B.pop();
+
+        B.comment("Органы и пересадка (третий этап, п. 7).").push("organs");
+        bind("organSpoilWarmHours", "Орган вне холодильника портится за столько часов.");
+        bind("organSpoilFridgeDays", "Орган в холодильнике портится за столько дней.");
+        bind("limbReattachHours", "Отрезанную конечность можно пришить столько часов.");
+        bind("rejectionPerHour", "Отторжение органа другой группы растёт на столько процентов в час (циклоспорин останавливает).");
+        bind("reattachSeverity", "Пришитая конечность: рана такой тяжести.");
+        B.pop();
+
+        B.comment("Обмен веществ: диабет, курение, алкоголь (третий этап, п. 8).").push("metabolism");
+        bind("sugarDeclinePerHour", "Сахар крови у диабетика падает на столько ммоль/л в час без еды.");
+        bind("sugarPerNutrition", "Сахар растёт на столько от единицы углеводов еды.");
+        bind("glucoseTabletSugar", "Таблетка глюкозы поднимает сахар на столько.");
+        bind("sugarLow", "Гипогликемия: ниже этого — пот, слабость.");
+        bind("sugarFaint", "Ниже этого — обморок.");
+        bind("sugarBrainDamage", "Ниже этого — повреждение мозга.");
+        bind("hypoglycemiaBrainPerHour", "Мозг теряет столько процентов в час при таком сахаре.");
+        bind("sugarHigh", "Гипергликемия: выше этого — жажда, тошнота.");
+        bind("sugarComa", "Выше этого — кома.");
+        bind("hyperglycemiaThirstPerHour", "Жажда при высоком сахаре, единиц в час.");
+        bind("smokerLungsFloor", "Курильщик: лёгкие не лучше этого (повреждение, %).");
+        bind("alcoholicLiverFloor", "Алкоголик: печень не лучше этого (повреждение, %).");
+        bind("smokerCoughsPerHour", "Курильщик кашляет столько раз в час.");
         B.pop();
 
         SPEC = B.build();

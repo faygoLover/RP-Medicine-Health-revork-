@@ -54,7 +54,7 @@ public final class ExamService {
             PANELS.remove(viewer.getUUID());
             return;
         }
-        LivingEntity target = resolve(viewer, targetId, PANEL_DISTANCE);
+        LivingEntity target = resolve(viewer, targetId, faygolover.rpmedicine.config.ServerConfig.CLOSE_DISTANCE.get() + 0.3);
         if (target == null) return;
         Sub sub = new Sub();
         sub.targetId = target == viewer ? -1 : target.getId();
@@ -192,7 +192,7 @@ public final class ExamService {
             }
             Sub sub = e.getValue();
             if (panel) {
-                LivingEntity target = resolve(viewer, sub.targetId, PANEL_DISTANCE + 1);
+                LivingEntity target = resolve(viewer, sub.targetId, faygolover.rpmedicine.config.ServerConfig.CLOSE_DISTANCE.get() + 0.5);
                 if (target == null) {
                     it.remove();
                     continue;
@@ -208,7 +208,7 @@ public final class ExamService {
     public static void refreshFor(ServerPlayer viewer) {
         Sub sub = PANELS.get(viewer.getUUID());
         if (sub == null) return;
-        LivingEntity target = resolve(viewer, sub.targetId, PANEL_DISTANCE + 1);
+        LivingEntity target = resolve(viewer, sub.targetId, faygolover.rpmedicine.config.ServerConfig.CLOSE_DISTANCE.get() + 0.5);
         if (target != null) sendExam(viewer, target, sub);
     }
 

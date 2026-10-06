@@ -47,8 +47,20 @@ public final class MedcardStore {
         }
         c.fixNulls();
         c.ensureNumber();
+        takePhoto(server, c);
         CACHE.put(uuid, c);
         return c;
+    }
+
+    /** Снимок для карты — один раз, пока персонаж в сети (скин на момент заведения карты). */
+    public static void takePhoto(MinecraftServer server, Medcard c) {
+        if (c.photoTaken) return;
+        var sp = server.getPlayerList().getPlayer(c.uuid);
+        if (sp == null) return;
+        var tex = sp.getGameProfile().getProperties().get("textures");
+        c.photo = tex.isEmpty() ? "" : tex.iterator().next().getValue();
+        c.photoTaken = true;
+        save(server, c);
     }
 
     @Nullable

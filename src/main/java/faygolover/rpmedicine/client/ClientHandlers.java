@@ -92,7 +92,7 @@ public final class ClientHandlers {
             ClientState.incomingSubtitle = p.subtitle();
             return;
         }
-        if (p.totalTicks() < 0) Rhythm.set(p.labelKey());
+        if (p.totalTicks() < 0) Rhythm.set(p.labelKey(), p.doneTicks());
         else Rhythm.stop();
         ClientState.progressLabel = p.labelKey();
         ClientState.progressTotal = p.totalTicks();

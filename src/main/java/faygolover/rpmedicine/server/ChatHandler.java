@@ -30,8 +30,8 @@ public final class ChatHandler {
         if (sp == Speech.SILENCED) event.setCanceled(true);
         else if (!sp.canSpeak()) event.setMessage(Component.literal(DOTS));
         else {
+            // Одышка текст чата не искажает (замечание 64) — только голос.
             String text = event.getRawText();
-            if (sp == Speech.BREATHLESS) text = Speech.breathless(text, Speech.breathlessness(m, faygolover.rpmedicine.core.MedicalSettings.get()), RANDOM.split());
             text = faygolover.rpmedicine.core.Substances.slur(text, m.intoxication, RANDOM.split());
             if (!text.equals(event.getRawText())) event.setMessage(Component.literal(text));
         }
@@ -48,10 +48,7 @@ public final class ChatHandler {
         String cmd = input.startsWith("/") ? input.substring(1) : input;
         String[] parts = cmd.split(" ", 3);
         if (parts.length == 0 || !PRIVATE.contains(parts[0].toLowerCase(Locale.ROOT))) return;
-        if (speech == Speech.BREATHLESS) {
-            breathlessCommand(event, sp, m, parts);
-            return;
-        }
+        if (speech == Speech.BREATHLESS) return;
         if (Speech.of(m) == Speech.SILENCED) {
             event.setCanceled(true);
             return;
@@ -63,26 +60,5 @@ public final class ChatHandler {
         else return;
         var dispatcher = sp.server.getCommands().getDispatcher();
         event.setParseResults(dispatcher.parse(rewritten, parse.getContext().getSource()));
-    }
-
-    /** Одышка: текст /me, /tell и т.п. с обрывами. */
-    private static void breathlessCommand(CommandEvent event, ServerPlayer sp, MedicalState m, String[] parts) {
-        String root = parts[0].toLowerCase(Locale.ROOT);
-        boolean hasTarget = !(root.equals("me") || root.equals("teammsg") || root.equals("tm"));
-        String text;
-        String head;
-        if (hasTarget) {
-            if (parts.length < 3) return;
-            head = root + " " + parts[1] + " ";
-            text = parts[2];
-        } else {
-            if (parts.length < 2) return;
-            head = root + " ";
-            text = parts.length == 3 ? parts[1] + " " + parts[2] : parts[1];
-        }
-        String broken = Speech.breathless(text, Speech.breathlessness(m, faygolover.rpmedicine.core.MedicalSettings.get()), RANDOM.split());
-        if (broken.equals(text)) return;
-        var source = event.getParseResults().getContext().getSource();
-        event.setParseResults(sp.server.getCommands().getDispatcher().parse(head + broken, source));
     }
 }

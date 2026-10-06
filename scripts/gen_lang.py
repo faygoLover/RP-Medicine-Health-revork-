@@ -934,6 +934,9 @@ for k, ru, en in [("albumin", "Альбумин: %s г/л (норма 35–50)",
     t("rpmedicine.lab." + k, ru, en)
 t("rpmedicine.medcard.entry.lab_nutrition", "Анализ крови: альбумин %s г/л, триглицериды %s, глюкоза %s, B12 %s", "Blood test: albumin %s g/L, triglycerides %s, glucose %s, B12 %s")
 # --- конец пачки 05.10 ---
+# --- пачка 06.10: совместная проверка и внешний вид ---
+t("rpmedicine.medcard.vitals", "Кровь, рост, вес (меняет ГМ)", "Blood, height, weight (set by the GM)")
+# --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):

@@ -119,7 +119,8 @@ public final class Injuries {
         if (overflow > 0) overflow(m, part, overflow, wasIntact, rep, rnd, s);
 
         // Травматическая ампутация: огромный урон по сломанной конечности (третий этап, п. 6.1).
-        if (s.traumaticAmputation && part.isLimb() && ps.hasFracture() && damage > s.traumaticAmputationDamage
+        double ampThreshold = prof.location == InjuryProfile.Location.EXPLOSION ? s.traumaticAmputationBlastDamage : s.traumaticAmputationDamage;
+        if (s.traumaticAmputation && part.isLimb() && ps.hasFracture() && damage > ampThreshold
                 && rnd.nextDouble() < s.traumaticAmputationChance) {
             Limbs.traumatic(m, part, s);
             rep.outcomes.add(Outcome.AMPUTATION);
@@ -210,8 +211,9 @@ public final class Injuries {
             }
         }
 
-        // Контузия.
-        if (s.concussionEnabled && rnd.nextDouble() < prof.concussion.at(sev)) {
+        // Контузия — от удара по голове или взрывной волны; ушиб руки или ноги её не даёт (замечание 26).
+        boolean headOrBlast = part == BodyPart.HEAD || prof.location == InjuryProfile.Location.EXPLOSION;
+        if (s.concussionEnabled && headOrBlast && rnd.nextDouble() < prof.concussion.at(sev)) {
             if (addConcussion(m, sev * prof.concussionPerSeverity, rnd, s)) rep.outcomes.add(Outcome.KNOCKOUT);
             rep.outcomes.add(Outcome.CONCUSSION);
         }

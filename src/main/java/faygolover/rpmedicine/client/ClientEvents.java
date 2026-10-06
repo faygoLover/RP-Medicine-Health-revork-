@@ -95,7 +95,8 @@ public final class ClientEvents {
             mc.setScreen(new DownedScreen());
             return;
         }
-        Entity target = crosshairPatient(mc, 4.5);
+        // Чужая панель — только вплотную (замечание 7); дальше — своя.
+        Entity target = crosshairPatient(mc, 2.5);
         int id = target != null ? target.getId() : -1;
         mc.setScreen(new MedicalPanelScreen(id));
         Network.sendToServer(new RequestExamPacket(id, true));

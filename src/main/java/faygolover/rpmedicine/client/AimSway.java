@@ -17,7 +17,8 @@ public final class AimSway {
             lastDx = lastDy = 0;
             return;
         }
-        float amp = v.sway / 20f * 1.6f * (float) (double) ClientConfig.EFFECT_STRENGTH.get();
+        // Заметнее, чем было (замечание 29): до ~4,5° при полной раскачке.
+        float amp = v.sway / 20f * 4.5f * (float) (double) ClientConfig.EFFECT_STRENGTH.get();
         t += 0.08;
         // Плавная раскачка + мелкая дрожь; смещение — разность с прошлым тиком, чтобы не уводить прицел.
         float dx = (float) (Math.sin(t * 1.3) * amp + Math.sin(t * 7.1) * amp * 0.15);

@@ -48,7 +48,7 @@ public final class ClientSounds {
         if (ClientConfig.HEARTBEAT.get() && heartVol > 0 && v.heartbeat > 0) {
             if (--heartCooldown <= 0) {
                 var ev = v.heartbeat >= 3 ? ModSounds.HEARTBEAT_FAST.get() : ModSounds.HEARTBEAT.get();
-                mc.getSoundManager().play(SimpleSoundInstance.forUI(ev, 1.0f, 0.8f * heartVol));
+                mc.getSoundManager().play(SimpleSoundInstance.forUI(ev, 1.0f, 1.0f * heartVol));
                 heartCooldown = switch (v.heartbeat) { case 3 -> 16; case 2 -> 9; default -> 12; };
             }
         }

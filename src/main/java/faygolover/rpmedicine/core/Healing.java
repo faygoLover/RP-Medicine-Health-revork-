@@ -82,8 +82,14 @@ public final class Healing {
             advance(m, dt, s);
             for (BodyPartState ps : m.parts) {
                 for (Wound w : ps.wounds) if (w.isDressed()) w.dressingAge += dt;
-                if (!ps.hasTourniquet() && ps.ischemia > 0)
+                if (ps.hasTourniquet()) {
+                    // Жгут тоже «проматывается»: ишемия копится, потом некроз (замечание 88).
+                    ps.tourniquetSeconds += dt;
+                    double over = ps.tourniquetSeconds - s.tourniquetSafeMinutes * 60.0;
+                    if (over > 0) ps.ischemia = Math.min(100, ps.ischemia + s.tourniquetIschemiaPerMinute * dt / 60.0);
+                } else if (ps.ischemia > 0) {
                     ps.ischemia = Math.max(0, ps.ischemia - s.ischemiaRecoveryPerMinute * dt / 60.0);
+                }
             }
             if (m.totalExternalBleed(s) + m.totalInternalBleed() < 0.01)
                 Physiology.regenerateBlood(m, s.bloodRegenPerHour * dt / 3600.0, s);
@@ -93,6 +99,7 @@ public final class Healing {
             Physiology.tickDrugTimers(m, dt, true);
             StepInput in = new StepInput(dt);
             Infections.tick(m, in, s, new StepResult());
+            Limbs.tickNecrosis(m, in, s);
         }
     }
 }

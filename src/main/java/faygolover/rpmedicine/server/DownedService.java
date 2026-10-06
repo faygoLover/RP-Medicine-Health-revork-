@@ -80,8 +80,9 @@ public final class DownedService {
 
     /** Упал: прервать всё, что делал, сообщить окружающим (для позы). */
     public static void onWentDown(ServerPlayer sp, MedicalState m) {
-        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.BODY_FALL.get(),
-                net.minecraft.sounds.SoundSource.PLAYERS, 0.8f, 1.0f);
+        // Без громкого удара о землю (замечание 13): только тихий выдох.
+        sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.GASP.get(),
+                net.minecraft.sounds.SoundSource.VOICE, 0.3f, faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp));
         sp.stopUsingItem();
         if (sp.containerMenu != sp.inventoryMenu) sp.closeContainer();
         ActionManager.cancel(sp, "rpmedicine.action.interrupted");
@@ -94,7 +95,7 @@ public final class DownedService {
 
     public static void onWokeUp(ServerPlayer sp) {
         sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.WAKE_UP.get(),
-                net.minecraft.sounds.SoundSource.VOICE, 0.7f, faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp));
+                net.minecraft.sounds.SoundSource.VOICE, 0.3f, faygolover.rpmedicine.medcard.MedcardService.voicePitch(sp));
         CarryService.dropIfCarried(sp);
         broadcastDowned(sp, false);
         sp.displayClientMessage(Component.translatable("rpmedicine.msg.woke_up"), true);

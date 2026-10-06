@@ -42,9 +42,6 @@
     "sounds": [
       {
         "name": "rpmedicine:bc/insulin_shot"
-      },
-      {
-        "name": "rpmedicine:bc/surgery_inject"
       }
     ]
   },

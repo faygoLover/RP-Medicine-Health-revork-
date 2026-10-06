@@ -30,8 +30,9 @@ public class HudEditorScreen extends Screen {
 
     @Override
     protected void init() {
-        int cx = width / 2;
-        int y = height - 52;
+        // Кнопки маленькие, в правом верхнем углу — не закрывают элементы HUD (замечание 25).
+        int y = 4;
+        int right = width - 4;
         anchorButton = addRenderableWidget(Button.builder(anchorLabel(), b -> {
             if (selected == null) return;
             ClientConfig.ElementConfig c = ClientConfig.hud(selected);
@@ -40,13 +41,13 @@ public class HudEditorScreen extends Screen {
             c.offsetY.set(0);
             b.setMessage(anchorLabel());
             save();
-        }).bounds(cx - 155, y, 150, 20).build());
+        }).bounds(right - 236, y, 120, 14).build());
         addRenderableWidget(Button.builder(Component.translatable("rpmedicine.hud.editor.reset"), b -> {
             for (HudElement e : HudElement.values()) ClientConfig.hud(e).reset(e);
             save();
-        }).bounds(cx + 5, y, 72, 20).build());
+        }).bounds(right - 112, y, 54, 14).build());
         addRenderableWidget(Button.builder(Component.translatable("rpmedicine.hud.editor.done"), b -> onClose())
-                .bounds(cx + 81, y, 72, 20).build());
+                .bounds(right - 54, y, 54, 14).build());
     }
 
     private Component anchorLabel() {

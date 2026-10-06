@@ -55,7 +55,11 @@ public final class InteractionHandler {
         if (main.getItem() instanceof GmScannerItem) return;
         if (event.getLevel().isClientSide) {
             // Клиент: жест переноски и медпредметы поглощаем, чтобы не сработали чужие действия.
-            if (carryOnGesture || main.is(faygolover.rpmedicine.menu.MedicalContainerMenu.MEDICAL_ITEMS)) cancel(event);
+            // CONSUME, а не SUCCESS: рука не машет на каждый повтор ПКМ (мешок Амбу, замечание 70).
+            if (carryOnGesture || main.is(faygolover.rpmedicine.menu.MedicalContainerMenu.MEDICAL_ITEMS)) {
+                event.setCanceled(true);
+                event.setCancellationResult(InteractionResult.CONSUME);
+            }
             // СЛР пустой рукой: рука вытянута, а не машет на каждый повтор.
             else if (main.isEmpty() && faygolover.rpmedicine.client.ClientInteraction.isDowned(target)) {
                 event.setCanceled(true);
