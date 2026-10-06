@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "rpmedicine:block/sterilizer_particle"
+    },
+    "facing=east": {
+      "model": "rpmedicine:block/sterilizer_particle"
+    },
+    "facing=south": {
+      "model": "rpmedicine:block/sterilizer_particle"
+    },
+    "facing=west": {
+      "model": "rpmedicine:block/sterilizer_particle"
+    }
+  }
+}

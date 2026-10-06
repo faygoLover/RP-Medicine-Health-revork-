@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "rpmedicine:block/lab_table_particle"
+    },
+    "facing=east": {
+      "model": "rpmedicine:block/lab_table_particle"
+    },
+    "facing=south": {
+      "model": "rpmedicine:block/lab_table_particle"
+    },
+    "facing=west": {
+      "model": "rpmedicine:block/lab_table_particle"
+    }
+  }
+}

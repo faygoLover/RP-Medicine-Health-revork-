@@ -1,0 +1,7 @@
+{
+  "function": "oxygen",
+  "blocks": [
+    "rpmedicine:oxygen_tank"
+  ],
+  "radius": 3
+}

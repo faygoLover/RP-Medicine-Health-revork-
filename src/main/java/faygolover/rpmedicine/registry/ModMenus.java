@@ -18,5 +18,8 @@ public final class ModMenus {
     public static final RegistryObject<MenuType<SearchMenu>> SEARCH = MENUS.register("search",
             () -> IForgeMenuType.create(SearchMenu::fromNetwork));
 
+    public static final RegistryObject<MenuType<faygolover.rpmedicine.menu.MedicalStorageMenu>> MEDICAL_STORAGE = MENUS.register("medical_storage",
+            () -> IForgeMenuType.create(faygolover.rpmedicine.menu.MedicalStorageMenu::fromNetwork));
+
     private ModMenus() {}
 }

@@ -63,6 +63,7 @@ public final class ClientSetup {
         e.registerEntityRenderer(ModEntities.BODY_STUB.get(), BodyStubRenderer::new);
         e.registerEntityRenderer(ModEntities.VOMIT.get(), faygolover.rpmedicine.client.render.VomitRenderer::new);
         e.registerBlockEntityRenderer(faygolover.rpmedicine.registry.ModBlocks.IV_STAND_BE.get(), faygolover.rpmedicine.client.render.IvStandRenderer::new);
+        e.registerBlockEntityRenderer(faygolover.rpmedicine.registry.ModBlocks.HOSPITAL_STORAGE_BE.get(), faygolover.rpmedicine.client.render.HospitalGeoRenderer::new);
     }
 
     /** Стетоскоп в руке: трубки от ушей к руке. */
@@ -87,6 +88,7 @@ public final class ClientSetup {
         e.enqueueWork(() -> {
             MenuScreens.register(ModMenus.MEDICAL_CONTAINER.get(), MedicalContainerScreen::new);
             MenuScreens.register(ModMenus.SEARCH.get(), SearchScreen::new);
+            MenuScreens.register(ModMenus.MEDICAL_STORAGE.get(), faygolover.rpmedicine.client.screen.MedicalStorageScreen::new);
             // Варианты иконок по NBT: какой орган (испорченный — отдельно) и какая конечность.
             net.minecraft.client.renderer.item.ItemProperties.register(faygolover.rpmedicine.registry.ModItems.ORGAN.get(),
                     new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "organ"), (st, level, entity, seed) -> {

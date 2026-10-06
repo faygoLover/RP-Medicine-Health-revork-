@@ -60,6 +60,18 @@ def two_vertical(block, x, z, facing="north"):
             f"setblock ~{x} ~1 ~{z} {block}[facing={facing},half=positive] replace"]
 
 
+def own_bed(block, x, z):
+    """Своя двухблочная мебель вдоль: изголовье на север (z), ноги — к югу."""
+    return [f"setblock ~{x} ~ ~{z} {block}[facing=north,head=true] replace",
+            f"setblock ~{x} ~ ~{z + 1} {block}[facing=north,head=false] replace"]
+
+
+def own_vertical(block, x, z, prop="head", facing="south"):
+    """Своя двухблочная мебель в высоту (монитор экраном на юг, стойка)."""
+    return [f"setblock ~{x} ~ ~{z} {block}[facing={facing},{prop}=false] replace",
+            f"setblock ~{x} ~1 ~{z} {block}[facing={facing},{prop}=true] replace"]
+
+
 def kit_button(x, z, kit):
     return [f"setblock ~{x} ~ ~{z} minecraft:command_block{{Command:\"rpmedicine kit {kit} @p\"}} replace",
             f"setblock ~{x} ~1 ~{z} minecraft:stone_button[face=floor] replace"]
@@ -73,8 +85,7 @@ def main():
     os.makedirs(ROOT, exist_ok=True)
     json.dump({"pack": {"pack_format": 15, "description": "RP Medicine: тестовая площадка"}},
               open(os.path.join(ROOT, "pack.mcmeta"), "w", encoding="utf-8"), ensure_ascii=False)
-    # Кислород в датапаке по умолчанию не назначен — на площадке это огнетушитель-«баллон».
-    w("rpmedicine/hospital_blocks/test_oxygen.json", {"function": "oxygen", "blocks": ["industrialhellscape:fire_extinguisher"], "radius": 3})
+
     # Вещества без модов сборки: мёд — алкоголь, свекольный суп — кофе, бумага (ПКМ) — сигарета.
     w("rpmedicine/substances/test_alcohol.json", {"substance": "alcohol", "amount": 1.0, "items": ["minecraft:honey_bottle"]})
     w("rpmedicine/substances/test_caffeine.json", {"substance": "caffeine", "amount": 1.0, "items": ["minecraft:beetroot_soup"]})
@@ -87,41 +98,39 @@ def main():
          "fill ~-1 ~-1 ~-1 ~30 ~-1 ~-1 minecraft:polished_deepslate"]
     # Палата: две медицинские койки с мониторами и стойками, койка MOA с её монитором, раскладушка.
     L += ["# --- Палата"]
-    L += two_forward("industrialhellscape:medical_bed", 1, 3, "waterlogged=false")
-    L += two_vertical("industrialhellscape:vitals_monitor", 0, 3)
-    L += ["setblock ~2 ~ ~3 rpmedicine:iv_stand[facing=west] replace"]
-    L += two_forward("industrialhellscape:medical_bed", 5, 3, "waterlogged=false")
-    L += two_vertical("industrialhellscape:vitals_monitor", 4, 3)
-    L += two_vertical("industrialhellscape:iv_dripstand", 6, 3)
+    L += own_bed("rpmedicine:hospital_bed", 1, 3)
+    L += own_vertical("rpmedicine:vitals_monitor", 0, 3)
+    L += own_vertical("rpmedicine:iv_stand", 2, 3, prop="upper", facing="west")
+    L += own_bed("rpmedicine:hospital_bed", 5, 3)
+    L += own_vertical("rpmedicine:vitals_monitor", 4, 3)
+    L += own_vertical("rpmedicine:iv_stand", 6, 3, prop="upper", facing="west")
     L += ["setblock ~1 ~ ~7 moa_decor_science:camahblanca[facing=north] replace",
           "setblock ~0 ~ ~7 moa_decor_science:lectordesignosvitales[facing=north] replace",
           "setblock ~5 ~ ~7 multibeds:cot replace",
-          "setblock ~3 ~ ~9 industrialhellscape:fire_extinguisher[facing=north] replace",
-          sign(3, 0, 1, ["Палата", "стойка RP Medicine —", "у левой койки,", "IHS — у правой"]),
-          sign(3, 0, 10, ["Кислород", "огнетушитель", "у коек", ""])]
+          "setblock ~3 ~ ~9 rpmedicine:oxygen_tank[facing=north] replace",
+          sign(3, 0, 1, ["Палата", "койки, мониторы,", "стойки капельниц", ""]),
+          sign(3, 0, 10, ["Кислород", "баллон", "у коек", ""])]
     # Операционная: стол, монитор, стойка, стерилизатор, кислород.
     L += ["# --- Операционная"]
-    L += two_forward("industrialhellscape:operating_table", 10, 3)
-    L += two_vertical("industrialhellscape:vitals_monitor", 9, 3)
-    L += two_vertical("industrialhellscape:iv_dripstand", 11, 3)
-    L += ["setblock ~11 ~ ~6 health_and_disease:purifybox[facing=north] replace",
-          "setblock ~10 ~ ~6 health_and_disease:medicalanticollisionbox[facing=north] replace",
-          "setblock ~9 ~ ~6 industrialhellscape:fire_extinguisher[facing=north] replace",
-          sign(10, 0, 1, ["Операционная", "стол, монитор,", "стерилизатор H&D", "ящик лекарств"])]
+    L += own_bed("rpmedicine:operating_table", 10, 3)
+    L += own_vertical("rpmedicine:vitals_monitor", 9, 3)
+    L += own_vertical("rpmedicine:iv_stand", 11, 3, prop="upper", facing="west")
+    L += ["setblock ~11 ~ ~6 rpmedicine:sterilizer[facing=north] replace",
+          "setblock ~10 ~ ~6 rpmedicine:medicine_crate[facing=north] replace",
+          "setblock ~12 ~1 ~6 rpmedicine:medicine_cabinet[facing=north] replace",
+          "setblock ~9 ~ ~6 rpmedicine:oxygen_tank[facing=north] replace",
+          sign(10, 0, 1, ["Операционная", "стол (и фиксация),", "стерилизатор,", "ящик и шкаф"])]
     # Стол с фиксацией.
     L += ["# --- Фиксация",
-          "setblock ~17 ~ ~3 butchery:metal_butchers_table[facing=north] replace"]
-    L += two_vertical("industrialhellscape:vitals_monitor", 16, 3)
-    L += [sign(16, 0, 1, ["Стол с фиксацией", "стол мясника", "", ""])]
+          ]
     # Лаборатория и холодильник.
     L += ["# --- Лаборатория",
           "setblock ~20 ~ ~3 industrialhellscape:metal_desk[type=solo,facing=north] replace",
           "setblock ~20 ~1 ~3 moa_decor_science:microscopio[facing=north] replace",
-          "setblock ~21 ~ ~3 health_and_disease:pathologicalexaminationtable[facing=north] replace",
+          "setblock ~21 ~ ~3 rpmedicine:lab_table[facing=north] replace",
           "setblock ~23 ~ ~3 refurbished_furniture:light_fridge[facing=north] replace",
-          "setblock ~19 ~ ~3 health_and_disease:thermostaticholder[facing=north] replace",
-          "setblock ~19 ~ ~5 health_and_disease:medicalbox[facing=north] replace",
-          sign(20, 0, 1, ["Лаборатория", "микроскоп и стол H&D:", "ПКМ пробиркой", "термостат — слева"]),
+          "setblock ~19 ~ ~3 rpmedicine:thermostat[facing=north] replace",
+          sign(20, 0, 1, ["Лаборатория", "микроскоп и стол:", "ПКМ пробиркой", "термостат — слева"]),
           sign(23, 0, 1, ["Холодильник", "кровь и органы", "хранятся дольше", ""])]
     # Поле: открытое место для ранений.
     L += ["# --- Поле",

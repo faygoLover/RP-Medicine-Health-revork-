@@ -45,25 +45,45 @@ public final class HospitalService {
 
     /** Точка, где лежит пациент: центр верхней грани блока. */
     public static Vec3 bedSpot(Level level, BlockPos pos) {
-        BlockState st = level.getBlockState(pos);
-        VoxelShape shape = st.getCollisionShape(level, pos);
-        double top = shape.isEmpty() ? 0.5625 : Math.min(1.5, shape.max(Direction.Axis.Y));
-        // Двухблочная койка (Industrial Hellscape и т. п.): середина между половинами.
+        // Двухблочная койка: середина между половинами.
         Direction other = otherHalf(level, pos);
         double ox = other != null ? other.getStepX() * 0.5 : 0, oz = other != null ? other.getStepZ() * 0.5 : 0;
-        return new Vec3(pos.getX() + 0.5 + ox, pos.getY() + top, pos.getZ() + 0.5 + oz);
+        double x = pos.getX() + 0.5 + ox, z = pos.getZ() + 0.5 + oz;
+        // Высота — верх того, что под телом (обеих половин): иначе подушка или спинка выталкивает тело,
+        // его трясёт, а при вставании прилетает урон (замечание 06.10).
+        double top = topUnder(level, pos, x, z);
+        if (other != null) top = Math.max(top, topUnder(level, pos.relative(other), x, z));
+        if (top < 0) top = 0.5625;
+        return new Vec3(x, pos.getY() + top, z);
+    }
+
+    /** Верх коллизии блока в квадрате 0,6 вокруг (x, z), относительно низа койки; −1 — пусто. */
+    private static double topUnder(Level level, BlockPos p, double x, double z) {
+        VoxelShape shape = level.getBlockState(p).getCollisionShape(level, p);
+        double[] top = {-1};
+        double lx = x - p.getX(), lz = z - p.getZ();
+        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
+            if (x2 > lx - 0.3 && x1 < lx + 0.3 && z2 > lz - 0.3 && z1 < lz + 0.3) top[0] = Math.max(top[0], Math.min(1.5, y2));
+        });
+        return top[0];
     }
 
     /** Где вторая половина двухблочной койки: соседний блок того же типа, или null. */
     @Nullable
     public static Direction otherHalf(Level level, BlockPos pos) {
-        var block = level.getBlockState(pos).getBlock();
+        BlockState st0 = level.getBlockState(pos);
+        if (st0.getBlock() instanceof TwoPartBlock tp && !tp.vertical()) return tp.toOther(st0);
+        var block = st0.getBlock();
         for (Direction d : Direction.Plane.HORIZONTAL) if (level.getBlockState(pos.relative(d)).is(block)) return d;
         return null;
     }
 
     /** Четверть поворота лежащего: вдоль двухблочной койки, иначе по взгляду. */
     public static byte bedQuarter(Level level, BlockPos pos, float yRot) {
+        // Своя койка и стол: только головой к изголовью (замечание 06.10). Тело лежит головой против взгляда.
+        BlockState st0 = level.getBlockState(pos);
+        if (st0.getBlock() instanceof TwoPartBlock tp && !tp.vertical())
+            return (byte) Math.floorMod(Math.round(st0.getValue(TwoPartBlock.FACING).getOpposite().toYRot() / 90f), 4);
         Direction other = otherHalf(level, pos);
         if (other != null) return (byte) Math.floorMod(Math.round(other.toYRot() / 90f), 4);
         BlockState st = level.getBlockState(pos);
@@ -174,6 +194,7 @@ public final class HospitalService {
             Vec3 out = standUpSpot(sp.serverLevel(), bed, sp);
             sp.teleportTo(out.x, out.y, out.z);
         }
+        sp.fallDistance = 0;
         Medical.changed(sp);
         DownedService.broadcastPose(sp);
     }
@@ -225,6 +246,8 @@ public final class HospitalService {
                 sp.teleportTo(spot.x, spot.y, spot.z);
                 sp.setDeltaMovement(Vec3.ZERO);
             }
+            // Лёжа не падают: иначе при вставании — урон от «падения».
+            sp.fallDistance = 0;
         }
         boolean drip = m.salineDripRemaining > 0;
         if ((bed != null || drip) && now - d.hospitalScanTick >= SCAN_TICKS) {

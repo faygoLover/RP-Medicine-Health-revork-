@@ -83,6 +83,12 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
         pose.popPose();
     }
 
+    /** Нарисовать модель целиком (блоки госпиталя): начало координат — центр низа блока. */
+    public static void renderModel(GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose, VertexConsumer vc, int light, int overlay) {
+        fill = -1;
+        for (GeoModel.Bone bone : e.model().roots) renderBone(bone, e, clip, t, pose, vc, light, overlay);
+    }
+
     /** Заполнение ручки 0–1 для текущего предмета (-1 — не ручка). */
     private static float fill = -1;
     /** Высота жидкости в окошке ручки при полной, единицы модели. */

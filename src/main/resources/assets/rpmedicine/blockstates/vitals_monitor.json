@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,head=true": {
+      "model": "rpmedicine:block/vitals_monitor_head"
+    },
+    "facing=north,head=false": {
+      "model": "rpmedicine:block/vitals_monitor_foot"
+    },
+    "facing=east,head=true": {
+      "model": "rpmedicine:block/vitals_monitor_head",
+      "y": 90
+    },
+    "facing=east,head=false": {
+      "model": "rpmedicine:block/vitals_monitor_foot",
+      "y": 90
+    },
+    "facing=south,head=true": {
+      "model": "rpmedicine:block/vitals_monitor_head",
+      "y": 180
+    },
+    "facing=south,head=false": {
+      "model": "rpmedicine:block/vitals_monitor_foot",
+      "y": 180
+    },
+    "facing=west,head=true": {
+      "model": "rpmedicine:block/vitals_monitor_head",
+      "y": 270
+    },
+    "facing=west,head=false": {
+      "model": "rpmedicine:block/vitals_monitor_foot",
+      "y": 270
+    }
+  }
+}

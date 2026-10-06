@@ -178,5 +178,33 @@
       "lefthand_pos",
       "righthand_pos"
     ]
+  },
+  "rpmedicine:medicine_cabinet": {
+    "geo": "rpmedicine:rpgeo/medicine_cabinet.geo.json",
+    "texture": "rpmedicine:textures/geo/medicine_cabinet.png",
+    "animations": "rpmedicine:rpgeo/medicine_cabinet.anim.json",
+    "fit": true,
+    "size": 0.95
+  },
+  "rpmedicine:medicine_crate": {
+    "geo": "rpmedicine:rpgeo/medicine_crate.geo.json",
+    "texture": "rpmedicine:textures/geo/medicine_crate.png",
+    "animations": "rpmedicine:rpgeo/medicine_crate.anim.json",
+    "fit": true,
+    "size": 0.95
+  },
+  "rpmedicine:sterilizer": {
+    "geo": "rpmedicine:rpgeo/sterilizer.geo.json",
+    "texture": "rpmedicine:textures/geo/sterilizer.png",
+    "animations": "rpmedicine:rpgeo/sterilizer.anim.json",
+    "fit": true,
+    "size": 0.95
+  },
+  "rpmedicine:lab_table": {
+    "geo": "rpmedicine:rpgeo/lab_table.geo.json",
+    "texture": "rpmedicine:textures/geo/lab_table.png",
+    "animations": "rpmedicine:rpgeo/lab_table.anim.json",
+    "fit": true,
+    "size": 0.95
   }
 }

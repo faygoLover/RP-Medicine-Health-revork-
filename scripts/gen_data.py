@@ -427,19 +427,20 @@ write(f"{DATA}/rpmedicine/tags/entity_types/biting_mobs.json",
 MOA_COLORS = ["amarilla", "azul", "azulclara", "blanca", "cafe", "cian", "gris", "grisclara", "magenta", "morada",
               "naranja", "negra", "roja", "rosa", "verde", "verdelima"]
 HOSPITAL = {
-    "beds": {"function": "bed", "blocks": ["industrialhellscape:medical_bed"] + [f"moa_decor_science:camah{c}" for c in MOA_COLORS]
+    # Свои блоки (забраны из Industrial Hellscape и Health & Disease, решения, п. 1.16) и кровати других модов (мягко).
+    "beds": {"function": "bed", "blocks": ["rpmedicine:hospital_bed"] + [f"moa_decor_science:camah{c}" for c in MOA_COLORS]
              + ["multibeds:cot"]},
-    "operating_tables": {"function": "operating_table", "blocks": ["industrialhellscape:operating_table"]},
-    "restraint_tables": {"function": "restraint_table", "blocks": ["butchery:metal_butchers_table"]},
-    "monitors": {"function": "monitor", "blocks": ["industrialhellscape:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
-    "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand", "rpmedicine:iv_stand"], "radius": 3},
-    # Холодильник и лаборатория — предложение по справочнику id, ждёт подтверждения автора (07_spec_stage2.md, п. 16.13).
-    # Блоки Health & Disease (замечание 06.10): термостат для пробирок — холодильник, бокс очистки — стерилизатор,
-    # стол патологоанатомического исследования — лаборатория (бланк анализа в окне). Аптечки H&D — просто хранилища.
+    "operating_tables": {"function": "operating_table", "blocks": ["rpmedicine:operating_table"]},
+    # Операционный стол — и стол с фиксацией.
+    "restraint_tables": {"function": "restraint_table", "blocks": ["rpmedicine:operating_table"]},
+    "monitors": {"function": "monitor", "blocks": ["rpmedicine:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
+    "iv_stands": {"function": "iv_stand", "blocks": ["rpmedicine:iv_stand"], "radius": 3},
+    # Холодильник — пока чужой; термостат держит пробирки.
     "fridges": {"function": "fridge", "blocks": ["refurbished_furniture:light_fridge", "refurbished_furniture:dark_fridge",
-                                                 "health_and_disease:thermostaticholder"]},
-    "labs": {"function": "lab", "blocks": ["moa_decor_science:microscopio", "health_and_disease:pathologicalexaminationtable"]},
-    "sterilizers": {"function": "sterilizer", "blocks": ["health_and_disease:purifybox"]},
+                                                 "rpmedicine:thermostat"]},
+    "labs": {"function": "lab", "blocks": ["moa_decor_science:microscopio", "rpmedicine:lab_table"]},
+    "sterilizers": {"function": "sterilizer", "blocks": ["rpmedicine:sterilizer"]},
+    "oxygen": {"function": "oxygen", "blocks": ["rpmedicine:oxygen_tank"], "radius": 3},
 }
 for name, obj in HOSPITAL.items():
     write(f"{DATA}/rpmedicine/rpmedicine/hospital_blocks/{name}.json", obj)
@@ -658,6 +659,8 @@ import item_art  # noqa: E402
 item_art.main()
 import iv_stand_art  # noqa: E402
 iv_stand_art.main()
+import hospital_art  # noqa: E402
+hospital_art.main()
 
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
 print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(DRUGS), "препаратов,", len(ALIASES), "аналогов")

@@ -44,6 +44,22 @@ public final class ModItems {
     public static final RegistryObject<Item> IV_CATHETER = medical("iv_catheter", 16);
     /** Опустевший пакет капельницы — мусор (решения, п. 1.16). */
     public static final RegistryObject<Item> USED_IV_BAG = medical("used_iv_bag", 16);
+    // Мебель госпиталя — свои блоки (решения, п. 1.16).
+    public static final RegistryObject<Item> HOSPITAL_BED = block("hospital_bed", ModBlocks.HOSPITAL_BED, false);
+    public static final RegistryObject<Item> OPERATING_TABLE = block("operating_table", ModBlocks.OPERATING_TABLE, false);
+    public static final RegistryObject<Item> VITALS_MONITOR = block("vitals_monitor", ModBlocks.VITALS_MONITOR, false);
+    public static final RegistryObject<Item> MEDICINE_CABINET = block("medicine_cabinet", ModBlocks.MEDICINE_CABINET, true);
+    public static final RegistryObject<Item> MEDICINE_CRATE = block("medicine_crate", ModBlocks.MEDICINE_CRATE, true);
+    public static final RegistryObject<Item> STERILIZER = block("sterilizer", ModBlocks.STERILIZER, true);
+    public static final RegistryObject<Item> LAB_TABLE = block("lab_table", ModBlocks.LAB_TABLE, true);
+    public static final RegistryObject<Item> THERMOSTAT = block("thermostat", ModBlocks.THERMOSTAT, false);
+    public static final RegistryObject<Item> OXYGEN_TANK = block("oxygen_tank", ModBlocks.OXYGEN_TANK, false);
+
+    private static RegistryObject<Item> block(String name, RegistryObject<net.minecraft.world.level.block.Block> b, boolean geo) {
+        return tool(name, () -> geo ? new faygolover.rpmedicine.item.GeoBlockItem(b.get(), new Item.Properties())
+                : new net.minecraft.world.item.BlockItem(b.get(), new Item.Properties()));
+    }
+
     /** Стойка капельницы — свой блок. */
     public static final RegistryObject<Item> IV_STAND = tool("iv_stand", () -> new net.minecraft.world.item.BlockItem(ModBlocks.IV_STAND.get(), new Item.Properties()));
     public static final RegistryObject<Item> AMMONIA = medical("ammonia", 16);
@@ -174,6 +190,7 @@ public final class ModItems {
             "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
             "propofol", "insulin", "syringe", "filled_syringe", "dirty_syringe", "used_pen",
+            "hospital_bed", "operating_table", "vitals_monitor", "medicine_cabinet", "medicine_crate", "sterilizer", "lab_table", "thermostat", "oxygen_tank",
             "iv_stand", "iv_catheter", "saline", "used_iv_bag", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",

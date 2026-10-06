@@ -62,7 +62,12 @@ public final class Perishable {
      * Строка подсказки о сроке: «в холоде, ещё ~N» или «осталось ~N в тепле» (замечание 37).
      * Время — реальное (тики сервера), как и порча.
      */
+    /** Без общего срока: в холоде порча стоит совсем (решения, п. 1.16). */
+    public static final double NO_LIMIT = 1e9;
+
     public static net.minecraft.network.chat.Component shelfLine(boolean cold, long warmTicks, long ageTicks, double warmHours, double maxHours) {
+        if (cold && maxHours >= NO_LIMIT)
+            return net.minecraft.network.chat.Component.translatable("rpmedicine.tooltip.shelf_frozen").withStyle(net.minecraft.ChatFormatting.AQUA);
         long warmLeft = Math.max(0, (long) (warmHours * 72000) - warmTicks);
         long totalLeft = Math.max(0, (long) (maxHours * 72000) - ageTicks);
         long left = cold ? totalLeft : Math.min(warmLeft, totalLeft);

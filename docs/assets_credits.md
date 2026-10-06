@@ -231,3 +231,13 @@ SOFTWARE.
 | `models/block/iv_stand.json`, `textures/block/iv_stand.png` | Industrial Hellscape 0.0.1: `iv_dripstand` (без пакетов) | YellowUboat | MIT |
 | `models/block/iv_bag_*.json`, `textures/block/iv_bag_*.png` | Industrial Hellscape 0.0.1: пакеты `iv_dripstand` (перекрашено) | YellowUboat | MIT |
 <!-- iv_stand:end -->
+
+<!-- hospital:begin -->
+## Мебель госпиталя (`scripts/hospital_art.py`)
+
+| Файл в моде (`assets/rpmedicine/…`) | Откуда | Автор | Лицензия |
+|---|---|---|---|
+| `models/block/{hospital_bed,operating_table,vitals_monitor}_*.json`, `textures/block/…` | Industrial Hellscape 0.0.1: `medical_bed`, `operating_table`, `vitals_monitor` | YellowUboat | MIT |
+| `rpgeo/{medicine_cabinet,medicine_crate,sterilizer,lab_table}.*`, `textures/geo/…` | Health & Disease 1.4.2: `medibox`, `collisionbox`, `store`, `scan` | JEDIGD | MIT |
+| `models/block/thermostat_*.json`, `textures/block/thermostat.png` | Health & Disease 1.4.2: `tube*` | JEDIGD | MIT |
+<!-- hospital:end -->

@@ -1,6 +1,6 @@
 {
   "function": "sterilizer",
   "blocks": [
-    "health_and_disease:purifybox"
+    "rpmedicine:sterilizer"
   ]
 }

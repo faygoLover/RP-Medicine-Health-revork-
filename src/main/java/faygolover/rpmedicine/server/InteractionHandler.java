@@ -175,6 +175,7 @@ public final class InteractionHandler {
                         ? faygolover.rpmedicine.registry.ModItems.SYRINGE.get() : faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get();
                 p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(clean, dirty.getCount()));
                 p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.sterilized"), true);
+                faygolover.rpmedicine.hospital.HospitalGeoBlock.animate(event.getLevel(), event.getPos());
             }
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.CONSUME);
@@ -186,6 +187,7 @@ public final class InteractionHandler {
             if (!event.getLevel().isClientSide) {
                 faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(p.getMainHandItem(), true);
                 p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.sterilized"), true);
+                faygolover.rpmedicine.hospital.HospitalGeoBlock.animate(event.getLevel(), event.getPos());
             }
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.CONSUME);

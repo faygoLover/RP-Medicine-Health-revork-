@@ -211,7 +211,7 @@ public final class HospitalGameTests {
             var cold = bag.copy();
             faygolover.rpmedicine.item.BloodBagItem.setCold(cold, true, now);
             h.assertTrue(!faygolover.rpmedicine.item.BloodBagItem.isSpoiled(cold, now + 3 * 72000), "в холодильнике за 3 часа цел");
-            h.assertTrue(faygolover.rpmedicine.item.BloodBagItem.isSpoiled(cold, now + 8L * 24 * 72000), "за 8 дней испортился и в холодильнике");
+            h.assertTrue(!faygolover.rpmedicine.item.BloodBagItem.isSpoiled(cold, now + 8L * 24 * 72000), "в холодильнике порча стоит (решения 1.16)");
             // Переливание несовместимой крови (A+ → O+).
             medic.getInventory().selected = slot < 9 ? slot : 0;
             if (slot >= 9) {

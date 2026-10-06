@@ -109,7 +109,7 @@ public class BloodBagItem extends MedicalItem {
             MedicalSettings s = MedicalSettings.get();
             long now = level.getGameTime();
             tooltip.add(Perishable.shelfLine(stack.getTag().getBoolean(COLD), warmTicks(stack, now), now - stack.getTag().getLong(COLLECTED),
-                    s.bloodSpoilWarmHours, s.bloodSpoilFridgeDays * 24));
+                    s.bloodSpoilWarmHours, Perishable.NO_LIMIT));
         }
     }
 }

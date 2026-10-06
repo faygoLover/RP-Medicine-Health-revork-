@@ -1,7 +1,7 @@
 {
   "function": "bed",
   "blocks": [
-    "industrialhellscape:medical_bed",
+    "rpmedicine:hospital_bed",
     "moa_decor_science:camahamarilla",
     "moa_decor_science:camahazul",
     "moa_decor_science:camahazulclara",

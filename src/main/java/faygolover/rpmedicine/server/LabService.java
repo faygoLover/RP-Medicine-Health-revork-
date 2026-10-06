@@ -41,7 +41,8 @@ public final class LabService {
         CompoundTag t = tube.getOrCreateTag();
         t.putString("Patient", patient.getName().getString());
         t.putUUID("PatientId", patient instanceof faygolover.rpmedicine.entity.BodyStubEntity stub ? stub.ownerId() : patient.getUUID());
-        t.putLong("Taken", System.currentTimeMillis());
+        // Проба портится в тепле, в термостате — нет (решения, п. 1.16).
+        faygolover.rpmedicine.item.Perishable.start(tube, medic.level().getGameTime());
         t.put("Medical", MedicalNbt.write(m));
         if (!medic.getInventory().add(tube)) medic.drop(tube, false);
     }
@@ -55,6 +56,10 @@ public final class LabService {
     /** ПКМ по лабораторному столу с пробиркой в руке. */
     public static boolean onUseBlock(ServerPlayer sp, BlockPos pos) {
         if (!HospitalBlocks.is(sp.level().getBlockState(pos), HospitalFunction.LAB)) return false;
+        if (faygolover.rpmedicine.item.BloodSampleItem.spoiled(sp.getMainHandItem(), sp.level().getGameTime())) {
+            sp.displayClientMessage(Component.translatable("rpmedicine.lab.spoiled").withStyle(ChatFormatting.YELLOW), true);
+            return true;
+        }
         ItemStack tube = sp.getMainHandItem();
         if (!tube.is(ModItems.BLOOD_SAMPLE.get()) || !tube.hasTag()) return false;
         if (Medical.isDown(sp)) return true;

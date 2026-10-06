@@ -41,7 +41,8 @@ public class OrganItem extends MedicalItem implements Perishable.Item {
 
     public static boolean spoiled(ItemStack st, long now) {
         MedicalSettings s = MedicalSettings.get();
-        return Perishable.spoiled(st, now, s.organSpoilWarmHours, s.organSpoilFridgeDays * 24);
+        // В холодильнике порча стоит совсем (решения, п. 1.16).
+        return Perishable.spoiled(st, now, s.organSpoilWarmHours, Perishable.NO_LIMIT);
     }
 
     /** Содержимое для пересадки. */
@@ -78,7 +79,7 @@ public class OrganItem extends MedicalItem implements Perishable.Item {
             var s = faygolover.rpmedicine.core.MedicalSettings.get();
             long now = level.getGameTime();
             tooltip.add(Perishable.shelfLine(Perishable.cold(st), Perishable.warmTicks(st, now), Perishable.ageTicks(st, now),
-                    s.organSpoilWarmHours, s.organSpoilFridgeDays * 24));
+                    s.organSpoilWarmHours, Perishable.NO_LIMIT));
         }
     }
 }

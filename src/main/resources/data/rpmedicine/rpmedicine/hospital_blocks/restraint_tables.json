@@ -1,6 +1,6 @@
 {
   "function": "restraint_table",
   "blocks": [
-    "butchery:metal_butchers_table"
+    "rpmedicine:operating_table"
   ]
 }

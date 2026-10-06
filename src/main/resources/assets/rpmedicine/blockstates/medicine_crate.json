@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "rpmedicine:block/medicine_crate_particle"
+    },
+    "facing=east": {
+      "model": "rpmedicine:block/medicine_crate_particle"
+    },
+    "facing=south": {
+      "model": "rpmedicine:block/medicine_crate_particle"
+    },
+    "facing=west": {
+      "model": "rpmedicine:block/medicine_crate_particle"
+    }
+  }
+}

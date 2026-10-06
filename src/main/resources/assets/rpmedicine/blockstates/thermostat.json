@@ -1,0 +1,139 @@
+{
+  "variants": {
+    "facing=north,tubes=0": {
+      "model": "rpmedicine:block/thermostat_0"
+    },
+    "facing=north,tubes=1": {
+      "model": "rpmedicine:block/thermostat_1"
+    },
+    "facing=north,tubes=2": {
+      "model": "rpmedicine:block/thermostat_2"
+    },
+    "facing=north,tubes=3": {
+      "model": "rpmedicine:block/thermostat_3"
+    },
+    "facing=north,tubes=4": {
+      "model": "rpmedicine:block/thermostat_4"
+    },
+    "facing=north,tubes=5": {
+      "model": "rpmedicine:block/thermostat_5"
+    },
+    "facing=north,tubes=6": {
+      "model": "rpmedicine:block/thermostat_6"
+    },
+    "facing=north,tubes=7": {
+      "model": "rpmedicine:block/thermostat_7"
+    },
+    "facing=north,tubes=8": {
+      "model": "rpmedicine:block/thermostat_8"
+    },
+    "facing=east,tubes=0": {
+      "model": "rpmedicine:block/thermostat_0",
+      "y": 90
+    },
+    "facing=east,tubes=1": {
+      "model": "rpmedicine:block/thermostat_1",
+      "y": 90
+    },
+    "facing=east,tubes=2": {
+      "model": "rpmedicine:block/thermostat_2",
+      "y": 90
+    },
+    "facing=east,tubes=3": {
+      "model": "rpmedicine:block/thermostat_3",
+      "y": 90
+    },
+    "facing=east,tubes=4": {
+      "model": "rpmedicine:block/thermostat_4",
+      "y": 90
+    },
+    "facing=east,tubes=5": {
+      "model": "rpmedicine:block/thermostat_5",
+      "y": 90
+    },
+    "facing=east,tubes=6": {
+      "model": "rpmedicine:block/thermostat_6",
+      "y": 90
+    },
+    "facing=east,tubes=7": {
+      "model": "rpmedicine:block/thermostat_7",
+      "y": 90
+    },
+    "facing=east,tubes=8": {
+      "model": "rpmedicine:block/thermostat_8",
+      "y": 90
+    },
+    "facing=south,tubes=0": {
+      "model": "rpmedicine:block/thermostat_0",
+      "y": 180
+    },
+    "facing=south,tubes=1": {
+      "model": "rpmedicine:block/thermostat_1",
+      "y": 180
+    },
+    "facing=south,tubes=2": {
+      "model": "rpmedicine:block/thermostat_2",
+      "y": 180
+    },
+    "facing=south,tubes=3": {
+      "model": "rpmedicine:block/thermostat_3",
+      "y": 180
+    },
+    "facing=south,tubes=4": {
+      "model": "rpmedicine:block/thermostat_4",
+      "y": 180
+    },
+    "facing=south,tubes=5": {
+      "model": "rpmedicine:block/thermostat_5",
+      "y": 180
+    },
+    "facing=south,tubes=6": {
+      "model": "rpmedicine:block/thermostat_6",
+      "y": 180
+    },
+    "facing=south,tubes=7": {
+      "model": "rpmedicine:block/thermostat_7",
+      "y": 180
+    },
+    "facing=south,tubes=8": {
+      "model": "rpmedicine:block/thermostat_8",
+      "y": 180
+    },
+    "facing=west,tubes=0": {
+      "model": "rpmedicine:block/thermostat_0",
+      "y": 270
+    },
+    "facing=west,tubes=1": {
+      "model": "rpmedicine:block/thermostat_1",
+      "y": 270
+    },
+    "facing=west,tubes=2": {
+      "model": "rpmedicine:block/thermostat_2",
+      "y": 270
+    },
+    "facing=west,tubes=3": {
+      "model": "rpmedicine:block/thermostat_3",
+      "y": 270
+    },
+    "facing=west,tubes=4": {
+      "model": "rpmedicine:block/thermostat_4",
+      "y": 270
+    },
+    "facing=west,tubes=5": {
+      "model": "rpmedicine:block/thermostat_5",
+      "y": 270
+    },
+    "facing=west,tubes=6": {
+      "model": "rpmedicine:block/thermostat_6",
+      "y": 270
+    },
+    "facing=west,tubes=7": {
+      "model": "rpmedicine:block/thermostat_7",
+      "y": 270
+    },
+    "facing=west,tubes=8": {
+      "model": "rpmedicine:block/thermostat_8",
+      "y": 270
+    }
+  }
+}
