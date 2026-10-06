@@ -499,7 +499,8 @@ public final class MedicalState {
 
     /** Добавить повреждение органу (не выше 100). */
     public void damageOrgan(Organ o, double amount) {
-        if (amount <= 0 || !hasOrgan(o)) return;
+        // Мозг — своя шкала (brain), орган «мозг» только для изъятия.
+        if (amount <= 0 || !hasOrgan(o) || o == Organ.BRAIN) return;
         organs[o.ordinal()] = Math.min(100, organs[o.ordinal()] + amount);
     }
 

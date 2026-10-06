@@ -78,6 +78,10 @@ public final class MedicalSettings {
     public double salineDripSeconds = 120.0;
     /** Стойка капельницы (замечание 35): длина шланга, блоков; дальше — катетер вырван. */
     public double ivHoseLength = 4.0;
+    /** Селезёнка от 50 %: внутреннее кровотечение в живот, мл/мин (от 80 % — вдвое). */
+    public double spleenInternalBleed = 20.0;
+    /** Без селезёнки иммунитет слабее (множитель). */
+    public double aspleniaImmunityFactor = 0.7;
     /** Пробирка с кровью портится в тепле за столько часов (в термостате — нет). */
     public double sampleSpoilWarmHours = 2.0;
     /** С какого уровня медицины вообще можно сделать анализ крови в лаборатории. */

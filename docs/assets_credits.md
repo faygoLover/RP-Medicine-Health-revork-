@@ -142,9 +142,9 @@ SOFTWARE.
 | `textures/item/organ_lungs.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_lungs.png` | VKM | MIT |
 | `textures/item/organ_liver.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_liver.png` | VKM | MIT |
 | `textures/item/organ_kidneys.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_kidneys.png` | VKM | MIT |
-| `textures/item/organ_spoiled.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/spoiled_organ.png` | VKM | MIT |
-| `textures/item/organ_brain.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_brain.png` | VKM | MIT |
 | `textures/item/organ_spleen.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_spleen.png` | VKM | MIT |
+| `textures/item/organ_brain.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_brain.png` | VKM | MIT |
+| `textures/item/organ_spoiled.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/spoiled_organ.png` | VKM | MIT |
 | `textures/item/organ_stomach.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_stomach.png` | VKM | MIT |
 | `textures/item/organ_pancreas.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_pancreas.png` | VKM | MIT |
 | `textures/gui/medical_pouch.png` | Tactical Medicine 1.1.0: `assets/tacmed/textures/gui/ifak_pouch.png` | Lector | MIT |

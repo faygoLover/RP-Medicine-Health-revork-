@@ -104,6 +104,8 @@ public final class Infections {
         if (m.sepsis >= 30) f *= s.immunitySepsisFactor;
         // Голод и жажда ослабляют иммунитет.
         if (in.satiety < s.hungerThreshold || in.hydration < s.dehydrationThreshold) f *= s.immunityHungerFactor;
+        // Без селезёнки инфекции тяжелее (решения, п. 1.16).
+        if (!m.hasOrgan(Organ.SPLEEN)) f *= s.aspleniaImmunityFactor;
         return f;
     }
 

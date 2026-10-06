@@ -767,6 +767,12 @@ public final class Physiology {
         if (m.down == Down.NONE && delivery >= 0.9 && in.online && m.brain < 100 && !Organs.toxicBrain(m))
             m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * in.brainRecoveryFactor * dt);
 
+        // Мозг изъят — смерть сразу, даже в клинической смерти (решения, п. 1.16).
+        if (!m.hasOrgan(Organ.BRAIN)) {
+            m.brain = 0;
+            brainDeath(m, s, r);
+            return;
+        }
         if (m.brain <= 0 && m.down != Down.CLINICAL) {
             brainDeath(m, s, r);
             return;

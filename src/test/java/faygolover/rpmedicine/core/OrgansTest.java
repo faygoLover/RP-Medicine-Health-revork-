@@ -119,7 +119,7 @@ class OrgansTest {
         StepInput in = input(5);
         in.dt = 3600;
         Organs.tick(m, in, s);
-        for (Organ o : Organ.VALUES) assertEquals(s.sepsisOrganPerHour, m.organ(o), 1e-9);
+        for (Organ o : Organ.VALUES) if (o != Organ.BRAIN) assertEquals(s.sepsisOrganPerHour, m.organ(o), 1e-9);
         MedicalState p = new MedicalState(s);
         assertEquals(0, Infections.sepsisSources(p));
         p.setOrgan(Organ.INTESTINES, 100);

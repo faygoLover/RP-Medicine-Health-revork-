@@ -1138,6 +1138,8 @@ t("item.rpmedicine.lr_ibuprofen.desc", "Как ибупрофен.", "Works as i
 t("item.rpmedicine.lr_amoxycillin", "Амоксициллин (LR)", "Amoxicillin (LR)")
 t("item.rpmedicine.lr_amoxycillin.desc", "Как амоксициллин.", "Works as amoxicillin.")
 t("rpmedicine.action.open_kit", "Открываю аптечку…", "Opening the kit…")
+t("rpmedicine.organ.spleen", "Селезёнка", "Spleen")
+t("rpmedicine.organ.brain", "Мозг", "Brain")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

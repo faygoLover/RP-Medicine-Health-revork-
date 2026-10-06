@@ -980,6 +980,8 @@ public class SurgeryMinigameScreen extends Screen {
             case 1 -> new double[]{X0 + 40, CY};      // лёгкие
             case 2 -> new double[]{X0 + 38, CY - 14}; // печень
             case 3 -> new double[]{X1 - 40, CY + 8};  // почки
+            case 5 -> new double[]{X0 + 52, CY + 10}; // селезёнка
+            case 6 -> new double[]{160, CY};          // мозг
             default -> new double[]{168, CY};         // кишечник
         };
     }
@@ -990,6 +992,8 @@ public class SurgeryMinigameScreen extends Screen {
             case 1 -> 0xFFD07A80;
             case 2 -> 0xFF6A2A1A;
             case 3 -> 0xFF8A3A2A;
+            case 5 -> 0xFF6A1A3A;
+            case 6 -> 0xFFE0B4B0;
             default -> 0xFFD89A90;
         };
     }

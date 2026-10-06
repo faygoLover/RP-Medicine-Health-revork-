@@ -24,6 +24,11 @@ public final class Organs {
         // Нет сердца — остановка; нет лёгких — не дышит (третий этап, п. 7.1).
         if (!m.hasOrgan(Organ.HEART) && m.heart == MedicalState.Heart.NORMAL) m.heart = MedicalState.Heart.ARREST;
         if (!m.hasOrgan(Organ.LUNGS)) m.respiratoryArrest = true;
+        // Селезёнка от 50 % — кровь в живот (решения, п. 1.16).
+        if (m.hasOrgan(Organ.SPLEEN) && m.organ(Organ.SPLEEN) >= 50) {
+            BodyPartState abdomen = m.part(BodyPart.ABDOMEN);
+            abdomen.internalBleed = Math.max(abdomen.internalBleed, s.spleenInternalBleed * (m.organ(Organ.SPLEEN) >= 80 ? 2 : 1));
+        }
         // Печень 100 % — кровь в живот.
         if (m.organ(Organ.LIVER) >= 100) {
             BodyPartState abdomen = m.part(BodyPart.ABDOMEN);

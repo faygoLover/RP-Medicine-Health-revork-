@@ -12,7 +12,11 @@ public enum Organ {
     LUNGS("lungs", BodyPart.CHEST),
     LIVER("liver", BodyPart.ABDOMEN),
     KIDNEYS("kidneys", BodyPart.ABDOMEN),
-    INTESTINES("intestines", BodyPart.ABDOMEN);
+    INTESTINES("intestines", BodyPart.ABDOMEN),
+    /** Селезёнка (решения, п. 1.16): кровит при сильном повреждении; без неё инфекции тяжелее. */
+    SPLEEN("spleen", BodyPart.ABDOMEN),
+    /** Мозг как орган — только для изъятия (смерть). Сама «жизнь» — шкала мозга первого этапа. */
+    BRAIN("brain", BodyPart.HEAD);
 
     public static final Organ[] VALUES = values();
     public static final int COUNT = VALUES.length;

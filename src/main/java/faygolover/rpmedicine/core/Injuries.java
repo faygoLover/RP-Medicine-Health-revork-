@@ -273,7 +273,8 @@ public final class Injuries {
     /** Случайный орган части тела (грудь: сердце или лёгкие, живот: печень, почки, кишечник). */
     static Organ randomOrgan(BodyPart part, RandomGenerator rnd) {
         List<Organ> in = new ArrayList<>();
-        for (Organ o : Organ.VALUES) if (o.part == part) in.add(o);
+        // Мозг — своя шкала, не случайный орган.
+        for (Organ o : Organ.VALUES) if (o.part == part && o != Organ.BRAIN) in.add(o);
         return in.get(rnd.nextInt(in.size()));
     }
 

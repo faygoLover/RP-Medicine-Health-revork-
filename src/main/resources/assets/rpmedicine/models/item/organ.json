@@ -36,6 +36,18 @@
     },
     {
       "predicate": {
+        "rpmedicine:organ": 0.6
+      },
+      "model": "rpmedicine:item/organ_spleen"
+    },
+    {
+      "predicate": {
+        "rpmedicine:organ": 0.7
+      },
+      "model": "rpmedicine:item/organ_brain"
+    },
+    {
+      "predicate": {
         "rpmedicine:organ": 0.9
       },
       "model": "rpmedicine:item/organ_spoiled"

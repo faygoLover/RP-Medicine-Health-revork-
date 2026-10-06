@@ -93,7 +93,8 @@ public final class Surgery {
                 return st == SurgeryStage.RETRACTED ? null : "not_retracted";
             }
             case ORGAN_REMOVE -> {
-                if (!part.isTorso()) return "torso_only";
+                // Голова — только мозг (решения, п. 1.16).
+                if (!part.isTorso() && part != BodyPart.HEAD) return "torso_only";
                 if (st != SurgeryStage.RETRACTED) return "not_retracted";
                 if (extra instanceof Treatments.OrganPick pick) return pick.organ().part == part && m.hasOrgan(pick.organ()) ? null : "no_organ";
                 for (Organ o : Organ.VALUES) if (o.part == part && m.hasOrgan(o)) return null;

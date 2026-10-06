@@ -118,6 +118,8 @@ ORGAN_VARIANTS = [  # (индекс, имя текстуры, источник)
     (3, "organ_liver", BC + "textures/item/donor_liver.png"),
     (4, "organ_kidneys", BC + "textures/item/donor_kidneys.png"),
     (5, "organ_intestines", ("drawn", "organ_intestines")),
+    (6, "organ_spleen", BC + "textures/item/donor_spleen.png"),
+    (7, "organ_brain", BC + "textures/item/donor_brain.png"),
     (9, "organ_spoiled", BC + "textures/item/spoiled_organ.png"),
 ]
 # Про запас (органов в механике пока нет — вопрос автору): мозг, селезёнка, желудок, поджелудочная.
