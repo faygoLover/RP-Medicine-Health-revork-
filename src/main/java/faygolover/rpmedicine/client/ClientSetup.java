@@ -60,6 +60,13 @@ public final class ClientSetup {
     public static void onRenderers(EntityRenderersEvent.RegisterRenderers e) {
         e.registerEntityRenderer(ModEntities.BODY_STUB.get(), BodyStubRenderer::new);
         e.registerEntityRenderer(ModEntities.VOMIT.get(), faygolover.rpmedicine.client.render.VomitRenderer::new);
+        e.registerBlockEntityRenderer(faygolover.rpmedicine.registry.ModBlocks.IV_STAND_BE.get(), faygolover.rpmedicine.client.render.IvStandRenderer::new);
+    }
+
+    /** Пакеты на стойке капельницы — отдельные модели (рисует IvStandRenderer). */
+    @SubscribeEvent
+    public static void onModels(net.minecraftforge.client.event.ModelEvent.RegisterAdditional e) {
+        faygolover.rpmedicine.client.render.IvStandRenderer.allModels().forEach(e::register);
     }
 
     @SubscribeEvent

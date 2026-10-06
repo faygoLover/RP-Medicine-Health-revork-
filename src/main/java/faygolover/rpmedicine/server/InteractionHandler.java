@@ -68,6 +68,11 @@ public final class InteractionHandler {
             return;
         }
         ServerPlayer sp = (ServerPlayer) p;
+        // Шланг стойки в руке: подключить к катетеру (замечание 35).
+        if (main.isEmpty() && faygolover.rpmedicine.hospital.IvStandService.holdingHose(sp)) {
+            if (faygolover.rpmedicine.hospital.IvStandService.onPatient(sp, target)) cancel(event);
+            return;
+        }
         ItemRules.Spec spec = ItemRules.specFor(main);
         if (spec != null) {
             if (TreatmentService.startWithItem(sp, target, sp.getInventory().selected, null)) cancel(event);

@@ -1,0 +1,54 @@
+{
+  "texture_size": [
+    32,
+    32
+  ],
+  "textures": {
+    "1": "rpmedicine:block/iv_bag_empty_saline",
+    "particle": "rpmedicine:block/iv_bag_empty_saline"
+  },
+  "elements": [
+    {
+      "name": "iv_bag",
+      "from": [
+        1.25,
+        19.5,
+        8.25
+      ],
+      "to": [
+        6.25,
+        29.5,
+        8.25
+      ],
+      "rotation": {
+        "angle": 22.5,
+        "axis": "y",
+        "origin": [
+          3.25,
+          27.5,
+          7.25
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            0,
+            5,
+            5
+          ],
+          "texture": "#1"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            0,
+            5,
+            5
+          ],
+          "texture": "#1"
+        }
+      }
+    }
+  ]
+}

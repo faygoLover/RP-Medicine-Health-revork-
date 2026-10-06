@@ -1,7 +1,8 @@
 {
   "function": "iv_stand",
   "blocks": [
-    "industrialhellscape:iv_dripstand"
+    "industrialhellscape:iv_dripstand",
+    "rpmedicine:iv_stand"
   ],
   "radius": 3
 }

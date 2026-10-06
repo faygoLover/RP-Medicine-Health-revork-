@@ -590,6 +590,7 @@ WHAT.update({
     "norepinephrine": ("Флакон норадреналина на 2 дозы, набирать шприцем.", "A norepinephrine vial, 2 doses, drawn with a syringe."),
     "syringe": ("Многоразовый шприц: набрать из флакона, взять кровь.", "A reusable syringe: draw from a vial, take blood."),
     "used_pen": ("Пустая шприц-ручка.", "An empty injector pen."),
+    "iv_catheter": ("Пластиковая канюля с иглой.", "A plastic cannula with a needle."),
 })
 for k, (ru, en) in WHAT.items():
     t(f"item.rpmedicine.{k}.what", ru, en)
@@ -1034,6 +1035,32 @@ t("rpmedicine.labform.glucose", "Глюкоза", "Glucose")
 t("rpmedicine.labform.glucose.unit", "ммоль/л", "mmol/L")
 t("rpmedicine.labform.b12", "Витамин B12", "Vitamin B12")
 t("rpmedicine.labform.b12.unit", "пг/мл", "pg/mL")
+t("block.rpmedicine.iv_stand", "Стойка капельницы", "IV stand")
+t("item.rpmedicine.iv_stand.desc", "ПКМ пакетом — повесить. ПКМ пустой рукой — взять шланг, потом ПКМ по пациенту с катетером. Shift+ПКМ — снять пакет.", "Right-click with a bag to hang it. Empty hand: take the hose, then right-click a patient with a catheter. Shift+right-click: take a bag off.")
+t("item.rpmedicine.iv_catheter", "Венозный катетер", "IV catheter")
+t("item.rpmedicine.iv_catheter.desc", "Ставится в руку. Через него капает со стойки. Отойти дальше шланга — катетер вырвет.", "Goes into an arm. The IV stand drips through it. Walk beyond the hose and it gets torn out.")
+t("rpmedicine.iv.hung", "Пакет повешен на стойку", "Bag hung on the stand")
+t("rpmedicine.iv.no_hook", "Свободных крючков нет", "No free hooks")
+t("rpmedicine.iv.no_bags", "На стойке нет пакетов", "No bags on the stand")
+t("rpmedicine.iv.bag_in_use", "Этот пакет капает — сначала отсоедините шланг", "This bag is dripping — disconnect the hose first")
+t("rpmedicine.iv.bag_taken", "Пакет снят", "Bag taken off")
+t("rpmedicine.iv.bag_thrown", "Начатый пакет снят и выброшен", "The used bag was taken off and thrown away")
+t("rpmedicine.iv.detached", "Шланг отсоединён", "Hose disconnected")
+t("rpmedicine.iv.hose_taken", "Шланг в руке: ПКМ по пациенту с катетером", "Hose in hand: right-click a patient with a catheter")
+t("rpmedicine.iv.players_only", "Подключить можно только к игроку", "Only a player can be connected")
+t("rpmedicine.iv.stand_gone", "Стойки больше нет", "The stand is gone")
+t("rpmedicine.iv.need_catheter", "Сначала поставьте катетер", "Place a catheter first")
+t("rpmedicine.iv.too_far", "Пациент слишком далеко от стойки", "The patient is too far from the stand")
+t("rpmedicine.iv.linked", "Капельница подключена", "IV connected")
+t("rpmedicine.iv.torn", "Катетер вырвало из руки!", "The catheter got torn out of your arm!")
+t("rpmedicine.msg.catheter_removed", "Катетер вынут", "Catheter removed")
+t("rpmedicine.panel.remove_catheter", "Вынуть катетер", "Remove catheter")
+t("rpmedicine.exam.catheter_left", "Катетер в левой руке", "Catheter in the left arm")
+t("rpmedicine.exam.catheter_right", "Катетер в правой руке", "Catheter in the right arm")
+t("rpmedicine.treat.catheter_placed", "Катетер поставлен", "Catheter placed")
+t("rpmedicine.treat.catheter_failed", "Не попали в вену — катетер испорчен", "Missed the vein — the catheter is ruined")
+t("rpmedicine.refuse.catheter_already", "Катетер уже стоит", "A catheter is already in place")
+t("rpmedicine.refuse.catheter_arm_only", "Катетер ставят в руку", "A catheter goes into an arm")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

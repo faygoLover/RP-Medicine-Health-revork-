@@ -531,6 +531,29 @@ public final class HospitalGameTests {
         h.succeed();
     }
 
+    /** Своя стойка капельницы (замечание 35): пакет капает через катетер; отошёл дальше шланга — катетер вырван, рана. */
+    @GameTest(template = T, timeoutTicks = 100)
+    public static void ivStandHoseDripAndTear(GameTestHelper h) {
+        noDeath(false);
+        BlockPos pos = h.absolutePos(new BlockPos(2, 1, 2));
+        h.getLevel().setBlockAndUpdate(pos, faygolover.rpmedicine.registry.ModBlocks.IV_STAND.get().defaultBlockState());
+        var be = (faygolover.rpmedicine.hospital.IvStandBlockEntity) h.getLevel().getBlockEntity(pos);
+        h.assertTrue(be != null && be.hang(new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SALINE.get())), "пакет повешен");
+        ServerPlayer p = player(h, 3.5, 2.5);
+        MedicalState m = state(p);
+        m.catheterPart = faygolover.rpmedicine.core.BodyPart.RIGHT_ARM.ordinal();
+        be.link(p, m.catheterPart);
+        for (int i = 0; i < 10; i++) be.serverTick();
+        h.assertTrue(m.salineDripRemaining > 0, "капает со стойки");
+        p.teleportTo(p.getX() + 8, p.getY(), p.getZ());
+        for (int i = 0; i < 10; i++) be.serverTick();
+        h.assertTrue(m.catheterPart < 0 && !be.linked() && m.salineDripRemaining == 0, "катетер вырван, капельница остановлена");
+        h.assertTrue(!m.part(faygolover.rpmedicine.core.BodyPart.RIGHT_ARM).wounds.isEmpty(), "рана на руке");
+        h.assertTrue(be.kind(0) == faygolover.rpmedicine.hospital.IvStandBlockEntity.SALINE, "недокапавшее осталось в пакете");
+        remove(h, p);
+        h.succeed();
+    }
+
     /** Голод и жажда (второй этап, п. 12): своя жажда убывает, вода её восполняет, food add прокручивает и офлайн. */
     @GameTest(template = T, timeoutTicks = 100)
     public static void hungerThirstAndFoodCommand(GameTestHelper h) {

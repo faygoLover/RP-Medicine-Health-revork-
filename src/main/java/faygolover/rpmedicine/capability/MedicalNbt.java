@@ -76,6 +76,7 @@ public final class MedicalNbt {
             if (m.bloodDripType != null) t.putByte("bDripType", (byte) m.bloodDripType.ordinal());
             if (m.bloodDripSpoiled) t.putBoolean("bDripSpoiled", true);
         }
+        if (m.catheterPart >= 0) t.putByte("cath", (byte) m.catheterPart);
         putIf(t, "reaction", m.transfusionReactionSeconds);
         putIf(t, "opioid", m.opioidSeconds);
         if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
@@ -254,6 +255,7 @@ public final class MedicalNbt {
         m.bloodDripRate = t.getFloat("bDripRate");
         m.bloodDripType = t.contains("bDripType") ? BloodType.byOrdinal(t.getByte("bDripType")) : null;
         m.bloodDripSpoiled = t.getBoolean("bDripSpoiled");
+        m.catheterPart = t.contains("cath") ? t.getByte("cath") : -1;
         m.transfusionReactionSeconds = t.getFloat("reaction");
         m.opioidSeconds = t.getFloat("opioid");
         m.thirst = t.contains("thirst") ? t.getFloat("thirst") : 100;

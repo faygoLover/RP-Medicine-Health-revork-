@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "rpmedicine:block/iv_stand"
+    },
+    "facing=east": {
+      "model": "rpmedicine:block/iv_stand",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "rpmedicine:block/iv_stand",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "rpmedicine:block/iv_stand",
+      "y": 270
+    }
+  }
+}

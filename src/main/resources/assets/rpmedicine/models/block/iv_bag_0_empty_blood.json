@@ -1,0 +1,54 @@
+{
+  "texture_size": [
+    32,
+    32
+  ],
+  "textures": {
+    "1": "rpmedicine:block/iv_bag_empty_blood",
+    "particle": "rpmedicine:block/iv_bag_empty_blood"
+  },
+  "elements": [
+    {
+      "name": "iv_bag",
+      "from": [
+        5.5,
+        19.5,
+        4
+      ],
+      "to": [
+        10.5,
+        29.5,
+        4
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          7.5,
+          27.5,
+          3
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            2.5,
+            0,
+            5,
+            5
+          ],
+          "texture": "#1"
+        },
+        "south": {
+          "uv": [
+            2.5,
+            0,
+            5,
+            5
+          ],
+          "texture": "#1"
+        }
+      }
+    }
+  ]
+}

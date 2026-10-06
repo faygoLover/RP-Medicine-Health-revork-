@@ -8,6 +8,8 @@ public final class ModRegistries {
 
     public static void register(IEventBus modBus) {
         ModSounds.SOUNDS.register(modBus);
+        ModBlocks.BLOCKS.register(modBus);
+        ModBlocks.BLOCK_ENTITIES.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModItems.TABS.register(modBus);
         ModEntities.ENTITIES.register(modBus);

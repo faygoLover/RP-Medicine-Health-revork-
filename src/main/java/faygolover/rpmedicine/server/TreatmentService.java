@@ -661,7 +661,7 @@ public final class TreatmentService {
                 case SPLINT -> ModSounds.SPLINT.get();
                 case AIRWAY, INTUBATE -> ModSounds.SURGERY_TRACHEA.get();
                 case TOURNIQUET, ESMARCH -> ModSounds.TOURNIQUET.get();
-                case MORPHINE, ADRENALINE, TXA, NEEDLE, SALINE, BLOOD_BAG, BLOOD_COLLECT -> ModSounds.INJECTION.get();
+                case MORPHINE, ADRENALINE, TXA, NEEDLE, SALINE, BLOOD_BAG, BLOOD_COLLECT, CATHETER -> ModSounds.INJECTION.get();
                 case DRUG -> {
                     var d = ItemRules.drugFor(original);
                     yield d != null && d.form() == faygolover.rpmedicine.core.Drug.Form.PILL ? ModSounds.PILLS.get() : ModSounds.INJECTION.get();

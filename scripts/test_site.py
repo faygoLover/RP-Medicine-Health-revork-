@@ -89,7 +89,7 @@ def main():
     L += ["# --- Палата"]
     L += two_forward("industrialhellscape:medical_bed", 1, 3, "waterlogged=false")
     L += two_vertical("industrialhellscape:vitals_monitor", 0, 3)
-    L += two_vertical("industrialhellscape:iv_dripstand", 2, 3)
+    L += ["setblock ~2 ~ ~3 rpmedicine:iv_stand[facing=west] replace"]
     L += two_forward("industrialhellscape:medical_bed", 5, 3, "waterlogged=false")
     L += two_vertical("industrialhellscape:vitals_monitor", 4, 3)
     L += two_vertical("industrialhellscape:iv_dripstand", 6, 3)
@@ -97,7 +97,7 @@ def main():
           "setblock ~0 ~ ~7 moa_decor_science:lectordesignosvitales[facing=north] replace",
           "setblock ~5 ~ ~7 multibeds:cot replace",
           "setblock ~3 ~ ~9 industrialhellscape:fire_extinguisher[facing=north] replace",
-          sign(3, 0, 1, ["Палата", "койки, мониторы,", "стойки капельниц", ""]),
+          sign(3, 0, 1, ["Палата", "стойка RP Medicine —", "у левой койки,", "IHS — у правой"]),
           sign(3, 0, 10, ["Кислород", "огнетушитель", "у коек", ""])]
     # Операционная: стол, монитор, стойка, стерилизатор, кислород.
     L += ["# --- Операционная"]

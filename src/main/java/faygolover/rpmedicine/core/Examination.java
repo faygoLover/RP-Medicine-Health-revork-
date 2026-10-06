@@ -242,6 +242,7 @@ public final class Examination {
         if (!self && lvl >= 4 && m.effect(DrugEffect.ANESTHESIA) > 0) out.add(new Line("anesthesia"));
         if (m.bloodDripRemaining > 0) out.add(new Line("drip_blood"));
         if (m.salineDripRemaining > 0) out.add(new Line("drip_saline"));
+        if (m.catheterPart >= 0) out.add(new Line(BodyPart.values()[m.catheterPart] == BodyPart.LEFT_ARM ? "catheter_left" : "catheter_right"));
         if (!self && lvl >= 4) {
             if (m.bodyTemp >= 37.8) out.add(new Line("feels_hot"));
             else if (m.bodyTemp <= 35.5) out.add(new Line("feels_cold"));

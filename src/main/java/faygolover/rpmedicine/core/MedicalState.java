@@ -128,6 +128,8 @@ public final class MedicalState {
     public double bloodDripRate;
     public BloodType bloodDripType;
     public boolean bloodDripSpoiled;
+    /** Венозный катетер (замечание 35): часть тела (ordinal BodyPart) или -1. Через него капает со стойки. */
+    public int catheterPart = -1;
     /** Реакция на несовместимую кровь: осталось секунд. */
     public double transfusionReactionSeconds;
     /** Своя жажда без LSO: вода 0–100. */
@@ -256,6 +258,7 @@ public final class MedicalState {
         bloodDripRate = 0;
         bloodDripType = null;
         bloodDripSpoiled = false;
+        catheterPart = -1;
         transfusionReactionSeconds = 0;
         opioidSeconds = 0;
         acutePain = 0;
@@ -410,6 +413,7 @@ public final class MedicalState {
         bloodDripRate = o.bloodDripRate;
         bloodDripType = o.bloodDripType;
         bloodDripSpoiled = o.bloodDripSpoiled;
+        catheterPart = o.catheterPart;
         transfusionReactionSeconds = o.transfusionReactionSeconds;
         opioidSeconds = o.opioidSeconds;
         acutePain = o.acutePain;

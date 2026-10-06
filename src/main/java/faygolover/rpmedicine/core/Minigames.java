@@ -86,7 +86,7 @@ public final class Minigames {
             case BANDAGE, PRESSURE_DRESSING, HEMOSTATIC -> Type.BANDAGE;
             case TOURNIQUET, ESMARCH -> Type.TOURNIQUET;
             case MORPHINE, ADRENALINE, TXA, NEEDLE -> Type.INJECTION;
-            case SALINE, BLOOD_BAG, BLOOD_COLLECT, BLOOD_SAMPLE -> Type.VEIN;
+            case SALINE, BLOOD_BAG, BLOOD_COLLECT, BLOOD_SAMPLE, CATHETER -> Type.VEIN;
             case TWEEZERS -> Type.TWEEZERS;
             case SUTURE -> Type.SUTURE;
             case REDUCE -> Type.REDUCE;

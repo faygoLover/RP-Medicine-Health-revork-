@@ -145,8 +145,14 @@ public class MedicalPanelScreen extends Screen {
         int bits = exam != null && selected != null ? exam.removable()[selected.ordinal()] : 0;
         for (int i = 0; i < removeButtons.size(); i++) removeButtons.get(i).visible = (bits & (1 << i)) != 0;
         if (searchButton != null) searchButton.visible = exam != null && !exam.self() && exam.downState() != 0;
-        if (dripButton != null) dripButton.visible = exam != null && exam.view().general().stream()
-                .anyMatch(l -> l.key().equals("drip_blood") || l.key().equals("drip_saline"));
+        if (dripButton != null) {
+            boolean drip = exam != null && exam.view().general().stream()
+                    .anyMatch(l -> l.key().equals("drip_blood") || l.key().equals("drip_saline"));
+            boolean cath = exam != null && exam.view().general().stream().anyMatch(l -> l.key().startsWith("catheter_"));
+            // Без капельницы та же кнопка вынимает катетер.
+            dripButton.visible = drip || cath;
+            dripButton.setMessage(Component.translatable(drip ? "rpmedicine.panel.stop_drip" : "rpmedicine.panel.remove_catheter"));
+        }
         if (tubeButton != null) tubeButton.visible = exam != null && (exam.general() & 1) != 0;
         if (airwayButton != null) airwayButton.visible = exam != null && (exam.general() & 2) != 0;
         if (restrainButton != null) {

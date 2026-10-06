@@ -128,6 +128,8 @@ public final class ServerConfig {
         bind("salineLossPerHour", "Физраствор сам уходит из сосудов, доля в час.");
         bind("salineVolume", "Объём пакета физраствора, мл.");
         bind("salineDripSeconds", "Капельница идёт столько секунд.");
+        bind("ivHoseLength", "Стойка капельницы: длина шланга, блоков. Пациент отошёл дальше — катетер вырван.");
+        bind("ivTearWoundSeverity", "Рана от вырванного катетера (тяжесть пореза).");
         bind("arrestBloodLossFraction", "Потеря этой доли крови — остановка сердца.");
         B.pop();
 

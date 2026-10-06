@@ -186,6 +186,10 @@ public final class Treatments {
                 if (!part.isTorso()) return "torso_only";
                 return ps.internalBleed > 0 ? null : "no_internal";
             }
+            case CATHETER -> {
+                if (!part.isArm()) return "catheter_arm_only";
+                return m.catheterPart >= 0 ? "catheter_already" : null;
+            }
             case SALINE -> {
                 if (m.salineDripRemaining > 0 || m.bloodDripRemaining > 0) return "already_dripping";
                 double normal = m.normalBlood(s);
@@ -361,7 +365,7 @@ public final class Treatments {
                 }
                 return Result.failed("forced_defib");
             }
-            case TOURNIQUET, ESMARCH, SPLINT, OCCLUSIVE, PAINKILLER, MORPHINE, TXA, SALINE, AMMONIA -> {
+            case TOURNIQUET, ESMARCH, SPLINT, OCCLUSIVE, PAINKILLER, MORPHINE, TXA, SALINE, AMMONIA, CATHETER -> {
                 // Эффект как обычно: жгут без нужды пережимает здоровую ногу, лишняя доза — передозировка.
                 if (a == TreatmentAction.PAINKILLER && m.painkillerSeconds > 0) m.nauseaSeconds = Math.max(m.nauseaSeconds, 120);
                 if ((a == TreatmentAction.TOURNIQUET || a == TreatmentAction.ESMARCH) && ps.hasTourniquet())
@@ -510,6 +514,12 @@ public final class Treatments {
                 m.stabilizationUsed = true;
                 m.stabilizedSeconds = s.stabilizationSeconds * (error ? 0.5 : 1.0);
                 return error ? Result.failed("stabilization_partial") : Result.ok("stabilized");
+            }
+            case CATHETER -> {
+                // Промах: вена «лопнула» — катетера нет, катетер потрачен.
+                if (error) return Result.failed("catheter_failed");
+                m.catheterPart = part.ordinal();
+                return Result.ok("catheter_placed");
             }
             case SALINE -> {
                 double vol = s.salineVolume * (error ? 0.5 : 1.0);

@@ -140,7 +140,7 @@ ITEMS = [
     ("occlusive_dressing", "occlusive", 4, 1, True), ("decompression_needle", "needle", 5, 3, True),
     ("painkillers", "painkiller", 2, 0, True), ("morphine", "morphine", 2, 1, True),
     ("adrenaline", "adrenaline", 2, 2, True), ("txa", "txa", 2, 2, True), ("stabilization_kit", "stabilize", 8, 2, True),
-    ("field_surgery_kit", "surgical_kit", 15, 4, True), ("saline", "saline", 10, 2, True),
+    ("field_surgery_kit", "surgical_kit", 15, 4, True), ("saline", "saline", 10, 2, True), ("iv_catheter", "catheter", 6, 2, True),
     ("ammonia", "ammonia", 1, 0, True), ("airway", "airway", 4, 2, True),
     ("ambu_bag", "ambu", 1, 2, False), ("defibrillator", "defibrillator", 6, 1, True),
     ("pulse_oximeter", "pulse_oximeter", 2, 0, False), ("tonometer", "tonometer", 6, 1, False),
@@ -416,7 +416,7 @@ HOSPITAL = {
     "operating_tables": {"function": "operating_table", "blocks": ["industrialhellscape:operating_table"]},
     "restraint_tables": {"function": "restraint_table", "blocks": ["butchery:metal_butchers_table"]},
     "monitors": {"function": "monitor", "blocks": ["industrialhellscape:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
-    "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand"], "radius": 3},
+    "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand", "rpmedicine:iv_stand"], "radius": 3},
     # Холодильник и лаборатория — предложение по справочнику id, ждёт подтверждения автора (07_spec_stage2.md, п. 16.13).
     # Блоки Health & Disease (замечание 06.10): термостат для пробирок — холодильник, бокс очистки — стерилизатор,
     # стол патологоанатомического исследования — лаборатория (бланк анализа в окне). Аптечки H&D — просто хранилища.
@@ -640,6 +640,8 @@ for name, (shape, color, accent) in ICONS.items():
 # Внешний вид предметов: иконки, 3D-модели, варианты органов и конечностей (перезаписывает заглушки выше).
 import item_art  # noqa: E402
 item_art.main()
+import iv_stand_art  # noqa: E402
+iv_stand_art.main()
 
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
 print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(DRUGS), "препаратов,", len(ALIASES), "аналогов")

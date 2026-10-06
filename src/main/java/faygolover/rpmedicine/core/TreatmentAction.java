@@ -19,6 +19,8 @@ public enum TreatmentAction {
     TXA("txa", Target.BODY),
     SURGICAL_KIT("surgical_kit", Target.PART),
     SALINE("saline", Target.BODY),
+    /** Венозный катетер в руку: через него капает со стойки (замечание 35). */
+    CATHETER("catheter", Target.PART),
     AMMONIA("ammonia", Target.BODY),
     AIRWAY("airway", Target.BODY),
     AMBU("ambu", Target.HOLD),
@@ -93,7 +95,7 @@ public enum TreatmentAction {
 
     /** Пациент должен стоять на месте всё время действия (забор и установка капельницы). */
     public boolean requiresStill() {
-        return this == BLOOD_BAG || this == BLOOD_COLLECT || this == SALINE;
+        return this == BLOOD_BAG || this == BLOOD_COLLECT || this == SALINE || this == CATHETER;
     }
 
     /** Диагностика: ошибка только от нехватки уровня, результат — в чат. */

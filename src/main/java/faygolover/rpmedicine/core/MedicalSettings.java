@@ -76,6 +76,10 @@ public final class MedicalSettings {
     public double salineLossPerHour = 0.25;
     public double salineVolume = 500.0;
     public double salineDripSeconds = 120.0;
+    /** Стойка капельницы (замечание 35): длина шланга, блоков; дальше — катетер вырван. */
+    public double ivHoseLength = 4.0;
+    /** Рана от вырванного катетера (тяжесть пореза). */
+    public double ivTearWoundSeverity = 6.0;
 
     // ---------------- Множители ----------------
     public double bleedMultiplier = 1.0;

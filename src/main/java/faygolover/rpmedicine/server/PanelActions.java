@@ -98,7 +98,18 @@ public final class PanelActions {
             sp.displayClientMessage(Component.translatable(refuse).withStyle(ChatFormatting.YELLOW), true);
             return;
         }
-        if (m.bloodDripRemaining <= 0 && m.salineDripRemaining <= 0) return;
+        // Без капельницы — вынуть катетер.
+        if (m.bloodDripRemaining <= 0 && m.salineDripRemaining <= 0) {
+            if (m.catheterPart < 0) return;
+            if (target instanceof ServerPlayer tp) faygolover.rpmedicine.hospital.IvStandService.detachPatient(tp);
+            m.catheterPart = -1;
+            Medical.changed(target);
+            sp.displayClientMessage(Component.translatable("rpmedicine.msg.catheter_removed"), true);
+            ExamService.refreshFor(sp);
+            return;
+        }
+        // Со стойки: недокапавшее остаётся в пакете.
+        if (target instanceof ServerPlayer tp) faygolover.rpmedicine.hospital.IvStandService.detachPatient(tp);
         m.bloodDripRemaining = 0;
         m.bloodDripRate = 0;
         m.bloodDripType = null;

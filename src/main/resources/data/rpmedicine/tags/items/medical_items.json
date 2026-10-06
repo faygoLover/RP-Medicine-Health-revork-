@@ -16,6 +16,7 @@
     "rpmedicine:stabilization_kit",
     "rpmedicine:field_surgery_kit",
     "rpmedicine:saline",
+    "rpmedicine:iv_catheter",
     "rpmedicine:ammonia",
     "rpmedicine:airway",
     "rpmedicine:ambu_bag",

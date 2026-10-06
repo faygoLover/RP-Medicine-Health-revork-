@@ -41,6 +41,7 @@ ICONS = {
     "antibiotic_ointment": ("drawn", "antibiotic_ointment"),
     # Дыхание
     "ammonia": ("drawn", "ammonia"),
+    "iv_catheter": ("drawn", "iv_catheter"),
     "laryngoscope": ("drawn", "laryngoscope"),
     "endotracheal_tube": ("drawn", "endotracheal_tube"),
     # Таблетки — флаконы, как их 3D-модели (Health & Disease)

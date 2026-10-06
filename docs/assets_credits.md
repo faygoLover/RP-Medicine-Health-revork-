@@ -220,3 +220,12 @@ SOFTWARE.
 | `rpgeo/empty_blood_bag.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/empty_blood_bag.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
 <!-- item_art:end -->
+
+<!-- iv_stand:begin -->
+## Стойка капельницы (`scripts/iv_stand_art.py`)
+
+| Файл в моде (`assets/rpmedicine/…`) | Откуда | Автор | Лицензия |
+|---|---|---|---|
+| `models/block/iv_stand.json`, `textures/block/iv_stand.png` | Industrial Hellscape 0.0.1: `iv_dripstand` (без пакетов) | YellowUboat | MIT |
+| `models/block/iv_bag_*.json`, `textures/block/iv_bag_*.png` | Industrial Hellscape 0.0.1: пакеты `iv_dripstand` (перекрашено) | YellowUboat | MIT |
+<!-- iv_stand:end -->

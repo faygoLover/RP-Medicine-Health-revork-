@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:iv_catheter",
+  "action": "catheter",
+  "seconds": 6,
+  "min_level": 2,
+  "consume": true
+}
