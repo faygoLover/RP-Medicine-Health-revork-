@@ -44,6 +44,14 @@ public final class ModItems {
     public static final RegistryObject<Item> IV_CATHETER = medical("iv_catheter", 16);
     /** Опустевший пакет капельницы — мусор (решения, п. 1.16). */
     public static final RegistryObject<Item> USED_IV_BAG = medical("used_iv_bag", 16);
+    // Предметы медицины LR Tactical (LesRaisins Studio) — их модели и анимации, наши эффекты (замечание 06.10, посмотреть).
+    public static final RegistryObject<Item> LR_AI2 = medical("lr_ai2", 1);
+    public static final RegistryObject<Item> LR_CMS = medical("lr_cms", 1);
+    public static final RegistryObject<Item> LR_SURV12 = medical("lr_surv12", 1);
+    public static final RegistryObject<Item> LR_GOLDENSTAR = medical("lr_goldenstar", 4);
+    public static final RegistryObject<Item> LR_VASELINE = medical("lr_vaseline", 4);
+    public static final RegistryObject<Item> LR_IBUPROFEN = medical("lr_ibuprofen", 16);
+    public static final RegistryObject<Item> LR_AMOXYCILLIN = medical("lr_amoxycillin", 16);
     /** Бланк анализа крови (замечание 06.10). */
     public static final RegistryObject<Item> LAB_REPORT = tool("lab_report", () -> new faygolover.rpmedicine.item.LabReportItem(new Item.Properties().stacksTo(1)));
     // Мебель госпиталя — свои блоки (решения, п. 1.16).

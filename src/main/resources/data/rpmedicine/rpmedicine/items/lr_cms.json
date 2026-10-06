@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:lr_cms",
+  "action": "surgical_kit",
+  "seconds": 13,
+  "min_level": 4,
+  "consume": true
+}

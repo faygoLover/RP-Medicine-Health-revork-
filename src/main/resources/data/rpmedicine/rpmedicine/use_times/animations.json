@@ -20,6 +20,16 @@
     "rpmedicine:morphine": 1.0,
     "rpmedicine:insulin": 1.0,
     "rpmedicine:used_pen": 1.0,
-    "rpmedicine:dirty_syringe": 1.0
+    "rpmedicine:dirty_syringe": 1.0,
+    "rpmedicine:blood_bag": 4.63,
+    "rpmedicine:saline": 4.63,
+    "rpmedicine:empty_blood_bag": 4.63,
+    "rpmedicine:lr_ai2": 4.62,
+    "rpmedicine:lr_cms": 12.9,
+    "rpmedicine:lr_surv12": 8.0,
+    "rpmedicine:lr_goldenstar": 5.58,
+    "rpmedicine:lr_vaseline": 2.82,
+    "rpmedicine:lr_ibuprofen": 2.45,
+    "rpmedicine:lr_amoxycillin": 7.22
   }
 }

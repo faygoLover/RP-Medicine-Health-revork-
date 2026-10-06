@@ -89,6 +89,25 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
         for (GeoModel.Bone bone : e.model().roots) renderBone(bone, e, clip, t, pose, vc, light, overlay);
     }
 
+    /** Руки игрока вместо кубов *_pos (вид от первого лица, FirstPersonGeo). */
+    public interface ArmHook {
+        void draw(GeoModel.Bone bone, PoseStack pose, int light);
+    }
+
+    @Nullable
+    public static ArmHook armHook;
+
+    /** Нарисовать модель с руками игрока (вид от первого лица). */
+    public static void renderWithArms(GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose, VertexConsumer vc, int light,
+                                      int overlay, ArmHook hook) {
+        armHook = hook;
+        try {
+            renderModel(e, clip, t, pose, vc, light, overlay);
+        } finally {
+            armHook = null;
+        }
+    }
+
     /** Заполнение ручки 0–1 для текущего предмета (-1 — не ручка). */
     private static float fill = -1;
     /** Высота жидкости в окошке ручки при полной, единицы модели. */
@@ -96,7 +115,7 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     private static void renderBone(GeoModel.Bone b, GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose,
                                    VertexConsumer vc, int light, int overlay) {
-        if (e.hide().contains(b.name)) return;
+        if (e.hide().contains(b.name) && !(armHook != null && b.name.contains("hand"))) return;
         if (fill >= 0 && b.name.equals("liquid") && fill <= 0.001f) return;
         pose.pushPose();
         if (fill >= 0 && b.name.equals("stopper")) pose.translate(0, PEN_LIQUID * fill, 0);
@@ -121,7 +140,11 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
         float[] sc = clip == null ? null : clip.sample(b.name, 2, t);
         if (sc != null) pose.scale(nz(sc[0]), nz(sc[1]), nz(sc[2]));
         pose.translate(-b.px, -b.py, -b.pz);
-        quads(b.quads, pose, vc, light, overlay);
+        if (armHook != null && (b.name.equals("lefthand_pos") || b.name.equals("righthand_pos"))) {
+            armHook.draw(b, pose, light);
+        } else {
+            quads(b.quads, pose, vc, light, overlay);
+        }
         for (GeoModel.RotatedGroup g : b.rotated) {
             pose.pushPose();
             pose.translate(g.px(), g.py(), g.pz());

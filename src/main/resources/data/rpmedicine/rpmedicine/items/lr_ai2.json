@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:lr_ai2",
+  "action": "painkiller",
+  "seconds": 3,
+  "min_level": 0,
+  "consume": true
+}

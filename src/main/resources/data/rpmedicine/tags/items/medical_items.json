@@ -30,6 +30,9 @@
     "rpmedicine:portable_scanner",
     "rpmedicine:hemoanalyzer",
     "rpmedicine:lancet",
+    "rpmedicine:lr_ai2",
+    "rpmedicine:lr_cms",
+    "rpmedicine:lr_surv12",
     "rpmedicine:surgical_tweezers",
     "rpmedicine:suture_kit",
     "rpmedicine:scissors",
@@ -122,6 +125,22 @@
     },
     {
       "id": "medicamod:penicillin",
+      "required": false
+    },
+    {
+      "id": "rpmedicine:lr_amoxycillin",
+      "required": false
+    },
+    {
+      "id": "rpmedicine:lr_goldenstar",
+      "required": false
+    },
+    {
+      "id": "rpmedicine:lr_ibuprofen",
+      "required": false
+    },
+    {
+      "id": "rpmedicine:lr_vaseline",
       "required": false
     },
     {

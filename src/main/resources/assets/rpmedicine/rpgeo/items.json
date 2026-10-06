@@ -134,6 +134,7 @@
   "rpmedicine:first_aid_kit": {
     "geo": "rpmedicine:rpgeo/first_aid_kit.geo.json",
     "texture": "rpmedicine:textures/geo/first_aid_kit.png",
+    "animations": "rpmedicine:rpgeo/first_aid_kit.anim.json",
     "fit": true,
     "size": 0.8,
     "hide": [
@@ -146,6 +147,8 @@
   "rpmedicine:blood_bag": {
     "geo": "rpmedicine:rpgeo/blood_bag.geo.json",
     "texture": "rpmedicine:textures/geo/blood_bag.png",
+    "animations": "rpmedicine:rpgeo/blood_bag.anim.json",
+    "use": "use",
     "fit": true,
     "size": 0.95,
     "hide": [
@@ -158,6 +161,8 @@
   "rpmedicine:saline": {
     "geo": "rpmedicine:rpgeo/saline.geo.json",
     "texture": "rpmedicine:textures/geo/saline.png",
+    "animations": "rpmedicine:rpgeo/saline.anim.json",
+    "use": "use",
     "fit": true,
     "size": 0.95,
     "hide": [
@@ -170,8 +175,108 @@
   "rpmedicine:empty_blood_bag": {
     "geo": "rpmedicine:rpgeo/empty_blood_bag.geo.json",
     "texture": "rpmedicine:textures/geo/empty_blood_bag.png",
+    "animations": "rpmedicine:rpgeo/empty_blood_bag.anim.json",
+    "use": "use",
     "fit": true,
     "size": 0.95,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_ai2": {
+    "geo": "rpmedicine:rpgeo/lr_ai2.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_ai2.png",
+    "animations": "rpmedicine:rpgeo/lr_ai2.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_cms": {
+    "geo": "rpmedicine:rpgeo/lr_cms.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_cms.png",
+    "animations": "rpmedicine:rpgeo/lr_cms.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_surv12": {
+    "geo": "rpmedicine:rpgeo/lr_surv12.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_surv12.png",
+    "animations": "rpmedicine:rpgeo/lr_surv12.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_goldenstar": {
+    "geo": "rpmedicine:rpgeo/lr_goldenstar.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_goldenstar.png",
+    "animations": "rpmedicine:rpgeo/lr_goldenstar.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_vaseline": {
+    "geo": "rpmedicine:rpgeo/lr_vaseline.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_vaseline.png",
+    "animations": "rpmedicine:rpgeo/lr_vaseline.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_ibuprofen": {
+    "geo": "rpmedicine:rpgeo/lr_ibuprofen.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_ibuprofen.png",
+    "animations": "rpmedicine:rpgeo/lr_ibuprofen.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:lr_amoxycillin": {
+    "geo": "rpmedicine:rpgeo/lr_amoxycillin.geo.json",
+    "texture": "rpmedicine:textures/geo/lr_amoxycillin.png",
+    "animations": "rpmedicine:rpgeo/lr_amoxycillin.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
     "hide": [
       "lefthand",
       "righthand",

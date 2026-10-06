@@ -159,6 +159,36 @@ def oxygen():
     loot("oxygen_tank", False)
 
 
+PACK = os.path.join(os.environ.get("APPDATA", ""), "ElyPrismLauncher", "instances", "DEPARTMENT_s5_client", "minecraft", "mods")
+
+
+def tools():
+    """Инструменты из модов сборки (решения, п. 1.16): дрель — 3D Cybernetic System, иконки скальпеля, зажима,
+    ранорасширителя — [CS] Augmentations, пила — [CS] Foundation. Нет сборки — файлы не трогаем."""
+    def jar(prefix):
+        if not os.path.isdir(PACK):
+            return None
+        found = [f for f in os.listdir(PACK) if f.startswith(prefix) and f.endswith(".jar")]
+        return zipfile.ZipFile(os.path.join(PACK, sorted(found)[-1])) if found else None
+    cyb = jar("cybernetic_system")
+    if cyb:
+        m = json.loads(cyb.read("assets/cybernetic_system/models/custom/hand_drill.json"))
+        m["textures"] = {"1": "rpmedicine:item/surgical_drill_3d", "particle": "rpmedicine:item/surgical_drill"}
+        write(os.path.join(ASSETS, "models", "item", "surgical_drill.json"), m)
+        with open(os.path.join(ASSETS, "textures", "item", "surgical_drill_3d.png"), "wb") as f:
+            f.write(cyb.read("assets/cybernetic_system/textures/block/hand_drill.png"))
+    aug = jar("[CS] Augmentations")
+    if aug:
+        # Ранорасширитель у них почти как зажим — оставляем свой рисунок.
+        for ours, theirs in (("scalpel", "scalpel"), ("hemostat", "hemostat")):
+            with open(os.path.join(ASSETS, "textures", "item", f"{ours}.png"), "wb") as f:
+                f.write(aug.read(f"assets/csaugmentations/textures/item/{theirs}.png"))
+    fnd = jar("[CS] Foundation")
+    if fnd:
+        with open(os.path.join(ASSETS, "textures", "item", "bone_saw.png"), "wb") as f:
+            f.write(fnd.read("assets/csfoundation/textures/item/refined_saw.png"))
+
+
 def credits():
     text = open(CREDITS, encoding="utf-8").read()
     start, end = "<!-- hospital:begin -->", "<!-- hospital:end -->"
@@ -180,6 +210,7 @@ def main():
     ih()
     hd()
     oxygen()
+    tools()
     credits()
     print("hospital_art: ок")
 

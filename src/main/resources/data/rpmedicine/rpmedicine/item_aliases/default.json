@@ -1,5 +1,9 @@
 {
   "aliases": {
+    "rpmedicine:lr_goldenstar": "rpmedicine:antiseptic",
+    "rpmedicine:lr_vaseline": "rpmedicine:antibiotic_ointment",
+    "rpmedicine:lr_ibuprofen": "rpmedicine:ibuprofen",
+    "rpmedicine:lr_amoxycillin": "rpmedicine:amoxicillin",
     "survival_instinct:bandage": "rpmedicine:bandage",
     "survival_instinct:homemade_bandage": "rpmedicine:bandage",
     "survival_instinct:analgesic": "rpmedicine:painkillers",

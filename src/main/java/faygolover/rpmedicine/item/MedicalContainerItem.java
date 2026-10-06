@@ -29,16 +29,63 @@ public class MedicalContainerItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide && player instanceof ServerPlayer sp) {
-            int slot = hand == InteractionHand.MAIN_HAND ? sp.getInventory().selected : -1;
-            NetworkHooks.openScreen(sp, new SimpleMenuProvider(
-                    (id, inv, p) -> new MedicalContainerMenu(id, inv, hand, slots),
-                    stack.getHoverName()), buf -> {
-                buf.writeEnum(hand);
-                buf.writeVarInt(slots);
-                buf.writeVarInt(slot);
-            });
+            // Аптечка: сначала анимация — расстегнуть молнию (LR Tactical), потом открыть (замечание 06.10).
+            if (slots >= 20 && hand == InteractionHand.MAIN_HAND) {
+                if (!(faygolover.rpmedicine.server.ActionManager.current(sp) instanceof OpenKit))
+                    faygolover.rpmedicine.server.ActionManager.start(new OpenKit(sp, stack.copy(), this));
+            } else {
+                open(sp, hand, stack);
+            }
         }
-        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+        return InteractionResultHolder.consume(stack);
+    }
+
+    void open(ServerPlayer sp, InteractionHand hand, ItemStack stack) {
+        int slot = hand == InteractionHand.MAIN_HAND ? sp.getInventory().selected : -1;
+        NetworkHooks.openScreen(sp, new SimpleMenuProvider(
+                (id, inv, p) -> new MedicalContainerMenu(id, inv, hand, slots),
+                stack.getHoverName()), buf -> {
+            buf.writeEnum(hand);
+            buf.writeVarInt(slots);
+            buf.writeVarInt(slot);
+        });
+    }
+
+    /** Открыть аптечку: время на анимацию молнии. */
+    static final class OpenKit extends faygolover.rpmedicine.server.ActionManager.TimedAction {
+        private final ItemStack original;
+        private final MedicalContainerItem item;
+
+        OpenKit(ServerPlayer sp, ItemStack original, MedicalContainerItem item) {
+            super(sp, 38);
+            this.original = original;
+            this.item = item;
+        }
+
+        @Override
+        public String label() {
+            return "rpmedicine.action.open_kit";
+        }
+
+        @Override
+        public boolean slowsActor() {
+            return false;
+        }
+
+        @Override
+        public ItemStack icon() {
+            return original;
+        }
+
+        @Override
+        public String checkContinue() {
+            return actor.getMainHandItem().getItem() == original.getItem() ? null : "rpmedicine.action.item_changed";
+        }
+
+        @Override
+        public void complete() {
+            item.open(actor, InteractionHand.MAIN_HAND, actor.getMainHandItem());
+        }
     }
 
     @Override

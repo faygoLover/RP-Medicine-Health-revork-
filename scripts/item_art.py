@@ -202,13 +202,22 @@ GEO = {
     "dirty_syringe": dict(HD_INJECT, tex=("bloodtip", HD + "textures/item/broad-spectrum_antibiotics.png", None), hide=["bone3"]),
     # Наборы и кровь из LR Tactical (модели TaCZ — вписываются в куб предмета, руки скрыты)
     "first_aid_kit": dict(geo=LR + "geo_models/consumable/carfak_geo.json", tex=LR + "textures/consumable/carfak_uv.png", fit=True, size=0.8,
+                          anim=LR + "animations/consumable/carfak.animation.json",
                           fp={"rotation": [5, -40, 0], "translation": [1.5, 3, -1], "scale": [0.42, 0.42, 0.42]}),
     # Пакеты — одна модель LR (пакет крови), жидкость перекрашена (замечание 06.10): физраствор, пустой.
-    **{k: dict(geo=LR + "geo_models/consumable/blood_pack_geo.json", tex=tex, fit=True, size=0.95, fp=BAG_FP, tp=BAG_TP)
+    **{k: dict(geo=LR + "geo_models/consumable/blood_pack_geo.json", tex=tex, fit=True, size=0.95, fp=BAG_FP, tp=BAG_TP,
+               anim=LR + "animations/consumable/blood_pack.animation.json", use="use")
        for k, tex in {"blood_bag": LR + "textures/consumable/blood_pack_uv.png",
                       "saline": ("bag", LR + "textures/consumable/blood_pack_uv.png", (214, 232, 240, 150)),
                       "empty_blood_bag": ("bag", LR + "textures/consumable/blood_pack_uv.png", (186, 213, 219, 70))}.items()},
 }
+LR_EXTRA = {"lr_ai2": "ai2", "lr_cms": "cms", "lr_surv12": "surv12", "lr_goldenstar": "goldenstar", "lr_vaseline": "vaseline",
+            "lr_ibuprofen": "ibuprofen", "lr_amoxycillin": "amoxycillin"}
+for _k, _n in LR_EXTRA.items():
+    GEO[_k] = dict(geo=LR + f"geo_models/consumable/{_n}_geo.json", tex=LR + f"textures/consumable/{_n}_uv.png", fit=True, size=0.8,
+                   anim=LR + f"animations/consumable/{_n}.animation.json", use="use")
+    ICONS[_k] = ("small", LR + f"textures/consumable/slot/{_n}.png")
+
 FIT_DISPLAY = {
     "thirdperson_righthand": {"rotation": [0, 0, 0], "translation": [0, 1.5, 1], "scale": [0.55, 0.55, 0.55]},
     "thirdperson_lefthand": {"rotation": [0, 0, 0], "translation": [0, 1.5, 1], "scale": [0.55, 0.55, 0.55]},
@@ -274,6 +283,9 @@ def load(spec):
                         k = min(1.0, 0.75 + (r + g + b) / 765)
                         px[x, y] = (round(tr * k), round(tg * k), round(tb * k), ta)
             return im
+        if kind == "small":
+            # Иконка LR (128–256 px) — до 32 px.
+            return im.resize((32, 32), Image.LANCZOS)
         if kind == "liquidicon":
             # Иконка шприца H&D: насыщенная жидкость -> заданный цвет с той же светотенью.
             px = im.load()
@@ -482,33 +494,37 @@ def main():
         "perspectives": {"head": {"parent": "rpmedicine:item/surgical_mask_worn"}}})
 
     # Стетоскоп в руке (замечание 06.10): головка 3D, трубки к ушам рисует StethoscopeLayer; в инвентаре — иконка.
-    stex = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for y in range(16):
-        for x in range(16):
-            if y < 6:
-                c = (205, 210, 218) if (x + y) % 5 else (232, 236, 240)    # металл головки
-            elif y < 10:
-                c = (150, 156, 166)                                        # обод
+    # Текстура мельче (32 px), головка крупнее, ножка толще, пластины не в одной плоскости (без мерцания).
+    stex = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    for y in range(32):
+        for x in range(32):
+            if y < 12:
+                c = (206, 211, 219) if (x + y) % 7 else (234, 238, 242)    # металл головки
+                if 3 <= x <= 28 and y in (5, 6) and x % 3 == 0:
+                    c = (176, 182, 192)                                    # насечка мембраны
+            elif y < 20:
+                c = (150, 156, 166) if x % 2 else (136, 142, 152)          # обод, ножка
             else:
-                c = (48, 48, 54) if x % 4 else (62, 62, 70)                # трубка
+                c = (48, 48, 54) if (x + y) % 5 else (64, 64, 72)          # трубка
             stex.putpixel((x, y), c + (255,))
     stex.save(os.path.join(ASSETS, "textures", "item", "stethoscope_3d.png"))
 
     def sbox(a, b, uv):
         return {"from": a, "to": b, "faces": {f: {"uv": list(uv), "texture": "#s"} for f in ("north", "south", "east", "west", "up", "down")}}
-    head3d = {"textures": {"s": "rpmedicine:item/stethoscope_3d", "particle": "rpmedicine:item/stethoscope"},
+    head3d = {"texture_size": [32, 32], "textures": {"s": "rpmedicine:item/stethoscope_3d", "particle": "rpmedicine:item/stethoscope"},
               "elements": [
-                  sbox([6, 5, 7.4], [10, 11, 8.6], (0, 0, 16, 6)),              # мембрана (восьмиугольник из двух плашек)
-                  sbox([5, 6, 7.4], [11, 10, 8.6], (0, 0, 16, 6)),
-                  sbox([6.5, 6.5, 8.6], [9.5, 9.5, 9.4], (0, 6, 16, 10)),       # чашечка
-                  sbox([7.5, 10.5, 7.6], [8.5, 12.5, 8.4], (0, 6, 16, 10)),     # ножка
-                  sbox([7.6, 12.5, 7.6], [8.4, 16, 8.4], (0, 10, 16, 16)),      # трубка
+                  sbox([5.5, 4.5, 7.3], [10.5, 11.5, 8.7], (0, 0, 16, 6)),      # мембрана (восьмиугольник из двух плашек)
+                  sbox([4.5, 5.5, 7.35], [11.5, 10.5, 8.65], (0, 0, 16, 6)),
+                  sbox([6.5, 6.5, 8.7], [9.5, 9.5, 9.6], (0, 6, 16, 10)),       # чашечка
+                  sbox([7, 11.5, 7.2], [9, 13.5, 8.8], (0, 6, 16, 10)),         # ножка — толще
+                  sbox([7.3, 13.5, 7.3], [8.7, 16, 8.7], (0, 10, 16, 16)),      # трубка
               ],
               "display": {
-                  "thirdperson_righthand": {"rotation": [0, 0, 0], "translation": [0, 1, 1.5], "scale": [0.4, 0.4, 0.4]},
-                  "thirdperson_lefthand": {"rotation": [0, 0, 0], "translation": [0, 1, 1.5], "scale": [0.4, 0.4, 0.4]},
-                  "firstperson_righthand": {"rotation": [-10, 110, 0], "translation": [1, 3.5, -1], "scale": [0.3, 0.3, 0.3]},
-                  "firstperson_lefthand": {"rotation": [-10, -110, 0], "translation": [-1, 3.5, -1], "scale": [0.3, 0.3, 0.3]},
+                  # От третьего лица трубка — вниз, в руку (замечание 06.10).
+                  "thirdperson_righthand": {"rotation": [0, 0, 180], "translation": [0, 1, 1.5], "scale": [0.55, 0.55, 0.55]},
+                  "thirdperson_lefthand": {"rotation": [0, 0, 180], "translation": [0, 1, 1.5], "scale": [0.55, 0.55, 0.55]},
+                  "firstperson_righthand": {"rotation": [-10, 110, 0], "translation": [1, 3.5, -1], "scale": [0.4, 0.4, 0.4]},
+                  "firstperson_lefthand": {"rotation": [-10, -110, 0], "translation": [-1, 3.5, -1], "scale": [0.4, 0.4, 0.4]},
                   "ground": {"translation": [0, 2, 0], "scale": [0.4, 0.4, 0.4]},
                   "fixed": {"scale": [0.6, 0.6, 0.6]}}}
     write(os.path.join(ASSETS, "models", "item", "stethoscope_held.json"), head3d)

@@ -150,6 +150,8 @@ ITEMS = [
     ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
     # Пробирка крови — только ланцетом (замечание 06.10); шприц — для набора из флакона.
     ("lancet", "blood_sample", 3, 1, True),
+    # Предметы LR Tactical (посмотреть): АИ-2 — обезболивающее, CMS и Surv12 — хирургические наборы.
+    ("lr_ai2", "painkiller", 3, 0, True), ("lr_cms", "surgical_kit", 13, 4, True), ("lr_surv12", "surgical_kit", 8, 4, True),
     ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
     # третий этап
     ("endotracheal_tube", "intubate", 6, 6, True),
@@ -252,6 +254,9 @@ for name, d in DRUGS.items():
     write(f"{DATA}/rpmedicine/rpmedicine/drugs/{name}.json", obj)
 
 ALIASES = {
+    # LR Tactical — наши препараты.
+    "rpmedicine:lr_goldenstar": "rpmedicine:antiseptic", "rpmedicine:lr_vaseline": "rpmedicine:antibiotic_ointment",
+    "rpmedicine:lr_ibuprofen": "rpmedicine:ibuprofen", "rpmedicine:lr_amoxycillin": "rpmedicine:amoxicillin",
     # Survival Instinct (остаётся в сборке)
     "survival_instinct:bandage": "rpmedicine:bandage", "survival_instinct:homemade_bandage": "rpmedicine:bandage",
     "survival_instinct:analgesic": "rpmedicine:painkillers",

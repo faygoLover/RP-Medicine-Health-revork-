@@ -97,7 +97,7 @@ public class MedicalContainerMenu extends AbstractContainerMenu {
     public record Layout(int[] xs, int[] ys, int invTop, int height, int imageHeight, int texHeight, String texture) {
         public static Layout of(int size) {
             if (size == 8) return new Layout(new int[]{32, 64, 96, 128}, new int[]{50, 79}, 140, 223, 132, 770, "medical_pouch");
-            if (size == 20) return new Layout(new int[]{36, 58, 80, 102, 124}, new int[]{62, 83, 104, 125}, 163, 246, 155, 900, "first_aid_kit");
+            // Аптечка — без рисунка (замечание 06.10): обычная сетка.
             return null;
         }
     }

@@ -29,6 +29,8 @@ public final class GeoModel {
         /** Поворот покоя в радианах (X и Y уже с обратным знаком). */
         public final float rx, ry, rz;
         public final List<Quad> quads = new ArrayList<>();
+        /** Кубы кости (x0, y0, z0, x1, y1, z1) — для рук игрока на месте *_pos (LR Tactical). */
+        public final List<float[]> boxes = new ArrayList<>();
         /** Кубы со своим поворотом: группа квадов, точка и углы. */
         public final List<RotatedGroup> rotated = new ArrayList<>();
         public final List<Bone> children = new ArrayList<>();
@@ -90,6 +92,7 @@ public final class GeoModel {
         float inf = c.has("inflate") ? c.get("inflate").getAsFloat() : 0;
         float x0 = -(o[0] + s[0]) - inf, y0 = o[1] - inf, z0 = o[2] - inf;
         float x1 = -o[0] + inf, y1 = o[1] + s[1] + inf, z1 = o[2] + s[2] + inf;
+        bone.boxes.add(new float[]{x0, y0, z0, x1, y1, z1});
         List<Quad> out = new ArrayList<>();
         Map<String, float[]> faces = new HashMap<>();
         if (c.has("uv") && c.get("uv").isJsonArray()) {

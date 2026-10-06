@@ -131,6 +131,13 @@ SOFTWARE.
 | `textures/item/surgical_gloves.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/gloves.png` (перекрашено) | VKM | MIT |
 | `textures/item/field_surgery_kit.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/surgicalinstrument.png` | JEDIGD | MIT |
 | `textures/item/organ.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_heart.png` | VKM | MIT |
+| `textures/item/lr_ai2.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/ai2.png` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/lr_cms.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/cms.png` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/lr_surv12.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/surv12.png` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/lr_goldenstar.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/goldenstar.png` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/lr_vaseline.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/vaseline.png` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/lr_ibuprofen.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/ibuprofen.png` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/lr_amoxycillin.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/amoxycillin.png` | LesRaisins Studio | GPL-3.0 |
 | `textures/item/organ_heart.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_heart.png` | VKM | MIT |
 | `textures/item/organ_lungs.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_lungs.png` | VKM | MIT |
 | `textures/item/organ_liver.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_liver.png` | VKM | MIT |
@@ -216,12 +223,37 @@ SOFTWARE.
 | `rpgeo/dirty_syringe.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/inject.animation.json` | JEDIGD | MIT |
 | `rpgeo/first_aid_kit.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/carfak_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/first_aid_kit.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/carfak_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/first_aid_kit.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/carfak.animation.json` | LesRaisins Studio | GPL-3.0 |
 | `rpgeo/blood_bag.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/blood_bag.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/blood_bag.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/blood_pack.animation.json` | LesRaisins Studio | GPL-3.0 |
 | `rpgeo/saline.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/saline.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/saline.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/blood_pack.animation.json` | LesRaisins Studio | GPL-3.0 |
 | `rpgeo/empty_blood_bag.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/empty_blood_bag.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/empty_blood_bag.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/blood_pack.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_ai2.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/ai2_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_ai2.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/ai2_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_ai2.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/ai2.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_cms.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/cms_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_cms.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/cms_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_cms.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/cms.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_surv12.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/surv12_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_surv12.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/surv12_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_surv12.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/surv12.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_goldenstar.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/goldenstar_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_goldenstar.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/goldenstar_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_goldenstar.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/goldenstar.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_vaseline.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/vaseline_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_vaseline.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/vaseline_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_vaseline.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/vaseline.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_ibuprofen.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/ibuprofen_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_ibuprofen.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/ibuprofen_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_ibuprofen.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/ibuprofen.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_amoxycillin.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/amoxycillin_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/lr_amoxycillin.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/amoxycillin_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/lr_amoxycillin.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/amoxycillin.animation.json` | LesRaisins Studio | GPL-3.0 |
 <!-- item_art:end -->
 
 <!-- iv_stand:begin -->
