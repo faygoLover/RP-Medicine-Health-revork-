@@ -1140,6 +1140,13 @@ t("item.rpmedicine.lr_amoxycillin.desc", "Как амоксициллин.", "Wo
 t("rpmedicine.action.open_kit", "Открываю аптечку…", "Opening the kit…")
 t("rpmedicine.organ.spleen", "Селезёнка", "Spleen")
 t("rpmedicine.organ.brain", "Мозг", "Brain")
+t("rpmedicine.minigame.hint_auscultation", "Зажмите ЛКМ и приложите головку к жёлтой точке — держите, пока слушаете. Спереди и сзади.", "Hold LMB and put the chestpiece on the yellow point — keep it there while listening. Front and back.")
+t("rpmedicine.minigame.hint_bp_cuff", "Колёсико вверх — накачать манжету. Потом стравливается (ЛКМ — быстрее). Пробел или ПКМ — когда тоны появились, и ещё раз — когда пропали.", "Wheel up — pump the cuff. Then it deflates (LMB — faster). Space or RMB — when the sounds start, and again when they stop.")
+t("rpmedicine.minigame.front", "Спереди", "Front")
+t("rpmedicine.minigame.back", "Сзади", "Back")
+t("rpmedicine.minigame.slipped", "Сорвалось — слушать заново", "Slipped — listen again")
+t("rpmedicine.minigame.tighten", "Стяните края: держите ЛКМ, отпустите, когда сошлись", "Pull the edges together: hold LMB, release when they meet")
+t("rpmedicine.minigame.tissue_torn", "Перетянули — ткань порвалась", "Pulled too hard — the tissue tore")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

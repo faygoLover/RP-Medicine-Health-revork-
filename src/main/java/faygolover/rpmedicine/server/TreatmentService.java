@@ -215,6 +215,11 @@ public final class TreatmentService {
         Minigames.Scene scene = surgical != null ? Minigames.Scene.of(m, p, target.getUUID().getLeastSignificantBits() ^ p.ordinal() * 0x9E3779B97F4A7C15L)
                 : Minigames.Scene.NONE;
         if (extra instanceof Treatments.OrganPick op) scene = scene.withOrgan(op.organ());
+        // Тонометр: тоны — по настоящему давлению (верхнее и нижнее — в полях сцены).
+        if (mg == Minigames.Type.BP_CUFF) {
+            int sys = m.heart == faygolover.rpmedicine.core.MedicalState.Heart.NORMAL ? (int) Math.round(m.pressure) : 0;
+            scene = new Minigames.Scene(-1, 0, 0, 0, sys, (int) Math.round(sys * 0.65), (int) Math.round(m.heartRate));
+        }
         if (extra instanceof Treatments.DonorOrgan dn) scene = scene.withOrgan(dn.organ());
         if (mg != null) {
             final BodyPart part0 = p;
@@ -594,7 +599,8 @@ public final class TreatmentService {
             if (spec.action().isDiagnostic()) MedcardHooks.examined(actor, target);
             if (spec.action().isDiagnostic()) {
                 // Прибор работает у любого, но без нужного уровня показания не разобрать.
-                error = RANDOM.nextDouble() < Math.min(s.maxErrorChance, Math.max(0, spec.minLevel() - level) * s.underLevelErrorPerLevel);
+                error = quality >= 0 ? Minigames.failed(quality, s)
+                        : RANDOM.nextDouble() < Math.min(s.maxErrorChance, Math.max(0, spec.minLevel() - level) * s.underLevelErrorPerLevel);
                 if (spec.action() == TreatmentAction.HEMOANALYZER && !consumeLancet(actor)) {
                     actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_lancet").withStyle(ChatFormatting.YELLOW), true);
                     return;

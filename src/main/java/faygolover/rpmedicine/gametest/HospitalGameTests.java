@@ -295,6 +295,8 @@ public final class HospitalGameTests {
             inv.setItem(tubeSlot, net.minecraft.world.item.ItemStack.EMPTY);
             inv.setItem(0, sample);
             inv.selected = 0;
+            // Анализ — с уровня 3 (решения, п. 1.16).
+            data(medic).skillOverride = 5;
             h.assertTrue(faygolover.rpmedicine.server.LabService.onUseBlock(medic, lab), "анализ на лабораторном столе начался");
             h.runAfterDelay(1250, () -> {
                 h.assertTrue(!inv.getItem(0).is(faygolover.rpmedicine.registry.ModItems.BLOOD_SAMPLE.get()), "пробирка ушла в анализ");

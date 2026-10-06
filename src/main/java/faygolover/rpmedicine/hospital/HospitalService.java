@@ -222,8 +222,8 @@ public final class HospitalService {
         BlockPos bed = d.bedPos;
         long now = sp.serverLevel().getGameTime();
         if (bed != null) {
-            if (sp.isPassenger()) {
-                // Подняли и несут — уже не на койке.
+            if (sp.isPassenger() || CarryService.isCarried(sp)) {
+                // Подняли и тащат — уже не на койке.
                 leaveBed(sp, false);
                 return;
             }

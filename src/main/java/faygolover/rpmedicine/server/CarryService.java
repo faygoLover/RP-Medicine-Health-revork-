@@ -16,8 +16,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Переноска лежачего на плече (п. 5.2 ТЗ). Тело — пассажир несущего. Несущий идёт медленнее, не
- * бегает и не стреляет. Поднять — Shift+ПКМ по лежачему, положить — Shift+ПКМ по блоку или по койке.
+ * Переноска лежачего — волоком по земле (решения, п. 1.16; было «на плече»). Тело лежит и тянется за
+ * медиком, медик идёт медленнее, не бегает и не стреляет. Взять — Shift+ПКМ по лежачему, положить —
+ * Shift+ПКМ по блоку или по койке.
  */
 public final class CarryService {
     private CarryService() {}
@@ -39,7 +40,7 @@ public final class CarryService {
     }
 
     public static boolean isCarried(Entity e) {
-        return e.getVehicle() instanceof ServerPlayer carrier && CARRIED.get(carrier.getUUID()) == e;
+        return CARRIED.containsValue(e);
     }
 
     public static boolean pickUp(ServerPlayer carrier, LivingEntity target) {
@@ -51,7 +52,7 @@ public final class CarryService {
             return false;
         }
         if (carrier.distanceTo(target) > ServerConfig.INTERACT_DISTANCE.get() + 0.5) return false;
-        if (!target.startRiding(carrier, true)) return false;
+        if (isCarried(target)) return false;
         CARRIED.put(carrier.getUUID(), target);
         // Рывок при подъёме на плечо — малый шанс вывиха плеча (второй этап, п. 7).
         var s = faygolover.rpmedicine.core.MedicalSettings.get();
@@ -72,16 +73,8 @@ public final class CarryService {
         Entity e = CARRIED.remove(carrier.getUUID());
         setCarrying(carrier, false);
         if (e == null) return;
-        if (e.getVehicle() == carrier) {
-            dropping = true;
-            try {
-                e.stopRiding();
-            } finally {
-                dropping = false;
-            }
-            Vec3 look = carrier.getLookAngle().multiply(1, 0, 1).normalize().scale(0.8);
-            e.teleportTo(carrier.getX() + look.x, carrier.getY(), carrier.getZ() + look.z);
-        }
+        // Волоком: тело и так лежит на земле позади — отпустить там, где есть.
+        e.setDeltaMovement(Vec3.ZERO);
         Medical.changed(e);
     }
 
@@ -105,16 +98,35 @@ public final class CarryService {
 
     /** Сбросить игрока, если его несут (пришёл в себя, умер, вышел). */
     public static void dropIfCarried(Entity e) {
-        if (e.getVehicle() instanceof ServerPlayer carrier && CARRIED.get(carrier.getUUID()) == e) dropCarried(carrier);
+        for (var en : new java.util.ArrayList<>(CARRIED.entrySet())) {
+            if (en.getValue() != e) continue;
+            ServerPlayer carrier = e.getServer() != null ? e.getServer().getPlayerList().getPlayer(en.getKey()) : null;
+            if (carrier != null) dropCarried(carrier);
+            else CARRIED.remove(en.getKey());
+        }
     }
 
     /** Каждый тик несущего. */
     public static void tickCarrier(ServerPlayer carrier) {
         Entity e = CARRIED.get(carrier.getUUID());
         if (e == null) return;
-        if (e.isRemoved() || e.getVehicle() != carrier || Medical.isDown(carrier)) {
+        if (e.isRemoved() || e.level() != carrier.level() || Medical.isDown(carrier) || !Medical.isDown(e)
+                || e.distanceTo(carrier) > 4.5) {
             dropCarried(carrier);
             return;
+        }
+        // Тело тянется позади медика, за руки: ноги волочатся (решения, п. 1.16).
+        Vec3 back = carrier.getLookAngle().multiply(1, 0, 1);
+        if (back.lengthSqr() < 1e-4) back = Vec3.directionFromRotation(0, carrier.getYRot());
+        back = back.normalize().scale(-1.2);
+        Vec3 want = carrier.position().add(back);
+        Vec3 cur = e.position();
+        // Плавно, без рывков; по высоте — как медик (ступеньки, склоны).
+        Vec3 next = cur.lerp(new Vec3(want.x, carrier.getY(), want.z), 0.35);
+        if (cur.distanceToSqr(next) > 1e-4) {
+            if (e instanceof ServerPlayer tp) tp.connection.teleport(next.x, next.y, next.z, carrier.getYRot() + 180, tp.getXRot());
+            else e.moveTo(next.x, next.y, next.z, carrier.getYRot() + 180, e.getXRot());
+            e.fallDistance = 0;
         }
         if (carrier.tickCount % 20 == 0) Integrations.consumeStamina(carrier, ServerConfig.CARRY_STAMINA_PER_SECOND.get().floatValue());
     }

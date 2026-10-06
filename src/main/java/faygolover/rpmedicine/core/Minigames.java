@@ -52,7 +52,11 @@ public final class Minigames {
         /** Пересадка: уложить орган на место и сшить сосуд. */
         PLANT(2.6),
         /** Интубация: провести трубку между связками, когда они раскрываются в ритме дыхания (п. 10). */
-        INTUBATION(1.6);
+        INTUBATION(1.6),
+        /** Стетоскоп (замечание 40): приложить головку к точкам выслушивания спереди и сзади и подержать. */
+        AUSCULTATION(3.0),
+        /** Тонометр (замечание 41): накачать манжету, стравливать и отметить появление и исчезновение тонов. */
+        BP_CUFF(3.0);
 
         public static final Type[] VALUES = values();
 
@@ -69,7 +73,7 @@ public final class Minigames {
 
         /** Мини-игра операции: идёт всегда (и в бою), рисуется сценой тела. */
         public boolean isSurgical() {
-            return ordinal() >= INCISION.ordinal() && this != INTUBATION;
+            return ordinal() >= INCISION.ordinal() && this != INTUBATION && this != AUSCULTATION && this != BP_CUFF;
         }
 
         public static Type byOrdinal(int i) {
@@ -91,6 +95,8 @@ public final class Minigames {
             case SUTURE -> Type.SUTURE;
             case REDUCE -> Type.REDUCE;
             case INTUBATE -> Type.INTUBATION;
+            case STETHOSCOPE -> Type.AUSCULTATION;
+            case TONOMETER -> Type.BP_CUFF;
             case DRUG -> drug == null ? null : switch (drug.form()) {
                 case INJECTION -> Type.INJECTION;
                 case DRIP -> Type.VEIN;

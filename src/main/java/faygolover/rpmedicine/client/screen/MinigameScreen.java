@@ -115,6 +115,8 @@ public class MinigameScreen extends Screen {
             case SUTURE -> 16;
             case REDUCE -> 8;
             case INTUBATION -> 12;
+            case AUSCULTATION -> 22;
+            case BP_CUFF -> 40;
             default -> 10;
         };
     }
@@ -163,8 +165,121 @@ public class MinigameScreen extends Screen {
                 targetR = 6 + 5 * ease;
                 zonePhase = rnd.nextDouble() * Math.PI * 2;
             }
+            case AUSCULTATION -> {
+                // Точки: спереди — сердце и лёгкие (верх, низ), сзади — лёгкие.
+                points = new double[][]{{80, 82}, {64, 70}, {96, 70}, {66, 110}, {94, 110}, {204, 74}, {236, 74}, {206, 112}, {234, 112}};
+                channel = 6 + 4 * ease;
+            }
+            case BP_CUFF -> {
+                cuff = 0;
+                channel = 6 + 8 * ease;
+            }
             default -> { }
         }
+    }
+
+    // ------------------------------------------------------------------ стетоскоп
+
+    private double[][] points;
+    private int pointIndex;
+    private double listen;
+
+    private void auscultation(GuiGraphics g, int l, int t, double dt, double tx, double ty) {
+        // Торс спереди и сзади.
+        torso(g, l + 40, t + 46, false);
+        torso(g, l + 180, t + 46, true);
+        g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.front"), l + 80, t + 150, 0xFFAAAAAA);
+        g.drawCenteredString(font, Component.translatable("rpmedicine.minigame.back"), l + 220, t + 150, 0xFFAAAAAA);
+        for (int i = 0; i < points.length; i++) {
+            int col = i < pointIndex ? 0xFF50C060 : i == pointIndex ? 0xFFFFD040 : 0xFF707070;
+            circle(g, l + points[i][0], t + points[i][1], 4, col);
+        }
+        if (pointIndex >= points.length) return;
+        double[] p = points[pointIndex];
+        boolean on = mouseDown && Math.hypot(tx - p[0], ty - p[1]) < channel;
+        if (on) {
+            double before = listen;
+            listen += dt / (1.0 + 0.5 * (1 - ease));
+            // Слышно: сердце — стук, лёгкие — вдох.
+            if ((int) (before * 2.5) != (int) (listen * 2.5))
+                sound(pointIndex == 0 ? ModSounds.HEARTBEAT.get() : ModSounds.HEAVY_BREATHING.get(), 1.0f);
+            int r = (int) (8 * Math.min(1, listen));
+            circle(g, l + p[0], t + p[1], 4 + r, 0x8050C060);
+            if (listen >= 1) {
+                pointIndex++;
+                listen = 0;
+                if (pointIndex >= points.length) finish(quality());
+            }
+        } else if (listen > 0) {
+            // Сорвался с точки — выслушивать заново.
+            if (mouseDown) error("rpmedicine.minigame.slipped");
+            listen = 0;
+        }
+    }
+
+    private void torso(GuiGraphics g, int x, int y, boolean back) {
+        g.fill(x + 10, y - 22, x + 70, y + 92, 0xFFC09070);
+        g.fill(x + 26, y - 40, x + 54, y - 22, 0xFFC09070);
+        g.renderOutline(x + 10, y - 22, 60, 114, 0xFF7A5040);
+        if (!back) g.fill(x + 39, y - 20, x + 41, y + 50, 0x40000000);
+        else g.fill(x + 39, y - 20, x + 41, y + 90, 0x50000000);
+    }
+
+    // ------------------------------------------------------------------ тонометр
+
+    private double cuff;
+    private int sysMark = -1, diaMark = -1;
+    private double beatTimer;
+
+    private void bpCuff(GuiGraphics g, int l, int t, double dt) {
+        int sys = task.scene().bullets(), dia = task.scene().fragments(), hr = Math.max(40, task.scene().organ());
+        // Стравливание: само понемногу, ЛКМ — быстрее.
+        if (phase == 1) cuff = Math.max(0, cuff - dt * (mouseDown ? 14 : 6));
+        // Тоны слышны, пока давление в манжете между верхним и нижним.
+        boolean tones = sys > 0 && cuff <= sys && cuff >= dia;
+        beatTimer += dt;
+        if (beatTimer >= 60.0 / hr) {
+            beatTimer = 0;
+            if (tones && phase == 1) sound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1.4f);
+        }
+        // Шкала манометра.
+        int cx = l + W / 2, cy = t + 104, r = 52;
+        circle(g, cx, cy, r + 2, 0xFF404040);
+        circle(g, cx, cy, r, 0xFFE8E4D8);
+        for (int v = 0; v <= 260; v += 20) {
+            double a = Math.toRadians(-225 + v / 260.0 * 270);
+            g.fill((int) (cx + Math.cos(a) * (r - 6)), (int) (cy + Math.sin(a) * (r - 6)), (int) (cx + Math.cos(a) * (r - 6)) + 2,
+                    (int) (cy + Math.sin(a) * (r - 6)) + 2, 0xFF202020);
+        }
+        double a = Math.toRadians(-225 + Mth.clamp(cuff, 0, 260) / 260.0 * 270);
+        line(g, cx, cy, cx + Math.cos(a) * (r - 10), cy + Math.sin(a) * (r - 10), 0xFFB02020);
+        g.drawCenteredString(font, String.valueOf((int) cuff), cx, cy + 18, 0xFF202020);
+        String marks = (sysMark >= 0 ? String.valueOf(sysMark) : "—") + " / " + (diaMark >= 0 ? String.valueOf(diaMark) : "—");
+        g.drawCenteredString(font, marks, cx, t + H - 40, 0xFFFFFFFF);
+        if (phase == 1 && cuff <= 0.5 && !sent) finishCuff(sys, dia);
+    }
+
+    /** Отметка тона (пробел или ПКМ): сначала верхнее, потом нижнее. */
+    private void markTone() {
+        if (phase != 1 || sent) return;
+        if (sysMark < 0) sysMark = (int) cuff;
+        else if (diaMark < 0) {
+            diaMark = (int) cuff;
+            finishCuff(task.scene().bullets(), task.scene().fragments());
+        }
+    }
+
+    private void finishCuff(int sys, int dia) {
+        if (sys <= 0) {
+            finish(quality());
+            return;
+        }
+        // Точность отметок: каждые channel мм рт. ст. мимо — ошибка.
+        int miss = 0;
+        miss += sysMark < 0 ? 3 : (int) (Math.abs(sysMark - sys) / channel);
+        miss += diaMark < 0 ? 3 : (int) (Math.abs(diaMark - dia) / channel);
+        errors += Math.min(4, miss);
+        finish(quality());
     }
 
     /** Извилистый путь слева направо: {@code bend} — насколько сильно гнётся. */
@@ -241,6 +356,7 @@ public class MinigameScreen extends Screen {
             g.drawCenteredString(font, line, width / 2, hy, 0xFFFFFF);
             hy += 9;
         }
+        frameDt = dt;
         switch (task.type()) {
             case INJECTION -> injection(g, l, t, dt, tx, ty);
             case VEIN -> vein(g, l, t, dt, tx, ty);
@@ -250,11 +366,13 @@ public class MinigameScreen extends Screen {
             case SUTURE -> suture(g, l, t, tx, ty);
             case REDUCE -> reduce(g, l, t, dt);
             case INTUBATION -> intubation(g, l, t, dt, tx, ty);
+            case AUSCULTATION -> auscultation(g, l, t, dt, tx, ty);
+            case BP_CUFF -> bpCuff(g, l, t, dt);
             default -> { }
         }
         // Инструмент у курсора (кроме игр без инструмента).
         if (!tool.isEmpty() && task.type() != Minigames.Type.BANDAGE && task.type() != Minigames.Type.TOURNIQUET
-                && task.type() != Minigames.Type.REDUCE) {
+                && task.type() != Minigames.Type.REDUCE && task.type() != Minigames.Type.BP_CUFF) {
             g.pose().pushPose();
             g.pose().translate(l + tx - 2, t + ty - 14, 200);
             g.renderItem(tool, 0, 0);
@@ -504,12 +622,33 @@ public class MinigameScreen extends Screen {
 
     // ------------------------------------------------------------------ швы
 
+    /** Швы, вторая фаза (замечание 85): стянуть края нитками — не перетянуть, иначе ткань рвётся. */
+    private boolean tightening;
+    private double tension;
+    private double frameDt;
+
     private void suture(GuiGraphics g, int l, int t, double tx, double ty) {
-        // Рана — тёмная линия.
+        // Рана: края разошлись; стягиваются по мере натяжения ниток.
+        double gap = 12 * (1 - Mth.clamp(tension, 0, 1));
         for (int x = 50; x < W - 50; x++) {
             double f = (x - 50) / (double) (W - 100);
             int y = (int) (95 + Math.sin(f * Math.PI * 1.3 + 0.5) * 12);
-            g.fill(l + x, t + y - 2, l + x + 1, t + y + 3, 0xFF6A1515);
+            int h = (int) Math.round(gap / 2) + 2;
+            g.fill(l + x, t + y - h, l + x + 1, t + y + h + 1, 0xFF6A1515);
+            g.fill(l + x, t + y - h - 1, l + x + 1, t + y - h, 0xFFB07060);
+            g.fill(l + x, t + y + h + 1, l + x + 1, t + y + h + 2, 0xFFB07060);
+        }
+        if (tightening) {
+            // Держать ЛКМ — тянуть нитки; перетянул — рвёт ткань (у новичка тянется рывками).
+            if (mouseDown && !sent) tension += frameDt * (0.35 + 0.25 * (1 - ease)) * (1 + Math.sin(time * 9) * 0.35 * (1 - ease));
+            if (tension > 1.0) {
+                error("rpmedicine.minigame.tissue_torn");
+                tension = 0.55;
+            }
+            int bx = l + W / 2 - 60, by = t + H - 44;
+            g.fill(bx, by, bx + 120, by + 6, 0xFF302020);
+            g.fill(bx + (int) (120 * 0.85), by, bx + 120 - 2, by + 6, 0xFF2E7A3A);
+            g.fill(bx, by + 1, bx + (int) (120 * Mth.clamp(tension, 0, 1)), by + 5, 0xFFE8E0C0);
         }
         int n = stitches.length / 2;
         for (int i = 0; i < n; i++) {
@@ -540,6 +679,7 @@ public class MinigameScreen extends Screen {
     }
 
     private void stitchPress() {
+        if (tightening) return;
         if (stitches == null || stitchIndex >= stitches.length / 2) return;
         double[] a = stitches[stitchIndex * 2];
         if (Math.hypot(toolX - a[0], toolY - a[1]) < channel * 1.2) {
@@ -551,13 +691,25 @@ public class MinigameScreen extends Screen {
     }
 
     private void stitchRelease() {
+        // Отпустил, когда края сошлись, — шов завязан.
+        if (tightening) {
+            if (tension >= 0.85 && !sent) {
+                sound(ModSounds.SURGERY_STITCH.get(), 0.8f);
+                finish(Mth.clamp(quality() - Math.max(0, 0.92 - tension), 0, 1));
+            }
+            return;
+        }
         if (!stitchDragging) return;
         stitchDragging = false;
         double[] b = stitches[stitchIndex * 2 + 1];
         if (Math.hypot(toolX - b[0], toolY - b[1]) < channel * 1.2) {
             stitchIndex++;
             sound(ModSounds.SURGERY_STITCH.get(), 1.0f + rnd.nextFloat() * 0.2f);
-            if (stitchIndex >= stitches.length / 2) finish(quality());
+            // Все стежки — теперь стянуть края.
+            if (stitchIndex >= stitches.length / 2) {
+                tightening = true;
+                status = "rpmedicine.minigame.tighten";
+            }
         } else {
             error("rpmedicine.minigame.missed");
         }
@@ -755,6 +907,10 @@ public class MinigameScreen extends Screen {
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (super.mouseClicked(mx, my, button)) return true;
+        if (button == 1 && task.type() == Minigames.Type.BP_CUFF) {
+            markTone();
+            return true;
+        }
         if (button != 0 || sent) return false;
         mouseDown = true;
         switch (task.type()) {
@@ -781,6 +937,20 @@ public class MinigameScreen extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mx, double my, double delta) {
+        // Тонометр: колёсико вверх — качать грушу; потом стравливать.
+        if (task.type() == Minigames.Type.BP_CUFF && !sent) {
+            if (delta > 0 && phase == 0) {
+                cuff = Math.min(260, cuff + 12);
+                sound(net.minecraft.sounds.SoundEvents.WOOL_PLACE, 1.6f);
+                if (cuff >= Math.max(140, task.scene().bullets() + 20)) phase = 1;
+            }
+            return true;
+        }
+        return super.mouseScrolled(mx, my, delta);
+    }
+
+    @Override
     public boolean mouseReleased(double mx, double my, int button) {
         if (button == 0) {
             mouseDown = false;
@@ -798,6 +968,11 @@ public class MinigameScreen extends Screen {
 
     @Override
     public boolean keyPressed(int key, int scan, int mods) {
+        // Тонометр: пробел — отметить тон.
+        if (key == 32 && task.type() == Minigames.Type.BP_CUFF) {
+            markTone();
+            return true;
+        }
         if (key == org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE && !sent && task.type() == Minigames.Type.REDUCE) {
             jerk();
             return true;

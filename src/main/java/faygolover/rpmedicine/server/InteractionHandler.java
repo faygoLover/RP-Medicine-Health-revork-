@@ -194,7 +194,7 @@ public final class InteractionHandler {
             return;
         }
         // Несёшь тело: Shift+ПКМ по блоку — положить туда; по койке — на койку.
-        boolean carrying = !p.getPassengers().isEmpty();
+        boolean carrying = p instanceof ServerPlayer spc ? CarryService.isCarrying(spc) : !p.getPassengers().isEmpty();
         if (carrying && p.isShiftKeyDown() && !HospitalBlocks.isBed(event.getLevel().getBlockState(event.getPos()))) {
             if (!event.getLevel().isClientSide)
                 CarryService.dropAt((ServerPlayer) p, event.getPos().relative(event.getFace() != null ? event.getFace() : net.minecraft.core.Direction.UP));

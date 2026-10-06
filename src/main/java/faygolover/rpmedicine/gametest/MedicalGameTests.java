@@ -349,9 +349,9 @@ public final class MedicalGameTests {
         m.painShock = true;
         victim.getInventory().setItem(0, new ItemStack(Items.GOLD_INGOT));
         h.assertTrue(CarryService.pickUp(other, victim), "поднять лежачего");
-        h.assertTrue(victim.getVehicle() == other, "лежачий на плече");
+        h.assertTrue(CarryService.isCarried(victim), "лежачего тащат");
         CarryService.dropCarried(other);
-        h.assertTrue(victim.getVehicle() == null, "сброшен");
+        h.assertTrue(!CarryService.isCarried(victim), "отпустили");
         SearchService.start(other, victim);
         h.runAfterDelay(220, () -> {
             h.assertTrue(other.containerMenu instanceof SearchMenu, "после 10 с открыт обыск");
