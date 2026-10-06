@@ -2,6 +2,7 @@
   "function": "fridge",
   "blocks": [
     "refurbished_furniture:light_fridge",
-    "refurbished_furniture:dark_fridge"
+    "refurbished_furniture:dark_fridge",
+    "health_and_disease:thermostaticholder"
   ]
 }

@@ -1,6 +1,7 @@
 {
   "function": "lab",
   "blocks": [
-    "moa_decor_science:microscopio"
+    "moa_decor_science:microscopio",
+    "health_and_disease:pathologicalexaminationtable"
   ]
 }

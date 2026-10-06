@@ -414,12 +414,16 @@ HOSPITAL = {
     "beds": {"function": "bed", "blocks": ["industrialhellscape:medical_bed"] + [f"moa_decor_science:camah{c}" for c in MOA_COLORS]
              + ["multibeds:cot"]},
     "operating_tables": {"function": "operating_table", "blocks": ["industrialhellscape:operating_table"]},
-    "restraint_tables": {"function": "restraint_table", "blocks": ["health_and_disease:pathologicalexaminationtable", "butchery:metal_butchers_table"]},
+    "restraint_tables": {"function": "restraint_table", "blocks": ["butchery:metal_butchers_table"]},
     "monitors": {"function": "monitor", "blocks": ["industrialhellscape:vitals_monitor", "moa_decor_science:lectordesignosvitales"], "radius": 3},
     "iv_stands": {"function": "iv_stand", "blocks": ["industrialhellscape:iv_dripstand"], "radius": 3},
     # Холодильник и лаборатория — предложение по справочнику id, ждёт подтверждения автора (07_spec_stage2.md, п. 16.13).
-    "fridges": {"function": "fridge", "blocks": ["refurbished_furniture:light_fridge", "refurbished_furniture:dark_fridge"]},
-    "labs": {"function": "lab", "blocks": ["moa_decor_science:microscopio"]},
+    # Блоки Health & Disease (замечание 06.10): термостат для пробирок — холодильник, бокс очистки — стерилизатор,
+    # стол патологоанатомического исследования — лаборатория (бланк анализа в окне). Аптечки H&D — просто хранилища.
+    "fridges": {"function": "fridge", "blocks": ["refurbished_furniture:light_fridge", "refurbished_furniture:dark_fridge",
+                                                 "health_and_disease:thermostaticholder"]},
+    "labs": {"function": "lab", "blocks": ["moa_decor_science:microscopio", "health_and_disease:pathologicalexaminationtable"]},
+    "sterilizers": {"function": "sterilizer", "blocks": ["health_and_disease:purifybox"]},
 }
 for name, obj in HOSPITAL.items():
     write(f"{DATA}/rpmedicine/rpmedicine/hospital_blocks/{name}.json", obj)

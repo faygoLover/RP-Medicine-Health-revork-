@@ -30,6 +30,8 @@ public final class LsoCompat {
 
     /** Температура LSO за пределами нормы в единицах LSO (минус — холод), 0 — в норме или нет данных. */
     public static double temperatureOffset(ServerPlayer sp) {
+        // Температура LSO выключена в его конфиге — значение в capability застыло, не читаем его.
+        if (!sfiomn.legendarysurvivaloverhaul.config.Config.Baked.temperatureEnabled) return 0;
         TemperatureCapability c = sp.getCapability(TemperatureProvider.TEMPERATURE_CAPABILITY).resolve().orElse(null);
         if (c == null) return 0;
         float t = c.getTemperatureLevel();

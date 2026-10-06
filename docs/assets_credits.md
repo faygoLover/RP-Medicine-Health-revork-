@@ -215,4 +215,8 @@ SOFTWARE.
 | `textures/geo/first_aid_kit.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/carfak_uv.png` | LesRaisins Studio | GPL-3.0 |
 | `rpgeo/blood_bag.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/blood_bag.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/saline.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/saline.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/empty_blood_bag.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/blood_pack_geo.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/geo/empty_blood_bag.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/blood_pack_uv.png` | LesRaisins Studio | GPL-3.0 |
 <!-- item_art:end -->

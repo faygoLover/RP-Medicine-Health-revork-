@@ -143,4 +143,9 @@ public final class ClientHandlers {
         ClientState.monitor = p;
         ClientState.monitorTime = System.currentTimeMillis();
     }
+
+    /** Бланк анализа крови. */
+    public static void openLab(faygolover.rpmedicine.network.LabResultPacket p) {
+        net.minecraft.client.Minecraft.getInstance().setScreen(new faygolover.rpmedicine.client.screen.LabResultScreen(p));
+    }
 }

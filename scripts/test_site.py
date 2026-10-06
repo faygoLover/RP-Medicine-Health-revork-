@@ -73,8 +73,7 @@ def main():
     os.makedirs(ROOT, exist_ok=True)
     json.dump({"pack": {"pack_format": 15, "description": "RP Medicine: тестовая площадка"}},
               open(os.path.join(ROOT, "pack.mcmeta"), "w", encoding="utf-8"), ensure_ascii=False)
-    # Стерилизатор и кислород в датапаке по умолчанию не назначены — на площадке это микроволновка и огнетушитель-«баллон».
-    w("rpmedicine/hospital_blocks/test_sterilizer.json", {"function": "sterilizer", "blocks": ["refurbished_furniture:light_microwave"]})
+    # Кислород в датапаке по умолчанию не назначен — на площадке это огнетушитель-«баллон».
     w("rpmedicine/hospital_blocks/test_oxygen.json", {"function": "oxygen", "blocks": ["industrialhellscape:fire_extinguisher"], "radius": 3})
     # Вещества без модов сборки: мёд — алкоголь, свекольный суп — кофе, бумага (ПКМ) — сигарета.
     w("rpmedicine/substances/test_alcohol.json", {"substance": "alcohol", "amount": 1.0, "items": ["minecraft:honey_bottle"]})
@@ -105,23 +104,25 @@ def main():
     L += two_forward("industrialhellscape:operating_table", 10, 3)
     L += two_vertical("industrialhellscape:vitals_monitor", 9, 3)
     L += two_vertical("industrialhellscape:iv_dripstand", 11, 3)
-    L += ["setblock ~11 ~ ~6 industrialhellscape:metal_desk[type=solo,facing=north] replace",
-          "setblock ~11 ~1 ~6 refurbished_furniture:light_microwave[facing=north] replace",
+    L += ["setblock ~11 ~ ~6 health_and_disease:purifybox[facing=north] replace",
+          "setblock ~10 ~ ~6 health_and_disease:medicalanticollisionbox[facing=north] replace",
           "setblock ~9 ~ ~6 industrialhellscape:fire_extinguisher[facing=north] replace",
-          sign(10, 0, 1, ["Операционная", "стол, монитор,", "стерилизатор —", "микроволновка"])]
+          sign(10, 0, 1, ["Операционная", "стол, монитор,", "стерилизатор H&D", "ящик лекарств"])]
     # Стол с фиксацией.
     L += ["# --- Фиксация",
-          "setblock ~15 ~ ~3 health_and_disease:pathologicalexaminationtable[facing=north] replace",
           "setblock ~17 ~ ~3 butchery:metal_butchers_table[facing=north] replace"]
     L += two_vertical("industrialhellscape:vitals_monitor", 16, 3)
-    L += [sign(16, 0, 1, ["Стол с фиксацией", "смотровой (H&D)", "и стол мясника", ""])]
+    L += [sign(16, 0, 1, ["Стол с фиксацией", "стол мясника", "", ""])]
     # Лаборатория и холодильник.
     L += ["# --- Лаборатория",
           "setblock ~20 ~ ~3 industrialhellscape:metal_desk[type=solo,facing=north] replace",
           "setblock ~20 ~1 ~3 moa_decor_science:microscopio[facing=north] replace",
-          "setblock ~22 ~ ~3 refurbished_furniture:light_fridge[facing=north] replace",
-          sign(20, 0, 1, ["Лаборатория", "микроскоп: ПКМ", "пробиркой", ""]),
-          sign(22, 0, 1, ["Холодильник", "кровь и органы", "хранятся дольше", ""])]
+          "setblock ~21 ~ ~3 health_and_disease:pathologicalexaminationtable[facing=north] replace",
+          "setblock ~23 ~ ~3 refurbished_furniture:light_fridge[facing=north] replace",
+          "setblock ~19 ~ ~3 health_and_disease:thermostaticholder[facing=north] replace",
+          "setblock ~19 ~ ~5 health_and_disease:medicalbox[facing=north] replace",
+          sign(20, 0, 1, ["Лаборатория", "микроскоп и стол H&D:", "ПКМ пробиркой", "термостат — слева"]),
+          sign(23, 0, 1, ["Холодильник", "кровь и органы", "хранятся дольше", ""])]
     # Поле: открытое место для ранений.
     L += ["# --- Поле",
           "fill ~25 ~-1 ~3 ~29 ~-1 ~8 minecraft:coarse_dirt",

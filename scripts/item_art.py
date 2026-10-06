@@ -128,6 +128,9 @@ HD_INJECT = dict(geo=HD + "geo/inject.geo.json", anim=HD + "animations/inject.an
                  display=HD + "models/displaysettings/inject.item.json")
 HD_EINJECT = dict(geo=HD + "geo/einject.geo.json", anim=HD + "animations/einject.animation.json", use="injectpush",
                   display=HD + "models/displaysettings/inject.item.json")
+# Пакет в руке: крупнее и в ладони, а не над ней (замечание 06.10).
+BAG_FP = {"rotation": [0, 70, 10], "translation": [1, 2, -1], "scale": [0.6, 0.6, 0.6]}
+BAG_TP = {"rotation": [0, 0, 90], "translation": [0, 0, 1], "scale": [0.85, 0.85, 0.85]}
 HD_BOTTLE = dict(geo=HD + "geo/bottle.geo.json", anim=HD + "animations/bottle.animation.json", use="take",
                  display=HD + "models/displaysettings/bottle.item.json")
 GEO = {
@@ -155,8 +158,11 @@ GEO = {
     # Наборы и кровь из LR Tactical (модели TaCZ — вписываются в куб предмета, руки скрыты)
     "first_aid_kit": dict(geo=LR + "geo_models/consumable/carfak_geo.json", tex=LR + "textures/consumable/carfak_uv.png", fit=True, size=0.8,
                           fp={"rotation": [5, -40, 0], "translation": [1.5, 3, -1], "scale": [0.42, 0.42, 0.42]}),
-    "blood_bag": dict(geo=LR + "geo_models/consumable/blood_pack_geo.json", tex=LR + "textures/consumable/blood_pack_uv.png", fit=True, size=0.75,
-                      fp={"rotation": [0, 70, 10], "translation": [1, 3, -1], "scale": [0.5, 0.5, 0.5]}),
+    # Пакеты — одна модель LR (пакет крови), жидкость перекрашена (замечание 06.10): физраствор, пустой.
+    **{k: dict(geo=LR + "geo_models/consumable/blood_pack_geo.json", tex=tex, fit=True, size=0.95, fp=BAG_FP, tp=BAG_TP)
+       for k, tex in {"blood_bag": LR + "textures/consumable/blood_pack_uv.png",
+                      "saline": ("bag", LR + "textures/consumable/blood_pack_uv.png", (214, 232, 240, 150)),
+                      "empty_blood_bag": ("bag", LR + "textures/consumable/blood_pack_uv.png", (186, 213, 219, 70))}.items()},
 }
 FIT_DISPLAY = {
     "thirdperson_righthand": {"rotation": [0, 0, 0], "translation": [0, 1.5, 1], "scale": [0.55, 0.55, 0.55]},
@@ -211,6 +217,17 @@ def load(spec):
                     if a and s > 0.25:
                         nr, ng, nb = colorsys.hls_to_rgb((h + spec[2]) % 1, l, s)
                         px[x, y] = (round(nr * 255), round(ng * 255), round(nb * 255), a)
+            return im
+        if kind == "bag":
+            # Пакет LR: красное (кровь в пакете и трубке) -> другой цвет с той же светотенью.
+            px = im.load()
+            tr, tg, tb, ta = spec[2]
+            for y in range(im.size[1]):
+                for x in range(im.size[0]):
+                    r, g, b, a = px[x, y]
+                    if a == 255 and r > g + 25 and r > b + 25:
+                        k = min(1.0, 0.75 + (r + g + b) / 765)
+                        px[x, y] = (round(tr * k), round(tg * k), round(tb * k), ta)
             return im
         if kind == "residue":
             # Использованная: стекло мутнее, внизу бурый налёт.
@@ -379,6 +396,10 @@ def main():
             entry["size"] = g.get("size", 0.75)
             entry["hide"] = ["lefthand", "righthand", "lefthand_pos", "righthand_pos"]
             display = dict(FIT_DISPLAY)
+            if g.get("tp"):
+                tp = g["tp"]
+                display["thirdperson_righthand"] = tp
+                display["thirdperson_lefthand"] = dict(tp, rotation=[tp["rotation"][0], -tp["rotation"][1], -tp["rotation"][2]])
             if g.get("fp"):
                 # Свой вид в руке от первого лица (левая рука — зеркально по Y).
                 fp = g["fp"]

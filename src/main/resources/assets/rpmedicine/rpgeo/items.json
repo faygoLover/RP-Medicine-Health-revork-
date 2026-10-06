@@ -147,7 +147,31 @@
     "geo": "rpmedicine:rpgeo/blood_bag.geo.json",
     "texture": "rpmedicine:textures/geo/blood_bag.png",
     "fit": true,
-    "size": 0.75,
+    "size": 0.95,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:saline": {
+    "geo": "rpmedicine:rpgeo/saline.geo.json",
+    "texture": "rpmedicine:textures/geo/saline.png",
+    "fit": true,
+    "size": 0.95,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:empty_blood_bag": {
+    "geo": "rpmedicine:rpgeo/empty_blood_bag.geo.json",
+    "texture": "rpmedicine:textures/geo/empty_blood_bag.png",
+    "fit": true,
+    "size": 0.95,
     "hide": [
       "lefthand",
       "righthand",

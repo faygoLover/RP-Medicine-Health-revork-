@@ -112,9 +112,29 @@ public final class LabService {
             MedicalState m = new MedicalState(s);
             MedicalNbt.read(m, original.getTag().getCompound("Medical"), s);
             Diagnostics.Lab lab = Diagnostics.lab(m, s);
-            for (Component c : report(original, lab, actor.getOffhandItem())) actor.sendSystemMessage(c);
+            // Бланк в окне (замечание 06.10), а не строки в чате.
+            faygolover.rpmedicine.network.Network.send(actor, form(original, lab, actor.getOffhandItem()));
             MedcardHooks.labResult(actor, original, lab);
         }
+    }
+
+    /** Бланк анализа для окна на клиенте. */
+    public static faygolover.rpmedicine.network.LabResultPacket form(ItemStack tube, Diagnostics.Lab lab, ItemStack offhand) {
+        String name = patientName(tube);
+        byte compat = -1;
+        String bagLabel = "";
+        if (offhand.getItem() instanceof BloodBagItem) {
+            BloodType bag = BloodBagItem.type(offhand);
+            if (bag == null || lab.bloodType() == null) {
+                compat = 0;
+            } else {
+                compat = (byte) (bag.canDonateTo(lab.bloodType()) ? 1 : 2);
+                bagLabel = bag.label;
+            }
+        }
+        return new faygolover.rpmedicine.network.LabResultPacket(name != null ? name : "", lab.bloodType() != null ? lab.bloodType().label : "",
+                new double[]{lab.hemoglobin(), lab.leukocytes(), lab.alt(), lab.creatinine(), lab.troponin(), lab.albumin(),
+                        lab.triglycerides(), lab.glucose(), lab.b12()}, lab.sepsis(), compat, bagLabel);
     }
 
     /** Строки результата анализа. */

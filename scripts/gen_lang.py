@@ -572,6 +572,25 @@ t("rpmedicine.panel.overall", "Общее состояние", "Overall")
 t("rpmedicine.msg.extubated", "Трубка извлечена", "Extubated")
 t("rpmedicine.msg.airway_removed", "Воздуховод убран", "Airway removed")
 WHAT = {'adrenaline': ('Ампула адреналина со шприцем.', 'Adrenaline ampoule with a syringe.'), 'airway': ('Пластиковая трубка в рот или нос.', 'A plastic tube for the mouth or nose.'), 'ambu_bag': ('Дыхательный мешок с маской.', 'A breathing bag with a mask.'), 'ammonia': ('Ватка с нашатырным спиртом.', 'Cotton soaked in smelling salts.'), 'amoxicillin': ('Антибиотик в таблетках.', 'Antibiotic tablets.'), 'antibiotic_ointment': ('Тюбик мази с антибиотиком.', 'A tube of antibiotic ointment.'), 'antiseptic': ('Флакон антисептика.', 'A bottle of antiseptic.'), 'atropine': ('Ампула атропина.', 'Atropine ampoule.'), 'bandage': ('Стерильный бинт.', 'A sterile bandage roll.'), 'blood_bag': ('Пакет донорской крови.', 'A bag of donor blood.'), 'blood_draw_syringe': ('Шприц для забора крови.', 'A syringe for drawing blood.'), 'blood_sample': ('Пробирка с кровью.', 'A tube of blood.'), 'ceftriaxone': ('Флакон антибиотика для укола.', 'An injectable antibiotic vial.'), 'decompression_needle': ('Длинная толстая игла с катетером.', 'A long thick needle with a catheter.'), 'defibrillator': ('Автоматический наружный дефибриллятор.', 'Automated external defibrillator.'), 'diazepam': ('Ампула успокоительного.', 'Sedative ampoule.'), 'empty_blood_bag': ('Пустой пакет для крови.', 'An empty blood bag.'), 'endotracheal_tube': ('Трубка для интубации.', 'An intubation tube.'), 'esmarch': ('Резиновый жгут.', 'A rubber tourniquet.'), 'field_surgery_kit': ('Набор полевого хирурга.', "A field surgeon's kit."), 'first_aid_kit': ('Сумка для медикаментов.', 'A bag for medical supplies.'), 'gm_scanner': ('Инструмент ведущего.', "A game master's tool."), 'hemoanalyzer': ('Карманный анализатор крови.', 'A pocket blood analyzer.'), 'hemostatic_gauze': ('Марля с кровоостанавливающим средством.', 'Gauze with a clotting agent.'), 'ibuprofen': ('Таблетки ибупрофена.', 'Ibuprofen tablets.'), 'ketamine': ('Ампула кетамина.', 'Ketamine ampoule.'), 'ketorolac': ('Ампула кеторолака.', 'Ketorolac ampoule.'), 'lancet': ('Одноразовый ланцет.', 'A disposable lancet.'), 'laryngoscope': ('Ларингоскоп с клинком.', 'A laryngoscope with a blade.'), 'lidocaine': ('Ампула лидокаина.', 'Lidocaine ampoule.'), 'medcard': ('Медицинская карта.', 'A medical record.'), 'medical_pouch': ('Подсумок для медикаментов.', 'A pouch for medical supplies.'), 'morphine': ('Шприц-тюбик с морфином.', 'A morphine autoinjector.'), 'naloxone': ('Ампула налоксона.', 'Naloxone ampoule.'), 'norepinephrine': ('Флакон норадреналина для капельницы.', 'A norepinephrine vial for a drip.'), 'occlusive_dressing': ('Герметичная наклейка на рану груди.', 'An airtight chest seal.'), 'painkillers': ('Блистер обезболивающих таблеток.', 'A blister of painkiller tablets.'), 'paracetamol': ('Таблетки парацетамола.', 'Paracetamol tablets.'), 'portable_scanner': ('Портативный медицинский сканер.', 'A portable medical scanner.'), 'pressure_dressing': ('Индивидуальный перевязочный пакет.', 'A pressure dressing pack.'), 'propofol': ('Флакон пропофола.', 'Propofol vial.'), 'pulse_oximeter': ('Прищепка на палец.', 'A finger clip.'), 'saline': ('Пакет физраствора с системой.', 'A saline bag with a line.'), 'scissors': ('Медицинские ножницы.', 'Medical scissors.'), 'splint': ('Шина для конечности.', 'A limb splint.'), 'stabilization_kit': ('Кислородный баллончик и противошоковый пакет.', 'An oxygen can and an anti-shock pack.'), 'stethoscope': ('Стетоскоп.', 'A stethoscope.'), 'surgical_tweezers': ('Хирургический пинцет.', 'Surgical tweezers.'), 'suture_kit': ('Игла с хирургической нитью.', 'A needle with surgical thread.'), 'test_tube': ('Пустая пробирка.', 'An empty test tube.'), 'thermometer': ('Медицинский термометр.', 'A medical thermometer.'), 'tonometer': ('Тонометр с манжетой.', 'A blood pressure cuff.'), 'tourniquet': ('Турникет CAT.', 'A CAT tourniquet.'), 'tramadol': ('Таблетки трамадола.', 'Tramadol tablets.'), 'txa': ('Ампула транексамовой кислоты.', 'Tranexamic acid ampoule.')}
+
+# Шприц-ручки и флаконы (06.10)
+WHAT.update({
+    "adrenaline": ("Шприц-ручка с адреналином, на 4 дозы.", "An injector pen with adrenaline, 4 doses."),
+    "atropine": ("Шприц-ручка с атропином, на 4 дозы.", "An injector pen with atropine, 4 doses."),
+    "diazepam": ("Шприц-ручка с диазепамом, на 4 дозы.", "An injector pen with diazepam, 4 doses."),
+    "ketamine": ("Шприц-ручка с кетамином, на 4 дозы.", "An injector pen with ketamine, 4 doses."),
+    "ketorolac": ("Шприц-ручка с кеторолаком, на 4 дозы.", "An injector pen with ketorolac, 4 doses."),
+    "lidocaine": ("Шприц-ручка с лидокаином, на 4 дозы.", "An injector pen with lidocaine, 4 doses."),
+    "naloxone": ("Шприц-ручка с налоксоном, на 4 дозы.", "An injector pen with naloxone, 4 doses."),
+    "txa": ("Шприц-ручка с транексамовой кислотой, на 4 дозы.", "An injector pen with tranexamic acid, 4 doses."),
+    "morphine": ("Шприц-ручка с морфином, на 4 дозы.", "An injector pen with morphine, 4 doses."),
+    "insulin": ("Шприц-ручка с инсулином, на 4 дозы.", "An injector pen with insulin, 4 doses."),
+    "ceftriaxone": ("Флакон антибиотика на 2 дозы, набирать шприцем.", "An antibiotic vial, 2 doses, drawn with a syringe."),
+    "propofol": ("Флакон пропофола на 2 дозы, набирать шприцем.", "A propofol vial, 2 doses, drawn with a syringe."),
+    "norepinephrine": ("Флакон норадреналина на 2 дозы, набирать шприцем.", "A norepinephrine vial, 2 doses, drawn with a syringe."),
+    "syringe": ("Многоразовый шприц: набрать из флакона, взять кровь.", "A reusable syringe: draw from a vial, take blood."),
+    "used_pen": ("Пустая шприц-ручка.", "An empty injector pen."),
+})
 for k, (ru, en) in WHAT.items():
     t(f"item.rpmedicine.{k}.what", ru, en)
 for k, ru, en in [
@@ -985,6 +1004,36 @@ t("item.rpmedicine.used_pen", "Использованная шприц-ручк�
 t("item.rpmedicine.used_pen.desc", "Пустая. Только выбросить.", "Empty. Throw it away.")
 t("rpmedicine.tooltip.pen_doses", "Шприц-ручка: доз %s из %s", "Injector pen: %s of %s doses")
 t("rpmedicine.tooltip.vial_doses", "Флакон: доз %s из %s (набрать шприцем)", "Vial: %s of %s doses (draw with a syringe)")
+t("rpmedicine.labform.title", "Анализ крови", "Blood test")
+t("rpmedicine.labform.lab", "Клинико-диагностическая лаборатория", "Clinical diagnostic laboratory")
+t("rpmedicine.labform.patient", "Пациент: %s", "Patient: %s")
+t("rpmedicine.labform.blood_type", "Группа крови: %s", "Blood type: %s")
+t("rpmedicine.labform.col_name", "Показатель", "Test")
+t("rpmedicine.labform.col_result", "Результат", "Result")
+t("rpmedicine.labform.col_norm", "Норма", "Normal")
+t("rpmedicine.labform.sepsis_yes", "Признаки сепсиса: есть", "Signs of sepsis: yes")
+t("rpmedicine.labform.sepsis_no", "Признаки сепсиса: нет", "Signs of sepsis: no")
+t("rpmedicine.labform.compat_yes", "Пакет крови %s: совместим", "Blood bag %s: compatible")
+t("rpmedicine.labform.compat_no", "Пакет крови %s: НЕСОВМЕСТИМ", "Blood bag %s: INCOMPATIBLE")
+t("rpmedicine.labform.compat_unknown", "Совместимость с пакетом: группа неизвестна", "Bag compatibility: blood type unknown")
+t("rpmedicine.labform.hemoglobin", "Гемоглобин", "Hemoglobin")
+t("rpmedicine.labform.hemoglobin.unit", "г/л", "g/L")
+t("rpmedicine.labform.leukocytes", "Лейкоциты", "White cells")
+t("rpmedicine.labform.leukocytes.unit", "×10⁹/л", "×10⁹/L")
+t("rpmedicine.labform.alt", "АЛТ (печень)", "ALT (liver)")
+t("rpmedicine.labform.alt.unit", "ед/л", "U/L")
+t("rpmedicine.labform.creatinine", "Креатинин (почки)", "Creatinine")
+t("rpmedicine.labform.creatinine.unit", "мкмоль/л", "µmol/L")
+t("rpmedicine.labform.troponin", "Тропонин (сердце)", "Troponin (heart)")
+t("rpmedicine.labform.troponin.unit", "нг/л", "ng/L")
+t("rpmedicine.labform.albumin", "Альбумин", "Albumin")
+t("rpmedicine.labform.albumin.unit", "г/л", "g/L")
+t("rpmedicine.labform.triglycerides", "Триглицериды", "Triglycerides")
+t("rpmedicine.labform.triglycerides.unit", "ммоль/л", "mmol/L")
+t("rpmedicine.labform.glucose", "Глюкоза", "Glucose")
+t("rpmedicine.labform.glucose.unit", "ммоль/л", "mmol/L")
+t("rpmedicine.labform.b12", "Витамин B12", "Vitamin B12")
+t("rpmedicine.labform.b12.unit", "пг/мл", "pg/mL")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

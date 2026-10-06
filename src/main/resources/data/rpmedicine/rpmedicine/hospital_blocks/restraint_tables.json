@@ -1,7 +1,6 @@
 {
   "function": "restraint_table",
   "blocks": [
-    "health_and_disease:pathologicalexaminationtable",
     "butchery:metal_butchers_table"
   ]
 }

@@ -70,7 +70,7 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
             pose.translate(0.5, 0.51, 0.5);
             pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         }
-        VertexConsumer vc = buffers.getBuffer(RenderType.entityCutoutNoCull(e.texture()));
+        VertexConsumer vc = buffers.getBuffer(RenderType.entityTranslucent(e.texture()));
         for (GeoModel.Bone bone : m.roots) renderBone(bone, e, clip, t, pose, vc, light, overlay);
         pose.popPose();
     }
