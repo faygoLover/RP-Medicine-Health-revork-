@@ -588,7 +588,7 @@ WHAT.update({
     "ceftriaxone": ("Флакон антибиотика на 2 дозы, набирать шприцем.", "An antibiotic vial, 2 doses, drawn with a syringe."),
     "propofol": ("Флакон пропофола на 2 дозы, набирать шприцем.", "A propofol vial, 2 doses, drawn with a syringe."),
     "norepinephrine": ("Флакон норадреналина на 2 дозы, набирать шприцем.", "A norepinephrine vial, 2 doses, drawn with a syringe."),
-    "syringe": ("Многоразовый шприц: набрать из флакона, взять кровь.", "A reusable syringe: draw from a vial, take blood."),
+    "syringe": ("Многоразовый шприц. Флакон во вторую руку — набрать.", "A reusable syringe. Hold a vial in the other hand to draw."),
     "used_pen": ("Пустая шприц-ручка.", "An empty injector pen."),
     "iv_catheter": ("Пластиковая канюля с иглой.", "A plastic cannula with a needle."),
 })
@@ -666,7 +666,7 @@ for k, ru, en in [("cpr", "СЛР: пробел в такт", "CPR: Space on the
     ("space", "держите ПКМ, пробел — компрессия", "hold RMB, Space — compression")]:
     t("rpmedicine.rhythm." + k, ru, en)
 t("item.rpmedicine.syringe", "Шприц", "Syringe")
-t("item.rpmedicine.syringe.what", "Пустой одноразовый шприц.", "An empty disposable syringe.")
+t("item.rpmedicine.syringe.what", "Пустой шприц.", "An empty syringe.")
 t("item.rpmedicine.syringe.desc", "С ампулой препарата медик сам выбирает дозу: половина, стандартная, полторы, двойная. Тратится на каждый укол. Медицина 4+.", "With a drug ampoule a medic chooses the dose: half, standard, one and a half, double. Used up per injection. Medicine 4+.")
 t("rpmedicine.refuse.need_syringe", "Нужен шприц", "You need a syringe")
 t("rpmedicine.dose.title", "Доза", "Dose")
@@ -1003,8 +1003,8 @@ t("rpmedicine.exam.next_step_organ_suture", "  Дальше: набор для �
 t("rpmedicine.exam.next_step_close", "  Дальше: набор для швов — закрыть рану", "  Next: suture kit — close the wound")
 t("item.rpmedicine.used_pen", "Использованная шприц-ручка", "Used injector pen")
 t("item.rpmedicine.used_pen.desc", "Пустая. Только выбросить.", "Empty. Throw it away.")
-t("rpmedicine.tooltip.pen_doses", "Шприц-ручка: доз %s из %s", "Injector pen: %s of %s doses")
-t("rpmedicine.tooltip.vial_doses", "Флакон: доз %s из %s (набрать шприцем)", "Vial: %s of %s doses (draw with a syringe)")
+t("rpmedicine.tooltip.pen_doses", "Шприц-ручка: %s мл из %s (1 мл — доза)", "Injector pen: %s of %s ml (1 ml is a dose)")
+t("rpmedicine.tooltip.vial_doses", "Флакон: %s мл из %s — набрать шприцем", "Vial: %s of %s ml — draw with a syringe")
 t("rpmedicine.labform.title", "Анализ крови", "Blood test")
 t("rpmedicine.labform.lab", "Клинико-диагностическая лаборатория", "Clinical diagnostic laboratory")
 t("rpmedicine.labform.patient", "Пациент: %s", "Patient: %s")
@@ -1061,6 +1061,37 @@ t("rpmedicine.treat.catheter_placed", "Катетер поставлен", "Cath
 t("rpmedicine.treat.catheter_failed", "Не попали в вену — катетер испорчен", "Missed the vein — the catheter is ruined")
 t("rpmedicine.refuse.catheter_already", "Катетер уже стоит", "A catheter is already in place")
 t("rpmedicine.refuse.catheter_arm_only", "Катетер ставят в руку", "A catheter goes into an arm")
+t("item.rpmedicine.morphine.label", "10 мг/мл", "10 mg/ml")
+t("item.rpmedicine.adrenaline.label", "1 мг/мл", "1 mg/ml")
+t("item.rpmedicine.txa.label", "1000 мг/мл", "1000 mg/ml")
+t("item.rpmedicine.ketorolac.label", "30 мг/мл", "30 mg/ml")
+t("item.rpmedicine.naloxone.label", "0,4 мг/мл", "0.4 mg/ml")
+t("item.rpmedicine.diazepam.label", "5 мг/мл", "5 mg/ml")
+t("item.rpmedicine.atropine.label", "1 мг/мл", "1 mg/ml")
+t("item.rpmedicine.insulin.label", "10 ЕД/мл", "10 IU/ml")
+t("item.rpmedicine.ceftriaxone.label", "250 мг/мл", "250 mg/ml")
+t("item.rpmedicine.lidocaine.label", "20 мг/мл (2 %)", "20 mg/ml (2%)")
+t("item.rpmedicine.ketamine.label", "50 мг/мл", "50 mg/ml")
+t("item.rpmedicine.norepinephrine.label", "1 мг/мл, в капельницу", "1 mg/ml, for a drip")
+t("item.rpmedicine.propofol.label", "10 мг/мл (1 %), в капельницу", "10 mg/ml (1%), for a drip")
+t("rpmedicine.refuse.vial_use_syringe", "Флакон набирают шприцем: шприц в руку, флакон во вторую", "Draw a vial with a syringe: syringe in hand, vial in the other")
+t("item.rpmedicine.filled_syringe", "Набранный шприц", "Filled syringe")
+t("item.rpmedicine.filled_syringe.named", "Шприц: %s, %s мл", "Syringe: %s, %s ml")
+t("item.rpmedicine.filled_syringe.desc", "ПКМ — ввести в вену (или в порт катетера). Препарат для капельницы — ПКМ по пакету на стойке.", "Right-click to inject into a vein (or a catheter port). A drip drug — right-click the bag on the IV stand.")
+t("rpmedicine.vial.label", "%s %s/мл", "%s %s/ml")
+t("rpmedicine.vial.drawn", "Набрано %s мл", "Drew %s ml")
+t("rpmedicine.unit.mg", "мг", "mg")
+t("rpmedicine.unit.iu", "ЕД", "IU")
+t("rpmedicine.dose.left", "В ручке: %s мл", "In the pen: %s ml")
+t("rpmedicine.dose.hint", "Нужно: ~%s мл (вес %s кг)", "Needed: ~%s ml (weight %s kg)")
+t("rpmedicine.dose.howto", "Колёсико — вращать поршень, ЛКМ или Enter — ввести, Esc — отмена", "Wheel — turn the plunger, LMB or Enter — inject, Esc — cancel")
+t("rpmedicine.draw.title", "Набор из флакона", "Drawing from a vial")
+t("rpmedicine.draw.pierce", "ЛКМ, когда пробка над иглой", "Left-click when the stopper is over the needle")
+t("rpmedicine.draw.amount", "Набрано: %s мл", "Drawn: %s ml")
+t("rpmedicine.draw.hint", "Нужно: ~%s мл", "Needed: ~%s ml")
+t("rpmedicine.draw.howto", "Колёсико — тянуть поршень, ЛКМ или Enter — готово", "Wheel — pull the plunger, LMB or Enter — done")
+t("rpmedicine.draw.by_eye", "Набираете на глаз…", "Drawing by eye…")
+t("rpmedicine.draw.left", "Во флаконе: %s мл", "In the vial: %s ml")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

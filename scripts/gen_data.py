@@ -148,7 +148,8 @@ ITEMS = [
     ("empty_blood_bag", "blood_collect", 30, 3, True), ("blood_bag", "blood_bag", 10, 3, True),
     ("stethoscope", "stethoscope", 4, 2, False), ("thermometer", "thermometer", 5, 0, False),
     ("portable_scanner", "scanner", 6, 4, False), ("hemoanalyzer", "hemoanalyzer", 10, 4, False),
-    ("blood_draw_syringe", "blood_sample", 3, 2, True), ("syringe", "blood_sample", 3, 2, True),
+    # Пробирка крови — только ланцетом (замечание 06.10); шприц — для набора из флакона.
+    ("lancet", "blood_sample", 3, 1, True),
     ("surgical_tweezers", "tweezers", 8, 4, False), ("suture_kit", "suture", 10, 3, True), ("scissors", "scissors", 3, 0, False),
     # третий этап
     ("endotracheal_tube", "intubate", 6, 6, True),
@@ -230,6 +231,21 @@ DRUGS = {
                  "overdose": {"effects": [eff("anesthesia", 1, 0, 30 * 60), eff("resp_depression", 0.9, 0, 30 * 60),
                                           eff("pressure", -25, 0, 30 * 60)], "arrest_chance": 0.2}},
 }
+# Препарат в крови (решения, п. 1.16): мг в стандартной дозе (1 мл = 1 доза) и единица; полувыведение — где своё.
+KINETICS = {
+    "paracetamol": {"mg_per_dose": 500}, "ibuprofen": {"mg_per_dose": 400}, "ketorolac": {"mg_per_dose": 30},
+    "tramadol": {"mg_per_dose": 50}, "naloxone": {"mg_per_dose": 0.4}, "insulin": {"mg_per_dose": 10, "unit": "iu"},
+    "glucose_tablets": {"mg_per_dose": 4000}, "cyclosporine": {"mg_per_dose": 100}, "amoxicillin": {"mg_per_dose": 500},
+    "ceftriaxone": {"mg_per_dose": 250}, "diazepam": {"mg_per_dose": 5}, "atropine": {"mg_per_dose": 1},
+    "lidocaine": {"mg_per_dose": 20}, "ketamine": {"mg_per_dose": 50},
+    # Капельница: короткое полувыведение — действует, пока капает.
+    "norepinephrine": {"mg_per_dose": 1, "half_life_minutes": 2.5},
+    "propofol": {"mg_per_dose": 10, "half_life_minutes": 4},
+}
+# Наркоз пропофолом держится капельницей (решения, п. 1.16).
+DRUGS["propofol"]["form"] = "drip"
+for name, k in KINETICS.items():
+    DRUGS[name]["kinetics"] = k
 for name, d in DRUGS.items():
     obj = {"items": [f"rpmedicine:{name}"]}
     obj.update(d)
@@ -395,7 +411,7 @@ for name, (items, kcal, prot, fat, carbs, vit) in NUTRITION.items():
         obj["kcal"] = kcal
     write(f"{DATA}/rpmedicine/rpmedicine/nutrition/{name}.json", obj)
 
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:lancet", "rpmedicine:blood_sample", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb", "rpmedicine:organ_container", "rpmedicine:organ"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:blood_sample", "rpmedicine:filled_syringe", "rpmedicine:dirty_syringe", "rpmedicine:used_pen", "rpmedicine:dirty_test_tube", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb", "rpmedicine:organ_container", "rpmedicine:organ"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",

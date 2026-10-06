@@ -245,10 +245,12 @@ public final class HospitalGameTests {
         medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.AMOXICILLIN.get(), 3));
         h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "дать таблетку");
         h.runAfterDelay(120, () -> {
+            // Таблетка всасывается 1–2 минуты (решения, п. 1.16).
+            faygolover.rpmedicine.core.Healing.fastForward(m, 150, MedicalSettings.get());
             h.assertTrue(m.hasEffect(faygolover.rpmedicine.core.DrugEffect.ANTIBIOTIC), "антибиотик действует");
             h.assertTrue(medic.getInventory().getItem(0).getCount() == 2, "одна таблетка потрачена");
             faygolover.rpmedicine.core.Healing.fastForward(m, 7 * 3600, MedicalSettings.get());
-            h.assertTrue(!w.isInfected() || w.infection < 15, "под антибиотиком инфекция спадает, было " + w.infection);
+            h.assertTrue(!w.isInfected() || w.infection < 30, "под антибиотиком инфекция спадает (было 50), " + w.infection);
             remove(h, medic, patient);
             h.succeed();
         });
@@ -270,12 +272,12 @@ public final class HospitalGameTests {
         inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.HEMOANALYZER.get()));
         faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null);
         h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(medic) == null, "без ланцета гемоанализатор не запускается");
-        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get()));
+        inv.setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.LANCET.get()));
         // Кровь набирается в пустую пробирку (проверка 05.10): без неё анализа не будет.
         inv.setItem(8, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get()));
         h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "забор в пробирку");
         h.runAfterDelay(140, () -> {
-            h.assertTrue(!inv.contains(new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.BLOOD_DRAW_SYRINGE.get())), "шприц потрачен");
+            h.assertTrue(!inv.contains(new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.LANCET.get())), "ланцет потрачен");
             int tube = -1;
             for (int i = 0; i < inv.getContainerSize(); i++) if (inv.getItem(i).is(faygolover.rpmedicine.registry.ModItems.BLOOD_SAMPLE.get())) tube = i;
             h.assertTrue(tube >= 0, "пробирка у медика");

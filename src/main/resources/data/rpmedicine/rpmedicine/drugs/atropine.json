@@ -31,5 +31,8 @@
         "duration": 1800
       }
     ]
+  },
+  "kinetics": {
+    "mg_per_dose": 1
   }
 }

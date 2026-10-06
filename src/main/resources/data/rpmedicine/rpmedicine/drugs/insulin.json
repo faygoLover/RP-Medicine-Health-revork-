@@ -25,5 +25,9 @@
         "duration": 7200
       }
     ]
+  },
+  "kinetics": {
+    "mg_per_dose": 10,
+    "unit": "iu"
   }
 }

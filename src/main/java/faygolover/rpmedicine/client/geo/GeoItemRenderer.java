@@ -70,15 +70,35 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
             pose.translate(0.5, 0.51, 0.5);
             pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         }
+        // Шприц-ручка: окошко заполнено по оставшимся дозам (0, 1, 2, 3, 4 использовано — округление вверх).
+        fill = -1;
+        if (faygolover.rpmedicine.registry.ModItems.isPen(stack)) {
+            double used = 4 - faygolover.rpmedicine.registry.ModItems.remainingDoses(stack);
+            fill = (float) (4 - Math.min(4, Math.ceil(used - 1e-6))) / 4f;
+        } else if (stack.is(faygolover.rpmedicine.registry.ModItems.USED_PEN.get())) {
+            fill = 0;
+        }
         VertexConsumer vc = buffers.getBuffer(RenderType.entityTranslucent(e.texture()));
         for (GeoModel.Bone bone : m.roots) renderBone(bone, e, clip, t, pose, vc, light, overlay);
         pose.popPose();
     }
 
+    /** Заполнение ручки 0–1 для текущего предмета (-1 — не ручка). */
+    private static float fill = -1;
+    /** Высота жидкости в окошке ручки при полной, единицы модели. */
+    private static final float PEN_LIQUID = 6.8f;
+
     private static void renderBone(GeoModel.Bone b, GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose,
                                    VertexConsumer vc, int light, int overlay) {
         if (e.hide().contains(b.name)) return;
+        if (fill >= 0 && b.name.equals("liquid") && fill <= 0.001f) return;
         pose.pushPose();
+        if (fill >= 0 && b.name.equals("stopper")) pose.translate(0, PEN_LIQUID * fill, 0);
+        if (fill >= 0 && b.name.equals("liquid")) {
+            pose.translate(b.px, b.py, b.pz);
+            pose.scale(1, fill, 1);
+            pose.translate(-b.px, -b.py, -b.pz);
+        }
         float[] pos = clip == null ? null : clip.sample(b.name, 1, t);
         if (pos != null) pose.translate(-pos[0], pos[1], pos[2]);
         pose.translate(b.px, b.py, b.pz);

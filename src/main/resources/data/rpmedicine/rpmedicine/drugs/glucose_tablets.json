@@ -5,5 +5,8 @@
   "form": "pill",
   "min_level": 0,
   "special": "glucose",
-  "effects": []
+  "effects": [],
+  "kinetics": {
+    "mg_per_dose": 4000
+  }
 }

@@ -37,5 +37,9 @@
         "duration": 1200
       }
     ]
+  },
+  "kinetics": {
+    "mg_per_dose": 1,
+    "half_life_minutes": 2.5
   }
 }

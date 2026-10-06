@@ -39,5 +39,8 @@
       }
     ],
     "arrest_chance": 0.1
+  },
+  "kinetics": {
+    "mg_per_dose": 50
   }
 }

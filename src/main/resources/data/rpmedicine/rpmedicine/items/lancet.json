@@ -1,0 +1,7 @@
+{
+  "item": "rpmedicine:lancet",
+  "action": "blood_sample",
+  "seconds": 3,
+  "min_level": 1,
+  "consume": true
+}

@@ -19,17 +19,21 @@ import java.util.function.Supplier;
 public final class DosePacket {
     private DosePacket() {}
 
-    public record Request(int targetId, int slot, int part, Component drug, int weightKg) {
+    /** max — сколько доз осталось в ручке; hint — сколько нужно этому пациенту (подсказка опытному). */
+    public record Request(int targetId, int slot, int part, Component drug, int weightKg, float max, float hint) {
         public static void encode(Request p, FriendlyByteBuf buf) {
             buf.writeVarInt(p.targetId + 1);
             buf.writeVarInt(p.slot);
             buf.writeVarInt(p.part + 1);
             buf.writeComponent(p.drug);
             buf.writeVarInt(p.weightKg);
+            buf.writeFloat(p.max);
+            buf.writeFloat(p.hint);
         }
 
         public static Request decode(FriendlyByteBuf buf) {
-            return new Request(buf.readVarInt() - 1, buf.readVarInt(), buf.readVarInt() - 1, buf.readComponent(), buf.readVarInt());
+            return new Request(buf.readVarInt() - 1, buf.readVarInt(), buf.readVarInt() - 1, buf.readComponent(), buf.readVarInt(),
+                    buf.readFloat(), buf.readFloat());
         }
 
         public static void handle(Request p, Supplier<NetworkEvent.Context> ctx) {

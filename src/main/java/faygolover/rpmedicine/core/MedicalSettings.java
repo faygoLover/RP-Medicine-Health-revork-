@@ -78,6 +78,8 @@ public final class MedicalSettings {
     public double salineDripSeconds = 120.0;
     /** Стойка капельницы (замечание 35): длина шланга, блоков; дальше — катетер вырван. */
     public double ivHoseLength = 4.0;
+    /** Пакет с добавленным препаратом (норадреналин, пропофол) капает дольше — держит уровень, с. */
+    public double ivAdditiveDripSeconds = 1200.0;
     /** Всасывание препарата: укол в мышцу и таблетки — постоянная, с (почти всё всосалось за 3 таких срока). */
     public double drugAbsorbImSeconds = 35.0;
     public double drugAbsorbOralSeconds = 40.0;

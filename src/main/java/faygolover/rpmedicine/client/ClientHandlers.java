@@ -144,6 +144,11 @@ public final class ClientHandlers {
         ClientState.monitorTime = System.currentTimeMillis();
     }
 
+    /** Набор шприцем из флакона. */
+    public static void onDrawRequest(faygolover.rpmedicine.network.DrawPacket.Request p) {
+        Minecraft.getInstance().setScreen(new faygolover.rpmedicine.client.screen.DrawScreen(p));
+    }
+
     /** Бланк анализа крови. */
     public static void openLab(faygolover.rpmedicine.network.LabResultPacket p) {
         net.minecraft.client.Minecraft.getInstance().setScreen(new faygolover.rpmedicine.client.screen.LabResultScreen(p));

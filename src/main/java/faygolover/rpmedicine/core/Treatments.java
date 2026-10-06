@@ -82,7 +82,12 @@ public final class Treatments {
     }
 
     /** Препарат с выбранной дозой (шприц и ампула, медицина 4+): 1 — стандартная доза инъектора. */
-    public record Dosed(Drug drug, double dose) implements Extra {}
+    /** Препарат с дозой и путём введения (ручка — в мышцу, шприц — в вену; решения, п. 1.16). */
+    public record Dosed(Drug drug, double dose, DrugLevels.Route route) implements Extra {
+        public Dosed(Drug drug, double dose) {
+            this(drug, dose, DrugLevels.routeOf(drug));
+        }
+    }
 
     /** Доза шприцем для встроенных уколов (морфин, адреналин, ТХК): доля стандартной, 0,5–2 (замечание 66). */
     public record ActionDose(double dose) implements Extra {}
@@ -406,7 +411,7 @@ public final class Treatments {
                                Extra extra, double quality) {
         double q = Physiology.clamp(quality, 0, 1);
         if (a == TreatmentAction.DRUG || a == TreatmentAction.DRUG_TOPICAL) {
-            if (extra instanceof Dosed ds) return Drugs.apply(m, part, ds.drug(), error, rnd, s, ds.dose());
+            if (extra instanceof Dosed ds) return Drugs.apply(m, part, ds.drug(), error, rnd, s, ds.dose(), ds.route());
             return extra instanceof Drug d ? Drugs.apply(m, part, d, error, rnd, s) : Result.failed("no_effect");
         }
         Bag bag = extra instanceof Bag b ? b : null;

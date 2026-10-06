@@ -5,5 +5,8 @@
   "form": "injection",
   "min_level": 4,
   "special": "opioid_antidote",
-  "effects": []
+  "effects": [],
+  "kinetics": {
+    "mg_per_dose": 0.4
+  }
 }

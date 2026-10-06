@@ -2,7 +2,7 @@
   "items": [
     "rpmedicine:propofol"
   ],
-  "form": "injection",
+  "form": "drip",
   "min_level": 7,
   "effects": [
     {
@@ -50,5 +50,9 @@
       }
     ],
     "arrest_chance": 0.2
+  },
+  "kinetics": {
+    "mg_per_dose": 10,
+    "half_life_minutes": 4
   }
 }

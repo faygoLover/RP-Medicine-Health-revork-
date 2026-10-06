@@ -122,6 +122,10 @@ SOFTWARE.
 | `textures/item/atropine.png` | Tactical Aid 1.3.9: `assets/tactical_aid/textures/item/aggressiveness.png` (другой оттенок) | 17612 | MIT |
 | `textures/item/ceftriaxone.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/norepinephrine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/oil_vial.png` | VKM | MIT |
+| `textures/item/filled_syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/brinject.png` | JEDIGD | MIT |
+| `textures/item/ketamine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
+| `textures/item/lidocaine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
+| `textures/item/propofol.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/emulsion_vial.png` | VKM | MIT |
 | `textures/item/surgical_gloves.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/gloves.png` (перекрашено) | VKM | MIT |
 | `textures/item/field_surgery_kit.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/surgicalinstrument.png` | JEDIGD | MIT |
 | `textures/item/organ.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_heart.png` | VKM | MIT |
@@ -172,6 +176,9 @@ SOFTWARE.
 | `rpgeo/syringe.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/inject.geo.json` | JEDIGD | MIT |
 | `textures/geo/syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/broad-spectrum_antibiotics.png` (другой цвет жидкости) | JEDIGD | MIT |
 | `rpgeo/syringe.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/inject.animation.json` | JEDIGD | MIT |
+| `rpgeo/filled_syringe.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/inject.geo.json` | JEDIGD | MIT |
+| `textures/geo/filled_syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/broad-spectrum_antibiotics.png` (другой цвет жидкости) | JEDIGD | MIT |
+| `rpgeo/filled_syringe.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/inject.animation.json` | JEDIGD | MIT |
 | `rpgeo/blood_draw_syringe.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/inject.geo.json` | JEDIGD | MIT |
 | `textures/geo/blood_draw_syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/broad-spectrum_antibiotics.png` (другой цвет жидкости) | JEDIGD | MIT |
 | `rpgeo/blood_draw_syringe.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/inject.animation.json` | JEDIGD | MIT |
@@ -193,12 +200,6 @@ SOFTWARE.
 | `rpgeo/atropine.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/einject.geo.json` | JEDIGD | MIT |
 | `textures/geo/atropine.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/einject.png` | JEDIGD | MIT |
 | `rpgeo/atropine.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/einject.animation.json` | JEDIGD | MIT |
-| `rpgeo/ketamine.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/einject.geo.json` | JEDIGD | MIT |
-| `textures/geo/ketamine.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/einject.png` | JEDIGD | MIT |
-| `rpgeo/ketamine.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/einject.animation.json` | JEDIGD | MIT |
-| `rpgeo/lidocaine.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/einject.geo.json` | JEDIGD | MIT |
-| `textures/geo/lidocaine.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/einject.png` | JEDIGD | MIT |
-| `rpgeo/lidocaine.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/einject.animation.json` | JEDIGD | MIT |
 | `rpgeo/morphine.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/einject.geo.json` | JEDIGD | MIT |
 | `textures/geo/morphine.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/einject.png` | JEDIGD | MIT |
 | `rpgeo/morphine.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/einject.animation.json` | JEDIGD | MIT |
@@ -209,7 +210,7 @@ SOFTWARE.
 | `textures/geo/used_pen.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/einject.png` | JEDIGD | MIT |
 | `rpgeo/used_pen.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/einject.animation.json` | JEDIGD | MIT |
 | `rpgeo/dirty_syringe.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/inject.geo.json` | JEDIGD | MIT |
-| `textures/geo/dirty_syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/broad-spectrum_antibiotics.png` (другой цвет жидкости) | JEDIGD | MIT |
+| `textures/geo/dirty_syringe.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/broad-spectrum_antibiotics.png` | JEDIGD | MIT |
 | `rpgeo/dirty_syringe.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/inject.animation.json` | JEDIGD | MIT |
 | `rpgeo/first_aid_kit.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/carfak_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/first_aid_kit.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/carfak_uv.png` | LesRaisins Studio | GPL-3.0 |

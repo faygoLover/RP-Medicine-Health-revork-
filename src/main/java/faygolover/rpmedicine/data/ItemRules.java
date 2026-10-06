@@ -82,6 +82,14 @@ public final class ItemRules {
         if (stack.isEmpty()) return null;
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
         if (id == null) return null;
+        // Набранный шприц: препарат в NBT, время и уровень — как у флакона этого препарата.
+        if (stack.getItem() instanceof faygolover.rpmedicine.item.FilledSyringeItem) {
+            faygolover.rpmedicine.core.Drug d = faygolover.rpmedicine.item.FilledSyringeItem.drugOf(stack);
+            if (d == null) return null;
+            DrugRules.Entry e = DrugRules.forItem(ResourceLocation.tryParse(d.id()));
+            return new Spec(id, d.form() == faygolover.rpmedicine.core.Drug.Form.TOPICAL ? TreatmentAction.DRUG_TOPICAL : TreatmentAction.DRUG,
+                    e != null ? e.seconds() : 3, e != null ? e.minLevel() : 0, true);
+        }
         Spec s = specs.get(id);
         if (s != null) return s;
         ResourceLocation alias = aliases.get(id);
@@ -100,6 +108,7 @@ public final class ItemRules {
     @Nullable
     public static faygolover.rpmedicine.core.Drug drugFor(ItemStack stack) {
         if (stack.isEmpty()) return null;
+        if (stack.getItem() instanceof faygolover.rpmedicine.item.FilledSyringeItem) return faygolover.rpmedicine.item.FilledSyringeItem.drugOf(stack);
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(stack.getItem());
         DrugRules.Entry d = DrugRules.forItem(id);
         if (d == null && id != null && aliases.get(id) != null) d = DrugRules.forItem(aliases.get(id));

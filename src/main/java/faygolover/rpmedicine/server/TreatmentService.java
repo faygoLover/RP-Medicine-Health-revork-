@@ -59,20 +59,31 @@ public final class TreatmentService {
         startWithItem(actor, target, slot, part, null);
     }
 
-    /** Ответ на выбор дозы шприцем: 0 — отмена. */
+    /** Ждём выбора дозы ручкой: проверка «нужно ли» уже пройдена (forced — продавлена повтором). */
+    private record PendingDose(int targetId, int slot, @Nullable BodyPart part, boolean forced, long tick) {}
+    private static final Map<UUID, PendingDose> PENDING_DOSE = new HashMap<>();
+
+    /** Ответ на выбор дозы шприц-ручкой: 0 — отмена. */
     public static void onDoseChoice(ServerPlayer actor, int targetId, int slot, @Nullable BodyPart part, float dose) {
+        PendingDose pd = PENDING_DOSE.remove(actor.getUUID());
         if (dose <= 0 || slot < 0 || slot >= actor.getInventory().getContainerSize()) return;
         net.minecraft.world.entity.Entity e = targetId < 0 ? actor : actor.level().getEntity(targetId);
         if (!(e instanceof LivingEntity target) || !Medical.isPatient(target)) return;
         ItemStack st = actor.getInventory().getItem(slot);
-        double max = 3;
-        if (st.isDamageableItem() && (faygolover.rpmedicine.registry.ModItems.isPen(st) || faygolover.rpmedicine.registry.ModItems.isVial(st)))
-            max = (st.getMaxDamage() - st.getDamageValue()) / 2.0;
-        startWithItem(actor, target, slot, part, (double) Math.max(0.25f, Math.min(max, dose)));
+        double max = faygolover.rpmedicine.registry.ModItems.isPen(st) ? faygolover.rpmedicine.registry.ModItems.remainingDoses(st) : 3;
+        double d = Math.max(0.1, Math.min(max, Math.round(dose * 10) / 10.0));
+        boolean same = pd != null && pd.targetId == targetId && pd.slot == slot && actor.level().getGameTime() - pd.tick < 20 * 60;
+        startWithItem(actor, target, slot, same ? pd.part : part, d, same ? pd.forced : null);
     }
 
-    /** {@code dose} — выбранная доза шприцем (null — стандартная доза инъектора или спросить). */
+    /** {@code dose} — выбранная доза (null — спросить опытного или случайная у неопытного). */
     public static boolean startWithItem(ServerPlayer actor, LivingEntity target, int slot, @Nullable BodyPart part, @Nullable Double dose) {
+        return startWithItem(actor, target, slot, part, dose, null);
+    }
+
+    /** preForced не null — проверка «нужно ли» уже пройдена до выбора дозы. */
+    static boolean startWithItem(ServerPlayer actor, LivingEntity target, int slot, @Nullable BodyPart part, @Nullable Double dose,
+                                 @Nullable Boolean preForced) {
         ItemStack stack = actor.getInventory().getItem(slot);
         ItemRules.Spec spec = ItemRules.specFor(stack);
         if (spec == null) return false;
@@ -90,25 +101,17 @@ public final class TreatmentService {
             return true;
         }
         TreatmentAction action = spec.action();
-        // Флакон без шприца не набрать.
-        if (faygolover.rpmedicine.registry.ModItems.isVial(stack) && !hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
-            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_syringe").withStyle(ChatFormatting.YELLOW), true);
+        // Флакон сам не применяется: шприц в руку, флакон во вторую — набрать (решения, п. 1.16).
+        if (faygolover.rpmedicine.registry.ModItems.isVial(stack)) {
+            actor.displayClientMessage(Component.translatable("rpmedicine.refuse.vial_use_syringe").withStyle(ChatFormatting.YELLOW), true);
             return true;
         }
         Treatments.Extra extra = extraFor(stack, actor, target, action);
-        // Шприц и ампула: медик с нужным уровнем сам выбирает дозу укола или капельницы.
-        boolean dosable = extra instanceof faygolover.rpmedicine.core.Drug drug
-                && (drug.form() == faygolover.rpmedicine.core.Drug.Form.INJECTION || drug.form() == faygolover.rpmedicine.core.Drug.Form.DRIP)
-                || Treatments.DOSE_ACTIONS.contains(action);
-        if (dose == null && dosable
-                && Medical.medicineLevel(actor) >= MedicalSettings.get().dosingMinLevel
-                && (faygolover.rpmedicine.registry.ModItems.isPen(stack) || hasItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get()))) {
-            faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.DosePacket.Request(
-                    target == actor ? -1 : target.getId(), slot, part == null ? -1 : part.ordinal(), stack.getHoverName(), (int) Math.round(m.weightKg)));
-            return true;
-        }
-        if (dose != null && extra instanceof faygolover.rpmedicine.core.Drug drug) extra = new Treatments.Dosed(drug, dose);
-        else if (dose != null && Treatments.DOSE_ACTIONS.contains(action)) extra = new Treatments.ActionDose(dose);
+        boolean pen = faygolover.rpmedicine.registry.ModItems.isPen(stack);
+        boolean filled = stack.getItem() instanceof faygolover.rpmedicine.item.FilledSyringeItem;
+        // Набранный шприц: доза уже выбрана при наборе, вводится в вену.
+        if (filled) dose = faygolover.rpmedicine.item.FilledSyringeItem.ml(stack);
+        extra = withDose(extra, action, dose, filled);
         if (action.target == TreatmentAction.Target.HOLD) {
             hold(actor, target, action, spec.minLevel());
             return true;
@@ -133,7 +136,13 @@ public final class TreatmentService {
                 }
             }
         }
-        if (p == null) {
+        if (preForced != null) {
+            // Проверено до выбора дозы.
+            if (p == null) p = Treatments.bestPart(m, action, s, extra);
+            if (p == null) p = defaultPart(action);
+            forced = preForced;
+            why = null;
+        } else if (p == null) {
             p = Treatments.bestPart(m, action, s, extra);
             why = p == null ? Treatments.check(m, defaultPart(action), action, s, extra) : null;
             if (p == null && why == null) why = "not_needed";
@@ -171,6 +180,24 @@ public final class TreatmentService {
             actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_lancet").withStyle(ChatFormatting.YELLOW), true);
             return true;
         }
+        // Доза шприц-ручкой — после проверки «нужно ли» (решения, п. 1.16): опытный выбирает колёсиком,
+        // неопытный не умеет — колет случайно 0,75–1,25 дозы.
+        if (pen && dose == null && (Treatments.drugOf(extra) != null || Treatments.DOSE_ACTIONS.contains(action))) {
+            double left = faygolover.rpmedicine.registry.ModItems.remainingDoses(stack);
+            if (Medical.medicineLevel(actor) >= s.dosingMinLevel) {
+                PENDING_DOSE.put(actor.getUUID(), new PendingDose(target == actor ? -1 : target.getId(), slot, part == null ? null : p, forced,
+                        actor.level().getGameTime()));
+                double hint = 1.0;
+                if (Treatments.drugOf(extra) != null)
+                    hint = 1.0 / Math.max(0.1, faygolover.rpmedicine.core.Drugs.effectiveDose(m, Treatments.drugOf(extra), 1.0, s));
+                faygolover.rpmedicine.network.Network.send(actor, new faygolover.rpmedicine.network.DosePacket.Request(
+                        target == actor ? -1 : target.getId(), slot, part == null ? -1 : p.ordinal(), stack.getHoverName(), (int) Math.round(m.weightKg),
+                        (float) left, (float) Math.min(left, Math.round(hint * 10) / 10.0)));
+                return true;
+            }
+            dose = Math.min(left, 0.75 + actor.getRandom().nextDouble() * 0.5);
+            extra = withDose(extraFor(stack, actor, target, action), action, dose, false);
+        }
         int level = Medical.medicineLevel(actor);
         boolean self = actor == target;
         GameplayEffects.Mods mods = Medical.data(actor) != null ? Medical.data(actor).lastMods : new GameplayEffects.Mods();
@@ -181,7 +208,9 @@ public final class TreatmentService {
         // Вне боя — мини-игра (второй этап, п. 9); в бою и без мини-игры — прогресс-бар.
         // Операция — всегда мини-игрой на сцене тела (решения, п. 1.14), даже в бою.
         Minigames.Type surgical = p != null ? Minigames.surgeryType(action, m, m.part(p)) : null;
-        Minigames.Type mg = forced ? null : surgical != null ? (s.minigamesEnabled && !MinigameService.prefersBar(actor) ? surgical : null) : MinigameService.minigameFor(actor, target, m,
+        // Набранный шприц при стоящем катетере — в порт, без мини-игры вены.
+        boolean port = filled && m.catheterPart >= 0;
+        Minigames.Type mg = forced || port ? null : surgical != null ? (s.minigamesEnabled && !MinigameService.prefersBar(actor) ? surgical : null) : MinigameService.minigameFor(actor, target, m,
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
         Minigames.Scene scene = surgical != null ? Minigames.Scene.of(m, p, target.getUUID().getLeastSignificantBits() ^ p.ordinal() * 0x9E3779B97F4A7C15L)
                 : Minigames.Scene.NONE;
@@ -206,6 +235,15 @@ public final class TreatmentService {
         ActionManager.start(new TreatmentTimedAction(actor, target, p, spec, slot, stack.copy(), (int) Math.round(seconds * 20), level, fromHand)
                 .withForced(forced).withDose(dose));
         return true;
+    }
+
+    /** Обернуть препарат дозой и путём: набранный шприц — в вену, ручка — в мышцу. */
+    static Treatments.Extra withDose(Treatments.Extra extra, TreatmentAction action, @Nullable Double dose, boolean intravenous) {
+        if (dose == null) return extra;
+        if (extra instanceof faygolover.rpmedicine.core.Drug drug)
+            return new Treatments.Dosed(drug, dose, intravenous ? faygolover.rpmedicine.core.DrugLevels.Route.IV : faygolover.rpmedicine.core.DrugLevels.routeOf(drug));
+        if (Treatments.DOSE_ACTIONS.contains(action)) return new Treatments.ActionDose(dose);
+        return extra;
     }
 
     private record ForcePending(int targetId, TreatmentAction action, long tick) {}
@@ -535,18 +573,8 @@ public final class TreatmentService {
             MedicalSettings s = MedicalSettings.get();
             // Повторная проверка: за время применения состояние могло измениться.
             Treatments.Extra extra = extraFor(actor.getInventory().getItem(slot), actor, target, spec.action());
-            // Флакон: набрать многоразовым шприцем — шприц после укола грязный. Ручка колет сама.
-            boolean needSyringe = faygolover.rpmedicine.registry.ModItems.isVial(original)
-                    || dose != null && !faygolover.rpmedicine.registry.ModItems.isPen(original);
-            if (needSyringe && (extra instanceof faygolover.rpmedicine.core.Drug || Treatments.DOSE_ACTIONS.contains(spec.action()))) {
-                if (!consumeItem(actor, faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
-                    actor.displayClientMessage(Component.translatable("rpmedicine.refuse.need_syringe").withStyle(ChatFormatting.YELLOW), true);
-                    return;
-                }
-                giveWaste(actor, faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
-            }
-            if (dose != null && (extra instanceof faygolover.rpmedicine.core.Drug || Treatments.DOSE_ACTIONS.contains(spec.action())))
-                extra = extra instanceof faygolover.rpmedicine.core.Drug drug ? new Treatments.Dosed(drug, dose) : new Treatments.ActionDose(dose);
+            // Набранный шприц — в вену (в порт катетера), ручка — в мышцу (решения, п. 1.16).
+            extra = TreatmentService.withDose(extra, spec.action(), dose, original.getItem() instanceof faygolover.rpmedicine.item.FilledSyringeItem);
             String why = Treatments.check(m, part, spec.action(), s, extra);
             if (forced && why != null && Treatments.FORCEABLE.contains(why)) {
                 Treatments.Result fr = Treatments.applyForced(m, part, spec.action(), RANDOM.split(), s, extra);
@@ -642,10 +670,16 @@ public final class TreatmentService {
         private void consume() {
             ItemStack stack = actor.getInventory().getItem(slot);
             if (actor.getAbilities().instabuild) return;
+            if (stack.getItem() instanceof faygolover.rpmedicine.item.FilledSyringeItem) {
+                // Шприц после укола — использованный (многоразовый: стерилизатор вернёт чистым).
+                stack.shrink(1);
+                giveWaste(actor, faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get());
+                return;
+            }
             if (stack.isDamageableItem()) {
-                // Ручки и флаконы считают половинки доз: стандартная доза — 2.
-                boolean dosed = faygolover.rpmedicine.registry.ModItems.isPen(stack) || faygolover.rpmedicine.registry.ModItems.isVial(stack);
-                int units = dosed ? Math.max(1, (int) Math.round((dose != null ? dose : 1.0) * 2)) : 1;
+                // Ручки считают десятые доли дозы (1 мл = 1 доза).
+                boolean dosed = faygolover.rpmedicine.registry.ModItems.isPen(stack);
+                int units = dosed ? Math.max(1, (int) Math.round((dose != null ? dose : 1.0) * 10)) : 1;
                 boolean pen = faygolover.rpmedicine.registry.ModItems.isPen(stack);
                 stack.hurtAndBreak(units, actor, p -> {
                     if (pen) giveWaste(actor, faygolover.rpmedicine.registry.ModItems.USED_PEN.get());

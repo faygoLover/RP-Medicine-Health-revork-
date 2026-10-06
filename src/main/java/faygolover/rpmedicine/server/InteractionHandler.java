@@ -118,6 +118,14 @@ public final class InteractionHandler {
         }
         ItemStack stack = event.getItemStack();
         if (stack.getItem() instanceof GmScannerItem || stack.getItem() instanceof MedicalContainerItem) return;
+        // Шприц в руке, флакон во второй — набрать (решения, п. 1.16). Пустой шприц сам ничего не делает.
+        if (event.getHand() == InteractionHand.MAIN_HAND && stack.is(faygolover.rpmedicine.registry.ModItems.SYRINGE.get())) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.CONSUME);
+            if (!event.getLevel().isClientSide && faygolover.rpmedicine.server.VialService.canDraw((ServerPlayer) p))
+                faygolover.rpmedicine.server.VialService.start((ServerPlayer) p);
+            return;
+        }
         if (event.getLevel().isClientSide) {
             if (stack.is(faygolover.rpmedicine.menu.MedicalContainerMenu.MEDICAL_ITEMS)) {
                 event.setCanceled(true);

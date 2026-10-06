@@ -83,14 +83,22 @@ public final class ModItems {
     public static final RegistryObject<Item> DIRTY_TEST_TUBE = medical("dirty_test_tube", 16);
     /** Пустая шприц-ручка — на выброс. */
     public static final RegistryObject<Item> USED_PEN = medical("used_pen", 16);
+    /** Шприц, набранный из флакона: препарат и мл в NBT (решения, п. 1.16). */
+    public static final RegistryObject<Item> FILLED_SYRINGE = tool("filled_syringe",
+            () -> new faygolover.rpmedicine.item.FilledSyringeItem(new Item.Properties().stacksTo(1)));
 
     /** Шприц-ручки и флаконы (решение 06.10): ручка колет сама, флакон — через многоразовый шприц. */
-    public static final java.util.Set<String> PEN_IDS = java.util.Set.of("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "ketamine", "lidocaine", "insulin");
-    public static final java.util.Set<String> VIAL_IDS = java.util.Set.of("ceftriaxone", "propofol", "norepinephrine");
+    public static final java.util.Set<String> PEN_IDS = java.util.Set.of("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "insulin");
+    public static final java.util.Set<String> VIAL_IDS = java.util.Set.of("ceftriaxone", "propofol", "norepinephrine", "lidocaine", "ketamine");
 
     public static boolean isPen(net.minecraft.world.item.ItemStack st) {
         var id = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(st.getItem());
         return id != null && id.getNamespace().equals(faygolover.rpmedicine.RpMedicine.MODID) && PEN_IDS.contains(id.getPath());
+    }
+
+    /** Сколько доз (= мл) осталось в ручке или флаконе. */
+    public static double remainingDoses(net.minecraft.world.item.ItemStack st) {
+        return st.isDamageableItem() ? (st.getMaxDamage() - st.getDamageValue()) / 10.0 : 0;
     }
 
     public static boolean isVial(net.minecraft.world.item.ItemStack st) {
@@ -103,8 +111,8 @@ public final class ModItems {
     public static final RegistryObject<Item> SUTURE_KIT = tool("suture_kit", () -> new MedicalItem(new Item.Properties().durability(5)));
     public static final RegistryObject<Item> SCISSORS = tool("scissors", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     // Третий этап: анестезия (п. 3)
-    public static final RegistryObject<Item> LIDOCAINE = pen("lidocaine");
-    public static final RegistryObject<Item> KETAMINE = pen("ketamine");
+    public static final RegistryObject<Item> LIDOCAINE = vial("lidocaine");
+    public static final RegistryObject<Item> KETAMINE = vial("ketamine");
     public static final RegistryObject<Item> PROPOFOL = vial("propofol");
     // Хирургия (третий этап, п. 4.4)
     public static final RegistryObject<Item> SCALPEL = tool("scalpel", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
@@ -163,7 +171,7 @@ public final class ModItems {
             "decompression_needle", "airway", "ambu_bag", "laryngoscope", "endotracheal_tube", "defibrillator", "ammonia",
             "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
-            "propofol", "insulin", "syringe", "dirty_syringe", "used_pen",
+            "propofol", "insulin", "syringe", "filled_syringe", "dirty_syringe", "used_pen",
             "iv_stand", "iv_catheter", "saline", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
@@ -173,12 +181,17 @@ public final class ModItems {
 
     /** Шприц-ручка: 4 дозы (8 половинок), пустая становится использованной (решение 06.10). */
     private static RegistryObject<Item> pen(String name) {
-        return tool(name, () -> new MedicalItem(new Item.Properties().durability(8)));
+        // 4 мл = 4 дозы, в десятых долях (шаг дозы 0,1).
+        return tool(name, () -> new MedicalItem(new Item.Properties().durability(PEN_TENTHS)));
     }
+
+    public static final int PEN_TENTHS = 40;
+    public static final int VIAL_TENTHS = 100;
 
     /** Флакон препарата: 2 дозы (4 половинки), набирается многоразовым шприцем. */
     private static RegistryObject<Item> vial(String name) {
-        return tool(name, () -> new MedicalItem(new Item.Properties().durability(4)));
+        // 10 мл = 10 доз, в десятых долях.
+        return tool(name, () -> new MedicalItem(new Item.Properties().durability(VIAL_TENTHS)));
     }
 
     private static RegistryObject<Item> medical(String name, int stack) {

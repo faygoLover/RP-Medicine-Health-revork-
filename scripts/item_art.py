@@ -72,6 +72,10 @@ ICONS = {
     "atropine": ("hue", TA + "textures/item/aggressiveness.png", 0.2),
     "ceftriaxone": ("hue", BC + "textures/item/hypnotic_vial.png", -0.3),
     "norepinephrine": BC + "textures/item/oil_vial.png",
+    "filled_syringe": ("liquidicon", HD + "textures/item/brinject.png", (236, 234, 224)),
+    "ketamine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.5),
+    "lidocaine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.12),
+    "propofol": BC + "textures/item/emulsion_vial.png",
 
     "lancet": ("drawn", "lancet"),
     # Диагностика
@@ -132,6 +136,39 @@ HD_EINJECT = dict(geo=HD + "geo/einject.geo.json", anim=HD + "animations/einject
 # Пакет в руке: крупнее и в ладони, а не над ней (замечание 06.10).
 BAG_FP = {"rotation": [0, 70, 10], "translation": [1, 2, -1], "scale": [0.6, 0.6, 0.6]}
 BAG_TP = {"rotation": [0, 0, 90], "translation": [0, 0, 1], "scale": [0.85, 0.85, 0.85]}
+PEN_ITEMS = ("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "insulin", "used_pen")
+
+
+def pen_geo():
+    """Инжектор H&D, переделанный под шприц-ручку (координаты Bedrock, текстура 32x32 в UV)."""
+    def cube(o, sz, uv):
+        return {"origin": o, "size": sz, "uv": uv}
+    return {"format_version": "1.12.0", "minecraft:geometry": [{
+        "description": {"identifier": "geometry.rpm_pen", "texture_width": 32, "texture_height": 32,
+                        "visible_bounds_width": 2, "visible_bounds_height": 2.5, "visible_bounds_offset": [0, 0.75, 0]},
+        "bones": [
+            {"name": "bone2", "pivot": [0, 0, 0], "cubes": [
+                cube([-0.75, 5.5, 0.25], [0.5, 2.5, 0.5], [0, 14]),        # игла — короче
+                cube([-2.3, 17.5, -1.3], [3.6, 1, 3.6], [9, 11]),           # кольцо
+                cube([-2, 8, -1], [3, 11, 3], [0, 0])]},                     # корпус с окошками
+            {"name": "liquid", "parent": "bone2", "pivot": [-0.5, 9.6, 0.5], "cubes": [
+                cube([-1.7, 9.6, -0.7], [2.4, 6.8, 2.4], [20, 20])]},
+            {"name": "stopper", "parent": "bone2", "pivot": [-0.5, 9.6, 0.5], "cubes": [
+                cube([-1.8, 9.6, -0.8], [2.6, 0.6, 2.6], [15, 1])]},
+            {"name": "pad", "parent": "bone2", "pivot": [0, 19, 0], "cubes": [
+                cube([-1.8, 19, -0.8], [2.6, 1, 2.6], [9, 0]),
+                cube([-1, 17, 0], [1, 2, 1], [12, 3])]},
+        ]}]}
+
+
+# Укол ручкой: поднести и приставить (как у H&D), пятка поднимается и нажимается.
+PEN_ANIM = {"format_version": "1.8.0", "animations": {"inject": {"animation_length": 1.0, "bones": {
+    "bone2": {"rotation": {"0.0": {"vector": [0, 0, 0]}, "0.125": {"vector": [68.82717, 18.74724, -7.09597]}},
+              "position": {"0.0": {"vector": [0, 0, 0]}, "0.125": {"vector": [3, 4, 0]}, "0.25": {"vector": [4, 4, 4]}}},
+    "pad": {"position": {"0.0": {"vector": [0, 0, 0]}, "0.3": {"vector": [0, 2.5, 0]}, "0.6": {"vector": [0, 2.5, 0]},
+                         "0.95": {"vector": [0, 0, 0]}}},
+}}}}
+
 HD_BOTTLE = dict(geo=HD + "geo/bottle.geo.json", anim=HD + "animations/bottle.animation.json", use="take",
                  display=HD + "models/displaysettings/bottle.item.json")
 GEO = {
@@ -148,14 +185,15 @@ GEO = {
     "amoxicillin": dict(HD_BOTTLE, tex=HD + "textures/item/bottle6.png"),
     "glucose_tablets": dict(HD_BOTTLE, tex=HD + "textures/item/bottle5.png"),
     # Шприцы
-    "syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", None)),
+    "syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", None), hide=["bone3"]),
+    "filled_syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", (240, 238, 228))),
     "blood_draw_syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", (150, 20, 30))),
 
     # Шприц-ручки: инжектор H&D в цвет своей иконки (цвет считается по иконке ниже, в main)
     **{k: dict(HD_EINJECT, tex=("tint", HD + "textures/item/einject.png", None)) for k in (
-        "adrenaline", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "ketamine", "lidocaine", "morphine", "insulin")},
+        "adrenaline", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "morphine", "insulin")},
     "used_pen": dict(HD_EINJECT, tex=("tint", HD + "textures/item/einject.png", (120, 110, 100))),
-    "dirty_syringe": dict(HD_INJECT, tex=("liquid", HD + "textures/item/broad-spectrum_antibiotics.png", (110, 40, 34))),
+    "dirty_syringe": dict(HD_INJECT, tex=("bloodtip", HD + "textures/item/broad-spectrum_antibiotics.png", None), hide=["bone3"]),
     # Наборы и кровь из LR Tactical (модели TaCZ — вписываются в куб предмета, руки скрыты)
     "first_aid_kit": dict(geo=LR + "geo_models/consumable/carfak_geo.json", tex=LR + "textures/consumable/carfak_uv.png", fit=True, size=0.8,
                           fp={"rotation": [5, -40, 0], "translation": [1.5, 3, -1], "scale": [0.42, 0.42, 0.42]}),
@@ -229,6 +267,31 @@ def load(spec):
                     if a == 255 and r > g + 25 and r > b + 25:
                         k = min(1.0, 0.75 + (r + g + b) / 765)
                         px[x, y] = (round(tr * k), round(tg * k), round(tb * k), ta)
+            return im
+        if kind == "liquidicon":
+            # Иконка шприца H&D: насыщенная жидкость -> заданный цвет с той же светотенью.
+            px = im.load()
+            for y in range(im.size[1]):
+                for x in range(im.size[0]):
+                    r, g, b, a = px[x, y]
+                    h_, l_, s_ = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+                    if a and s_ > 0.35:
+                        k = 0.8 + l_ * 0.4
+                        px[x, y] = tuple(min(255, round(c * k)) for c in spec[2]) + (a,)
+            return im
+        if kind == "bloodtip":
+            # Использованный шприц: пусто, кровь на кончике иглы (UV иглы 0,14 — в 64-px текстуре x 0..3, y 28..37).
+            px = im.load()
+            for y in range(im.size[1]):
+                for x in range(im.size[0]):
+                    r, g, b, a = px[x, y]
+                    h_, l_, s_ = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+                    if a and s_ > 0.3 and 0.1 < h_ < 0.2:
+                        px[x, y] = (226, 234, 242, a)
+            for y in range(34, 39):
+                for x in range(0, 4):
+                    if px[x, y][3]:
+                        px[x, y] = (150, 24, 32, 255) if (x + y) % 2 else (120, 14, 22, 255)
             return im
         if kind == "residue":
             # Использованная: стекло мутнее, внизу бурый налёт.
@@ -468,6 +531,8 @@ def main():
             if g.get("use"):
                 entry["use"] = g["use"]
                 times[f"rpmedicine:{item}"] = round(anim_length(g["anim"], g["use"]), 2)
+        if g.get("hide") and not g.get("fit"):
+            entry["hide"] = g["hide"]
         if g.get("fit"):
             entry["fit"] = True
             entry["size"] = g.get("size", 0.75)
@@ -494,6 +559,36 @@ def main():
             "perspectives": {"gui": flat(f"rpmedicine:item/{item}")},
         }
         write(os.path.join(ASSETS, "models", "item", f"{item}.json"), model)
+    # Шприц-ручки (замечание 06.10): своя модель на основе инжектора H&D — игла короче и стальная, окошко длиннее вниз,
+    # внутри жидкость (уровень — по оставшимся дозам, рисует GeoItemRenderer: кость liquid), на ней основание поршня
+    # (кость stopper), пятка поршня (кость pad) опущена и поднимается только в анимации.
+    for item in PEN_ITEMS:
+        if f"rpmedicine:{item}" not in index:
+            continue
+        write(os.path.join(ASSETS, "rpgeo", f"{item}.geo.json"), pen_geo())
+        write(os.path.join(ASSETS, "rpgeo", f"{item}.anim.json"), PEN_ANIM)
+        tpath = os.path.join(ASSETS, "textures", "geo", f"{item}.png")
+        im = Image.open(tpath).convert("RGBA")
+        px = im.load()
+        # Окошки длиннее вниз: прозрачные щели до строки 24 (в 64-px текстуре).
+        for x0 in (2, 8, 14, 20):
+            for x in (x0, x0 + 1):
+                for y in range(11, 25):
+                    px[x, y] = (0, 0, 0, 0)
+        # Игла — сталь, не цвет корпуса.
+        for y in range(28, 35):
+            for x in range(0, 4):
+                v = 205 if (x + y) % 3 else 228
+                px[x, y] = (v, v + 4, v + 10, 255)
+        # Жидкость — светлее цвета иконки.
+        c = icon_color(item)
+        liq = tuple(min(255, round(v * 0.55 + 255 * 0.45)) for v in c)
+        for y in range(40, 60):
+            for x in range(40, 60):
+                px[x, y] = liq + (235,)
+        im.save(tpath)
+        index[f"rpmedicine:{item}"]["use"] = "inject"
+        times[f"rpmedicine:{item}"] = 1.0
     write(os.path.join(ASSETS, "rpgeo", "items.json"), index)
     write(os.path.join(DATA, "use_times", "animations.json"), {"times": times})
 
