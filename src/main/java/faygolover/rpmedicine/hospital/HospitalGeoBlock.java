@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HospitalGeoBlock extends HorizontalDirectionalBlock implements EntityBlock {
     public enum Kind {
-        CABINET("medicine_cabinet", 27, MedicalStorageMenu.MEDICAL, Block.box(3, 1.5, 9.5, 13, 15.5, 16)),
+        CABINET("medicine_cabinet", 27, MedicalStorageMenu.MEDICAL, Block.box(3, 1.5, 3, 13, 15.5, 13)),
         CRATE("medicine_crate", 27, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0.5, 16, 16, 16)),
         STERILIZER("sterilizer", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),
         LAB_TABLE("lab_table", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),

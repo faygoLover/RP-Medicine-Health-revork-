@@ -42,7 +42,8 @@ public class HospitalGeoRenderer implements BlockEntityRenderer<HospitalStorageB
         Direction f = be.getBlockState().getValue(HospitalGeoBlock.FACING);
         pose.pushPose();
         pose.translate(0.5, 0, 0.5);
-        pose.mulPose(Axis.YP.rotationDegrees(-f.toYRot() + 180));
+        // Перед модели (+z) — туда, куда смотрит блок (к игроку, который его ставил).
+        pose.mulPose(Axis.YP.rotationDegrees(-f.toYRot()));
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         GeoItemRenderer.renderModel(e, clip, t, pose, buffers.getBuffer(RenderType.entityCutoutNoCull(e.texture())), light, overlay);
         pose.popPose();
