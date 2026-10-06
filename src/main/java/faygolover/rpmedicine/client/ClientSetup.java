@@ -40,6 +40,8 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void onKeys(RegisterKeyMappingsEvent e) {
+        // Самое раннее клиентское событие мода: до первой отрисовки моделей.
+        ItemPoses.init();
         e.register(PANEL);
         e.register(FINISH);
         e.register(NUTRITION);

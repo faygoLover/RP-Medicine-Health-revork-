@@ -372,6 +372,13 @@ def main():
         shutil.copyfile(src_path(BC + f"textures/gui/surgery_{name}.png"), os.path.join(ASSETS, dst))
         note(dst, BC + f"textures/gui/surgery_{name}.png")
 
+    # Инструменты держат как инструмент (рукоять в кулаке), а не как плоскую картинку (замечание 06.10).
+    for item in ("scalpel", "hemostat", "retractor", "surgical_tweezers", "scissors", "bone_saw", "surgical_drill", "laryngoscope",
+                 "thermometer", "decompression_needle", "vascular_suture", "lancet"):
+        path = os.path.join(ASSETS, "models", "item", f"{item}.json")
+        if os.path.exists(path) and json.load(open(path, encoding="utf-8")).get("parent") == "minecraft:item/generated":
+            write(path, {"parent": "minecraft:item/handheld", "textures": {"layer0": f"rpmedicine:item/{item}"}})
+
     # Хирургическая маска на голове (замечание 06.10: была над головой) — объёмная, на лице, с завязками;
     # в руке и в инвентаре — плоская иконка.
     mtex = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
