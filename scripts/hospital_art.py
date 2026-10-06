@@ -189,6 +189,20 @@ def tools():
             f.write(fnd.read("assets/csfoundation/textures/item/refined_saw.png"))
 
 
+def two_handed():
+    """Плоские двуручные предметы от третьего лица — перед собой лицом наружу (замечание 18 второй проверки)."""
+    d = {"rotation": [-90, 90, 0], "translation": [-1, 1, -2], "scale": [0.7, 0.7, 0.7]}
+    for item in ("defibrillator", "ambu_bag", "organ_container", "stabilization_kit"):
+        path = os.path.join(ASSETS, "models", "item", f"{item}.json")
+        if not os.path.exists(path):
+            continue
+        m = json.load(open(path, encoding="utf-8"))
+        if m.get("parent") != "minecraft:item/generated":
+            continue
+        m["display"] = {"thirdperson_righthand": d, "thirdperson_lefthand": d}
+        write(path, m)
+
+
 def credits():
     text = open(CREDITS, encoding="utf-8").read()
     start, end = "<!-- hospital:begin -->", "<!-- hospital:end -->"
@@ -211,6 +225,7 @@ def main():
     hd()
     oxygen()
     tools()
+    two_handed()
     credits()
     print("hospital_art: ок")
 
