@@ -10,11 +10,15 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Главные:$(br)- $(l)noDeathMode$() — без смерти (тест).$(br)- $(l)minigamesEnabled$(), $(l)minigamesInCombat$().$(br)- $(l)bleedMultiplier$(), $(l)painMultiplier$(), $(l)healSpeedMultiplier$()."
+      "text": "Главные:$(br)- $(l)no_death_mode$() — без смерти (тест).$(br)- $(l)minigames_enabled$(), $(l)minigames_in_combat$() (мини-игры и в бою: $(cfg)true$()).$(br)- $(l)bleed_multiplier$(), $(l)pain_multiplier$(), $(l)heal_speed_multiplier$()."
     },
     {
       "type": "patchouli:text",
-      "text": "- $(l)knockdownMin/MaxSeconds$() — таймер нокдауна.$(br)- $(l)dosingMinLevel$(), $(l)numbersMinLevel$(), $(l)labMinLevel$().$(br)- $(l)ivHoseLength$() — шланг стойки.$(br)- $(l)bookSkillGating$() — разделы этой книги по уровню медицины ($(cfg)false$() — всем всё).$(br)- $(l)organsEnabled$(), $(l)infectionEnabled$(), $(l)nutritionEnabled$(), $(l)substancesEnabled$() — отключаемые системы."
+      "text": "- $(l)knockdown_min/max_seconds$() — таймер нокдауна.$(br)- $(l)dosing_min_level$(), $(l)numbers_min_level$(), $(l)lab_min_level$().$(br)- $(l)iv_hose_length$() — шланг стойки.$(br)- $(l)book_skill_gating$() — разделы этой книги по уровню медицины ($(cfg)false$() — всем всё)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)organs_enabled$(), $(l)infection_enabled$(), $(l)nutrition_enabled$(), $(l)substances_enabled$() — отключаемые системы."
     }
   ],
   "advancement": "rpmedicine:book/gm",

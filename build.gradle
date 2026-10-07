@@ -50,6 +50,11 @@ minecraft {
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
+            // Живой тест с игроками: ./gradlew runServer -Plive=true — отдельная папка run_live (свой мир, ops, без RCON).
+            if (project.hasProperty('live')) {
+                workingDirectory project.file('run_live')
+                property 'forge.logging.console.level', 'info'
+            }
         }
 
         gameTestServer {

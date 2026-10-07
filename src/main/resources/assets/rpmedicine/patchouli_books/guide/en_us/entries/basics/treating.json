@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(l)Out of combat$() — a minigame: the better you play, the better the result. $(l)In combat$() (damage within $(cfg)30$() s) — a progress bar only.$(br2)The \"No minigame\" button or Esc — a progress bar $(cfg)2$() times longer, with more mistakes."
+      "text": "Treatment is a $(l)minigame$(): the better you play, the better the result. If the server turns minigames off in combat, then in combat (damage within $(cfg)30$() s) — a progress bar only.$(br2)The \"No minigame\" button or Esc — a progress bar $(cfg)2$() times longer, with more mistakes."
     },
     {
       "type": "patchouli:text",

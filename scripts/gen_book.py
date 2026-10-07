@@ -1,7 +1,7 @@
 # Справочник медика — книга Patchouli (python scripts/gen_book.py).
 # Книга: data/rpmedicine/patchouli_books/guide/book.json; текст: assets/rpmedicine/patchouli_books/guide/<язык>/.
 # Разделы прячутся скрытыми достижениями: book/gm — только операторам (GuideBook.java), book/medicine_N — по уровню
-# медицины, если в конфиге bookSkillGating = true (по умолчанию все видят всё).
+# медицины, если в конфиге book_skill_gating = true (по умолчанию все видят всё).
 # Значения из конфига — {{число}} в тексте: подсвечиваются цветом, в книге — стандартные.
 import json
 import os
@@ -136,10 +136,10 @@ entry("basics", "interface", "rpmedicine:portable_scanner", "Интерфейс 
 ])
 entry("basics", "treating", "rpmedicine:bandage", "Как лечить", "How to treat", [
     T("ПКМ предметом по пациенту — лечить его, ПКМ в воздух — себя. Часть тела выбирается сама (самая нуждающаяся) или перетаскиванием в панели **H**.\n\n"
-      "**Вне боя** — мини-игра: чем лучше сыграли, тем лучше результат. **В бою** (урон не позже {{30}} с назад) — только прогресс-бар.\n\n"
+      "Лечение — **мини-игра**: чем лучше сыграли, тем лучше результат. Если сервер выключил мини-игры в бою, то в бою (урон не позже {{30}} с назад) — только прогресс-бар.\n\n"
       "Кнопка «Без мини-игры» или Esc — прогресс-бар в {{2}} раза дольше и ошибки чаще.",
       "Right-click a patient with an item to treat them, right-click the air to treat yourself. The body part is picked automatically (the one in most need) or by dragging in the **H** panel.\n\n"
-      "**Out of combat** — a minigame: the better you play, the better the result. **In combat** (damage within {{30}} s) — a progress bar only.\n\n"
+      "Treatment is a **minigame**: the better you play, the better the result. If the server turns minigames off in combat, then in combat (damage within {{30}} s) — a progress bar only.\n\n"
       "The \"No minigame\" button or Esc — a progress bar {{2}} times longer, with more mistakes."),
     T("Если лечение не нужно, придёт отказ: «не нужно». Повторите то же в течение 5 секунд — сделаете всё равно, но с последствиями (жгут на здоровую ногу, лишняя доза).\n\n"
       "Когда предмет требует уровня выше вашего, применять можно, но каждый недостающий уровень даёт {{+30 %}} к шансу ошибки, не больше {{85 %}}. Ошибка вредит.\n\n"
@@ -553,13 +553,13 @@ entry("gm", "panel", "rpmedicine:gm_scanner", "Панель ГМа и скане
 ], gm=True)
 entry("gm", "config", "minecraft:comparator", "Настройки сервера", "Server settings", [
     T("Файл **world/serverconfig/rpmedicine-server.toml** — все числа мода, с комментариями по-русски. В книге значения из конфига выделены {{цветом}} — указаны стандартные.\n\n"
-      "Главные:\n- **noDeathMode** — без смерти (тест).\n- **minigamesEnabled**, **minigamesInCombat**.\n- **bleedMultiplier**, **painMultiplier**, **healSpeedMultiplier**.",
+      "Главные:\n- **no_death_mode** — без смерти (тест).\n- **minigames_enabled**, **minigames_in_combat** (мини-игры и в бою: {{true}}).\n- **bleed_multiplier**, **pain_multiplier**, **heal_speed_multiplier**.",
       "File **world/serverconfig/rpmedicine-server.toml** — every number of the mod, commented in Russian. In this book config values are {{coloured}} — the defaults are shown.\n\n"
-      "Main ones:\n- **noDeathMode** — no death (testing).\n- **minigamesEnabled**, **minigamesInCombat**.\n- **bleedMultiplier**, **painMultiplier**, **healSpeedMultiplier**."),
-    T("- **knockdownMin/MaxSeconds** — таймер нокдауна.\n- **dosingMinLevel**, **numbersMinLevel**, **labMinLevel**.\n- **ivHoseLength** — шланг стойки.\n"
-      "- **bookSkillGating** — разделы этой книги по уровню медицины ({{false}} — всем всё).\n- **organsEnabled**, **infectionEnabled**, **nutritionEnabled**, **substancesEnabled** — отключаемые системы.",
-      "- **knockdownMin/MaxSeconds** — knockdown timer.\n- **dosingMinLevel**, **numbersMinLevel**, **labMinLevel**.\n- **ivHoseLength** — IV hose.\n"
-      "- **bookSkillGating** — this book's sections by Medicine level ({{false}} — everything for everyone).\n- **organsEnabled**, **infectionEnabled**, **nutritionEnabled**, **substancesEnabled** — systems that can be switched off."),
+      "Main ones:\n- **no_death_mode** — no death (testing).\n- **minigames_enabled**, **minigames_in_combat** (minigames in combat too: {{true}}).\n- **bleed_multiplier**, **pain_multiplier**, **heal_speed_multiplier**."),
+    T("- **knockdown_min/max_seconds** — таймер нокдауна.\n- **dosing_min_level**, **numbers_min_level**, **lab_min_level**.\n- **iv_hose_length** — шланг стойки.\n"
+      "- **book_skill_gating** — разделы этой книги по уровню медицины ({{false}} — всем всё).\n- **organs_enabled**, **infection_enabled**, **nutrition_enabled**, **substances_enabled** — отключаемые системы.",
+      "- **knockdown_min/max_seconds** — knockdown timer.\n- **dosing_min_level**, **numbers_min_level**, **lab_min_level**.\n- **iv_hose_length** — IV hose.\n"
+      "- **book_skill_gating** — this book's sections by Medicine level ({{false}} — everything for everyone).\n- **organs_enabled**, **infection_enabled**, **nutrition_enabled**, **substances_enabled** — systems that can be switched off."),
 ], gm=True)
 entry("gm", "datapacks", "minecraft:knowledge_book", "Датапаки", "Datapacks", [
     T("Папка **data/<мод>/rpmedicine/...** в датапаке мира:\n- **items** — какой предмет что лечит, время, уровень;\n- **item_aliases** — предметы других модов как наши;\n"
