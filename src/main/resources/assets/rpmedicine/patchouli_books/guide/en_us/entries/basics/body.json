@@ -1,0 +1,16 @@
+{
+  "name": "Body and movement",
+  "icon": "minecraft:leather_boots",
+  "category": "rpmedicine:basics",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Broken leg$() — you limp, cannot jump, running hurts; walking on it makes it worse. Without both legs, or with both broken, you $(l)crawl$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Broken arm$() — everything is slower ($(cfg)2.5$() times with the main hand), weaker hits. Without an arm you cannot hold an item in it.$(br2)Strong pain slows you and sways your aim. Pain shock (pain above $(cfg)85$()) knocks you down for $(cfg)20–30$() s."
+    }
+  ]
+}

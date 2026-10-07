@@ -1,0 +1,6 @@
+{
+  "name": "Hospital",
+  "description": "Hospital blocks and what they do.",
+  "icon": "rpmedicine:hospital_bed",
+  "sortnum": 6
+}

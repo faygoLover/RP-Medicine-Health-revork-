@@ -1,0 +1,47 @@
+{
+  "name": "Таблетки",
+  "icon": "rpmedicine:painkillers",
+  "category": "rpmedicine:drugs",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:painkillers",
+      "text": "Обезболивающее от небольшой боли."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:paracetamol",
+      "text": "Боль и жар. Много — яд для печени."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ibuprofen",
+      "text": "Боль, жар, легче контузия. Передозировка — кровит сильнее."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:tramadol",
+      "text": "Сильная боль. Опиат. Уровень 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:amoxicillin",
+      "text": "Антибиотик против инфекции, курс. Уровень 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:glucose_tablets",
+      "text": "Сахар крови сразу выше — при гипогликемии."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:cyclosporine",
+      "text": "Против отторжения пересаженного органа, раз в 12 ч."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Таблетки пьют только в сознании. Действуют через 1–2 минуты."
+    }
+  ]
+}

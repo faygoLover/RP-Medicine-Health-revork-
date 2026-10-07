@@ -1,0 +1,33 @@
+{
+  "name": "IV stand",
+  "icon": "rpmedicine:iv_stand",
+  "category": "rpmedicine:blood",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "1. $(l)Hang$(): right-click the stand with a bag (up to 3, shown on the hooks).$(br)2. $(l)Catheter$(): put it into the patient's arm (vein minigame).$(br)3. $(l)Hose$(): right-click the stand with an empty hand, then the patient."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The first non-empty bag drips; when it is empty the hose moves to the next."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The patient can walk within $(cfg)4$() blocks. Further — the catheter tears out, an arm wound.$(br2)Looking at the stand shows what hangs and how much is left."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Shift+right-click with an empty hand — take a bag off: an opened one keeps its ml (hang it back later), an empty one is trash. Panel: \"Stop drip\" (the rest goes back), \"Remove catheter\"."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_catheter",
+      "text": "The stand drips through it; a syringe goes into its port without a minigame."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Norepinephrine or propofol in a filled syringe — right-click the stand: into a saline bag. The bag turns yellow (norepinephrine) or milky (propofol) and drips for $(cfg)20$() min, delivering the drug gradually."
+    }
+  ]
+}

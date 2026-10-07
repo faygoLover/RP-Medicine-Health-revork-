@@ -1,0 +1,23 @@
+{
+  "name": "Amputation and prostheses",
+  "icon": "rpmedicine:bone_saw",
+  "category": "rpmedicine:surgery",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:bone_saw",
+      "text": "For necrosis or crushed limbs. Saw evenly without leaving the cut."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The stump heals, then a prosthesis fits: a foot, a peg leg, a hook. A foot prosthesis only on a living shin.$(br2)A severed limb can be reattached within $(cfg)6$() h.$(br2)A strong explosion can tear off a limb by itself."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:peg_leg",
+      "text": "Walk again, slower."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

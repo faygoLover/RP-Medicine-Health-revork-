@@ -1,0 +1,27 @@
+{
+  "name": "Подготовка",
+  "icon": "rpmedicine:surgical_mask",
+  "category": "rpmedicine:surgery",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Перед операцией:$(br)- $(l)наркоз$(): кетамин (на минуты) или пропофол капельницей (пока капает); при пропофоле — интубация;$(br)- или $(l)местно$(): лидокаин в нужную часть;$(br)- $(l)маска$() и $(l)перчатки$(), $(l)стерильные$() инструменты;$(br)- место: стол лучше койки, койка лучше земли."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "В сознании без обезболивания каждый шаг — сильная боль ($(cfg)80$())."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_mask",
+      "text": "Надевается на лицо. Без неё заражение ×$(cfg)1,3$()."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_gloves",
+      "text": "Без перчаток заражение ×$(cfg)1,3$()."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

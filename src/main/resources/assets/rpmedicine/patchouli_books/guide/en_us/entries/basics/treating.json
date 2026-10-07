@@ -1,0 +1,24 @@
+{
+  "name": "How to treat",
+  "icon": "rpmedicine:bandage",
+  "category": "rpmedicine:basics",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Right-click a patient with an item to treat them, right-click the air to treat yourself. The body part is picked automatically (the one in most need) or by dragging in the $(l)H$() panel."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Out of combat$() — a minigame: the better you play, the better the result. $(l)In combat$() (damage within $(cfg)30$() s) — a progress bar only.$(br2)The \"No minigame\" button or Esc — a progress bar $(cfg)2$() times longer, with more mistakes."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "If the treatment is not needed, you get a refusal. Repeat it within 5 seconds to do it anyway, with consequences (a tourniquet on a healthy leg, an extra dose).$(br2)Items above your level can still be used, but each missing level adds $(cfg)+30%$() error chance, up to $(cfg)85%$(). Mistakes hurt."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Treating yourself takes $(cfg)1.5$() times longer."
+    }
+  ]
+}

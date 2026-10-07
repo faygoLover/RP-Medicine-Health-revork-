@@ -1,0 +1,27 @@
+{
+  "name": "Dressings",
+  "icon": "rpmedicine:bandage",
+  "category": "rpmedicine:wounds",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:bandage",
+      "text": "Stops slight and moderate bleeding, protects the wound. Minigame — circles with the mouse in the right direction."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:pressure_dressing",
+      "text": "Pressure dressing: holds heavy bleeding better than a bandage."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hemostatic_gauze",
+      "text": "Hemostatic gauze for deep wounds."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A fresh dressing is unreliable for $(cfg)5$() min: sprinting ($(cfg)1%$() per second) and jumping ($(cfg)4%$()) can tear it, new damage — $(cfg)50%$() chance.$(br2)A dressing cuts infection risk by $(cfg)80%$(). Remove it with an empty hand in the $(l)H$() panel."
+    }
+  ]
+}

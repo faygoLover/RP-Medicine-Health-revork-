@@ -1,0 +1,22 @@
+{
+  "name": "Chest wounds and pneumothorax",
+  "icon": "rpmedicine:occlusive_dressing",
+  "category": "rpmedicine:wounds",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:occlusive_dressing",
+      "text": "An airtight chest seal on an open chest wound."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:decompression_needle",
+      "text": "A needle for tension pneumothorax — releases air. Medicine 3."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Open pneumothorax: hard to breathe, SpO₂ falls. Seal it — in $(cfg)2–4$() min the lung holds.$(br2)$(l)Tension$() pneumothorax: pressure drops, cardiac arrest in $(cfg)3$() min. Only the needle helps, then a chest drain in the OR."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Carrying and searching",
+  "icon": "minecraft:lead",
+  "category": "rpmedicine:downed",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Drag$(): Shift+right-click a downed player with an empty hand. The body drags behind you along the ground; you walk slower and cannot run.$(br2)$(l)Put down$(): Shift+right-click a block — there; a bed — onto the bed."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Search$() — from the downed player's $(l)H$() panel: take and put items."
+    }
+  ]
+}

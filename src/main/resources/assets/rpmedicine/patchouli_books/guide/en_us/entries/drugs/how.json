@@ -1,0 +1,24 @@
+{
+  "name": "How drugs work",
+  "icon": "minecraft:potion",
+  "category": "rpmedicine:drugs",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A drug enters the $(l)blood$() and is cleared gradually — that is what sets its strength and duration."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- A pen (into the muscle) and pills — absorbed in 1–2 min.$(br)- A syringe into a vein — immediately.$(br)- A drip — while it drips."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Strength depends on the amount in the blood: about one dose — normal effect, more — stronger, but past a threshold — $(l)overdose$(). Two doses in a row or a dose on top of a drip easily cause it."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Weight$() matters: a dose is meant for $(cfg)70$() kg — too little for a heavy person, too much for a light one.$(br2)$(l)1 ml = 1 standard dose.$() The label shows the concentration (mg/ml).$(br2)Opioids, alcohol and nicotine build $(l)tolerance$() — they work weaker and shorter."
+    }
+  ]
+}

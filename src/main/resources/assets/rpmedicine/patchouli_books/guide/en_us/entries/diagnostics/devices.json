@@ -1,0 +1,43 @@
+{
+  "name": "Devices",
+  "icon": "rpmedicine:tonometer",
+  "category": "rpmedicine:diagnostics",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:stethoscope",
+      "text": "Breathing and heart. Minigame: put the chestpiece on the points front and back and hold."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:tonometer",
+      "text": "Blood pressure. Minigame: pump with the wheel, deflate, press space when the sounds start and stop."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:pulse_oximeter",
+      "text": "Pulse and SpO₂ — instantly."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:thermometer",
+      "text": "Body temperature: fever means infection or sepsis."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:glucometer",
+      "text": "Blood sugar. Needs a lancet."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hemoanalyzer",
+      "text": "Pocket blood test. Needs a lancet. Medicine 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:portable_scanner",
+      "text": "Scans a body part: fractures, organs, foreign bodies. Medicine 4."
+    }
+  ]
+}

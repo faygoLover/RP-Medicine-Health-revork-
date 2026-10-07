@@ -1,0 +1,16 @@
+{
+  "name": "Blood and blood loss",
+  "icon": "rpmedicine:blood_bag",
+  "category": "rpmedicine:blood",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "About $(cfg)70$() ml of blood per kg — around 4.9 l for $(cfg)70$() kg. Without bleeding it regenerates $(cfg)500$() ml per hour online.$(br2)Blood loss: pallor, weakness, fast pulse, low pressure, greying vision. Losing $(cfg)50%$() stops the heart."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Everyone has a blood type (see the medical record and blood tests). Transfuse only compatible blood."
+    }
+  ]
+}

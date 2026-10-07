@@ -1,0 +1,21 @@
+{
+  "name": "Medical record",
+  "icon": "rpmedicine:medcard",
+  "category": "rpmedicine:medcard",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:medcard",
+      "text": "Right-click a player with a blank card to bind it. Right-click to open."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Title page: name and callsign, birth date, sex, blood type, unit, allergies, chronic conditions, implants, special notes. The pencil in the corner — edit mode.$(br2)History: date, injury or diagnosis, circumstances, consequences."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Entries are proposed when a doctor $(l)carrying a medical record$() examines the patient and finds a problem (device or examination): accept ✓, decline ✗ or edit.$(br2)A blood test report — the \"Attach test\" button, if it is in your inventory."
+    }
+  ]
+}

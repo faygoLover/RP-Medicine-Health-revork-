@@ -1,0 +1,25 @@
+{
+  "name": "The lab",
+  "icon": "rpmedicine:lab_report",
+  "category": "rpmedicine:diagnostics",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "1. A $(l)lancet$() and an empty $(l)test tube$() in the inventory — right-click the patient with the lancet: a labelled blood sample.$(br)2. The sample in hand — right-click the $(l)lab table$(). Tests need Medicine $(cfg)3$().$(br)3."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The report opens at once and stays as an item: right-click to reread.$(br2)A blood bag in the other hand — the report shows compatibility."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The report: type, hemoglobin, white cells, sepsis, liver (ALT), kidneys (creatinine), heart (troponin), nutrition (albumin, triglycerides, glucose, B12). Out of range — red with an arrow."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A sample spoils in $(cfg)2$() h when warm; never in the thermostat. It reaches the medical record only via \"Attach test\" in the patient's record."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_3"
+}

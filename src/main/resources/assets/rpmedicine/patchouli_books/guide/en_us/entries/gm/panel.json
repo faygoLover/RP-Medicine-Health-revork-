@@ -1,0 +1,19 @@
+{
+  "name": "GM panel and scanner",
+  "icon": "rpmedicine:gm_scanner",
+  "category": "rpmedicine:gm",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:gm_scanner",
+      "text": "Right-click a player — the full panel with numbers and editing."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The panel ($(l)/rpmedicine panel$() or the scanner): player list, tabs Examination, Body (silhouette: add a wound, heal a part), Vitals (blood, SpO₂, brain, pressure... — edit values), drugs with a dose."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

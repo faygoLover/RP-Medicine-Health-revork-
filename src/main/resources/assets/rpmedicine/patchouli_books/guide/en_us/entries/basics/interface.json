@@ -1,0 +1,20 @@
+{
+  "name": "Interface and keys",
+  "icon": "rpmedicine:portable_scanner",
+  "category": "rpmedicine:basics",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(l)HUD$(): body silhouette (part colour shows its state), overall condition bar, sensations as text, treatment progress."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)H$() — examination panel: your own or the one you look at. It shows body parts, wounds, what is applied, and your medical items — drag them straight onto a body part.$(br2)$(l)K$() — how you feel from nutrition.$(br)$(l)G$() (hold) — finish off a downed player."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Move HUD elements with $(l)/rpmedicine hud$().$(br2)Client settings (screen effects, sounds, volume, \"no minigames\") — Esc → Mods → RP Medicine → Config.$(br2)Looking at a patient with a medical item in hand shows a short summary: bleeding, conscious or not."
+    }
+  ]
+}

@@ -78,6 +78,8 @@ public final class MedicalSettings {
     public double salineDripSeconds = 120.0;
     /** Стойка капельницы (замечание 35): длина шланга, блоков; дальше — катетер вырван. */
     public double ivHoseLength = 4.0;
+    /** Справочник: разделы открываются по уровню медицины (иначе всем всё видно). */
+    public boolean bookSkillGating = false;
     /** Селезёнка от 50 %: внутреннее кровотечение в живот, мл/мин (от 80 % — вдвое). */
     public double spleenInternalBleed = 20.0;
     /** Без селезёнки иммунитет слабее (множитель). */

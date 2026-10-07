@@ -1,0 +1,17 @@
+{
+  "name": "Bullets and fragments",
+  "icon": "rpmedicine:surgical_tweezers",
+  "category": "rpmedicine:wounds",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_tweezers",
+      "text": "Remove a bullet or fragment. Very painful ($(cfg)90$()). Medicine 4."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Anything stuck in a wound slows healing, and after $(cfg)6$() h doubles infection risk. Minigame: guide the tweezers along the wound channel without touching the walls and back.$(br2)After a wound the tweezers are not sterile — use the $(l)sterilizer$()."
+    }
+  ]
+}

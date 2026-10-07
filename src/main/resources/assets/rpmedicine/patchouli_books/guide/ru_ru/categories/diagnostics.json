@@ -1,0 +1,6 @@
+{
+  "name": "Диагностика",
+  "description": "Осмотр, приборы, лаборатория.",
+  "icon": "rpmedicine:stethoscope",
+  "sortnum": 5
+}

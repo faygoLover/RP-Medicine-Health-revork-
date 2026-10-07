@@ -1,0 +1,6 @@
+{
+  "name": "Медкарта",
+  "description": "Карта пациента и записи.",
+  "icon": "rpmedicine:medcard",
+  "sortnum": 9
+}

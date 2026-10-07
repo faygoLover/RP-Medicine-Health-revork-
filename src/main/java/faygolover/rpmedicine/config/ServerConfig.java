@@ -137,6 +137,7 @@ public final class ServerConfig {
         bind("ringingConcussion", "Звон в ушах — с такой контузии.");
         bind("heavyBreathingRespRate", "Тяжёлое дыхание (звук) — с такой частоты дыхания…");
         bind("heavyBreathingSpo2", "… или когда SpO2 ниже этого.");
+        bind("bookSkillGating", "Справочник медика (Patchouli): открывать разделы по уровню медицины. false — всем видно всё.");
         bind("ivHoseLength", "Стойка капельницы: длина шланга, блоков. Пациент отошёл дальше — катетер вырван.");
         bind("ivAdditiveDripSeconds", "Пакет с добавленным препаратом (норадреналин, пропофол) капает столько секунд.");
         bind("ivTearWoundSeverity", "Рана от вырванного катетера (тяжесть пореза).");

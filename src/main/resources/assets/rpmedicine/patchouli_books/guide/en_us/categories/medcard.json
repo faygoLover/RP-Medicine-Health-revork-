@@ -1,0 +1,6 @@
+{
+  "name": "Medical record",
+  "description": "The patient's record and entries.",
+  "icon": "rpmedicine:medcard",
+  "sortnum": 9
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Шаги операции",
+  "icon": "rpmedicine:retractor",
+  "category": "rpmedicine:surgery",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:scalpel",
+      "text": "1. $(l)Разрез$(): провести скальпелем по линии ровно и не спеша."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hemostat",
+      "text": "2. $(l)Зажимы$(): поймать пульсирующие точки кровотечения."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:retractor",
+      "text": "3. $(l)Ранорасширитель$(): медленно развести края — сначала верхний."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Дальше — то, ради чего оперируете: достать пули, ушить внутреннее кровотечение или орган, сосудистый шов, остеосинтез (дрель и набор пластин), дренаж груди, изъятие или пересадка органа.$(br2)В конце — $(l)закрыть$() операцию швами. Открытая рана сильно кровит ($(cfg)300$() мл/мин без зажимов) и быстро заражается."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:vascular_suture",
+      "text": "Сосудистый шов: останавливает артериальное кровотечение."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_drill",
+      "text": "Дрель с набором остеосинтеза: перелом срастается в $(cfg)3$() раза быстрее."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:chest_drain",
+      "text": "Дренаж груди: снимает пневмоторакс."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

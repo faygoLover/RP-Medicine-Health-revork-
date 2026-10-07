@@ -1,0 +1,22 @@
+{
+  "name": "Defibrillator and adrenaline",
+  "icon": "rpmedicine:defibrillator",
+  "category": "rpmedicine:downed",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:defibrillator",
+      "text": "A shock for fibrillation or after a CPR cycle ($(cfg)30$() s). Success ~$(cfg)70%$(). On a beating heart — a burn and arrhythmia."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:adrenaline",
+      "text": "Adrenaline (pen): raises pressure, helps restart the heart; numbs pain for $(cfg)30–60$() s."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Revival fails? Check the panel for what blocks it: too little blood, tension pneumothorax, no CPR. A hint appears after an attempt."
+    }
+  ]
+}

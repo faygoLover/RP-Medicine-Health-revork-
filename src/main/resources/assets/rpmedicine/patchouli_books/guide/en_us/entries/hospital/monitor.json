@@ -1,0 +1,18 @@
+{
+  "name": "Monitor and oxygen",
+  "icon": "rpmedicine:vitals_monitor",
+  "category": "rpmedicine:hospital",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:vitals_monitor",
+      "text": "Shows a patient on a bed within $(cfg)3$() blocks: pulse, pressure, SpO₂, breathing. Look at it. Alarm at SpO₂ below $(cfg)85$() or arrest."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:oxygen_tank",
+      "text": "Oxygen for a patient on a bed within $(cfg)3$() blocks: halves the SpO₂ ceiling loss."
+    }
+  ]
+}

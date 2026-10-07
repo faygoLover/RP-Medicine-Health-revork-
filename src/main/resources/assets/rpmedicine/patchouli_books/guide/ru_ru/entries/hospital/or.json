@@ -1,0 +1,13 @@
+{
+  "name": "Операционный стол",
+  "icon": "rpmedicine:operating_table",
+  "category": "rpmedicine:hospital",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:operating_table",
+      "text": "Сам себе монитор, кислород и аппарат ИВЛ. Лучшее место для операции. Можно зафиксировать пациента (панель) — он не встанет и не дёрнется."
+    }
+  ]
+}

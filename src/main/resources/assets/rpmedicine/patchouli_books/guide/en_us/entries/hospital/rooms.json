@@ -1,0 +1,37 @@
+{
+  "name": "Sterilizer, storage, lab",
+  "icon": "rpmedicine:sterilizer",
+  "category": "rpmedicine:hospital",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:sterilizer",
+      "text": "Right-click with a used syringe, tube or instrument — sterile again."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:medicine_cabinet",
+      "text": "Stores medical items only."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:medicine_crate",
+      "text": "Stores medical items only."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:thermostat",
+      "text": "Blood samples only; they do not spoil inside."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:lab_table",
+      "text": "The blood test table."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The fridge for blood and organs comes from the furniture mod (Refurbished Furniture fridge): nothing spoils inside."
+    }
+  ]
+}

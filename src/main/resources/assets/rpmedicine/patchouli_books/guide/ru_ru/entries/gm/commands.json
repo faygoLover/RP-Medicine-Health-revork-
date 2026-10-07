@@ -1,0 +1,30 @@
+{
+  "name": "Команды",
+  "icon": "minecraft:command_block",
+  "category": "rpmedicine:gm",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Все команды — $(l)/rpmedicine ...$(), для операторов.$(br2)$(l)inspect <цель> [full]$() — состояние в чат.$(br)$(l)heal <цели> [часть]$() — вылечить.$(br)$(l)revive <цели>$() — поднять.$(br)$(l)kill <цели>$() — смерть.$(br)$(l)skill <игрок> <0–10|reset>$() — уровень медицины."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)injure <цели> <тип> <часть> <тяжесть>$() — нанести рану (cut, stab, gunshot, shrapnel, bruise, burn...). $(l)amputate / restore <цели> <часть>$() — отнять или вернуть конечность. $(l)set <цели> <параметр> <значение>$() — кровь, SpO₂, сознание, температура, органы (organ), толерантность, нутриенты, пули..."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)time add <игроки> <время> [offline]$() — прокрутить время лечения (заживление, жгут, некроз, сепсис). $(l)food add <игроки> <время>$() — прокрутить голод и жажду. $(l)bed <цели> <x y z>$() — уложить на койку. $(l)card <игрок> <поле> <значение>$() — поле медкарты. $(l)stats [часы] / stats history <игрок>$() — журнал. $(l)panel$() — панель ГМа."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)kit <набор> [игроки]$() — выдать набор. $(l)reload$() — перечитать датапаки."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Наборы: $(l)field$() (полевой медик), $(l)resus$() (реанимация и капельницы), $(l)diag$() (диагностика), $(l)surgeon$() (хирург), $(l)transplant$() (органы и протезы), $(l)drugs$() (все препараты), $(l)food$(), $(l)substances$(), $(l)gm$(), $(l)all$()."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Game master",
+  "description": "Commands, panel, settings, datapacks.",
+  "icon": "rpmedicine:gm_scanner",
+  "sortnum": 10,
+  "secret": true
+}

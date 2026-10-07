@@ -1,0 +1,22 @@
+{
+  "name": "Infection and sepsis",
+  "icon": "rpmedicine:antiseptic",
+  "category": "rpmedicine:wounds",
+  "sortnum": 7,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:antiseptic",
+      "text": "Treat a fresh wound: infection risk ×$(cfg)0.3$()."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:antibiotic_ointment",
+      "text": "The ointment cures infection of a shallow wound."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Each open wound may get infected every $(cfg)20–60$() min. Dirt, non-sterile tools, a stuck bullet raise the risk; a bed and a dressing lower it.$(br2)Infection grows ($(cfg)4$()/h), immunity fights it ($(cfg)3$()/h). Neglected — $(l)sepsis$(): fever, falling pressure, organ damage. Antibiotics cure it: amoxicillin, ceftriaxone."
+    }
+  ]
+}

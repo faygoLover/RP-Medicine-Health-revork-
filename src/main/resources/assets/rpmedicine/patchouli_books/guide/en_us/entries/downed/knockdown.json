@@ -1,0 +1,21 @@
+{
+  "name": "Knockdown",
+  "icon": "minecraft:skeleton_skull",
+  "category": "rpmedicine:downed",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Consciousness below $(cfg)30$() — you fall. $(l)Fainting$() passes by itself; $(l)knockdown$() happens when life is threatened: a $(cfg)3–5$() min timer runs, then clinical death."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Lying down you see the sky, can only say \"...\", and can call for help from the menu ($(l)P$()). Others see you lying, can drag and search you.$(br2)The timer runs slower when you are in better shape (a transfusion buys time)."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:stabilization_kit",
+      "text": "The stabilization kit: the knockdown timer runs at half speed ($(cfg)5$() min), once per knockdown."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Физраствор",
+  "icon": "rpmedicine:saline",
+  "category": "rpmedicine:blood",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:saline",
+      "text": "$(cfg)500$() мл: возвращает объём, но не несёт кислород. Заменяет не больше $(cfg)1/3$() крови и уходит из сосудов ($(cfg)25 %$() в час)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "В поле — пакет в руке, пациент стоит или лежит на месте; капает $(cfg)2$() мин. Со стойкой — пациент может ходить."
+    }
+  ]
+}

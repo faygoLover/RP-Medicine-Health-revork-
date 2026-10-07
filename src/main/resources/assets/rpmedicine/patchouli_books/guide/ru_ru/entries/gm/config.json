@@ -1,0 +1,22 @@
+{
+  "name": "Настройки сервера",
+  "icon": "minecraft:comparator",
+  "category": "rpmedicine:gm",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Файл $(l)world/serverconfig/rpmedicine-server.toml$() — все числа мода, с комментариями по-русски. В книге значения из конфига выделены $(cfg)цветом$() — указаны стандартные."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Главные:$(br)- $(l)noDeathMode$() — без смерти (тест).$(br)- $(l)minigamesEnabled$(), $(l)minigamesInCombat$().$(br)- $(l)bleedMultiplier$(), $(l)painMultiplier$(), $(l)healSpeedMultiplier$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)knockdownMin/MaxSeconds$() — таймер нокдауна.$(br)- $(l)dosingMinLevel$(), $(l)numbersMinLevel$(), $(l)labMinLevel$().$(br)- $(l)ivHoseLength$() — шланг стойки.$(br)- $(l)bookSkillGating$() — разделы этой книги по уровню медицины ($(cfg)false$() — всем всё).$(br)- $(l)organsEnabled$(), $(l)infectionEnabled$(), $(l)nutritionEnabled$(), $(l)substancesEnabled$() — отключаемые системы."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

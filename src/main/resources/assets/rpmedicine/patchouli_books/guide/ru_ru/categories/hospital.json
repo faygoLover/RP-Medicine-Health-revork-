@@ -1,0 +1,6 @@
+{
+  "name": "Госпиталь",
+  "description": "Блоки госпиталя и что они дают.",
+  "icon": "rpmedicine:hospital_bed",
+  "sortnum": 6
+}

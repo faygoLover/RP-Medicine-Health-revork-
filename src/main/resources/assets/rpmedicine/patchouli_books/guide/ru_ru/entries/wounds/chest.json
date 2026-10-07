@@ -1,0 +1,22 @@
+{
+  "name": "Ранения груди и пневмоторакс",
+  "icon": "rpmedicine:occlusive_dressing",
+  "category": "rpmedicine:wounds",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:occlusive_dressing",
+      "text": "Герметичная наклейка на открытую рану груди: воздух перестаёт заходить."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:decompression_needle",
+      "text": "Игла для напряжённого пневмоторакса — выпускает воздух. Уровень 3."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Открытый пневмоторакс: тяжело дышать, падает SpO₂. Закройте наклейкой — через $(cfg)2–4$() мин лёгкое начнёт держать.$(br2)$(l)Напряжённый$() пневмоторакс: давление падает, через $(cfg)3$() мин — остановка сердца. Поможет только игла, потом дренаж в операционной."
+    }
+  ]
+}

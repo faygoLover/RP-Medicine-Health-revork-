@@ -1,0 +1,18 @@
+{
+  "name": "Монитор и кислород",
+  "icon": "rpmedicine:vitals_monitor",
+  "category": "rpmedicine:hospital",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:vitals_monitor",
+      "text": "Показывает пациента на койке в $(cfg)3$() блоках: пульс, давление, SpO₂, дыхание. Посмотрите на него. Тревога — при SpO₂ ниже $(cfg)85$() или остановке."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:oxygen_tank",
+      "text": "Кислород для пациента на койке в $(cfg)3$() блоках: потолок SpO₂ возвращается наполовину."
+    }
+  ]
+}

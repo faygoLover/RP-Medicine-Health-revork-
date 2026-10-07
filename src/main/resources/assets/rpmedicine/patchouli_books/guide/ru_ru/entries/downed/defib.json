@@ -1,0 +1,22 @@
+{
+  "name": "Дефибриллятор и адреналин",
+  "icon": "rpmedicine:defibrillator",
+  "category": "rpmedicine:downed",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:defibrillator",
+      "text": "Разряд при фибрилляции или после цикла СЛР ($(cfg)30$() с). Удача ~$(cfg)70 %$(). По живому сердцу — ожог и сбой ритма."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:adrenaline",
+      "text": "Адреналин (ручка): поднимает давление и помогает запустить сердце; на $(cfg)30–60$() с глушит боль."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Не получается поднять? Посмотрите в панели, что мешает: мало крови, напряжённый пневмоторакс, нет СЛР. Подсказка придёт после попытки."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Hospital bed",
+  "icon": "rpmedicine:hospital_bed",
+  "category": "rpmedicine:hospital",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hospital_bed",
+      "text": "Right-click with an empty hand to lie down (head to the headboard). Sneak to get up. A dragged patient — Shift+right-click."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "On a bed: wounds heal $(cfg)1.5$() times faster, blood regenerates $(cfg)1.5$() times faster, the brain $(cfg)2$() times faster, fewer infections (×$(cfg)0.7$()).$(br2)Beds from other mods work as hospital beds too."
+    }
+  ]
+}

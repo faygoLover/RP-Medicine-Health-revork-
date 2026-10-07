@@ -1,0 +1,22 @@
+{
+  "name": "Tourniquet",
+  "icon": "rpmedicine:tourniquet",
+  "category": "rpmedicine:wounds",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:tourniquet",
+      "text": "On an arm or leg: stops any bleeding below it, even arterial."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:esmarch",
+      "text": "Esmarch rubber tourniquet: the same, may snap ($(cfg)15%$())."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A tourniquet is safe for $(cfg)15$() min of online time. Then the limb suffers ischemia ($(cfg)2$() per minute) and later $(l)necrosis$() — it will have to be amputated.$(br2)A tourniquet is temporary: dress, suture, remove it (empty hand in the $(l)H$() panel)."
+    }
+  ]
+}

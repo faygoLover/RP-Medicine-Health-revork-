@@ -1,0 +1,24 @@
+{
+  "name": "Vials and the syringe",
+  "icon": "rpmedicine:ceftriaxone",
+  "category": "rpmedicine:drugs",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A vial is for the hospital: $(cfg)10$() ml (10 doses). It is not used by itself."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Syringe in hand, vial in the other, right-click$() — a minigame: pierce the stopper (LMB when it is over the needle) and draw ml with the wheel. The hint of how much is needed shows only to the experienced; others draw by eye."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The filled syringe — right-click a patient: into a vein. With a catheter — into the port, no minigame. Afterwards it is a used syringe: the sterilizer cleans it."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Vials: ceftriaxone, lidocaine (local, into the body part), ketamine. Norepinephrine and propofol go $(l)into a drip$(): right-click the IV stand with the filled syringe to add them to a saline bag."
+    }
+  ]
+}

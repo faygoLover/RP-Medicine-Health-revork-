@@ -1,0 +1,43 @@
+{
+  "name": "Приборы",
+  "icon": "rpmedicine:tonometer",
+  "category": "rpmedicine:diagnostics",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:stethoscope",
+      "text": "Дыхание и сердце. Мини-игра: приложить головку к точкам спереди и сзади и подержать."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:tonometer",
+      "text": "Давление. Мини-игра: накачать колёсиком, стравливать, пробелом отметить появление и исчезновение тонов."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:pulse_oximeter",
+      "text": "Пульс и SpO₂ — сразу."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:thermometer",
+      "text": "Температура тела: жар — инфекция или сепсис."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:glucometer",
+      "text": "Сахар крови. Нужен ланцет."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hemoanalyzer",
+      "text": "Карманный анализ крови: гемоглобин, лейкоциты. Нужен ланцет. Уровень 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:portable_scanner",
+      "text": "Сканер части тела: переломы, органы, инородные тела. Уровень 4."
+    }
+  ]
+}

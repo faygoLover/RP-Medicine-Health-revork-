@@ -1,0 +1,68 @@
+{
+  "name": "Drug list",
+  "icon": "rpmedicine:atropine",
+  "category": "rpmedicine:drugs",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:morphine",
+      "text": "10 mg/ml. Strong analgesia, an opioid: depresses breathing, especially with diazepam. Reversed by naloxone."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:txa",
+      "text": "TXA, 1000 mg/ml: reduces bleeding, especially internal."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ketorolac",
+      "text": "30 mg/ml: non-opioid analgesia. Overdose — more bleeding."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:naloxone",
+      "text": "0.4 mg/ml: reverses opioids at once. Medicine 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:diazepam",
+      "text": "5 mg/ml: sedation, drowsiness, lower pulse. With an opioid depresses breathing."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:atropine",
+      "text": "1 mg/ml: speeds up a slow pulse. Medicine 5."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:insulin",
+      "text": "10 IU/ml: lowers blood sugar (diabetes). Too much — hypoglycemia."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:lidocaine",
+      "text": "20 mg/ml, vial: local anesthesia of a body part — for sutures and surgery."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ketamine",
+      "text": "50 mg/ml, vial: anesthesia for a few minutes, keeps breathing. Medicine 7."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ceftriaxone",
+      "text": "250 mg/ml, vial: injected antibiotic, stronger than pills. Medicine 5."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:propofol",
+      "text": "10 mg/ml, into a drip: anesthesia lasts while it drips; depresses breathing — intubate. Medicine 7."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:norepinephrine",
+      "text": "1 mg/ml, into a drip: keeps blood pressure in shock. Medicine 6."
+    }
+  ]
+}

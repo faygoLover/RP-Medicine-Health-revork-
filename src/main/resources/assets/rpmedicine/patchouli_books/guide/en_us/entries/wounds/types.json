@@ -1,0 +1,16 @@
+{
+  "name": "Wounds and bleeding",
+  "icon": "rpmedicine:hemostatic_gauze",
+  "category": "rpmedicine:wounds",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Wounds: $(l)cut$(), $(l)stab$(), $(l)gunshot$(), $(l)shrapnel$(), $(l)bruise$(), $(l)burn$() (2nd degree from $(cfg)25$(), 3rd from $(cfg)55$() severity)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Bleeding:$(br)- slight — up to $(cfg)30$() ml/min, clots by itself in ~$(cfg)4$() min;$(br)- moderate — up to $(cfg)150$();$(br)- heavy — up to $(cfg)300$();$(br)- $(l)arterial$() — ~$(cfg)550$() ml/min, tourniquet or surgery only.$(br2)$(l)Internal$() bleeding is invisible: pale, weak, falling pressure. Needs a surgeon or TXA."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Operating table",
+  "icon": "rpmedicine:operating_table",
+  "category": "rpmedicine:hospital",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:operating_table",
+      "text": "Its own monitor, oxygen and ventilator. The best place to operate. The patient can be restrained (panel) — cannot get up or jerk."
+    }
+  ]
+}

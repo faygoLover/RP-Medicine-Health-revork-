@@ -1,0 +1,27 @@
+{
+  "name": "Повязки",
+  "icon": "rpmedicine:bandage",
+  "category": "rpmedicine:wounds",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:bandage",
+      "text": "Останавливает слабое и среднее кровотечение, защищает рану от грязи. Мини-игра — круги мышью в нужную сторону."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:pressure_dressing",
+      "text": "Давящая повязка: держит сильное кровотечение лучше бинта."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hemostatic_gauze",
+      "text": "Гемостатик: тампон с кровоостанавливающим — для глубоких ран."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Свежая повязка $(cfg)5$() мин ненадёжна: бег ($(cfg)1 %$() в секунду) и прыжки ($(cfg)4 %$()) могут её сорвать, новый урон — с шансом $(cfg)50 %$().$(br2)Повязка снижает риск инфекции на $(cfg)80 %$(). Снять повязку — пустой рукой в панели $(l)H$()."
+    }
+  ]
+}

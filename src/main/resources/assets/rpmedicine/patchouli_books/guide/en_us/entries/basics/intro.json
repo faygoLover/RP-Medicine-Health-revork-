@@ -1,0 +1,28 @@
+{
+  "name": "How health works",
+  "icon": "minecraft:book",
+  "category": "rpmedicine:basics",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "There are no hearts here: vanilla health is hidden and always full. Damage becomes $(l)wounds$() on nine body parts: head, chest, abdomen, arms, legs and feet."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Your real life is the $(l)brain$(). It suffers without oxygen: heavy blood loss, low pressure, cardiac or respiratory arrest. Brain at zero means death."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "You feel your body, not numbers: \"dizzy\", \"hard to breathe\", \"the arm won't obey\". Exact numbers come from devices and experience: from Medicine $(cfg)4$() the panel shows numbers."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "What kills:$(br)- $(l)blood loss$() — losing $(cfg)50%$() of blood stops the heart;$(br)- $(l)suffocation$() — pneumothorax, respiratory arrest, blocked airway;$(br)- $(l)head and brain trauma$();$(br)- $(l)organs$() — heart, lungs, liver, kidneys;$(br)- $(l)infection and sepsis$() — slowly but surely."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Almost everything can be treated in time. The sooner bleeding stops, the better the chances."
+    }
+  ]
+}

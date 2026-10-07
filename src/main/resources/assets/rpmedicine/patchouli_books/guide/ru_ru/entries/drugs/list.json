@@ -1,0 +1,68 @@
+{
+  "name": "Справочник препаратов",
+  "icon": "rpmedicine:atropine",
+  "category": "rpmedicine:drugs",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:morphine",
+      "text": "10 мг/мл. Сильное обезболивание, опиат: угнетает дыхание, особенно с диазепамом. Снимает налоксон."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:txa",
+      "text": "ТХА, 1000 мг/мл: снижает кровотечение, особенно внутреннее."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ketorolac",
+      "text": "30 мг/мл: обезболивание без опиата. Передозировка — кровит сильнее."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:naloxone",
+      "text": "0,4 мг/мл: снимает действие опиатов сразу. Уровень 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:diazepam",
+      "text": "5 мг/мл: успокаивает, сонливость, пульс ниже. С опиатом угнетает дыхание."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:atropine",
+      "text": "1 мг/мл: учащает редкий пульс. Уровень 5."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:insulin",
+      "text": "10 ЕД/мл: снижает сахар (диабет). Много — гипогликемия."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:lidocaine",
+      "text": "20 мг/мл, флакон: местное обезболивание части тела — для швов и операций."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ketamine",
+      "text": "50 мг/мл, флакон: наркоз на несколько минут, дыхание сохраняет. Уровень 7."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ceftriaxone",
+      "text": "250 мг/мл, флакон: антибиотик уколом, сильнее таблеток. Уровень 5."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:propofol",
+      "text": "10 мг/мл, в капельницу: наркоз держится, пока капает; угнетает дыхание — нужна интубация. Уровень 7."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:norepinephrine",
+      "text": "1 мг/мл, в капельницу: держит давление при шоке. Уровень 6."
+    }
+  ]
+}

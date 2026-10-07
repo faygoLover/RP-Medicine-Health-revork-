@@ -1,0 +1,23 @@
+{
+  "name": "Donation and transfusion",
+  "icon": "rpmedicine:empty_blood_bag",
+  "category": "rpmedicine:blood",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:empty_blood_bag",
+      "text": "Collects $(cfg)450$() ml from a donor, standing still ~30 s. Donor loses at most $(cfg)15%$(). Medicine 3."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:blood_bag",
+      "text": "Labelled with the donor's type. Transfusion $(cfg)4$() min. Spoils in $(cfg)2$() h out of a fridge; never in a fridge."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Incompatible blood$(): a $(cfg)10–20$() min reaction — fever, pain, falling pressure, kidney damage; may stop the heart. Stop the transfusion; saline and adrenaline help.$(br2)$(l)Spoiled blood$() looks dark on the icon. It can be transfused, but that means sepsis."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_3"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Datapacks",
+  "icon": "minecraft:knowledge_book",
+  "category": "rpmedicine:gm",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Folder $(l)data/<mod>/rpmedicine/...$() in a world datapack:$(br)- $(l)items$() — what an item treats, time, level;$(br)- $(l)item_aliases$() — other mods' items as ours;$(br)- $(l)drugs$() — effects, doses, half-life, mg;"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)hospital_blocks$() — which blocks are a bed, monitor, sterilizer, fridge, lab, oxygen;"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)substances$() — alcohol, tobacco etc. from mods;$(br)- $(l)nutrition$() — food composition;$(br)- $(l)damage_sources$() — which damage makes which wound;$(br)- $(l)mobs$() — mob injuries;$(br)- $(l)use_times$() — minimum use time (animation length).$(br2)Details — docs/datapack.md in the mod sources."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

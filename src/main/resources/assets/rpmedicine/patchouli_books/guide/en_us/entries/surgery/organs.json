@@ -1,0 +1,25 @@
+{
+  "name": "Organs",
+  "icon": "rpmedicine:organ_container",
+  "category": "rpmedicine:surgery",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Organs: $(l)heart$(), $(l)lungs$(), $(l)liver$(), $(l)kidneys$(), $(l)intestines$(), $(l)spleen$(). Damaged by chest and abdominal wounds, sepsis, lack of oxygen."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Up to $(cfg)50%$() they heal by themselves, worse — only a surgeon. Lungs — lower SpO₂; liver — more bleeding; kidneys — the brain suffers; heart — lower pressure; intestines at 100% — peritonitis and sepsis; spleen — abdominal bleeding, without it infections are worse."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Removal$(): the scalpel (in the inventory) cuts the ligaments, the organ goes into a container. The brain can be removed too — that is death, even from clinical death."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Transplant$(): place the donor organ and suture the vessel. A different blood type — $(l)rejection$(): cyclosporine every 12 h. An organ spoils in $(cfg)1$() h when warm, never in a fridge."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

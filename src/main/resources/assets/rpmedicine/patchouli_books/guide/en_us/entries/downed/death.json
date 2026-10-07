@@ -1,0 +1,16 @@
+{
+  "name": "Clinical death",
+  "icon": "minecraft:wither_skeleton_skull",
+  "category": "rpmedicine:downed",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The heart stopped or the knockdown timer ran out — $(l)clinical death$(). The brain still holds but dies without CPR. Brain at zero — death for good."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "To restart the heart: restore blood (at least ~$(cfg)55%$()), do CPR, defibrillate fibrillation, give adrenaline.$(br2)For $(cfg)3$() h after revival the body is weak: a new knockdown is more dangerous."
+    }
+  ]
+}

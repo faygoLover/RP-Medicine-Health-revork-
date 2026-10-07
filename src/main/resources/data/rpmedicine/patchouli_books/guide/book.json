@@ -1,0 +1,15 @@
+{
+  "name": "book.rpmedicine.guide.name",
+  "landing_text": "book.rpmedicine.guide.landing",
+  "subtitle": "RP Medicine",
+  "use_resource_pack": true,
+  "i18n": true,
+  "show_progress": false,
+  "version": 1,
+  "book_texture": "patchouli:textures/gui/book_red.png",
+  "model": "patchouli:book_red",
+  "creative_tab": "rpmedicine:main",
+  "macros": {
+    "$(cfg)": "$(#b5531f)"
+  }
+}

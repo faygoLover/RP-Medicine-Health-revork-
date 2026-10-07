@@ -1,0 +1,22 @@
+{
+  "name": "Sutures",
+  "icon": "rpmedicine:suture_kit",
+  "category": "rpmedicine:wounds",
+  "sortnum": 6,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:suture_kit",
+      "text": "Close a wound. Heals $(cfg)2$() times faster and stays closed. Medicine 3."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Minigame: pull the needle from a point to its pair across the wound without drifting. When all stitches are done — $(l)pull the edges together$(): hold LMB until they meet and release. Too hard — the tissue tears."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A suture does not stop arterial bleeding — that is vascular surgery. Remove sutures with scissors."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_3"
+}

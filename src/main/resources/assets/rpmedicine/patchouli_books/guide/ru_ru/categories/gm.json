@@ -1,0 +1,7 @@
+{
+  "name": "Ведущему (ГМ)",
+  "description": "Команды, панель, настройки, датапаки.",
+  "icon": "rpmedicine:gm_scanner",
+  "sortnum": 10,
+  "secret": true
+}

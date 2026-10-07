@@ -106,6 +106,7 @@ public final class ModSetup {
         CarryService.tickCarrier(sp);
         MedicalData d = Medical.data(sp);
         if (d != null) HospitalService.tickPlayer(sp, d);
+        faygolover.rpmedicine.server.GuideBook.tick(sp);
     }
 
     private static void onLivingTick(LivingEvent.LivingTickEvent e) {
@@ -129,6 +130,7 @@ public final class ModSetup {
         faygolover.rpmedicine.server.BloodService.onLogin(sp);
         faygolover.rpmedicine.medcard.MedcardService.onLogin(sp);
         faygolover.rpmedicine.server.SurvivalService.onLogin(sp);
+        faygolover.rpmedicine.server.GuideBook.onLogin(sp);
         faygolover.rpmedicine.stats.History.load(sp.server, sp.getUUID());
         SelfSync.forceSync(sp);
         MedicalState m = Medical.state(sp);

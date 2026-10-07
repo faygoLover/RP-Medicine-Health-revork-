@@ -1,0 +1,23 @@
+{
+  "name": "Ammonia, airway, intubation",
+  "icon": "rpmedicine:ammonia",
+  "category": "rpmedicine:downed",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ammonia",
+      "text": "Wakes from a faint. Does not work with a threat to life or under anesthesia."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:airway",
+      "text": "Keeps the airway open in an unconscious patient. Medicine 2."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:endotracheal_tube",
+      "text": "A tube into the trachea. Needs a laryngoscope in the inventory. Minigame: pass the tube between the cords when they open. Medicine 6."
+    }
+  ]
+}

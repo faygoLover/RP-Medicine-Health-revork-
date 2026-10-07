@@ -1,0 +1,16 @@
+{
+  "name": "Alcohol, tobacco, coffee, opioids",
+  "icon": "minecraft:honey_bottle",
+  "category": "rpmedicine:life",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Alcohol$() intoxicates: a lot — nausea, too much — you pass out. $(l)Tobacco$() slightly numbs pain, smokers' lungs suffer. $(l)Caffeine$() speeds up the pulse. $(l)Opioids$() numb pain and depress breathing."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Frequent use builds $(l)tolerance$() and $(l)dependence$(): without the substance comes withdrawal — pain, everything slower."
+    }
+  ]
+}

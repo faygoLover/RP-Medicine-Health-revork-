@@ -1,0 +1,43 @@
+{
+  "name": "Surgery steps",
+  "icon": "rpmedicine:retractor",
+  "category": "rpmedicine:surgery",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:scalpel",
+      "text": "1. $(l)Incision$(): run the scalpel along the line, steady and slow."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hemostat",
+      "text": "2. $(l)Clamps$(): catch the pulsing bleeding points."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:retractor",
+      "text": "3. $(l)Retractor$(): spread the edges slowly — the upper one first."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Then whatever you operate for: remove bullets, suture internal bleeding or an organ, vascular suture, osteosynthesis (drill and plate kit), chest drain, organ removal or transplant.$(br2)Finally $(l)close$() with sutures. An open wound bleeds heavily ($(cfg)300$() ml/min without clamps) and gets infected fast."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:vascular_suture",
+      "text": "Stops arterial bleeding."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_drill",
+      "text": "With the osteosynthesis kit: the fracture heals $(cfg)3$() times faster."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:chest_drain",
+      "text": "Treats pneumothorax."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

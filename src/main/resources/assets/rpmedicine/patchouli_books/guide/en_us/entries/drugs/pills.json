@@ -1,0 +1,47 @@
+{
+  "name": "Pills",
+  "icon": "rpmedicine:painkillers",
+  "category": "rpmedicine:drugs",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:painkillers",
+      "text": "For mild pain."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:paracetamol",
+      "text": "Pain and fever. Too much harms the liver."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ibuprofen",
+      "text": "Pain, fever, eases concussion. Overdose — more bleeding."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:tramadol",
+      "text": "Strong pain. An opioid. Medicine 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:amoxicillin",
+      "text": "An antibiotic, a course. Medicine 4."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:glucose_tablets",
+      "text": "Raises blood sugar at once — for hypoglycemia."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:cyclosporine",
+      "text": "Against transplant rejection, every 12 h."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Pills only while conscious. They act in 1–2 minutes."
+    }
+  ]
+}

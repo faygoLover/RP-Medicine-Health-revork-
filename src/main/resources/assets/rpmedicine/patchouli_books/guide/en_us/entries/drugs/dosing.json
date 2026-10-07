@@ -1,0 +1,17 @@
+{
+  "name": "Doses and overdose",
+  "icon": "rpmedicine:filled_syringe",
+  "category": "rpmedicine:drugs",
+  "sortnum": 5,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The dose hint accounts for the patient's weight. Half a dose — weaker and shorter; one and a half — stronger, but closer to overdose."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Overdose: opioids — respiratory arrest, diazepam — deep sleep and depressed breathing, paracetamol — the liver, NSAIDs — bleeding, norepinephrine — racing pulse and pressure.$(br2)Naloxone reverses opioids at once."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_4"
+}

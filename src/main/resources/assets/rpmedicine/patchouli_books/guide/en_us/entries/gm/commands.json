@@ -1,0 +1,34 @@
+{
+  "name": "Commands",
+  "icon": "minecraft:command_block",
+  "category": "rpmedicine:gm",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "All commands are $(l)/rpmedicine ...$(), for operators."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)inspect <target> [full]$() — state in chat.$(br)$(l)heal <targets> [part]$() — heal.$(br)$(l)revive <targets>$() — revive.$(br)$(l)kill <targets>$() — death.$(br)$(l)skill <player> <0–10|reset>$() — Medicine level."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)injure <targets> <type> <part> <severity>$() — inflict a wound (cut, stab, gunshot, shrapnel, bruise, burn...). $(l)amputate / restore <targets> <part>$() — remove or restore a limb. $(l)set <targets> <param> <value>$() — blood, SpO₂, consciousness, temperature, organs, tolerance, nutrients, bullets..."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)time add <players> <time> [offline]$() — fast-forward treatment time (healing, tourniquet, necrosis, sepsis). $(l)food add <players> <time>$() — fast-forward hunger and thirst. $(l)bed <targets> <x y z>$() — put on a bed. $(l)card <player> <field> <value>$() — a medical record field. $(l)stats [hours] / stats history <player>$() — the log. $(l)panel$() — the GM panel."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)kit <kit> [players]$() — give a kit. $(l)reload$() — reload datapacks."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Kits: $(l)field$(), $(l)resus$() (resuscitation and IVs), $(l)diag$(), $(l)surgeon$(), $(l)transplant$() (organs and prostheses), $(l)drugs$(), $(l)food$(), $(l)substances$(), $(l)gm$(), $(l)all$()."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

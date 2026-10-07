@@ -1,0 +1,6 @@
+{
+  "name": "Blood and IVs",
+  "description": "Blood loss, types, donation, transfusion, the IV stand.",
+  "icon": "rpmedicine:blood_bag",
+  "sortnum": 4
+}

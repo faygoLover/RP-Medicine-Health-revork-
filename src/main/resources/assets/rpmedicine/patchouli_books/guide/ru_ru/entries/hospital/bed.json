@@ -1,0 +1,17 @@
+{
+  "name": "Койка",
+  "icon": "rpmedicine:hospital_bed",
+  "category": "rpmedicine:hospital",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:hospital_bed",
+      "text": "ПКМ пустой рукой — лечь (головой к изголовью). Встать — присесть. Лежачего — Shift+ПКМ."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "На койке: раны заживают в $(cfg)1,5$() раза быстрее, кровь восстанавливается в $(cfg)1,5$() раза, мозг — в $(cfg)2$() раза, инфекции реже (×$(cfg)0,7$()).$(br2)Кровати других модов тоже работают как койки."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Preparation",
+  "icon": "rpmedicine:surgical_mask",
+  "category": "rpmedicine:surgery",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Before surgery:$(br)- $(l)anesthesia$(): ketamine (minutes) or a propofol drip (while it drips); with propofol — intubate;$(br)- or $(l)local$(): lidocaine into the part;$(br)- $(l)mask$() and $(l)gloves$(), $(l)sterile$() instruments;"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- place: a table beats a bed, a bed beats the ground.$(br2)Awake without analgesia every step hurts badly ($(cfg)80$())."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_mask",
+      "text": "Worn on the face. Without it infection ×$(cfg)1.3$()."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:surgical_gloves",
+      "text": "Without gloves infection ×$(cfg)1.3$()."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

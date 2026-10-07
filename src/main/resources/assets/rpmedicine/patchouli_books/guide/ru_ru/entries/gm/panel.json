@@ -1,0 +1,19 @@
+{
+  "name": "Панель ГМа и сканер",
+  "icon": "rpmedicine:gm_scanner",
+  "category": "rpmedicine:gm",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:gm_scanner",
+      "text": "Инструмент ведущего: ПКМ по игроку — полная панель с цифрами и правкой."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Панель ($(l)/rpmedicine panel$() или сканер): список игроков, вкладки «Осмотр» (по показателю на строку), «Тело» (силуэт: добавить рану, вылечить часть), «Показатели» (кровь, SpO₂, мозг, давление... — правка значений), препараты с дозой."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

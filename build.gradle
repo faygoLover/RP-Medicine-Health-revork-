@@ -92,6 +92,9 @@ dependencies {
     // RP Perks — обязательная зависимость.
     implementation fg.deobf("blank:rpperks:${rpperks_version}")
 
+    // Patchouli — книга-справочник (необязателен: без него книги просто нет). В разработке — всегда, чтобы видеть книгу.
+    runtimeOnly fg.deobf("blank:patchouli:1.20.1-85-FORGE")
+
     // Необязательные моды: только для компиляции. Код интеграций загружается, лишь когда мод установлен.
     compileOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
     compileOnly fg.deobf("maven.modrinth:timeless-and-classics-zero:${tacz_version}")

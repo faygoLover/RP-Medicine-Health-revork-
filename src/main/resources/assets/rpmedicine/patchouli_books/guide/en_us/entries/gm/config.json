@@ -1,0 +1,26 @@
+{
+  "name": "Server settings",
+  "icon": "minecraft:comparator",
+  "category": "rpmedicine:gm",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "File $(l)world/serverconfig/rpmedicine-server.toml$() — every number of the mod, commented in Russian. In this book config values are $(cfg)coloured$() — the defaults are shown."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Main ones:$(br)- $(l)noDeathMode$() — no death (testing).$(br)- $(l)minigamesEnabled$(), $(l)minigamesInCombat$().$(br)- $(l)bleedMultiplier$(), $(l)painMultiplier$(), $(l)healSpeedMultiplier$()."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)knockdownMin/MaxSeconds$() — knockdown timer.$(br)- $(l)dosingMinLevel$(), $(l)numbersMinLevel$(), $(l)labMinLevel$().$(br)- $(l)ivHoseLength$() — IV hose.$(br)- $(l)bookSkillGating$() — this book's sections by Medicine level ($(cfg)false$() — everything for everyone)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)organsEnabled$(), $(l)infectionEnabled$(), $(l)nutritionEnabled$(), $(l)substancesEnabled$() — systems that can be switched off."
+    }
+  ],
+  "advancement": "rpmedicine:book/gm",
+  "secret": true
+}

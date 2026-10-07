@@ -1,0 +1,20 @@
+{
+  "name": "Medicine skill",
+  "icon": "minecraft:experience_bottle",
+  "category": "rpmedicine:basics",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Medicine goes from 0 to 10. It does not grow by itself: the game master sets it (or the RP Perks attribute).$(br2)- $(l)0–2$() — first aid: bandages, tourniquet, pills, pens."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- $(l)3$() — sutures, blood donation and transfusion, the lab.$(br)- $(l)$(cfg)4$()$() — numbers are shown, dose selection with pens and syringes.$(br)- $(l)5–6$() — injected antibiotics, atropine, diazepam, intubation.$(br)- $(l)7+$() — surgery, anesthesia, organs, amputations."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Higher level — faster and more precise, easier minigames."
+    }
+  ]
+}

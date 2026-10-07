@@ -1,0 +1,23 @@
+{
+  "name": "Нашатырь, воздуховод, интубация",
+  "icon": "rpmedicine:ammonia",
+  "category": "rpmedicine:downed",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:ammonia",
+      "text": "Нашатырь будит из обморока. При угрозе жизни и под наркозом не будит."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:airway",
+      "text": "Воздуховод: держит дыхательные пути открытыми у того, кто без сознания. Уровень 2."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:endotracheal_tube",
+      "text": "Интубация: трубка в трахею. Нужен ларингоскоп в инвентаре. Мини-игра: провести трубку между связками, когда раскрыты. Уровень 6."
+    }
+  ]
+}

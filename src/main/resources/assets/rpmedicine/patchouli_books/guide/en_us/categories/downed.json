@@ -1,0 +1,6 @@
+{
+  "name": "Knockdown and resuscitation",
+  "description": "Unconsciousness, clinical death, CPR, carrying.",
+  "icon": "rpmedicine:defibrillator",
+  "sortnum": 2
+}

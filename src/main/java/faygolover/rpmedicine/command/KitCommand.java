@@ -31,7 +31,7 @@ public final class KitCommand {
     private static final Map<String, Kit> KITS = new LinkedHashMap<>();
 
     static {
-        KITS.put("field", new Kit("полевой медик", List.of(
+        KITS.put("field", new Kit("полевой медик", List.of("book",
                 "first_aid_kit:2", "medical_pouch", "bandage:16", "pressure_dressing:8", "hemostatic_gauze:8", "tourniquet:4",
                 "esmarch:2", "occlusive_dressing:4", "antiseptic:4", "antibiotic_ointment:2", "splint:4", "scissors",
                 "decompression_needle:2", "airway:2", "ammonia:2", "painkillers:8", "morphine", "adrenaline", "txa", "syringe:8")));
@@ -61,7 +61,7 @@ public final class KitCommand {
                 "minecraft:baked_potato:8", "minecraft:apple:8", "minecraft:carrot:8", "minecraft:golden_carrot:4",
                 "minecraft:mushroom_stew:2", "minecraft:pumpkin_pie:4", "minecraft:cookie:16", "minecraft:milk_bucket",
                 "minecraft:sweet_berries:16", "minecraft:melon_slice:16", "minecraft:egg:8", "glucose_tablets:4")));
-        KITS.put("gm", new Kit("ГМ", List.of("gm_scanner", "medcard:4")));
+        KITS.put("gm", new Kit("ГМ", List.of("book", "gm_scanner", "medcard:4")));
     }
 
     static LiteralArgumentBuilder<CommandSourceStack> node() {
@@ -104,6 +104,12 @@ public final class KitCommand {
                 if (cut > 0 && line.substring(cut + 1).chars().allMatch(Character::isDigit)) {
                     id = line.substring(0, cut);
                     count = Integer.parseInt(line.substring(cut + 1));
+                }
+                // Справочник медика (Patchouli).
+                if (id.equals("book")) {
+                    ItemStack book = faygolover.rpmedicine.server.GuideBook.stack();
+                    if (!book.isEmpty() && !p.getInventory().add(book)) p.drop(book, false);
+                    continue;
                 }
                 ResourceLocation rl = id.contains(":") ? ResourceLocation.tryParse(id) : new ResourceLocation("rpmedicine", id);
                 Item item = rl == null ? null : ForgeRegistries.ITEMS.getValue(rl);

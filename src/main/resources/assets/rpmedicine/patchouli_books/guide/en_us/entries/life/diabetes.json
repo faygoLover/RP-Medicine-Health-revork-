@@ -1,0 +1,12 @@
+{
+  "name": "Diabetes",
+  "icon": "rpmedicine:glucometer",
+  "category": "rpmedicine:life",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A diabetic (perk) watches blood sugar: glucometer, insulin every 8–12 h, food raises sugar.$(br2)Low sugar — weakness, fainting, brain damage: glucose tablets. High — thirst, then coma."
+    }
+  ]
+}

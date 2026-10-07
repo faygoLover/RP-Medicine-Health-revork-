@@ -1,0 +1,20 @@
+{
+  "name": "Nutrition",
+  "icon": "minecraft:bread",
+  "category": "rpmedicine:life",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Food gives protein, fat, carbs and vitamins (dishes are counted from their recipes). Key $(l)K$() — how you feel."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- Low protein — slow healing, weaker hits.$(br)- Low fat — chilly.$(br)- Low carbs — no energy.$(br)- Low vitamins — sick more often.$(br)- Balanced — better healing and immunity.$(br2)Exact values — only by a blood test."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)Fed up$(): the same food gets boring — slower eating, worse uptake. Variety helps."
+    }
+  ]
+}

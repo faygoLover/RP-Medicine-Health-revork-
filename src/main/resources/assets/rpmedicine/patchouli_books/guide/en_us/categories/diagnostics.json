@@ -1,0 +1,6 @@
+{
+  "name": "Diagnostics",
+  "description": "Examination, devices, the lab.",
+  "icon": "rpmedicine:stethoscope",
+  "sortnum": 5
+}

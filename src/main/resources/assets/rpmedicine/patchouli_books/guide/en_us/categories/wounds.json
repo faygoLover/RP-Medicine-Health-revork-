@@ -1,0 +1,6 @@
+{
+  "name": "Wounds and bleeding",
+  "description": "Wounds, dressings, tourniquets, sutures, fractures, infections.",
+  "icon": "rpmedicine:bandage",
+  "sortnum": 1
+}

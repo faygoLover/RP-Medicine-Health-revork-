@@ -1,0 +1,20 @@
+{
+  "name": "Injector pens",
+  "icon": "rpmedicine:morphine",
+  "category": "rpmedicine:drugs",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Pens are for combat and the field: $(cfg)4$() ml (4 doses), the bar shows what is left, the window shows the level. An empty pen is thrown away."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "- Below Medicine $(cfg)4$(): you cannot pick a dose — you inject 0.75–1.25 dose at random.$(br)- Medicine $(cfg)4$()+: first a check whether it is needed (repeat within 5 s to inject anyway), then pick the dose with the wheel (step 0.1) with a hint how much is needed."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Then the injection minigame and the animation — the pen is pressed and emptied.$(br2)Pens: adrenaline, morphine, TXA, ketorolac, naloxone, diazepam, atropine, insulin."
+    }
+  ]
+}

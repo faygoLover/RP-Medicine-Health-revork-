@@ -1,0 +1,12 @@
+{
+  "name": "Examination",
+  "icon": "rpmedicine:medcard",
+  "category": "rpmedicine:diagnostics",
+  "sortnum": 0,
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The $(l)H$() panel shows what the eye sees: wounds, blood, pallor, breathing. The higher your level, the more detail: from $(cfg)4$() — numbers.$(br2)Devices are more precise. Below their level readings are easy to misread."
+    }
+  ]
+}

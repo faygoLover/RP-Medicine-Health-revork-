@@ -1147,6 +1147,9 @@ t("rpmedicine.minigame.back", "Сзади", "Back")
 t("rpmedicine.minigame.slipped", "Сорвалось — слушать заново", "Slipped — listen again")
 t("rpmedicine.minigame.tighten", "Стяните края: держите ЛКМ, отпустите, когда сошлись", "Pull the edges together: hold LMB, release when they meet")
 t("rpmedicine.minigame.tissue_torn", "Перетянули — ткань порвалась", "Pulled too hard — the tissue tore")
+t("book.rpmedicine.guide.name", "Справочник медика", "Medic's Handbook")
+t("book.rpmedicine.guide.landing", "Справочник по медицине RP Medicine: раны, препараты, кровь, диагностика, госпиталь и хирургия.$(br2)Значения, выделенные $(#b5531f)цветом$(), сервер может поменять в настройках — здесь указаны стандартные.", "A handbook of RP Medicine: wounds, drugs, blood, diagnostics, hospital and surgery.$(br2)Values in $(#b5531f)colour$() can be changed by the server config — the defaults are shown here.")
+t("rpmedicine.book.welcome", "В инвентаре — «Справочник медика»: там всё о ранах, лечении и препаратах. Клавиша H — осмотр себя или пациента.", "You have the Medic's Handbook in your inventory: everything about wounds, treatment and drugs. Press H to examine yourself or a patient.")
 # --- конец пачки 06.10 ---
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")

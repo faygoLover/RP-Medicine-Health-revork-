@@ -1,0 +1,23 @@
+{
+  "name": "Ампутация и протезы",
+  "icon": "rpmedicine:bone_saw",
+  "category": "rpmedicine:surgery",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:bone_saw",
+      "text": "Ампутация при некрозе или раздроблении. Пилить ровно, не выходя из распила."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Культя заживает, потом можно поставить протез: стопа, деревянная нога, крюк. Протез стопы — только на живую голень.$(br2)Отрубленную конечность можно пришить в течение $(cfg)6$() ч.$(br2)Сильный взрыв может оторвать конечность сам."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:peg_leg",
+      "text": "Деревянная нога: ходить можно, но медленнее."
+    }
+  ],
+  "advancement": "rpmedicine:book/medicine_7"
+}

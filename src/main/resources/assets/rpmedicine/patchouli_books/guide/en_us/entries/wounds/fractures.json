@@ -1,0 +1,17 @@
+{
+  "name": "Fractures and dislocations",
+  "icon": "rpmedicine:splint",
+  "category": "rpmedicine:wounds",
+  "sortnum": 4,
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:splint",
+      "text": "Immobilizes a fracture, pain $(cfg)2.5$() times lower."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "A fracture can be closed or $(l)open$() (bleeds ~$(cfg)60$() ml/min). Heals $(cfg)4–5$() h online, ribs ~$(cfg)4.5$() h. A surgeon speeds it up with osteosynthesis.$(br2)$(l)Dislocation$(): pain and a weak limb. Reduce it with an empty hand in the $(l)H$() panel — very painful ($(cfg)70$()), give painkillers first. Sometimes the bone breaks ($(cfg)10%$())."
+    }
+  ]
+}
