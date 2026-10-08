@@ -156,7 +156,6 @@ SOFTWARE.
 | `textures/gui/surgery/fat.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_fat.png` | VKM | MIT |
 | `textures/gui/surgery/muscle.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_muscle.png` | VKM | MIT |
 | `textures/gui/surgery/organs.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` | VKM | MIT |
-| `textures/item/organ_{heart,lungs,liver,kidneys,spleen,brain,stomach,pancreas}.png` (с 08.10.2026) | Body Control 1.0.0-alpha: спрайты `assets/bodycontrol/textures/gui/surgery_organs.png`, уменьшены до 32×32 (`item_art.py`, `organ_icons_from_atlas`) | VKM | MIT |
 | `textures/gui/surgery/skin.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_skin.png` | VKM | MIT |
 | `textures/gui/surgery/tools.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_tools.png` | VKM | MIT |
 | `rpgeo/bandage.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/bengdai.geo.json` | JEDIGD | MIT |
@@ -254,8 +253,15 @@ SOFTWARE.
 | `rpgeo/lr_ibuprofen.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/ibuprofen.animation.json` | LesRaisins Studio | GPL-3.0 |
 | `rpgeo/lr_amoxycillin.geo.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/geo_models/consumable/amoxycillin_geo.json` | LesRaisins Studio | GPL-3.0 |
 | `textures/geo/lr_amoxycillin.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/amoxycillin_uv.png` | LesRaisins Studio | GPL-3.0 |
-| `textures/gui/thermostat.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/screens/tube.png` (окно TubeScreen) | JEDIGD | MIT |
 | `rpgeo/lr_amoxycillin.anim.json` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/animations/consumable/amoxycillin.animation.json` | LesRaisins Studio | GPL-3.0 |
+| `textures/item/organ_heart.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_lungs.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_stomach.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_liver.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_kidneys.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_pancreas.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_brain.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
+| `textures/item/organ_spleen.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/gui/surgery_organs.png` (спрайт сцены операции, 32×32) | VKM | MIT |
 <!-- item_art:end -->
 
 <!-- iv_stand:begin -->
@@ -275,4 +281,5 @@ SOFTWARE.
 | `models/block/{hospital_bed,operating_table,vitals_monitor}_*.json`, `textures/block/…` | Industrial Hellscape 0.0.1: `medical_bed`, `operating_table`, `vitals_monitor` | YellowUboat | MIT |
 | `rpgeo/{medicine_cabinet,medicine_crate,sterilizer,lab_table}.*`, `textures/geo/…` | Health & Disease 1.4.2: `medibox`, `collisionbox`, `store`, `scan` | JEDIGD | MIT |
 | `models/block/thermostat_*.json`, `textures/block/thermostat.png` | Health & Disease 1.4.2: `tube*` | JEDIGD | MIT |
+| `textures/gui/thermostat.png` | Health & Disease 1.4.2: `textures/screens/tube.png` (окно TubeScreen) | JEDIGD | MIT |
 <!-- hospital:end -->

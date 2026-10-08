@@ -432,13 +432,16 @@
     "subtitle": "subtitles.rpmedicine.bone_drill",
     "sounds": [
       {
-        "name": "rpmedicine:bc/bone_drill_1"
+        "name": "rpmedicine:bc/bone_drill_1",
+        "volume": 0.4
       },
       {
-        "name": "rpmedicine:bc/bone_drill_2"
+        "name": "rpmedicine:bc/bone_drill_2",
+        "volume": 0.4
       },
       {
-        "name": "rpmedicine:bc/bone_drill_3"
+        "name": "rpmedicine:bc/bone_drill_3",
+        "volume": 0.4
       }
     ]
   },

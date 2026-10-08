@@ -501,7 +501,8 @@ BC_SOUNDS = {
     "minigame_ok": ["mark_done"], "minigame_slip": ["item_slip"], "body_fall": ["fall"],
 }
 # Укол — короткая тихая отметка, а не писк (замечание автора 06.10).
-QUIET = {"injection": 0.35}
+# Дрель — тише (замечание живого теста 29: слишком громкая).
+QUIET = {"injection": 0.35, "bone_drill": 0.4}
 for k in BC_SOUNDS:
     SOUNDS.setdefault(k, "minecraft:ui.button.click")
 import shutil

@@ -8,6 +8,9 @@ import os
 import shutil
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import geo_fix  # noqa: E402
+
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -542,6 +545,7 @@ def main():
         # Своя папка rpgeo, не geo/animations: GeckoLib читает те папки у всех модов и падает на чужом.
         os.makedirs(os.path.join(ASSETS, "rpgeo"), exist_ok=True)
         shutil.copyfile(src_path(g["geo"]), os.path.join(ASSETS, "rpgeo", f"{name}.geo.json"))
+        geo_fix.fix_file(os.path.join(ASSETS, "rpgeo", f"{name}.geo.json"))
         note(f"rpgeo/{name}.geo.json", g["geo"])
         tex = g["tex"]
         if isinstance(tex, tuple) and tex[0] == "tint" and tex[2] is None:
@@ -600,7 +604,9 @@ def main():
     for item in PEN_ITEMS:
         if f"rpmedicine:{item}" not in index:
             continue
-        write(os.path.join(ASSETS, "rpgeo", f"{item}.geo.json"), pen_geo())
+        pen = pen_geo()
+        geo_fix.fix(pen)
+        write(os.path.join(ASSETS, "rpgeo", f"{item}.geo.json"), pen)
         write(os.path.join(ASSETS, "rpgeo", f"{item}.anim.json"), PEN_ANIM)
         tpath = os.path.join(ASSETS, "textures", "geo", f"{item}.png")
         im = Image.open(tpath).convert("RGBA")
@@ -627,6 +633,8 @@ def main():
     write(os.path.join(ASSETS, "rpgeo", "items.json"), index)
     write(os.path.join(DATA, "use_times", "animations.json"), {"times": times})
 
+    organ_icons_from_atlas()
+
     # Авторы
     rows = []
     seen = set()
@@ -635,7 +643,8 @@ def main():
             continue
         seen.add((dst, rel))
         mod = next(((m, a, lic) for k, (m, a, lic) in AUTHORS.items() if rel.startswith(k)), ("?", "?", "?"))
-        how = {"recolor": " (перекрашено)", "hue": " (другой оттенок)", "liquid": " (другой цвет жидкости)"}.get(kind, "")
+        how = {"recolor": " (перекрашено)", "hue": " (другой оттенок)", "liquid": " (другой цвет жидкости)",
+               "atlas": " (спрайт сцены операции, 32×32)"}.get(kind, "")
         rows.append(f"| `{dst}` | {mod[0]}: `{rel.split('/', 1)[1]}`{how} | {mod[1]} | {mod[2]} |")
     text = open(CREDITS, encoding="utf-8").read()
     start, end = "<!-- item_art:begin -->", "<!-- item_art:end -->"
@@ -677,9 +686,9 @@ def organ_icons_from_atlas():
                 r, g, b, al = px[x, y]
                 px[x, y] = (r, g, b, 255 if al >= 110 else 0)
         icon.save(os.path.join(ASSETS, "textures", "item", name + ".png"))
+        used.append((f"textures/item/{name}.png", BC + "textures/gui/surgery_organs.png", "atlas"))
     print("item_art: иконки органов из атласа операции:", len(ORGAN_ATLAS))
 
 
 if __name__ == "__main__":
     main()
-    organ_icons_from_atlas()

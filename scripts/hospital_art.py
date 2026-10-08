@@ -6,7 +6,11 @@
 import json
 import os
 import shutil
+import sys
 import zipfile
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import geo_fix  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..", "src", "main", "resources")
@@ -98,6 +102,7 @@ def hd():
     }
     for block, (geo, png) in tex.items():
         shutil.copyfile(os.path.join(HD, "geo", f"{geo}.geo.json"), os.path.join(ASSETS, "rpgeo", f"{block}.geo.json"))
+        geo_fix.fix_file(os.path.join(ASSETS, "rpgeo", f"{block}.geo.json"))
         shutil.copyfile(os.path.join(HD, "animations", f"{geo}.animation.json"), os.path.join(ASSETS, "rpgeo", f"{block}.anim.json"))
         shutil.copyfile(os.path.join(HD, "textures", "block", f"{png}.png"), os.path.join(ASSETS, "textures", "geo", f"{block}.png"))
         index[f"rpmedicine:{block}"] = {"geo": f"rpmedicine:rpgeo/{block}.geo.json", "texture": f"rpmedicine:textures/geo/{block}.png",
@@ -152,7 +157,7 @@ def oxygen():
     model = {"textures": {"0": "rpmedicine:block/oxygen_tank", "particle": "rpmedicine:block/oxygen_tank"}, "elements": [
         el([5, 0, 5], [11, 1, 11], [0, 13, 16, 16]),                       # подставка
         el([5.5, 1, 4.5], [10.5, 13, 11.5], [0, 0, 16, 10]),               # баллон (восьмиугольник из двух плашек)
-        el([4.5, 1, 5.5], [11.5, 13, 10.5], [0, 0, 16, 10]),
+        el([4.5, 1.01, 5.5], [11.5, 12.99, 10.5], [0, 0, 16, 10]),            # чуть ниже первой — без мерцания (замечание 34)
         el([6.5, 13, 6.5], [9.5, 14.5, 9.5], [0, 0, 16, 10]),              # горловина
         el([7, 14.5, 7], [9, 16, 9], [0, 10, 16, 13]),                     # вентиль
         el([9, 15, 7.5], [11, 15.6, 8.5], [0, 10, 16, 13]),                # маховик
@@ -168,20 +173,17 @@ PACK = os.path.join(os.environ.get("APPDATA", ""), "ElyPrismLauncher", "instance
 
 
 def tools():
-    """Инструменты из модов сборки (решения, п. 1.16): дрель — 3D Cybernetic System, иконки скальпеля, зажима,
+    """Инструменты из модов сборки (решения, п. 1.16): иконки скальпеля, зажима,
     ранорасширителя — [CS] Augmentations, пила — [CS] Foundation. Нет сборки — файлы не трогаем."""
     def jar(prefix):
         if not os.path.isdir(PACK):
             return None
         found = [f for f in os.listdir(PACK) if f.startswith(prefix) and f.endswith(".jar")]
         return zipfile.ZipFile(os.path.join(PACK, sorted(found)[-1])) if found else None
-    cyb = jar("cybernetic_system")
-    if cyb:
-        m = json.loads(cyb.read("assets/cybernetic_system/models/custom/hand_drill.json"))
-        m["textures"] = {"1": "rpmedicine:item/surgical_drill_3d", "particle": "rpmedicine:item/surgical_drill"}
-        write(os.path.join(ASSETS, "models", "item", "surgical_drill.json"), m)
-        with open(os.path.join(ASSETS, "textures", "item", "surgical_drill_3d.png"), "wb") as f:
-            f.write(cyb.read("assets/cybernetic_system/textures/block/hand_drill.png"))
+    # Дрель — своя простая иконка в руке, как у остальных инструментов: 3D Cybernetic System была слишком
+    # большой и вычурной (замечание живого теста 29).
+    write(os.path.join(ASSETS, "models", "item", "surgical_drill.json"),
+          {"parent": "minecraft:item/handheld", "textures": {"layer0": "rpmedicine:item/surgical_drill"}})
     aug = jar("[CS] Augmentations")
     if aug:
         # Ранорасширитель у них почти как зажим — оставляем свой рисунок.
@@ -217,7 +219,8 @@ def credits():
              "`medical_bed`, `operating_table`, `vitals_monitor` | YellowUboat | MIT |\n"
              "| `rpgeo/{medicine_cabinet,medicine_crate,sterilizer,lab_table}.*`, `textures/geo/…` | Health & Disease 1.4.2: "
              "`medibox`, `collisionbox`, `store`, `scan` | JEDIGD | MIT |\n"
-             "| `models/block/thermostat_*.json`, `textures/block/thermostat.png` | Health & Disease 1.4.2: `tube*` | JEDIGD | MIT |\n" + end)
+             "| `models/block/thermostat_*.json`, `textures/block/thermostat.png` | Health & Disease 1.4.2: `tube*` | JEDIGD | MIT |\n"
+             "| `textures/gui/thermostat.png` | Health & Disease 1.4.2: `textures/screens/tube.png` (окно TubeScreen) | JEDIGD | MIT |\n" + end)
     if start in text:
         text = text[:text.index(start)] + block + text[text.index(end) + len(end):]
     else:
