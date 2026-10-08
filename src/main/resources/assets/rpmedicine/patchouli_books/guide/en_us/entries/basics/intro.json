@@ -18,7 +18,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "What kills:$(br)- $(l)blood loss$() — losing $(cfg)50%$() of blood stops the heart;$(br)- $(l)suffocation$() — pneumothorax, respiratory arrest, blocked airway;$(br)- $(l)head and brain trauma$();$(br)- $(l)organs$() — heart, lungs, liver, kidneys;$(br)- $(l)infection and sepsis$() — slowly but surely."
+      "text": "What kills:$(br)- $(l)blood loss$() — losing $(cfg)50%%$() of blood stops the heart;$(br)- $(l)suffocation$() — pneumothorax, respiratory arrest, blocked airway;$(br)- $(l)head and brain trauma$();$(br)- $(l)organs$() — heart, lungs, liver, kidneys;$(br)- $(l)infection and sepsis$() — slowly but surely."
     },
     {
       "type": "patchouli:text",

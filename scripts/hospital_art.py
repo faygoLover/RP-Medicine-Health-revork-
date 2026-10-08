@@ -109,7 +109,12 @@ def hd():
                                                                         "textures": {"particle": f"rpmedicine:geo/{block}"}})
         loot(block, False)
     write(index_path, index)
+    # Частицы ломания берут текстуру из атласа блоков, а textures/geo туда не попадает — розовые частицы (замечание 1).
+    write(os.path.join(os.path.dirname(ASSETS), "minecraft", "atlases", "blocks.json"),
+          {"sources": [{"type": "single", "resource": f"rpmedicine:geo/{b}"} for b in tex]})
     # Термостат: модели H&D с 0–8 пробирками.
+    # Окно термостата — из H&D (TubeScreen: 8 пробирок 4×2 и инвентарь), замечание живого теста 5.
+    shutil.copyfile(os.path.join(HD, "textures", "screens", "tube.png"), os.path.join(ASSETS, "textures", "gui", "thermostat.png"))
     shutil.copyfile(os.path.join(HD, "textures", "block", "tube.png"), os.path.join(ASSETS, "textures", "block", "thermostat.png"))
     for n in range(9):
         m = json.load(open(os.path.join(HD, "models", "custom", "tube.json" if n == 0 else f"tube{n}.json"), encoding="utf-8"))

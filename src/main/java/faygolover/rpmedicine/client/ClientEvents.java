@@ -83,6 +83,12 @@ public final class ClientEvents {
             }
         }
         faygolover.rpmedicine.client.render.DownedPose.tick(mc);
+        // Без рук или без ног по лестнице не залезть — сползает вниз (замечание живого теста 26).
+        if (p.onClimbable() && !p.getAbilities().flying
+                && !faygolover.rpmedicine.core.Limbs.canClimb(ClientState.MISSING_LIMBS.getOrDefault(p.getId(), 0))) {
+            var dm = p.getDeltaMovement();
+            if (dm.y > -0.15) p.setDeltaMovement(dm.x, -0.15, dm.z);
+        }
         if (tick % 10 == 0) updateMonitor(mc, v);
         if (mc.screen == null) AimSway.tick(p, v);
         ClientSounds.tick(mc, v);
@@ -223,7 +229,8 @@ public final class ClientEvents {
         faygolover.rpmedicine.client.render.MissingLimbs.onRenderPre(e);
         Player p = e.getEntity();
         Float yaw = BedPose.CLIENT_BED_YAW.get(p.getId());
-        if (yaw == null || !p.hasPose(Pose.SLEEPING)) return;
+        // Лежачего и лежащего на койке кладёт DownedPose (поза стоя); старый сдвиг для ванильной позы сна не нужен.
+        if (yaw == null || !p.hasPose(Pose.SLEEPING) || faygolover.rpmedicine.client.render.DownedPose.isDowned(p)) return;
         p.yBodyRot = yaw;
         p.yBodyRotO = yaw;
         double a = Math.toRadians(yaw);

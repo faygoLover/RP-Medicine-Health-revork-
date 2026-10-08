@@ -27,6 +27,8 @@ def fmt(text):
     """{{x}} — значение из конфига (цветом); **x** — жирный; переносы абзацев — $(br2)."""
     text = re.sub(r"\{\{(.+?)\}\}", r"$(cfg)\1$()", text)
     text = re.sub(r"\*\*(.+?)\*\*", r"$(l)\1$()", text)
+    # Книга с i18n: Patchouli пропускает текст через String.format — одиночный % давал «format error» (замечание 3).
+    text = text.replace("%", "%%")
     return text.replace("\n\n", "$(br2)").replace("\n", "$(br)")
 
 

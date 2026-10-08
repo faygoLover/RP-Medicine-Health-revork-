@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Up to $(cfg)50%$() they heal by themselves, worse — only a surgeon. Lungs — lower SpO₂; liver — more bleeding; kidneys — the brain suffers; heart — lower pressure; intestines at 100% — peritonitis and sepsis; spleen — abdominal bleeding, without it infections are worse."
+      "text": "Up to $(cfg)50%%$() they heal by themselves, worse — only a surgeon. Lungs — lower SpO₂; liver — more bleeding; kidneys — the brain suffers; heart — lower pressure; intestines at 100%% — peritonitis and sepsis; spleen — abdominal bleeding, without it infections are worse."
     },
     {
       "type": "patchouli:text",

@@ -61,6 +61,11 @@ class LimbsTest {
         assertTrue(leg.missing && m.part(BodyPart.LEFT_FOOT).missing, "нога вместе со стопой");
         assertEquals(0, leg.necrosis, 1e-9, "некроз ушёл с ногой");
         assertFalse(leg.arterial, "хирургическая — без артерии");
+        // Культю зашивают отдельным шагом (замечание живого теста 27).
+        assertTrue(leg.wounds.stream().noneMatch(w -> w.sutured), "после опила культя открыта");
+        assertNull(Treatments.check(m, BodyPart.LEFT_LEG, TreatmentAction.SUTURE, s), "культю можно зашить");
+        Treatments.apply(m, BodyPart.LEFT_LEG, TreatmentAction.SUTURE, false, new SplittableRandom(1), s, null);
+        assertTrue(leg.wounds.stream().allMatch(w -> w.sutured), "культя зашита");
         // Без протеза — ползком.
         m.down = MedicalState.Down.NONE;
         assertTrue(GameplayEffects.compute(m, PatientTraits.NONE, s).crawl, "без ноги — только ползком");

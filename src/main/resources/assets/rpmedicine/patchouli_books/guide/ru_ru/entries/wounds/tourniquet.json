@@ -12,7 +12,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "rpmedicine:esmarch",
-      "text": "Резиновый жгут Эсмарха: то же, но может порваться ($(cfg)15 %$())."
+      "text": "Резиновый жгут Эсмарха: то же, но может порваться ($(cfg)15 %%$())."
     },
     {
       "type": "patchouli:text",

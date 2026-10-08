@@ -42,8 +42,11 @@ public class HospitalGeoRenderer implements BlockEntityRenderer<HospitalStorageB
         Direction f = be.getBlockState().getValue(HospitalGeoBlock.FACING);
         pose.pushPose();
         pose.translate(0.5, 0, 0.5);
-        // Перед модели (+z) — туда, куда смотрит блок (к игроку, который его ставил).
-        pose.mulPose(Axis.YP.rotationDegrees(-f.toYRot()));
+        // Перед модели — туда, куда смотрит блок (к игроку, который его ставил). У стерилизатора перед модели — +z,
+        // у шкафчика, ящика и стола — −z: их разворачиваем (замечания живого теста 1, 4, 31).
+        boolean backFront = be.kind() == HospitalGeoBlock.Kind.CABINET || be.kind() == HospitalGeoBlock.Kind.CRATE
+                || be.kind() == HospitalGeoBlock.Kind.LAB_TABLE;
+        pose.mulPose(Axis.YP.rotationDegrees(-f.toYRot() + (backFront ? 180 : 0)));
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         GeoItemRenderer.renderModel(e, clip, t, pose, buffers.getBuffer(RenderType.entityCutoutNoCull(e.texture())), light, overlay);
         pose.popPose();

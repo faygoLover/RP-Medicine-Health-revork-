@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "rpmedicine:defibrillator",
-      "text": "A shock for fibrillation or after a CPR cycle ($(cfg)30$() s). Success ~$(cfg)70%$(). On a beating heart — a burn and arrhythmia."
+      "text": "A shock for fibrillation or after a CPR cycle ($(cfg)30$() s). Success ~$(cfg)70%%$(). On a beating heart — a burn and arrhythmia."
     },
     {
       "type": "patchouli:spotlight",

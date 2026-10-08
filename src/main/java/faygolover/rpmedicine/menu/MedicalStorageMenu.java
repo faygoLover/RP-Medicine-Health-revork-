@@ -29,24 +29,45 @@ public class MedicalStorageMenu extends AbstractContainerMenu {
         this.rows = rows;
         this.filter = filter;
         container.startOpen(inv.player);
-        for (int r = 0; r < rows; r++)
-            for (int c = 0; c < 9; c++)
-                addSlot(new Slot(container, c + r * 9, 8 + c * 18, 18 + r * 18) {
-                    @Override
-                    public boolean mayPlace(ItemStack st) {
-                        return allowed(st, MedicalStorageMenu.this.filter);
-                    }
-                });
-        int top = 18 + rows * 18 + 13;
+        int top;
+        if (isThermostat(filter)) {
+            // Термостат — окно H&D: пробирки 4×2 по центру (замечание живого теста 5).
+            for (int i = 0; i < THERMOSTAT_SLOTS; i++) addSlot(storageSlot(container, i, 52 + (i % 4) * 18, 14 + (i / 4) * 18));
+            top = 68;
+        } else {
+            for (int r = 0; r < rows; r++)
+                for (int c = 0; c < 9; c++) addSlot(storageSlot(container, c + r * 9, 8 + c * 18, 18 + r * 18));
+            top = 18 + rows * 18 + 13;
+        }
         for (int r = 0; r < 3; r++)
             for (int c = 0; c < 9; c++) addSlot(new Slot(inv, c + r * 9 + 9, 8 + c * 18, top + r * 18));
         for (int c = 0; c < 9; c++) addSlot(new Slot(inv, c, 8 + c * 18, top + 58));
     }
 
+    /** Ячеек у термостата (модели H&D — до 8 пробирок). */
+    public static final int THERMOSTAT_SLOTS = 8;
+
+    public static boolean isThermostat(byte filter) {
+        return filter == BLOOD_SAMPLES;
+    }
+
+    private Slot storageSlot(Container c, int index, int x, int y) {
+        return new Slot(c, index, x, y) {
+            @Override
+            public boolean mayPlace(ItemStack st) {
+                return allowed(st, MedicalStorageMenu.this.filter);
+            }
+        };
+    }
+
     public static MedicalStorageMenu fromNetwork(int id, Inventory inv, FriendlyByteBuf buf) {
         int rows = buf.readVarInt();
         byte filter = buf.readByte();
-        return new MedicalStorageMenu(id, inv, new SimpleContainer(rows * 9), rows, filter);
+        return new MedicalStorageMenu(id, inv, new SimpleContainer(isThermostat(filter) ? THERMOSTAT_SLOTS : rows * 9), rows, filter);
+    }
+
+    public byte filter() {
+        return filter;
     }
 
     public static boolean allowed(ItemStack st, byte filter) {
@@ -65,7 +86,7 @@ public class MedicalStorageMenu extends AbstractContainerMenu {
         if (!slot.hasItem()) return ItemStack.EMPTY;
         ItemStack st = slot.getItem();
         ItemStack copy = st.copy();
-        int size = rows * 9;
+        int size = isThermostat(filter) ? THERMOSTAT_SLOTS : rows * 9;
         if (index < size) {
             if (!moveItemStackTo(st, size, slots.size(), true)) return ItemStack.EMPTY;
         } else {

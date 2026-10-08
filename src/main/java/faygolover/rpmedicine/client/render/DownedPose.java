@@ -131,6 +131,11 @@ public final class DownedPose {
         if (s == null) return;
         float pr = s.progress(System.currentTimeMillis());
         if (pr <= 0.001f) return;
+        // Поза с сервера (сна на койке, плавания на земле) могла дойти после тика: ваниль сама положила бы модель,
+        // а мы — ещё раз, и тело вставало вертикально (замечания живого теста 7, 21; с TaCZ было незаметно).
+        // Рисуем всегда из позы стоя, без ванильного наклона плавания.
+        if (p.getPose() != Pose.STANDING) p.setPose(Pose.STANDING);
+        clearSwim(p);
 
         // Тело не крутится вслед за взглядом лежачего; голова лежит ровно.
         SAVED.put(p.getId(), new float[]{p.yBodyRot, p.yBodyRotO, p.yHeadRot, p.yHeadRotO, p.getXRot(), p.xRotO});
@@ -202,6 +207,25 @@ public final class DownedPose {
         p.setXRot(r[4]);
         p.xRotO = r[5];
         e.getPoseStack().popPose();
+    }
+
+    private static java.lang.reflect.Field swimAmount, swimAmountO;
+    private static boolean swimFailed;
+
+    /** Ванильный наклон плавания (LivingEntity.swimAmount) — в ноль: иначе модель наклоняется ещё и ванилью. */
+    private static void clearSwim(Player p) {
+        if (swimFailed) return;
+        try {
+            if (swimAmount == null) {
+                swimAmount = net.minecraftforge.fml.util.ObfuscationReflectionHelper.findField(net.minecraft.world.entity.LivingEntity.class, "f_20931_");
+                swimAmountO = net.minecraftforge.fml.util.ObfuscationReflectionHelper.findField(net.minecraft.world.entity.LivingEntity.class, "f_20932_");
+            }
+            swimAmount.setFloat(p, 0f);
+            swimAmountO.setFloat(p, 0f);
+        } catch (Exception ex) {
+            swimFailed = true;
+            RpMedicine.LOGGER.warn("RP Medicine: не удалось сбросить наклон плавания: {}", ex.toString());
+        }
     }
 
     private static float lerpDeg(float from, float to, float t) {

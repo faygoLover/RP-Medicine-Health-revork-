@@ -21,7 +21,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "A fresh dressing is unreliable for $(cfg)5$() min: sprinting ($(cfg)1%$() per second) and jumping ($(cfg)4%$()) can tear it, new damage — $(cfg)50%$() chance.$(br2)A dressing cuts infection risk by $(cfg)80%$(). Remove it with an empty hand in the $(l)H$() panel."
+      "text": "A fresh dressing is unreliable for $(cfg)5$() min: sprinting ($(cfg)1%%$() per second) and jumping ($(cfg)4%%$()) can tear it, new damage — $(cfg)50%%$() chance.$(br2)A dressing cuts infection risk by $(cfg)80%%$(). Remove it with an empty hand in the $(l)H$() panel."
     }
   ]
 }

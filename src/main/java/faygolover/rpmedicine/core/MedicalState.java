@@ -60,6 +60,8 @@ public final class MedicalState {
     public boolean airway;
     /** Интубирован (третий этап, п. 3): дыхательные пути открыты, мешок или стол вентилируют полностью. */
     public boolean intubated;
+    /** Дышит кислородом (койка у баллона, операционный стол): не сохраняется, ставится каждый шаг — для осмотра (замечание живого теста 30). */
+    public boolean onOxygen;
     /** Зафиксирован на столе с фиксацией: не встаёт, руки не действуют, можно то, что требует пациента без сознания. */
     public boolean restrained;
     /** Осталось секунд вентиляции мешком Амбу и СЛР (продлеваются, пока медик удерживает действие). */
@@ -379,6 +381,7 @@ public final class MedicalState {
         respiratoryArrest = o.respiratoryArrest;
         airway = o.airway;
         intubated = o.intubated;
+        onOxygen = o.onOxygen;
         restrained = o.restrained;
         ambuSeconds = o.ambuSeconds;
         cprSeconds = o.cprSeconds;

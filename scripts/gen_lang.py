@@ -106,7 +106,7 @@ for k, ru, en in [
  ("breathing_ok", "Дышит сам", "Breathing on their own"), ("no_shockable", "Разряд не рекомендован", "No shock advised"),
  ("pulse_present", "Пульс есть", "Has a pulse"), ("not_needed", "Это здесь не нужно", "Not needed"),
  ("actor_down", "Вы без сознания", "You are unconscious"), ("arms_broken", "Обе руки сломаны", "Both arms are broken"),
- ("too_far", "Слишком далеко", "Too far away"), ("empty_hand", "Нужна пустая рука", "Your hand must be empty"),
+ ("too_far", "Слишком далеко", "Too far away"), ("empty_hand", "Нужна пустая рука", "Your hand must be empty"), ("need_other_hand", "Снять протез с единственной руки нечем — попросите другого", "You have no other hand to take the prosthesis off — ask someone"),
  ("clinical_no_finish", "Тело в клинической смерти добить нельзя", "A body in clinical death can't be finished off"),
  ("no_weapon", "Нужно оружие в руке", "You need a weapon in hand"),
 ]:
@@ -288,6 +288,7 @@ for k, ru, en in [
  ("rpmedicine.exam.wound_pus", "  рана гноится", "  the wound is festering"),
  ("rpmedicine.exam.drip_blood", "Капельница: кровь", "Drip: blood"),
  ("rpmedicine.exam.drip_saline", "Капельница: физраствор", "Drip: saline"),
+ ("rpmedicine.exam.on_oxygen", "Дышит кислородом", "Breathing oxygen"),
  ("rpmedicine.exam.feels_hot", "На ощупь горячий — жар", "Hot to the touch — fever"),
  ("rpmedicine.exam.feels_cold", "На ощупь холодный", "Cold to the touch"),
  ("rpmedicine.exam.complaint_fever", "Знобит, жарко", "Feverish chills"),
@@ -731,7 +732,7 @@ for k, ru, en in [
     ("surgery_slip", "%s: рука дрогнула — задеты ткани", "%s: the hand slipped — tissue damaged")]:
     t("rpmedicine.treat." + k, ru, en)
 for k, ru, en in [
-    ("already_open", "Уже вскрыто", "Already opened"), ("patient_moves", "Пациент в сознании дёргается — нужен наркоз, местная анестезия или фиксация", "The conscious patient flinches — needs anesthesia, local anesthesia or restraint"),
+    ("already_open", "Уже вскрыто", "Already opened"), ("incise_other", "Уже вскрыто: %s. Резать другую часть — через панель осмотра (H)", "Already opened: %s. To cut another part, use the exam panel (H)"), ("patient_moves", "Пациент в сознании дёргается — нужен наркоз, местная анестезия или фиксация", "The conscious patient flinches — needs anesthesia, local anesthesia or restraint"),
     ("not_open", "Сначала вскрыть", "Open it first"), ("already_clamped", "Уже зажато", "Already clamped"), ("clamp_first", "Сначала зажать", "Clamp first"),
     ("already_retracted", "Уже раскрыто", "Already retracted"), ("not_retracted", "Сначала раскрыть ретрактором", "Retract it first"),
     ("no_arterial", "Артерия цела", "The artery is intact"), ("already_fixated", "Уже зафиксировано", "Already fixed"),
@@ -816,7 +817,7 @@ t("rpmedicine.tooltip.limb_owner", "Чья: %s", "Whose: %s")
 for k, ru, en in [("bone_saw", "Пила для костей.", "A bone saw."), ("prosthetic_foot", "Протез стопы.", "A prosthetic foot."),
     ("peg_leg", "Деревянная нога.", "A wooden leg."), ("prosthetic_hook", "Протез-крюк.", "A hook prosthesis."), ("severed_limb", "Отнятая конечность.", "A severed limb.")]:
     t(f"item.rpmedicine.{k}.what", ru, en)
-for k, ru, en in [("amputated", "%s: ампутация, культя зашита", "%s: amputated, stump sutured"),
+for k, ru, en in [("amputated", "%s: ампутация — теперь зашейте культю", "%s: amputated — now suture the stump"),
     ("prosthesis_installed", "%s: протез установлен", "%s: prosthesis fitted"), ("prosthesis_poor", "%s: протез не сел", "%s: the prosthesis didn't fit")]:
     t("rpmedicine.treat." + k, ru, en)
 for k, ru, en in [("part_missing", "Этой части нет", "This part is missing"), ("limb_only", "Только рука, нога или стопа", "Arm, leg or foot only"),

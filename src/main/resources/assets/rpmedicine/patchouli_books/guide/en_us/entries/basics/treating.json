@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "If the treatment is not needed, you get a refusal. Repeat it within 5 seconds to do it anyway, with consequences (a tourniquet on a healthy leg, an extra dose).$(br2)Items above your level can still be used, but each missing level adds $(cfg)+30%$() error chance, up to $(cfg)85%$(). Mistakes hurt."
+      "text": "If the treatment is not needed, you get a refusal. Repeat it within 5 seconds to do it anyway, with consequences (a tourniquet on a healthy leg, an extra dose).$(br2)Items above your level can still be used, but each missing level adds $(cfg)+30%%$() error chance, up to $(cfg)85%%$(). Mistakes hurt."
     },
     {
       "type": "patchouli:text",

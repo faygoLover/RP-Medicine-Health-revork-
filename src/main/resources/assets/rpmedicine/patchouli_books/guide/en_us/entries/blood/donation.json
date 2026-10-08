@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "rpmedicine:empty_blood_bag",
-      "text": "Collects $(cfg)450$() ml from a donor, standing still ~30 s. Donor loses at most $(cfg)15%$(). Medicine 3."
+      "text": "Collects $(cfg)450$() ml from a donor, standing still ~30 s. Donor loses at most $(cfg)15%%$(). Medicine 3."
     },
     {
       "type": "patchouli:spotlight",

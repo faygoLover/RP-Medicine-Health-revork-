@@ -151,7 +151,10 @@ public final class InteractionHandler {
 
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Player p = event.getEntity();
-        if (Medical.isDown(p)) {
+        // Без обеих рук двери, рычаги, сундуки не открыть (замечание живого теста 26).
+        // Лечь на койку можно и без рук.
+        boolean armlessBlocked = faygolover.rpmedicine.core.Limbs.armless(limbMask(p)) && !HospitalBlocks.isBed(event.getLevel().getBlockState(event.getPos()));
+        if (Medical.isDown(p) || armlessBlocked) {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.FAIL);
             return;
@@ -262,7 +265,14 @@ public final class InteractionHandler {
     }
 
     public static void onPickup(EntityItemPickupEvent event) {
-        if (Medical.isDown(event.getEntity())) event.setCanceled(true);
+        if (Medical.isDown(event.getEntity()) || faygolover.rpmedicine.core.Limbs.armless(limbMask(event.getEntity()))) event.setCanceled(true);
+    }
+
+    /** Отсутствующие части без протеза: на сервере — из состояния, на клиенте — из пакета видимости конечностей. */
+    public static int limbMask(Player p) {
+        if (p.level().isClientSide) return faygolover.rpmedicine.client.ClientState.MISSING_LIMBS.getOrDefault(p.getId(), 0);
+        var m = Medical.state(p);
+        return m != null ? PatientTicker.limbMask(m) : 0;
     }
 
     /** Использование предметов: дольше при плохой руке; лук и арбалет — нельзя лежачему, несущему, без рук. */

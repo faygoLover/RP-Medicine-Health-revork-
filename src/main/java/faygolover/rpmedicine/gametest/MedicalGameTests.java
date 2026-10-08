@@ -73,6 +73,8 @@ public final class MedicalGameTests {
         new io.netty.channel.embedded.EmbeddedChannel(conn);
         server.getPlayerList().placeNewPlayer(conn, p);
         p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        // Справочник медика выдаётся при первом входе — у тестового игрока руки должны быть пустыми.
+        p.getInventory().clearContent();
         // Ванильная защита после входа (3 с) мешает проверять урон — снимаем.
         net.minecraftforge.fml.util.ObfuscationReflectionHelper.setPrivateValue(ServerPlayer.class, p, 0, "f_8921_");
         Vec3 pos = h.absoluteVec(new Vec3(x, 1, z));

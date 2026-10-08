@@ -7,7 +7,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "rpmedicine:saline",
-      "text": "$(cfg)500$() ml: restores volume but carries no oxygen. Replaces up to $(cfg)1/3$() of blood and leaks out ($(cfg)25%$()/h)."
+      "text": "$(cfg)500$() ml: restores volume but carries no oxygen. Replaces up to $(cfg)1/3$() of blood and leaks out ($(cfg)25%%$()/h)."
     },
     {
       "type": "patchouli:text",

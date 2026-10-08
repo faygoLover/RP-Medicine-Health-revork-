@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "To restart the heart: restore blood (at least ~$(cfg)55%$()), do CPR, defibrillate fibrillation, give adrenaline.$(br2)For $(cfg)3$() h after revival the body is weak: a new knockdown is more dangerous."
+      "text": "To restart the heart: restore blood (at least ~$(cfg)55%%$()), do CPR, defibrillate fibrillation, give adrenaline.$(br2)For $(cfg)3$() h after revival the body is weak: a new knockdown is more dangerous."
     }
   ]
 }

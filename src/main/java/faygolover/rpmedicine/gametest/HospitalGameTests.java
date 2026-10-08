@@ -63,7 +63,8 @@ public final class HospitalGameTests {
         noDeath(false);
         testBlocks();
         BlockPos bed = h.absolutePos(new BlockPos(2, 1, 2));
-        BlockPos monitor = h.absolutePos(new BlockPos(4, 1, 2));
+        // Монитор вплотную к койке (замечание живого теста 10: только соседняя койка).
+        BlockPos monitor = h.absolutePos(new BlockPos(1, 1, 2));
         BlockPos oxygen = h.absolutePos(new BlockPos(2, 1, 4));
         h.getLevel().setBlockAndUpdate(bed, Blocks.WHITE_WOOL.defaultBlockState());
         h.getLevel().setBlockAndUpdate(monitor, Blocks.OBSERVER.defaultBlockState());

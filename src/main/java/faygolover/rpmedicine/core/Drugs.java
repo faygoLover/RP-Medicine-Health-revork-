@@ -42,7 +42,14 @@ public final class Drugs {
     }
 
     public static boolean opioidsActive(MedicalState m) {
-        return m.morphineSeconds > 0 || m.morphineOverdoseSeconds > 0 || m.opioidSeconds > 0;
+        if (m.morphineSeconds > 0 || m.morphineOverdoseSeconds > 0 || m.opioidSeconds > 0) return true;
+        // Препарат в крови (п. 1.16): опиат ещё всасывается из мышцы или уже в крови — налоксону есть что вытеснять
+        // (замечание живого теста 19: при передозировке писал «опиатов нет»).
+        for (DrugLevels.Level l : m.drugLevels.values()) {
+            Drug d = l.drug != null ? l.drug : DrugLevels.resolver.apply(l.id);
+            if (d != null && d.opioid() && l.plasma + l.depot > 0) return true;
+        }
+        return false;
     }
 
     /** Препарат местной анестезии (укол в часть тела). */

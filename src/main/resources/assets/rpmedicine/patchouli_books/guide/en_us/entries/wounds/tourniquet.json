@@ -12,7 +12,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "rpmedicine:esmarch",
-      "text": "Esmarch rubber tourniquet: the same, may snap ($(cfg)15%$())."
+      "text": "Esmarch rubber tourniquet: the same, may snap ($(cfg)15%%$())."
     },
     {
       "type": "patchouli:text",

@@ -53,6 +53,12 @@ public final class DamageHandler {
             return;
         }
         DamageSource src = event.getSource();
+        // Пустота — смерть сразу: здоровье пациента каждый тик доливается до полного, и урон пустоты
+        // без этого не убивал (замечание живого теста 8).
+        if (src.is(net.minecraft.world.damagesource.DamageTypes.FELL_OUT_OF_WORLD)) {
+            event.setAmount(Math.max(event.getAmount(), target.getMaxHealth() * 10));
+            return;
+        }
         if (isTrueDeath(src)) return;
         long t0 = System.nanoTime();
         MedicalState m = Medical.state(target);

@@ -651,5 +651,35 @@ def main():
     print("item_art:", len(ICONS), "иконок,", len(GEO), "3D-моделей,", len(times), "минимальных времён")
 
 
+
+# Иконки органов — из спрайтов сцены операции (textures/gui/surgery/organs.png, атлас Body Control 64×64):
+# прежние 16×16 автору не нравились (замечание живого теста 33). Кишечник — свой рисунок (в атласе его нет).
+ORGAN_ATLAS = {"organ_heart": 0, "organ_lungs": 1, "organ_stomach": 2, "organ_liver": 3, "organ_kidneys": 4,
+               "organ_pancreas": 5, "organ_brain": 6, "organ_spleen": 7}
+
+
+def organ_icons_from_atlas():
+    from PIL import Image
+    atlas = Image.open(os.path.join(ASSETS, "textures", "gui", "surgery", "organs.png")).convert("RGBA")
+    for name, idx in ORGAN_ATLAS.items():
+        sprite = atlas.crop((idx * 64, 0, idx * 64 + 64, 64))
+        box = sprite.getbbox() or (0, 0, 64, 64)
+        # Вписать по содержимому в квадрат и уменьшить до 32×32 (в 2 раза детальнее ванильных 16×16).
+        w, h = box[2] - box[0], box[3] - box[1]
+        side = max(w, h) + 2
+        sq = Image.new("RGBA", (side, side))
+        sq.paste(sprite.crop(box), ((side - w) // 2, (side - h) // 2))
+        icon = sq.resize((32, 32), Image.LANCZOS)
+        # Края без полупрозрачной каймы, как у пиксельных иконок.
+        px = icon.load()
+        for y in range(32):
+            for x in range(32):
+                r, g, b, al = px[x, y]
+                px[x, y] = (r, g, b, 255 if al >= 110 else 0)
+        icon.save(os.path.join(ASSETS, "textures", "item", name + ".png"))
+    print("item_art: иконки органов из атласа операции:", len(ORGAN_ATLAS))
+
+
 if __name__ == "__main__":
     main()
+    organ_icons_from_atlas()

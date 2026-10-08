@@ -96,7 +96,10 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
     @Override
     public void startOpen(Player p) {
         if (p.isSpectator() || level == null) return;
-        if (viewers++ == 0) level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 1);
+        if (viewers++ == 0) {
+            level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 1);
+            if (getBlockState().getBlock() instanceof HospitalGeoBlock b) HospitalGeoBlock.lidSound(level, worldPosition, b.kind, true);
+        }
     }
 
     @Override
@@ -105,6 +108,7 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
         if (--viewers <= 0) {
             viewers = 0;
             level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 0);
+            if (getBlockState().getBlock() instanceof HospitalGeoBlock b) HospitalGeoBlock.lidSound(level, worldPosition, b.kind, false);
         }
     }
 

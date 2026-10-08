@@ -1,6 +1,7 @@
 package faygolover.rpmedicine.client.screen;
 
 import faygolover.rpmedicine.core.BodyPart;
+import faygolover.rpmedicine.core.Organ;
 import faygolover.rpmedicine.core.Minigames;
 import faygolover.rpmedicine.core.Minigames.Scene;
 import faygolover.rpmedicine.network.MinigameResultPacket;
@@ -468,27 +469,33 @@ public class SurgeryMinigameScreen extends Screen {
         }
         if (torso) {
             if (part == BodyPart.CHEST) {
-                // Рёбра, лёгкие, сердце.
+                // Рёбра, лёгкие, сердце. Изъятого (и уже вынутого при изъятии) органа в теле нет — пустое ложе (замечание 17).
                 for (int i = -2; i <= 2; i++) masked(g, l, t, X0, CY + i * 12 - 2, X1, CY + i * 12 + 2, 0xFFE8DCC0, top, bottom);
-                masked(g, l, t, X0 + 10, CY - 30, X0 + 70, CY + 30, 0x90D07A80, top, bottom);
-                masked(g, l, t, X1 - 70, CY - 30, X1 - 10, CY + 30, 0x90D07A80, top, bottom);
-                boolean heartOut = type == Minigames.Type.HARVEST && phase >= 1 && scene.organ() == faygolover.rpmedicine.core.Organ.HEART.ordinal();
-                if (!heartOut) {
-                    // Сердце бьётся, только если оно на месте; при изъятии — пустое ложе.
-                    double beat = type == Minigames.Type.HARVEST && scene.organ() == faygolover.rpmedicine.core.Organ.HEART.ordinal() ? 1 : 1 + 0.08 * Math.max(0, Math.sin(time * 7));
+                if (inBody(Organ.LUNGS)) {
+                    masked(g, l, t, X0 + 10, CY - 30, X0 + 70, CY + 30, 0x90D07A80, top, bottom);
+                    masked(g, l, t, X1 - 70, CY - 30, X1 - 10, CY + 30, 0x90D07A80, top, bottom);
+                }
+                if (inBody(Organ.HEART)) {
+                    // Сердце бьётся, только если оно на месте; при изъятии — не бьётся.
+                    double beat = type == Minigames.Type.HARVEST && scene.organ() == Organ.HEART.ordinal() ? 1 : 1 + 0.08 * Math.max(0, Math.sin(time * 7));
                     int hw = (int) (16 * beat);
                     masked(g, l, t, 160 - hw, CY - hw, 160 + hw, CY + hw, 0xFF7A1018, top, bottom);
                 } else {
                     masked(g, l, t, 146, CY - 14, 174, CY + 14, 0xFF4A0A0E, top, bottom);
                 }
             } else {
-                // Печень и петли кишечника.
-                masked(g, l, t, X0 + 6, CY - 34, X0 + 70, CY + 4, 0xFF6A2A1A, top, bottom);
-                for (int i = 0; i < 6; i++) {
-                    int cx = 140 + (i % 3) * 28;
-                    int cy = CY - 10 + (i / 3) * 18;
-                    masked(g, l, t, cx - 12, cy - 6, cx + 12, cy + 6, 0xFFD89A90, top, bottom);
-                    masked(g, l, t, cx - 10, cy - 1, cx + 10, cy + 1, 0xFFB87A70, top, bottom);
+                // Печень, селезёнка, почка и петли кишечника.
+                if (inBody(Organ.LIVER)) masked(g, l, t, X0 + 6, CY - 34, X0 + 70, CY + 4, 0xFF6A2A1A, top, bottom);
+                else masked(g, l, t, X0 + 14, CY - 28, X0 + 62, CY - 2, 0xFF4A0A0E, top, bottom);
+                if (inBody(Organ.SPLEEN)) masked(g, l, t, X0 + 44, CY + 4, X0 + 62, CY + 16, 0xFF6A1A3A, top, bottom);
+                if (inBody(Organ.KIDNEYS)) masked(g, l, t, X1 - 50, CY + 2, X1 - 30, CY + 14, 0xFF8A3A2A, top, bottom);
+                if (inBody(Organ.INTESTINES)) {
+                    for (int i = 0; i < 6; i++) {
+                        int cx = 140 + (i % 3) * 28;
+                        int cy = CY - 10 + (i / 3) * 18;
+                        masked(g, l, t, cx - 12, cy - 6, cx + 12, cy + 6, 0xFFD89A90, top, bottom);
+                        masked(g, l, t, cx - 10, cy - 1, cx + 10, cy + 1, 0xFFB87A70, top, bottom);
+                    }
                 }
             }
         } else {
@@ -998,6 +1005,12 @@ public class SurgeryMinigameScreen extends Screen {
         };
     }
 
+    /** Орган лежит в теле: есть у пациента и ещё не вынут в этой мини-игре изъятия. */
+    private boolean inBody(Organ o) {
+        if (!scene.hasOrgan(o)) return false;
+        return !(type == Minigames.Type.HARVEST && phase >= 1 && scene.organ() == o.ordinal());
+    }
+
     private void drawOrgan(GuiGraphics g, int l, int t, double x, double y) {
         // Атлас Body Control: сердце, лёгкие, желудок, печень, почки, поджелудочная, мозг, селезёнка.
         int idx = switch (scene.organ()) {
@@ -1006,6 +1019,8 @@ public class SurgeryMinigameScreen extends Screen {
             case 2 -> 3;   // печень
             case 3 -> 4;   // почки
             case 4 -> 2;   // кишечник — желудок
+            case 5 -> 7;   // селезёнка
+            case 6 -> 6;   // мозг (замечание живого теста 16: у мозга и селезёнки было сердце)
             default -> 0;
         };
         g.blit(T_ORGANS, l + (int) x - 16, t + (int) y - 16, 32, 32, idx * 64, 0, 64, 64, 512, 64);

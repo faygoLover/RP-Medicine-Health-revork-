@@ -113,9 +113,16 @@ public final class Minigames {
     public record Scene(int part, int stage, long seed, int flags, int bullets, int fragments, int organ) {
         public static final Scene NONE = new Scene(-1, 0, 0, 0, 0, 0, -1);
         public static final int ARTERIAL = 1, FRACTURE = 2, INTERNAL = 4, ORGAN = 8, PNEUMO = 16, FIXATED = 32;
+        /** Органа нет (изъят): бит {@code MISSING << ordinal} — чтобы сцена не рисовала его в теле. */
+        public static final int MISSING = 64;
 
         public boolean has(int flag) {
             return (flags & flag) != 0;
+        }
+
+        /** Орган на месте (для сцены). */
+        public boolean hasOrgan(Organ o) {
+            return (flags & (MISSING << o.ordinal())) == 0;
         }
 
         public static Scene of(MedicalState m, BodyPart part, long seed) {
@@ -127,6 +134,7 @@ public final class Minigames {
             for (Organ o : Organ.VALUES) if (o.part == part && m.organs[o.ordinal()] > 0) f |= ORGAN;
             if (m.pneumo != MedicalState.Pneumo.NONE) f |= PNEUMO;
             if (ps.fixated) f |= FIXATED;
+            for (Organ o : Organ.VALUES) if (!m.hasOrgan(o)) f |= MISSING << o.ordinal();
             return new Scene(part.ordinal(), ps.surgery.ordinal(), seed, f, ps.bullets, ps.fragments, -1);
         }
 

@@ -30,7 +30,8 @@ import java.util.List;
  * («нужна пустая рука» и т.п.) показываются прямо в панели.
  */
 public class MedicalPanelScreen extends Screen {
-    private static final int W = 410;
+    /** Ширина; правая колонка — 120, иначе «Убрать воздуховод» не влезал в кнопку (замечание 13). */
+    private static final int W = 432;
     private static final int H = 236;
     private static final int UNIT = 5;
     private final int targetId;
@@ -46,6 +47,10 @@ public class MedicalPanelScreen extends Screen {
     private Button tubeButton;
     private Button airwayButton;
     private Button restrainButton;
+    /** Прокрутка списка выбранной части, строк (замечание 11: длинный список обрезался). */
+    private int detailScroll;
+    /** Строк в списке выбранной части всего — для границы прокрутки. */
+    private int detailTotal;
     /** Панель уже открывалась и отписалась от осмотра (вернулись после мини-игры) — подписаться снова. */
     private boolean unsubscribed;
 
@@ -198,13 +203,18 @@ public class MedicalPanelScreen extends Screen {
             y += 12;
             List<Examination.Line> lines = exam.view().parts().get(selected.ordinal()).lines();
             if (lines.isEmpty()) g.drawString(font, Component.translatable("rpmedicine.exam.nothing_visible").withStyle(ChatFormatting.GRAY), x, y, 0xFFFFFF);
-            for (Examination.Line line : lines) {
-                for (FormattedCharSequence seq : font.split(ExamText.format(line).withStyle(ExamText.color(line)), dw)) {
-                    if (y > t + 130) break;
-                    g.drawString(font, seq, x, y, 0xFFFFFF);
-                    y += 10;
-                }
+            List<FormattedCharSequence> rows = new ArrayList<>();
+            for (Examination.Line line : lines) rows.addAll(font.split(ExamText.format(line).withStyle(ExamText.color(line)), dw - 6));
+            int fit = Math.max(1, (t + 138 - y) / 10);
+            detailTotal = rows.size();
+            detailScroll = Math.max(0, Math.min(detailScroll, rows.size() - fit));
+            for (int i = detailScroll; i < Math.min(rows.size(), detailScroll + fit); i++) {
+                g.drawString(font, rows.get(i), x, y, 0xFFFFFF);
+                y += 10;
             }
+            // Не влезло — стрелки у края: колёсико мыши листает.
+            if (detailScroll > 0) g.drawString(font, "▲", x + dw - 6, t + 38, 0xAAAAAA);
+            if (detailScroll + fit < rows.size()) g.drawString(font, "▼", x + dw - 6, t + 130, 0xAAAAAA);
         }
         // Общие признаки.
         int gx = generalX();
@@ -401,6 +411,10 @@ public class MedicalPanelScreen extends Screen {
             itemScroll = Math.max(0, itemScroll - (int) Math.signum(delta));
             return true;
         }
+        if (selected != null && mx >= detailX() && mx < generalX() && my >= top() + 26 && my < top() + 140) {
+            detailScroll = Math.max(0, Math.min(detailTotal - 1, detailScroll - (int) Math.signum(delta)));
+            return true;
+        }
         return super.mouseScrolled(mx, my, delta);
     }
 
@@ -416,6 +430,7 @@ public class MedicalPanelScreen extends Screen {
         if (button == 0) {
             BodyPart p = partAt(mx, my);
             if (p != null) {
+                if (p != selected) detailScroll = 0;
                 selected = p;
                 updateButtons();
                 return true;

@@ -43,6 +43,10 @@ public final class TreatmentService {
      * @return true, если событие взаимодействия нужно поглотить
      */
     public static boolean startWithItem(ServerPlayer actor, LivingEntity target, int slot, @Nullable BodyPart part) {
+        // Новое применение (не продолжение идущего действия или мини-игры) — старый выбор органа забыть,
+        // иначе сорвавшаяся попытка навсегда давала «органа здесь нет» на другой части (замечание живого теста 12).
+        if (!(ActionManager.current(actor) instanceof TreatmentTimedAction) && MinigameService.currentSession(actor) <= 0)
+            ORGAN_PICKS.remove(actor.getUUID());
         return startWithItem(actor, target, slot, part, null);
     }
 
@@ -52,6 +56,7 @@ public final class TreatmentService {
     /** Ответ на выбор органа: пусто — отмена. */
     public static void onOrganChoice(ServerPlayer actor, int targetId, int slot, BodyPart part, String organ) {
         var o = faygolover.rpmedicine.core.Organ.byId(organ).orElse(null);
+        ORGAN_PICKS.remove(actor.getUUID());
         if (o == null || o.part != part || slot < 0 || slot >= actor.getInventory().getContainerSize()) return;
         net.minecraft.world.entity.Entity e = targetId < 0 ? actor : actor.level().getEntity(targetId);
         if (!(e instanceof LivingEntity target) || !Medical.isPatient(target)) return;
@@ -117,6 +122,16 @@ public final class TreatmentService {
             return true;
         }
         BodyPart p = part;
+        // Скальпель ПКМ сам выбирает часть: если что-то уже вскрыто, новую часть молча не режем — назвать вскрытую
+        // и отправить в панель, где часть выбирают явно (замечание живого теста 14).
+        if (action == TreatmentAction.INCISE && p == null) {
+            for (faygolover.rpmedicine.core.BodyPartState ps : m.parts) {
+                if (ps.surgery == faygolover.rpmedicine.core.BodyPartState.SurgeryStage.NONE) continue;
+                actor.displayClientMessage(Component.translatable("rpmedicine.refuse.incise_other",
+                        Component.translatable(ps.part.translationKey())).withStyle(ChatFormatting.YELLOW), true);
+                return true;
+            }
+        }
         boolean forced = false;
         String why;
         // Изъятие: в части несколько органов — медик выбирает, какой (п. 7.1).
@@ -666,6 +681,13 @@ public final class TreatmentService {
             Medical.changed(target);
             sound(spec.action());
             Component msg = resultMessage(r, part);
+            // Опытный хирург (6+) сразу видит следующий шаг операции (замечание живого теста 20).
+            var ops = m.part(part);
+            if (r.applied && faygolover.rpmedicine.core.Surgery.isSurgical(spec.action()) && level >= 6
+                    && ops.surgery != faygolover.rpmedicine.core.BodyPartState.SurgeryStage.NONE) {
+                msg = msg.copy().append(Component.literal(" ·").withStyle(ChatFormatting.GRAY)).append(Component.translatable(
+                        "rpmedicine.exam.next_step_" + faygolover.rpmedicine.core.Examination.nextSurgeryStep(m, ops)).withStyle(ChatFormatting.AQUA));
+            }
             // Показания приборов длинные — в чат, остальное — над панелью.
             actor.displayClientMessage(msg, !spec.action().isDiagnostic());
             if (target != actor && target instanceof ServerPlayer tp && !(spec.action().isInstrument())) {

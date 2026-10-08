@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(l)CPR$(): hold right-click with an empty hand on a downed player and press $(l)space$() in rhythm (mark in the centre). Good CPR keeps the brain oxygenated and sometimes ($(cfg)15%$()) restarts the heart."
+      "text": "$(l)CPR$(): hold right-click with an empty hand on a downed player and press $(l)space$() in rhythm (mark in the centre). Good CPR keeps the brain oxygenated and sometimes ($(cfg)15%%$()) restarts the heart."
     },
     {
       "type": "patchouli:text",

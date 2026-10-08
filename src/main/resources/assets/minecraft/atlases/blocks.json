@@ -1,0 +1,20 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "rpmedicine:geo/medicine_cabinet"
+    },
+    {
+      "type": "single",
+      "resource": "rpmedicine:geo/medicine_crate"
+    },
+    {
+      "type": "single",
+      "resource": "rpmedicine:geo/sterilizer"
+    },
+    {
+      "type": "single",
+      "resource": "rpmedicine:geo/lab_table"
+    }
+  ]
+}

@@ -30,6 +30,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Госпиталь (ТЗ второго этапа, п. 2): больничная койка, монитор показателей, стойка капельницы.
  * Блоки — чужие, их функции задаёт датапак ({@link HospitalBlocks}).
@@ -252,7 +254,7 @@ public final class HospitalService {
         boolean drip = m.salineDripRemaining > 0;
         if ((bed != null || drip) && now - d.hospitalScanTick >= SCAN_TICKS) {
             d.hospitalScanTick = now;
-            d.monitorPos = bed != null ? HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.MONITOR, HospitalBlocks.radius(HospitalFunction.MONITOR)) : null;
+            d.monitorPos = bed != null ? adjacentMonitor(sp.level(), bed) : null;
             d.nearOxygen = bed != null && HospitalBlocks.findNearest(sp.level(), bed, HospitalFunction.OXYGEN, HospitalBlocks.radius(HospitalFunction.OXYGEN)) != null;
             // Операционный стол (третий этап): аппарат ИВЛ, кислород и монитор в самом столе.
             d.onTable = bed != null && (HospitalBlocks.is(sp.level().getBlockState(bed), HospitalFunction.OPERATING_TABLE)
@@ -281,7 +283,7 @@ public final class HospitalService {
             return;
         }
         if (alarm(stub.state())) {
-            BlockPos mon = HospitalBlocks.findNearest(stub.level(), bed, HospitalFunction.MONITOR, HospitalBlocks.radius(HospitalFunction.MONITOR));
+            BlockPos mon = adjacentMonitor(stub.level(), bed);
             if (mon != null) playAlarm((ServerLevel) stub.level(), mon);
         }
     }
@@ -296,6 +298,7 @@ public final class HospitalService {
 
     /** Условия на шаг физиологии: койка ускоряет заживление, стойка позволяет капельнице идти на ходу. */
     public static void applyConditions(MedicalData d, StepInput in, MedicalSettings s) {
+        d.state.onOxygen = d.bedPos != null && (d.nearOxygen || d.onTable);
         if (d.bedPos != null) {
             in.healFactor *= s.bedHealFactor;
             in.bloodRegenFactor *= s.bedBloodRegenFactor;
@@ -315,23 +318,90 @@ public final class HospitalService {
 
     // ------------------------------------------------------------------ монитор
 
-    /** Пациент на койке, к которой привязан монитор (ближайший), или null. */
+    /**
+     * Пациент на койке, стоящей вплотную к монитору (замечание живого теста 10: раньше — любая койка в радиусе).
+     * Вплотную две койки — правая, если смотреть на экран монитора.
+     */
     @Nullable
     public static LivingEntity monitorPatient(Level level, BlockPos monitor) {
-        int r = HospitalBlocks.radius(HospitalFunction.MONITOR);
         LivingEntity best = null;
-        double bestDist = Double.MAX_VALUE;
-        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(monitor).inflate(r + 1.5), HospitalService::isOnBed)) {
+        double bestScore = -Double.MAX_VALUE;
+        Direction right = screenRight(level.getBlockState(monitor));
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(monitor).inflate(4), HospitalService::isOnBed)) {
             BlockPos bed = bedOf(e);
-            if (bed == null) continue;
-            if (Math.abs(bed.getX() - monitor.getX()) > r || Math.abs(bed.getY() - monitor.getY()) > r || Math.abs(bed.getZ() - monitor.getZ()) > r) continue;
-            double dist = bed.distSqr(monitor);
-            if (dist < bestDist) {
-                bestDist = dist;
+            if (bed == null || !touches(level, bed, monitor)) continue;
+            // Правее по экрану — больше; без направления у блока — ближе к монитору.
+            double score = right != null ? (bed.getX() - monitor.getX()) * right.getStepX() + (bed.getZ() - monitor.getZ()) * right.getStepZ()
+                    : -bed.distSqr(monitor);
+            if (score > bestScore) {
+                bestScore = score;
                 best = e;
             }
         }
         return best;
+    }
+
+    /** Монитор вплотную к койке (любой её половине), или null. */
+    @Nullable
+    public static BlockPos adjacentMonitor(Level level, BlockPos bed) {
+        List<BlockPos> cells = bedCells(level, bed);
+        BlockPos best = null;
+        double bestDist = Double.MAX_VALUE;
+        for (BlockPos c : cells) {
+            for (Direction d : Direction.Plane.HORIZONTAL) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos p = c.relative(d).above(dy);
+                    if (cells.contains(p) || !HospitalBlocks.is(level.getBlockState(p), HospitalFunction.MONITOR)) continue;
+                    double dist = p.distSqr(bed);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        best = p;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
+    /** Койка касается монитора боком (по горизонтали, монитор может стоять на ступень выше или ниже). */
+    static boolean touches(Level level, BlockPos bed, BlockPos monitor) {
+        for (BlockPos c : bedCells(level, bed)) {
+            // Операционный стол — сам себе монитор.
+            if (c.equals(monitor)) return true;
+            if (Math.abs(c.getX() - monitor.getX()) + Math.abs(c.getZ() - monitor.getZ()) == 1 && Math.abs(c.getY() - monitor.getY()) <= 1)
+                return true;
+        }
+        return false;
+    }
+
+    /** Клетки койки: сама и вторая половина (у двухблочных койки чужих модов — соседний такой же блок). */
+    static List<BlockPos> bedCells(Level level, BlockPos bed) {
+        List<BlockPos> out = new java.util.ArrayList<>(2);
+        out.add(bed);
+        BlockState st = level.getBlockState(bed);
+        if (st.getBlock() instanceof TwoPartBlock tp) {
+            out.add(bed.relative(tp.toOther(st)));
+            return out;
+        }
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            if (level.getBlockState(bed.relative(d)).is(st.getBlock())) {
+                out.add(bed.relative(d));
+                break;
+            }
+        }
+        return out;
+    }
+
+    /** Право по экрану монитора: смотрящий стоит перед экраном (экран — в сторону FACING), правая рука — по часовой. */
+    @Nullable
+    private static Direction screenRight(BlockState st) {
+        for (var prop : st.getProperties()) {
+            if (prop instanceof net.minecraft.world.level.block.state.properties.DirectionProperty dp && dp.getName().equals("facing")) {
+                Direction f = st.getValue(dp);
+                if (f.getAxis().isHorizontal()) return f.getOpposite().getClockWise();
+            }
+        }
+        return null;
     }
 
     /** Игрок смотрит на монитор: отправить цифры пациента (п. 2.3). */

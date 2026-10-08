@@ -159,6 +159,14 @@ public final class PanelActions {
     private static void removeProsthesis(ServerPlayer sp, LivingEntity target, MedicalState m, faygolover.rpmedicine.core.BodyPart part) {
         var ps = m.part(part);
         if (ps.prosthesis == faygolover.rpmedicine.core.BodyPartState.Prosthesis.NONE) return;
+        // Себе протез руки снимают другой, живой рукой; с единственной руки — нечем (замечание живого теста 25).
+        if (target == sp && part.isArm()) {
+            var other = m.part(part == faygolover.rpmedicine.core.BodyPart.RIGHT_ARM ? faygolover.rpmedicine.core.BodyPart.LEFT_ARM : faygolover.rpmedicine.core.BodyPart.RIGHT_ARM);
+            if (other.missing) {
+                sp.displayClientMessage(Component.translatable("rpmedicine.refuse.need_other_hand").withStyle(ChatFormatting.YELLOW), true);
+                return;
+            }
+        }
         var item = switch (ps.prosthesis) {
             case FOOT -> faygolover.rpmedicine.registry.ModItems.PROSTHETIC_FOOT.get();
             case PEG_LEG -> faygolover.rpmedicine.registry.ModItems.PEG_LEG.get();

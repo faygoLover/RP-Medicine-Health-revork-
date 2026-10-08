@@ -34,7 +34,7 @@ public class HospitalGeoBlock extends HorizontalDirectionalBlock implements Enti
         CRATE("medicine_crate", 27, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0.5, 16, 16, 16)),
         STERILIZER("sterilizer", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),
         LAB_TABLE("lab_table", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),
-        THERMOSTAT("thermostat", 9, MedicalStorageMenu.BLOOD_SAMPLES, Block.box(2, 0, 4, 14, 8, 12));
+        THERMOSTAT("thermostat", MedicalStorageMenu.THERMOSTAT_SLOTS, MedicalStorageMenu.BLOOD_SAMPLES, Block.box(2, 0, 4, 14, 8, 12));
 
         public final String id;
         public final int slots;
@@ -86,8 +86,10 @@ public class HospitalGeoBlock extends HorizontalDirectionalBlock implements Enti
         if (!(level.getBlockEntity(pos) instanceof HospitalStorageBlockEntity be)) return InteractionResult.PASS;
         if (kind.slots <= 0) {
             // Стерилизатор и стол: крышка открывается и закрывается (сама работа — ПКМ предметом, InteractionHandler).
-            if (!level.isClientSide) {
+            // Крышка ещё открыта (анимация идёт) — повторный ПКМ её не перезапускает (замечание живого теста 2).
+            if (!level.isClientSide && !level.getBlockTicks().hasScheduledTick(pos, this)) {
                 level.blockEvent(pos, this, 1, 1);
+                lidSound(level, pos, kind, true);
                 level.scheduleTick(pos, this, 30);
             }
             return InteractionResult.CONSUME;
@@ -103,13 +105,32 @@ public class HospitalGeoBlock extends HorizontalDirectionalBlock implements Enti
     @SuppressWarnings("deprecation")
     public void tick(BlockState st, net.minecraft.server.level.ServerLevel level, BlockPos pos, net.minecraft.util.RandomSource rnd) {
         level.blockEvent(pos, this, 1, 0);
+        lidSound(level, pos, kind, false);
+    }
+
+    /** Звук дверцы или крышки (замечания живого теста 1, 2: открывались беззвучно). */
+    public static void lidSound(Level level, BlockPos pos, Kind kind, boolean open) {
+        net.minecraft.sounds.SoundEvent ev = switch (kind) {
+            case CRATE -> open ? net.minecraft.sounds.SoundEvents.BARREL_OPEN : net.minecraft.sounds.SoundEvents.BARREL_CLOSE;
+            case CABINET, STERILIZER, THERMOSTAT -> open ? net.minecraft.sounds.SoundEvents.IRON_TRAPDOOR_OPEN : net.minecraft.sounds.SoundEvents.IRON_TRAPDOOR_CLOSE;
+            case LAB_TABLE -> null;
+        };
+        if (ev == null) return;
+        float pitch = kind == Kind.STERILIZER || kind == Kind.THERMOSTAT ? 1.4f : kind == Kind.CABINET ? 1.2f : 1.0f;
+        level.playSound(null, pos, ev, net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, pitch * (0.95f + level.random.nextFloat() * 0.1f));
     }
 
     /** Открыть или закрыть крышку для всех (стерилизатор после работы). */
     public static void animate(Level level, BlockPos pos) {
         BlockState st = level.getBlockState(pos);
-        if (st.getBlock() instanceof HospitalGeoBlock b && !level.isClientSide) {
+        if (level instanceof net.minecraft.server.level.ServerLevel sl) {
+            // Пар и шипение: видно и слышно, что стерилизатор поработал (замечание живого теста 2).
+            sl.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 8, 0.2, 0.1, 0.2, 0.01);
+            level.playSound(null, pos, net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH, net.minecraft.sounds.SoundSource.BLOCKS, 0.4f, 1.6f);
+        }
+        if (st.getBlock() instanceof HospitalGeoBlock b && !level.isClientSide && !level.getBlockTicks().hasScheduledTick(pos, b)) {
             level.blockEvent(pos, b, 1, 1);
+            lidSound(level, pos, b.kind, true);
             level.scheduleTick(pos, b, 30);
         }
     }

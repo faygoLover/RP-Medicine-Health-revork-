@@ -768,9 +768,10 @@ public final class Physiology {
             m.brain = Math.min(100, m.brain + 100.0 / (s.brainRecoveryHours * 3600.0) * in.brainRecoveryFactor * dt);
 
         // Мозг изъят — смерть сразу, даже в клинической смерти (решения, п. 1.16).
+        // Режим «без смерти» тут не спасает: клиническая смерть без мозга — бесконечные стоны (замечание живого теста 15).
         if (!m.hasOrgan(Organ.BRAIN)) {
             m.brain = 0;
-            brainDeath(m, s, r);
+            r.add(Event.DIED);
             return;
         }
         if (m.brain <= 0 && m.down != Down.CLINICAL) {

@@ -12,6 +12,22 @@ import java.util.random.RandomGenerator;
 public final class Limbs {
     private Limbs() {}
 
+    // ------------------------------------------------------------------ без рук, без ног (замечание живого теста 26)
+
+    /** Маска отсутствующих частей без протеза (бит — ordinal части), как в пакете видимости конечностей. */
+    public static boolean armless(int mask) {
+        return (mask & (1 << BodyPart.RIGHT_ARM.ordinal())) != 0 && (mask & (1 << BodyPart.LEFT_ARM.ordinal())) != 0;
+    }
+
+    public static boolean legless(int mask) {
+        return (mask & (1 << BodyPart.RIGHT_LEG.ordinal())) != 0 && (mask & (1 << BodyPart.LEFT_LEG.ordinal())) != 0;
+    }
+
+    /** Лезть по лестнице: нужны руки и хоть одна нога. */
+    public static boolean canClimb(int mask) {
+        return !armless(mask) && !legless(mask);
+    }
+
     // ------------------------------------------------------------------ некроз
 
     public static boolean irreversible(BodyPartState ps, MedicalSettings s) {
@@ -92,13 +108,15 @@ public final class Limbs {
         }
     }
 
-    /** Хирургическая ампутация: культя под швами, без артериального кровотечения. */
+    /**
+     * Хирургическая ампутация: культя без артериального кровотечения, но открытая — её зашивают отдельным шагом
+     * (замечание живого теста 27: операция заканчивалась самим опиливанием). Качество опила — меньше кровит.
+     */
     public static Treatments.Result amputate(MedicalState m, BodyPart p, MedicalSettings s, double quality) {
         removePart(m, p);
-        Wound stump = new Wound(WoundType.CUT, s.stumpSeverity);
+        Wound stump = new Wound(WoundType.CUT, s.stumpSeverity * (1.2 - 0.4 * Math.max(0, Math.min(1, quality))));
         stump.surgical = true;
-        stump.sutured = true;
-        stump.sutureQuality = 0.6 + 0.4 * quality;
+        stump.sutured = false;
         stump.infectionStage = Wound.Infection.CLEAN;
         m.part(p).wounds.add(stump);
         return Treatments.Result.ok("amputated");
