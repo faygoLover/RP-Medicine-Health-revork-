@@ -247,6 +247,8 @@ public final class MedicalGameTests {
         noErrors();
         ServerPlayer p = player(h, 2, 3);
         ServerPlayer medic = player(h, 3, 3);
+        // Медик нулевого уровня (без RP Perks по умолчанию все на максимуме — тогда ручка спросила бы дозу).
+        faygolover.rpmedicine.server.Medical.data(medic).skillOverride = 0;
         MedicalState m = state(p);
         m.heart = MedicalState.Heart.ARREST;
         m.down = MedicalState.Down.KNOCKDOWN;

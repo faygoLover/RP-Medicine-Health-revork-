@@ -188,7 +188,8 @@ public final class MedCommand {
     private static int skill(CommandContext<CommandSourceStack> c, int level) throws CommandSyntaxException {
         int n = 0;
         for (ServerPlayer sp : EntityArgument.getPlayers(c, "targets")) {
-            boolean attr = level >= 0 && faygolover.rpmedicine.integration.RpPerksCompat.setMedicine(sp, level);
+            // С RP Perks уровень ведёт он (через RP Core), без него — хранится в RP Medicine.
+            boolean attr = faygolover.rpmedicine.integration.CoreCompat.setMedicine(sp, level);
             var d = Medical.data(sp);
             if (d != null) d.skillOverride = attr ? -1 : level;
             n++;

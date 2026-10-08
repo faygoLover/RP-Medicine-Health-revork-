@@ -44,6 +44,7 @@ public final class RpMedicine {
         event.enqueueWork(() -> {
             Network.register();
             ModSetup.commonSetup();
+            faygolover.rpcore.api.RpCoreAPI.registerModule(MODID, "медицина: травмы, лечение, госпиталь, хирургия");
         });
     }
 

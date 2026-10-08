@@ -344,7 +344,7 @@
   "rpmedicine.cmd.restored": "%s: body part restored — %s",
   "rpmedicine.cmd.revived": "%s revived",
   "rpmedicine.cmd.set": "%s: %s = %s",
-  "rpmedicine.cmd.skill_attribute": "%s: Medicine %s (RP Perks attribute), now %s",
+  "rpmedicine.cmd.skill_attribute": "%s: Medicine %s (stored in RP Perks), now %s",
   "rpmedicine.cmd.skill_own": "%s: Medicine %s (mod's own level), now %s",
   "rpmedicine.cmd.time_added": "Healing advanced for %s by %s min",
   "rpmedicine.craving.alcohol": "You're shaking. You want a drink.",

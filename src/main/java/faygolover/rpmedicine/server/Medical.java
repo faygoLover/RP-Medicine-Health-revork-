@@ -5,7 +5,6 @@ import faygolover.rpmedicine.capability.MedicalData;
 import faygolover.rpmedicine.core.MedicalState;
 import faygolover.rpmedicine.core.PatientTraits;
 import faygolover.rpmedicine.entity.BodyStubEntity;
-import faygolover.rpmedicine.integration.RpPerksCompat;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +34,7 @@ public final class Medical {
     }
 
     public static PatientTraits traits(Entity e) {
-        if (e instanceof Player p) return RpPerksCompat.traits(p);
+        if (e instanceof Player p) return faygolover.rpmedicine.integration.CoreCompat.traits(p);
         if (e instanceof BodyStubEntity stub) return stub.traits();
         return PatientTraits.NONE;
     }
@@ -78,14 +77,20 @@ public final class Medical {
     }
 
     /**
-     * Уровень «Медицины»: атрибут RP Perks, если он есть; иначе уровень от команды ГМа {@code skill}
-     * (спорный п. 16.4: свой уровень перекрывает перки, пока атрибута нет); иначе перки.
+     * Уровень «Медицины»: свой уровень от команды ГМа {@code skill} (остаётся только без RP Perks — с ним
+     * уровень переносится в Perks при входе), иначе навык RP Core: с RP Perks — по перкам и уровню ГМа,
+     * без него — максимальный.
      */
     public static int medicineLevel(Player p) {
-        if (!RpPerksCompat.hasMedicineAttribute()) {
-            MedicalData d = MedicalCapability.get(p);
-            if (d != null && d.skillOverride >= 0) return d.skillOverride;
-        }
-        return RpPerksCompat.medicineLevel(p);
+        MedicalData d = MedicalCapability.get(p);
+        if (d != null && d.skillOverride >= 0) return d.skillOverride;
+        return faygolover.rpmedicine.integration.CoreCompat.medicineLevel(p);
+    }
+
+    /** Вход: уровень, выставленный раньше командой RP Medicine, переезжает в RP Perks (если он стоит). */
+    public static void migrateSkill(Player p) {
+        MedicalData d = MedicalCapability.get(p);
+        if (d == null || d.skillOverride < 0 || !faygolover.rpmedicine.integration.CoreCompat.medicineManaged()) return;
+        if (faygolover.rpmedicine.integration.CoreCompat.setMedicine(p, d.skillOverride)) d.skillOverride = -1;
     }
 }

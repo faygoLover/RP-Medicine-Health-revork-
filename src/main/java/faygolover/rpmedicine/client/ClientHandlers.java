@@ -1,7 +1,6 @@
 package faygolover.rpmedicine.client;
 
 import faygolover.rpmedicine.client.screen.ClinicalDeathScreen;
-import faygolover.rpmedicine.client.screen.HudEditorScreen;
 import faygolover.rpmedicine.client.screen.MedicalPanelScreen;
 import faygolover.rpmedicine.hospital.BedPose;
 import faygolover.rpmedicine.network.EntityDownedPacket;
@@ -103,7 +102,7 @@ public final class ClientHandlers {
     }
 
     public static void openHudEditor() {
-        Minecraft.getInstance().setScreen(new HudEditorScreen());
+        Minecraft.getInstance().setScreen(new faygolover.rpcore.client.hud.HudEditorScreen());
     }
 
     public static void onEntityDowned(EntityDownedPacket p) {

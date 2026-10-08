@@ -91,7 +91,7 @@ public class ClientSettingsScreen extends Screen {
             });
         }
         int by = vy + ((volumes.length + 1) / 2) * 22 + 10;
-        addRenderableWidget(Button.builder(Component.translatable("rpmedicine.settings.hud_editor"), b -> minecraft.setScreen(new HudEditorScreen()))
+        addRenderableWidget(Button.builder(Component.translatable("rpmedicine.settings.hud_editor"), b -> minecraft.setScreen(new faygolover.rpcore.client.hud.HudEditorScreen()))
                 .bounds(x0, by, colW, 20).build());
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, b -> onClose()).bounds(x1, by, colW, 20).build());
     }

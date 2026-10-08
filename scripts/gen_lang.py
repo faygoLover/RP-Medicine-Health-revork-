@@ -403,7 +403,7 @@ for k, ru, en in [
  ("rpmedicine.gm.not_loaded", "Тело в незагруженном чанке — телепортируйтесь к нему", "The body is in an unloaded chunk — teleport to it"),
  ("rpmedicine.gm.heal", "Вылечить", "Heal"), ("rpmedicine.gm.revive", "Поднять", "Revive"), ("rpmedicine.gm.kill", "Убить", "Kill"),
  ("rpmedicine.gm.teleport", "К нему", "Go to"), ("rpmedicine.gm.history", "История", "History"), ("rpmedicine.gm.inspect", "Осмотр", "Inspect"),
- ("rpmedicine.cmd.skill_attribute", "%s: «Медицина» %s (атрибут RP Perks), сейчас %s", "%s: Medicine %s (RP Perks attribute), now %s"),
+ ("rpmedicine.cmd.skill_attribute", "%s: «Медицина» %s (хранится в RP Perks), сейчас %s", "%s: Medicine %s (stored in RP Perks), now %s"),
  ("rpmedicine.cmd.skill_own", "%s: «Медицина» %s (свой уровень мода), сейчас %s", "%s: Medicine %s (mod's own level), now %s"),
  ("rpmedicine.stats.title", "Статистика %s за %s ч", "Stats for %s over %s h"),
  ("rpmedicine.stats.treat_given", "  Лечил: %s раз, ошибок %s", "  Treated others: %s times, %s errors"),

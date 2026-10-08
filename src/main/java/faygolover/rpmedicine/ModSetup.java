@@ -130,6 +130,7 @@ public final class ModSetup {
         faygolover.rpmedicine.server.BloodService.onLogin(sp);
         faygolover.rpmedicine.medcard.MedcardService.onLogin(sp);
         faygolover.rpmedicine.server.SurvivalService.onLogin(sp);
+        Medical.migrateSkill(sp);
         faygolover.rpmedicine.server.GuideBook.onLogin(sp);
         faygolover.rpmedicine.stats.History.load(sp.server, sp.getUUID());
         SelfSync.forceSync(sp);

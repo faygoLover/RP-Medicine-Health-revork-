@@ -86,6 +86,7 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
+            MedicalHud.registerCore();
             MenuScreens.register(ModMenus.MEDICAL_CONTAINER.get(), MedicalContainerScreen::new);
             MenuScreens.register(ModMenus.SEARCH.get(), SearchScreen::new);
             MenuScreens.register(ModMenus.MEDICAL_STORAGE.get(), faygolover.rpmedicine.client.screen.MedicalStorageScreen::new);

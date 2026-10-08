@@ -344,7 +344,7 @@
   "rpmedicine.cmd.restored": "%s: часть тела возвращена — %s",
   "rpmedicine.cmd.revived": "%s поднят",
   "rpmedicine.cmd.set": "%s: %s = %s",
-  "rpmedicine.cmd.skill_attribute": "%s: «Медицина» %s (атрибут RP Perks), сейчас %s",
+  "rpmedicine.cmd.skill_attribute": "%s: «Медицина» %s (хранится в RP Perks), сейчас %s",
   "rpmedicine.cmd.skill_own": "%s: «Медицина» %s (свой уровень мода), сейчас %s",
   "rpmedicine.cmd.time_added": "Заживление прокручено у %s на %s мин",
   "rpmedicine.craving.alcohol": "Трясёт. Хочется выпить.",

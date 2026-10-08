@@ -48,34 +48,82 @@ public final class MedicalHud {
         };
     }
 
-    /** Прямоугольник элемента на экране: {x, y, w, h}. */
-    public static int[] layout(HudElement e, int sw, int sh) {
-        ClientConfig.ElementConfig c = ClientConfig.hud(e);
-        double scale = c.scale.get();
-        int w = (int) Math.round(baseW(e) * scale);
-        int h = (int) Math.round(baseH(e) * scale);
-        ClientConfig.Anchor a = c.anchor.get();
-        int x = Math.round(sw * a.fx - w * a.fx) + c.offsetX.get();
-        int y = Math.round(sh * a.fy - h * a.fy) + c.offsetY.get();
-        return new int[]{x, y, w, h};
+    /**
+     * Элемент общего HUD RP Core: положение, масштаб и видимость хранит Core, двигать — в общем редакторе
+     * ({@code /rphud} или {@code /rpmedicine hud}). Первое положение — из старого клиентского конфига мода.
+     */
+    public static final class CoreElement implements faygolover.rpcore.client.hud.HudElement {
+        private final HudElement e;
+        private final net.minecraft.resources.ResourceLocation id;
+
+        public CoreElement(HudElement e) {
+            this.e = e;
+            this.id = new net.minecraft.resources.ResourceLocation(faygolover.rpmedicine.RpMedicine.MODID, e.id);
+        }
+
+        @Override
+        public net.minecraft.resources.ResourceLocation id() {
+            return id;
+        }
+
+        @Override
+        public Component title() {
+            return Component.translatable("rpmedicine.hud.element." + e.id);
+        }
+
+        @Override
+        public int width() {
+            return baseW(e);
+        }
+
+        @Override
+        public int height() {
+            return baseH(e);
+        }
+
+        @Override
+        public faygolover.rpcore.client.hud.Anchor defaultAnchor() {
+            return faygolover.rpcore.client.hud.Anchor.parse(ClientConfig.hud(e).anchor.get().name(), faygolover.rpcore.client.hud.Anchor.TOP_LEFT);
+        }
+
+        @Override
+        public int defaultX() {
+            return ClientConfig.hud(e).offsetX.get();
+        }
+
+        @Override
+        public int defaultY() {
+            return ClientConfig.hud(e).offsetY.get();
+        }
+
+        @Override
+        public double defaultScale() {
+            return ClientConfig.hud(e).scale.get();
+        }
+
+        @Override
+        public boolean defaultVisible() {
+            return ClientConfig.hud(e).visible.get();
+        }
+
+        @Override
+        public void render(GuiGraphics g, float partialTick, boolean preview) {
+            Minecraft mc = Minecraft.getInstance();
+            if (!preview && (mc.player == null || mc.player.isDeadOrDying())) return;
+            drawElement(g, mc.font, e, ClientState.self, preview);
+        }
     }
 
-    /** Точка входа слоя HUD (сигнатура IGuiOverlay). */
+    /** Зарегистрировать элементы в общем HUD RP Core. */
+    public static void registerCore() {
+        for (HudElement e : HudElement.values()) faygolover.rpcore.client.hud.HudRegistry.register(new CoreElement(e));
+    }
+
+    /** Слой RP Medicine: ощущения текстом (элементы рисует общий HUD RP Core). Сигнатура IGuiOverlay. */
     public static void render(ForgeGui gui, GuiGraphics g, float partialTick, int sw, int sh) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.options.hideGui || mc.player.isDeadOrDying()) return;
         SelfView v = ClientState.self;
-        for (HudElement e : HudElement.values()) {
-            if (!ClientConfig.hud(e).visible.get()) continue;
-            int[] l = layout(e, sw, sh);
-            g.pose().pushPose();
-            // Выше чата по глубине: иначе фон сообщений чата закрывает элементы мода.
-            g.pose().translate(l[0], l[1], 300);
-            float scale = ClientConfig.hud(e).scale.get().floatValue();
-            g.pose().scale(scale, scale, 1);
-            drawElement(g, mc.font, e, v, false);
-            g.pose().popPose();
-        }
         if (ClientConfig.SENSATION_MESSAGES.get() && !v.isDown() && !v.sensations.isEmpty()) {
             int idx = (int) ((System.currentTimeMillis() / 4000) % v.sensations.size());
             Component t = Component.translatable("rpmedicine.exam.complaint_" + v.sensations.get(idx)).withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);

@@ -94,8 +94,11 @@ boolean withOptional = (project.findProperty('with_optional') ?: 'false').toStri
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    // RP Perks — обязательная зависимость.
-    implementation fg.deobf("blank:rpperks:${rpperks_version}")
+    // RP Core — обязательная зависимость: навыки и черты (от RP Perks), общий HUD и редактор.
+    implementation fg.deobf("blank:rpcore:${rpcore_version}")
+    // RP Perks и RP Stamina — необязательные: связь с ними только через RP Core и API.
+    // В разработке по умолчанию стоят оба; проверить мод отдельно: -Pno_perks=true, -Pno_stamina=true.
+    if (!(project.findProperty('no_perks') ?: 'false').toString().toBoolean()) runtimeOnly fg.deobf("blank:rpperks:${rpperks_version}")
 
     // Patchouli — книга-справочник (необязателен: без него книги просто нет). В разработке — всегда, чтобы видеть книгу.
     runtimeOnly fg.deobf("blank:patchouli:1.20.1-85-FORGE")
@@ -108,9 +111,10 @@ dependencies {
     compileOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}"
     compileOnly fg.deobf("maven.modrinth:legendary-survival-overhaul:${lso_version}")
 
+    if (!(project.findProperty('no_stamina') ?: 'false').toString().toBoolean()) runtimeOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
+
     if (withOptional) {
         // Для проверки интеграций при runServer/runClient: -Pwith_optional=true
-        runtimeOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
         runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
         runtimeOnly fg.deobf("maven.modrinth:timeless-and-classics-zero:${tacz_version}")
         runtimeOnly fg.deobf("maven.modrinth:zerocontact:${zerocontact_version}")

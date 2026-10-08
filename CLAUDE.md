@@ -58,13 +58,16 @@ JDK 17 обязательно (Forge 1.20.1, ForgeGradle 6, Gradle 8.1.1 чер�
 - Все числа — в конфиге или датапаке.
 - В бою лечение через прогресс-бар; вне боя — мини-игры.
 - Заживление идёт по времени игрока в сети, не по игровым суткам.
-- Навыки не растут сами: уровень «Медицины» 0–10 выставляет ГМ (`/rpmedicine skill` или атрибут RP Perks).
-- Интеграции мягкие, кроме RP Perks (обязательная зависимость). Сталкер, психика, эпидемии, сложные протезы, NPC — аддоны, не здесь.
+- Навыки не растут сами: уровень «Медицины» 0–10 выставляет ГМ (`/rpmedicine skill` или `/rpcore skill`; с RP Perks хранится в нём).
+- Интеграции мягкие; обязателен только RP Core. Сталкер, психика, эпидемии, сложные протезы, NPC — аддоны, не здесь.
+
+## RP Core (с 08.10.2026)
+RP Medicine 0.2.0 требует только **RP Core** (`rpcore`, соседняя папка `RP Core`, план — `RP Core/docs/00_plan.md`). RP Perks и RP Stamina — необязательные: навыки и черты Medicine берёт через `RpCoreAPI` (`integration/CoreCompat`), HUD — элементы общего HUD Core (`MedicalHud.CoreElement`), редактор — общий (`/rphud`). Без RP Perks уровень «Медицины» у всех максимальный (если ГМ не выставил свой). Jar Core, Perks, Stamina — в `libs/`; в разработке по умолчанию стоят все, проверка без них: `-Pno_perks=true`, `-Pno_stamina=true`.
 
 ## Соседние моды автора
 Лежат в соседних папках на машине автора, на GitHub их нет. Собранные jar — в `libs/`, ключевые исходники — в `docs/reference/`.
-- **RP Perks** (`rpperks`, `libs/rpperks-1.0.3-1.20.1-forge.jar`). Перки: enum `faygolover.rpperks.perk.Perk`; у игрока capability `PlayerPerksProvider.PLAYER_PERKS` → `PlayerPerks.hasPerk(Perk)`. Атрибута «Медицина» в RP Perks пока нет; RP Medicine читает `rpperks:medicine` по id, если его нет — свой уровень из `/rpmedicine skill`, иначе из перков: `FIRST_AID` → 3, `MEDIC` → 8, иначе 0.
-- **RP Stamina** (`rpstamina`, `libs/rpstamina-1.0.2-1.20.1-forge.jar`). `StaminaAPI` (только сервер), атрибуты `rpstamina:max_stamina`, `regen_multiplier`, `cost_multiplier`. Редактор HUD RP Medicine сделан по образцу его `HudEditorScreen`.
+- **RP Perks** (`rpperks` 1.1.0, `libs/`). Ведёт навыки семейства для RP Core (`rpperks/compat/CoreTraits`): уровень ГМа, иначе по перкам — `FIRST_AID` → 3, `MEDIC` → 8; черты по перкам. Medicine классы Perks не использует.
+- **RP Stamina** (`rpstamina` 1.1.0, `libs/`). `StaminaAPI` (только сервер), атрибуты `rpstamina:max_stamina`, `regen_multiplier`, `cost_multiplier`. Полоска — элемент общего HUD Core.
 
 ## Чужие моды
 | Мод | Версия в сборке | Где взять |
