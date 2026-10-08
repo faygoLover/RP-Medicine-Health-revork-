@@ -1,0 +1,11 @@
+{
+  "items": [
+    "rpmedicine:iv_amino_acids"
+  ],
+  "form": "drip",
+  "min_level": 3,
+  "effects": [],
+  "nutrition": {
+    "protein": 5
+  }
+}

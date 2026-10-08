@@ -1,0 +1,11 @@
+{
+  "items": [
+    "rpmedicine:iv_vitamins"
+  ],
+  "form": "drip",
+  "min_level": 3,
+  "effects": [],
+  "nutrition": {
+    "vitamins": 6
+  }
+}

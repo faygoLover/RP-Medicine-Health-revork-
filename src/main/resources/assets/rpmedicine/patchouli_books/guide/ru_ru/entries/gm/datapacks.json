@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "- $(l)substances$() — алкоголь, табак и т. п. из модов;$(br)- $(l)nutrition$() — состав продуктов;$(br)- $(l)damage_sources$() — какой урон какую рану даёт;$(br)- $(l)mobs$() — травмы мобов;$(br)- $(l)use_times$() — минимальное время применения (длина анимации).$(br2)Подробно — docs/datapack.md в исходниках мода."
+      "text": "- $(l)substances$() — алкоголь, табак и т. п. из модов;$(br)- состав продуктов — в датапаке RP Culinary;$(br)- $(l)damage_sources$() — какой урон какую рану даёт;$(br)- $(l)mobs$() — травмы мобов;$(br)- $(l)use_times$() — минимальное время применения (длина анимации).$(br2)Подробно — docs/datapack.md в исходниках мода."
     }
   ],
   "advancement": "rpmedicine:book/gm",

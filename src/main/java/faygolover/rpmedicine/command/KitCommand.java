@@ -37,7 +37,8 @@ public final class KitCommand {
                 "decompression_needle:2", "airway:2", "ammonia:2", "painkillers:8", "morphine", "adrenaline", "txa", "syringe:8")));
         KITS.put("resus", new Kit("реанимация и капельницы", List.of(
                 "ambu_bag", "laryngoscope", "endotracheal_tube:4", "defibrillator", "adrenaline", "atropine", "naloxone",
-                "saline:4", "iv_catheter:4", "iv_stand", "norepinephrine", "empty_blood_bag:4", "blood_bag:4", "syringe:8")));
+                "saline:4", "iv_catheter:4", "iv_stand", "norepinephrine", "empty_blood_bag:4", "blood_bag:4", "syringe:8",
+                "iv_glucose", "iv_amino_acids", "iv_lipids", "iv_vitamins")));
         KITS.put("diag", new Kit("диагностика и лаборатория", List.of(
                 "stethoscope", "thermometer", "pulse_oximeter", "tonometer", "glucometer", "hemoanalyzer", "portable_scanner",
                 "test_tube:8", "lancet:8", "medcard:2")));

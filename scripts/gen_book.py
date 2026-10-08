@@ -127,10 +127,10 @@ entry("basics", "intro", "minecraft:book", "Как устроено здоров
 entry("basics", "interface", "rpmedicine:portable_scanner", "Интерфейс и клавиши", "Interface and keys", [
     T("**HUD**: силуэт тела (цвет части — её состояние), общая полоса состояния, ощущения текстом, прогресс лечения.\n\n"
       "**H** — панель осмотра: своя или того, на кого смотрите. В ней части тела, раны, что стоит на теле, и список ваших медицинских предметов — их можно тащить прямо на часть тела.\n\n"
-      "**K** — самочувствие от питания.\n**G** (удерживать) — добить лежачего.",
+      "**K** — питание (мод RP Culinary).\n**G** (удерживать) — добить лежачего.",
       "**HUD**: body silhouette (part colour shows its state), overall condition bar, sensations as text, treatment progress.\n\n"
       "**H** — examination panel: your own or the one you look at. It shows body parts, wounds, what is applied, and your medical items — drag them straight onto a body part.\n\n"
-      "**K** — how you feel from nutrition.\n**G** (hold) — finish off a downed player."),
+      "**K** — nutrition (the RP Culinary mod).\n**G** (hold) — finish off a downed player."),
     T("Положение элементов HUD меняется командой **/rpmedicine hud**.\n\nКлиентские настройки (эффекты экрана, звуки, громкость, «без мини-игр») — Esc → «Моды» → RP Medicine → «Настройки».\n\n"
       "Взгляд на пациента с медицинским предметом в руке показывает короткую сводку: кровит ли, в сознании ли.",
       "Move HUD elements with **/rpmedicine hud**.\n\nClient settings (screen effects, sounds, volume, \"no minigames\") — Esc → Mods → RP Medicine → Config.\n\n"
@@ -341,6 +341,10 @@ DRUGLIST = [
     ("propofol", "10 мг/мл, в капельницу: наркоз держится, пока капает; угнетает дыхание — нужна интубация. Уровень 7.",
      "10 mg/ml, into a drip: anesthesia lasts while it drips; depresses breathing — intubate. Medicine 7."),
     ("norepinephrine", "1 мг/мл, в капельницу: держит давление при шоке. Уровень 6.", "1 mg/ml, into a drip: keeps blood pressure in shock. Medicine 6."),
+    ("iv_glucose", "В пакет физраствора: калории и сахар. Внутривенное питание — нужен RP Culinary.", "Into a saline bag: calories and sugar. IV feeding — needs RP Culinary."),
+    ("iv_amino_acids", "В пакет физраствора: белок.", "Into a saline bag: protein."),
+    ("iv_lipids", "В пакет физраствора: жиры, много калорий.", "Into a saline bag: fat, lots of calories."),
+    ("iv_vitamins", "В пакет физраствора: витамины.", "Into a saline bag: vitamins."),
 ]
 entry("drugs", "list", "rpmedicine:atropine", "Справочник препаратов", "Drug list", [S(f"rpmedicine:{d}", ru, en) for d, ru, en in DRUGLIST])
 entry("drugs", "dosing", "rpmedicine:filled_syringe", "Дозы и передозировка", "Doses and overdose", [
@@ -389,6 +393,10 @@ entry("blood", "stand", "rpmedicine:iv_stand", "Стойка капельниц�
     S("rpmedicine:iv_catheter", "Венозный катетер: через него капает стойка; шприц — в порт без мини-игры.", "The stand drips through it; a syringe goes into its port without a minigame."),
     T("Норадреналин или пропофол набранным шприцем — ПКМ по стойке: в пакет физраствора. Пакет желтеет (норадреналин) или становится молочным (пропофол) и капает {{20}} мин, вводя препарат понемногу.",
       "Norepinephrine or propofol in a filled syringe — right-click the stand: into a saline bag. The bag turns yellow (norepinephrine) or milky (propofol) and drips for {{20}} min, delivering the drug gradually."),
+    T("**Внутривенное питание** (нужен RP Culinary): глюкоза, аминокислоты, жировая эмульсия, витамины — так же шприцем в пакет физраствора. "
+      "За {{20}} мин капельницы поднимает сытость и нутриенты мимо желудка; потом несколько часов плохой аппетит. Сам физраствор поит.",
+      "**IV feeding** (needs RP Culinary): glucose, amino acids, lipid emulsion, vitamins — the same way, by syringe into a saline bag. "
+      "Over a {{20}}-min drip it raises satiety and nutrients bypassing the stomach; poor appetite for a few hours afterwards. Saline itself hydrates."),
 ])
 
 # ---------------------------------------------------------- Диагностика
@@ -499,14 +507,16 @@ entry("life", "substances", "minecraft:honey_bottle", "Алкоголь, таб�
       "Frequent use builds **tolerance** and **dependence**: without the substance comes withdrawal — pain, everything slower."),
 ])
 entry("life", "food", "minecraft:bread", "Питание", "Nutrition", [
-    T("Еда даёт белки, жиры, углеводы и витамины (состав блюд считается по рецептам). Клавиша **K** — как вы себя чувствуете.\n\n"
-      "- Мало белка — раны заживают дольше, удар слабее.\n- Мало жиров — зябко.\n- Мало углеводов — нет сил, быстро устаёте.\n- Мало витаминов — болеете чаще.\n"
-      "- Всё в норме — заживление и иммунитет лучше.\n\nТочно — только анализом крови.",
-      "Food gives protein, fat, carbs and vitamins (dishes are counted from their recipes). Key **K** — how you feel.\n\n"
-      "- Low protein — slow healing, weaker hits.\n- Low fat — chilly.\n- Low carbs — no energy.\n- Low vitamins — sick more often.\n"
-      "- Balanced — better healing and immunity.\n\nExact values — only by a blood test."),
-    T("**Приелось**: одно и то же надоедает — есть дольше, усваивается хуже. Разнообразие помогает.",
-      "**Fed up**: the same food gets boring — slower eating, worse uptake. Variety helps."),
+    T("Питание ведёт мод **RP Culinary**: сытость в калориях, вода, белки, жиры, углеводы, витамины и вес. Клавиша **K** — как вы себя чувствуете.\n\n"
+      "Как питание действует на тело:\n- Мало белка — раны заживают дольше, удар слабее.\n- Мало жиров — зябко.\n- Мало углеводов — нет сил, быстро устаёте.\n"
+      "- Мало витаминов — болеете чаще.\n- Всё в норме — заживление и иммунитет лучше.\n\nТочно — только анализом крови.",
+      "Nutrition is handled by the **RP Culinary** mod: satiety in calories, water, protein, fat, carbs, vitamins and body weight. Key **K** — how you feel.\n\n"
+      "How nutrition affects the body:\n- Low protein — slow healing, weaker hits.\n- Low fat — chilly.\n- Low carbs — no energy.\n"
+      "- Low vitamins — sick more often.\n- Balanced — better healing and immunity.\n\nExact values — only by a blood test."),
+    T("**Голод** не убивает: сначала «нет сил», потом голодные обмороки. Голодный хуже заживает. **Обезвоживание** снижает объём крови и давление.\n\n"
+      "Кто не может есть — **внутривенное питание** на капельнице (раздел «Стойка капельницы»).",
+      "**Hunger** does not kill: first weakness, then hunger faints. The hungry heal worse. **Dehydration** lowers blood volume and pressure.\n\n"
+      "Those who cannot eat — **IV feeding** on the drip stand (see \"IV stand\")."),
 ])
 entry("life", "diabetes", "rpmedicine:glucometer", "Диабет", "Diabetes", [
     T("Диабетик (перк) следит за сахаром: глюкометр, инсулин раз в 8–12 ч, еда поднимает сахар.\n\n"
@@ -538,10 +548,10 @@ entry("gm", "commands", "minecraft:command_block", "Команды", "Commands",
       "**set <цели> <параметр> <значение>** — кровь, SpO₂, сознание, температура, органы (organ), толерантность, нутриенты, пули...",
       "**injure <targets> <type> <part> <severity>** — inflict a wound (cut, stab, gunshot, shrapnel, bruise, burn...).\n**amputate / restore <targets> <part>** — remove or restore a limb.\n"
       "**set <targets> <param> <value>** — blood, SpO₂, consciousness, temperature, organs, tolerance, nutrients, bullets..."),
-    T("**time add <игроки> <время> [offline]** — прокрутить время лечения (заживление, жгут, некроз, сепсис).\n**food add <игроки> <время>** — прокрутить голод и жажду.\n"
+    T("**time add <игроки> <время> [offline]** — прокрутить время лечения (заживление, жгут, некроз, сепсис).\n**food add <игроки> <время>** — прокрутить голод и жажду (с RP Culinary — его).\n"
       "**bed <цели> <x y z>** — уложить на койку.\n**card <игрок> <поле> <значение>** — поле медкарты.\n**stats [часы] / stats history <игрок>** — журнал.\n"
       "**panel** — панель ГМа.\n**kit <набор> [игроки]** — выдать набор.\n**reload** — перечитать датапаки.",
-      "**time add <players> <time> [offline]** — fast-forward treatment time (healing, tourniquet, necrosis, sepsis).\n**food add <players> <time>** — fast-forward hunger and thirst.\n"
+      "**time add <players> <time> [offline]** — fast-forward treatment time (healing, tourniquet, necrosis, sepsis).\n**food add <players> <time>** — fast-forward hunger and thirst (RP Culinary's, if installed).\n"
       "**bed <targets> <x y z>** — put on a bed.\n**card <player> <field> <value>** — a medical record field.\n**stats [hours] / stats history <player>** — the log.\n"
       "**panel** — the GM panel.\n**kit <kit> [players]** — give a kit.\n**reload** — reload datapacks."),
     T("Наборы: **field** (полевой медик), **resus** (реанимация и капельницы), **diag** (диагностика), **surgeon** (хирург), **transplant** (органы и протезы), **drugs** (все препараты), "
@@ -568,9 +578,9 @@ entry("gm", "datapacks", "minecraft:knowledge_book", "Датапаки", "Datapa
       "- **drugs** — препараты: эффекты, дозы, полувыведение, мг;\n- **hospital_blocks** — какие блоки чего модов — койка, монитор, стерилизатор, холодильник, лаборатория, кислород;",
       "Folder **data/<mod>/rpmedicine/...** in a world datapack:\n- **items** — what an item treats, time, level;\n- **item_aliases** — other mods' items as ours;\n"
       "- **drugs** — effects, doses, half-life, mg;\n- **hospital_blocks** — which blocks are a bed, monitor, sterilizer, fridge, lab, oxygen;"),
-    T("- **substances** — алкоголь, табак и т. п. из модов;\n- **nutrition** — состав продуктов;\n- **damage_sources** — какой урон какую рану даёт;\n- **mobs** — травмы мобов;\n"
+    T("- **substances** — алкоголь, табак и т. п. из модов;\n- состав продуктов — в датапаке RP Culinary;\n- **damage_sources** — какой урон какую рану даёт;\n- **mobs** — травмы мобов;\n"
       "- **use_times** — минимальное время применения (длина анимации).\n\nПодробно — docs/datapack.md в исходниках мода.",
-      "- **substances** — alcohol, tobacco etc. from mods;\n- **nutrition** — food composition;\n- **damage_sources** — which damage makes which wound;\n- **mobs** — mob injuries;\n"
+      "- **substances** — alcohol, tobacco etc. from mods;\n- food composition — in the RP Culinary datapack;\n- **damage_sources** — which damage makes which wound;\n- **mobs** — mob injuries;\n"
       "- **use_times** — minimum use time (animation length).\n\nDetails — docs/datapack.md in the mod sources."),
 ], gm=True)
 

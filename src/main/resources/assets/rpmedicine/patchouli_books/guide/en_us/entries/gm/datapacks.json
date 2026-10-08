@@ -14,7 +14,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "- $(l)substances$() — alcohol, tobacco etc. from mods;$(br)- $(l)nutrition$() — food composition;$(br)- $(l)damage_sources$() — which damage makes which wound;$(br)- $(l)mobs$() — mob injuries;$(br)- $(l)use_times$() — minimum use time (animation length).$(br2)Details — docs/datapack.md in the mod sources."
+      "text": "- $(l)substances$() — alcohol, tobacco etc. from mods;$(br)- food composition — in the RP Culinary datapack;$(br)- $(l)damage_sources$() — which damage makes which wound;$(br)- $(l)mobs$() — mob injuries;$(br)- $(l)use_times$() — minimum use time (animation length)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Details — docs/datapack.md in the mod sources."
     }
   ],
   "advancement": "rpmedicine:book/gm",

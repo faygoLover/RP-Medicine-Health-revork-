@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(l)H$() — examination panel: your own or the one you look at. It shows body parts, wounds, what is applied, and your medical items — drag them straight onto a body part.$(br2)$(l)K$() — how you feel from nutrition.$(br)$(l)G$() (hold) — finish off a downed player."
+      "text": "$(l)H$() — examination panel: your own or the one you look at. It shows body parts, wounds, what is applied, and your medical items — drag them straight onto a body part.$(br2)$(l)K$() — nutrition (the RP Culinary mod).$(br)$(l)G$() (hold) — finish off a downed player."
     },
     {
       "type": "patchouli:text",

@@ -28,6 +28,10 @@
     {
       "type": "patchouli:text",
       "text": "Norepinephrine or propofol in a filled syringe — right-click the stand: into a saline bag. The bag turns yellow (norepinephrine) or milky (propofol) and drips for $(cfg)20$() min, delivering the drug gradually."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(l)IV feeding$() (needs RP Culinary): glucose, amino acids, lipid emulsion, vitamins — the same way, by syringe into a saline bag. Over a $(cfg)20$()-min drip it raises satiety and nutrients bypassing the stomach; poor appetite for a few hours afterwards. Saline itself hydrates."
     }
   ]
 }

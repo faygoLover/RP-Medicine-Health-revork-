@@ -90,6 +90,8 @@ public final class MedicalSettings {
     public int labMinLevel = 3;
     /** Пакет с добавленным препаратом (норадреналин, пропофол) капает дольше — держит уровень, с. */
     public double ivAdditiveDripSeconds = 1200.0;
+    /** Влитый раствор (физраствор, кровь) поит: процентов воды RP Culinary за литр. */
+    public double ivWaterPercentPerLiter = 40.0;
     /** Всасывание препарата: укол в мышцу и таблетки — постоянная, с (почти всё всосалось за 3 таких срока). */
     public double drugAbsorbImSeconds = 35.0;
     public double drugAbsorbOralSeconds = 40.0;

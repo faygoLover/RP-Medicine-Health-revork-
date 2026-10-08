@@ -1,0 +1,11 @@
+{
+  "items": [
+    "rpmedicine:iv_lipids"
+  ],
+  "form": "drip",
+  "min_level": 3,
+  "effects": [],
+  "nutrition": {
+    "fat": 5
+  }
+}

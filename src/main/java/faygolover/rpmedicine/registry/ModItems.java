@@ -117,7 +117,8 @@ public final class ModItems {
 
     /** Шприц-ручки и флаконы (решение 06.10): ручка колет сама, флакон — через многоразовый шприц. */
     public static final java.util.Set<String> PEN_IDS = java.util.Set.of("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "insulin");
-    public static final java.util.Set<String> VIAL_IDS = java.util.Set.of("ceftriaxone", "propofol", "norepinephrine", "lidocaine", "ketamine");
+    public static final java.util.Set<String> VIAL_IDS = java.util.Set.of("ceftriaxone", "propofol", "norepinephrine", "lidocaine", "ketamine",
+            "iv_glucose", "iv_amino_acids", "iv_lipids", "iv_vitamins");
 
     public static boolean isPen(net.minecraft.world.item.ItemStack st) {
         var id = net.minecraftforge.registries.ForgeRegistries.ITEMS.getKey(st.getItem());
@@ -142,6 +143,11 @@ public final class ModItems {
     public static final RegistryObject<Item> LIDOCAINE = vial("lidocaine");
     public static final RegistryObject<Item> KETAMINE = vial("ketamine");
     public static final RegistryObject<Item> PROPOFOL = vial("propofol");
+    /** Внутривенное питание (RP Culinary): добавки в пакет физраствора на стойке. */
+    public static final RegistryObject<Item> IV_GLUCOSE = vial("iv_glucose");
+    public static final RegistryObject<Item> IV_AMINO_ACIDS = vial("iv_amino_acids");
+    public static final RegistryObject<Item> IV_LIPIDS = vial("iv_lipids");
+    public static final RegistryObject<Item> IV_VITAMINS = vial("iv_vitamins");
     // Хирургия (третий этап, п. 4.4)
     public static final RegistryObject<Item> SCALPEL = tool("scalpel", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> HEMOSTAT = tool("hemostat", () -> new faygolover.rpmedicine.item.SurgicalInstrumentItem(new Item.Properties().stacksTo(1)));
@@ -219,7 +225,7 @@ public final class ModItems {
             "morphine", "adrenaline", "txa", "ketorolac", "naloxone", "ceftriaxone", "diazepam", "atropine", "lidocaine", "ketamine",
             "propofol", "insulin", "syringe", "filled_syringe", "dirty_syringe", "used_pen",
             "hospital_bed", "operating_table", "vitals_monitor", "medicine_cabinet", "medicine_crate", "sterilizer", "lab_table", "thermostat", "oxygen_tank",
-            "iv_stand", "iv_catheter", "saline", "used_iv_bag", "norepinephrine", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet", "lab_report",
+            "iv_stand", "iv_catheter", "saline", "used_iv_bag", "norepinephrine", "iv_glucose", "iv_amino_acids", "iv_lipids", "iv_vitamins", "empty_blood_bag", "blood_bag", "test_tube", "blood_sample", "dirty_test_tube", "lancet", "lab_report",
             "pulse_oximeter", "tonometer", "stethoscope", "thermometer", "glucometer", "hemoanalyzer", "portable_scanner",
             "surgical_mask", "surgical_gloves", "scalpel", "hemostat", "retractor", "surgical_tweezers", "vascular_suture",
             "surgical_drill", "osteosynthesis_kit", "chest_drain", "bone_saw",

@@ -18,11 +18,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(l)time add <players> <time> [offline]$() — fast-forward treatment time (healing, tourniquet, necrosis, sepsis). $(l)food add <players> <time>$() — fast-forward hunger and thirst. $(l)bed <targets> <x y z>$() — put on a bed. $(l)card <player> <field> <value>$() — a medical record field. $(l)stats [hours] / stats history <player>$() — the log. $(l)panel$() — the GM panel."
+      "text": "$(l)time add <players> <time> [offline]$() — fast-forward treatment time (healing, tourniquet, necrosis, sepsis). $(l)food add <players> <time>$() — fast-forward hunger and thirst (RP Culinary's, if installed). $(l)bed <targets> <x y z>$() — put on a bed. $(l)card <player> <field> <value>$() — a medical record field."
     },
     {
       "type": "patchouli:text",
-      "text": "$(l)kit <kit> [players]$() — give a kit. $(l)reload$() — reload datapacks."
+      "text": "$(l)stats [hours] / stats history <player>$() — the log. $(l)panel$() — the GM panel. $(l)kit <kit> [players]$() — give a kit. $(l)reload$() — reload datapacks."
     },
     {
       "type": "patchouli:text",

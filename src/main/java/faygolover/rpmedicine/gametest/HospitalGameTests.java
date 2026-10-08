@@ -619,6 +619,14 @@ public final class HospitalGameTests {
         double w = n.hydration(p);
         faygolover.rpmedicine.integration.CoreNutrition.vomit(p, s.vomitThirstLoss);
         h.assertTrue(Math.abs(n.hydration(p) - (w - s.vomitThirstLoss / 100)) < 1e-6, "рвота: минус вода, было " + n.hydration(p));
+        // Внутривенное питание: глюкоза с капельницы — не сразу, но аппетит пропадает; физраствор поит.
+        h.assertTrue(faygolover.rpmedicine.integration.IvNutrition.isNutrition("rpmedicine:iv_glucose"), "глюкоза — питательная добавка");
+        double satBefore = n.satiety(p);
+        faygolover.rpmedicine.integration.IvNutrition.deliver(p, m, "rpmedicine:iv_glucose", 10);
+        h.assertTrue(n.poorAppetite(p) && Math.abs(n.satiety(p) - satBefore) < 1e-6, "капельница: аппетита нет, сытость растёт не сразу");
+        double hyd = n.hydration(p);
+        faygolover.rpmedicine.integration.IvNutrition.water(p, 250);
+        h.assertTrue(Math.abs(n.hydration(p) - Math.min(1, hyd + 0.25 * s.ivWaterPercentPerLiter / 100)) < 1e-6, "физраствор поит: " + n.hydration(p));
         // Голодный обморок через мод тела.
         h.assertTrue(faygolover.rpcore.api.RpCoreAPI.body().faint(p, 12) && m.faintSeconds == 12, "обморок по вызову");
         m.faintSeconds = 0;

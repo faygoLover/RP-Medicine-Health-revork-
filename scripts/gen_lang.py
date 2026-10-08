@@ -247,6 +247,10 @@ items2.update({
  "ceftriaxone": ("Цефтриаксон", "Ceftriaxone", "Укол: сильный антибиотик на 12 часов. Медицина 5+.", "Injection: strong antibiotic for 12 hours. Medicine 5+."),
  "diazepam": ("Диазепам", "Diazepam", "Укол: снижает болевой шок и пульс, сонливость. С опиатами угнетает дыхание. Медицина 5+.", "Injection: eases pain shock and heart rate, drowsiness. With opioids depresses breathing. Medicine 5+."),
  "norepinephrine": ("Норадреналин", "Norepinephrine", "Капельница: поднимает давление на 20 минут. Пациент на месте. Медицина 6+.", "Drip: raises blood pressure for 20 minutes. The patient stays still. Medicine 6+."),
+ "iv_glucose": ("Глюкоза 40 %", "Glucose 40%", "В пакет физраствора на стойке: калории и сахар за 20 минут капельницы. Потом плохой аппетит. Нужен RP Culinary. Медицина 3+.", "Into a saline bag on the stand: calories and sugar over a 20-minute drip. Poor appetite afterwards. Needs RP Culinary. Medicine 3+."),
+ "iv_amino_acids": ("Аминокислоты", "Amino acids", "В пакет физраствора на стойке: белок за 20 минут капельницы. Нужен RP Culinary. Медицина 3+.", "Into a saline bag on the stand: protein over a 20-minute drip. Needs RP Culinary. Medicine 3+."),
+ "iv_lipids": ("Жировая эмульсия", "Lipid emulsion", "В пакет физраствора на стойке: жиры и много калорий за 20 минут капельницы. Нужен RP Culinary. Медицина 3+.", "Into a saline bag on the stand: fat and lots of calories over a 20-minute drip. Needs RP Culinary. Medicine 3+."),
+ "iv_vitamins": ("Витамины для капельницы", "IV vitamins", "В пакет физраствора на стойке: витамины за 20 минут капельницы. Нужен RP Culinary. Медицина 3+.", "Into a saline bag on the stand: vitamins over a 20-minute drip. Needs RP Culinary. Medicine 3+."),
  "atropine": ("Атропин", "Atropine", "Укол: учащает редкий пульс. Медицина 5+.", "Injection: speeds up a slow heart rate. Medicine 5+."),
  "antiseptic": ("Антисептик", "Antiseptic", "Спрей на рану: шанс заражения ниже на 70 %.", "Spray on a wound: 70% lower chance of infection."),
  "antibiotic_ointment": ("Мазь с антибиотиком", "Antibiotic ointment", "Лечит заражение неглубокой раны и ожога. Медицина 2+.", "Treats infection of a shallow wound or a burn. Medicine 2+."),
@@ -595,6 +599,10 @@ WHAT.update({
     "ceftriaxone": ("Флакон антибиотика на 2 дозы, набирать шприцем.", "An antibiotic vial, 2 doses, drawn with a syringe."),
     "propofol": ("Флакон пропофола на 2 дозы, набирать шприцем.", "A propofol vial, 2 doses, drawn with a syringe."),
     "norepinephrine": ("Флакон норадреналина на 2 дозы, набирать шприцем.", "A norepinephrine vial, 2 doses, drawn with a syringe."),
+    "iv_glucose": ("Флакон 10 мл — полный приём, набирать шприцем.", "A 10 ml vial — a full serving, drawn with a syringe."),
+    "iv_amino_acids": ("Флакон 10 мл — полный приём, набирать шприцем.", "A 10 ml vial — a full serving, drawn with a syringe."),
+    "iv_lipids": ("Флакон 10 мл — полный приём, набирать шприцем.", "A 10 ml vial — a full serving, drawn with a syringe."),
+    "iv_vitamins": ("Флакон 10 мл — полный приём, набирать шприцем.", "A 10 ml vial — a full serving, drawn with a syringe."),
     "syringe": ("Многоразовый шприц. Флакон во вторую руку — набрать.", "A reusable syringe. Hold a vial in the other hand to draw."),
     "used_pen": ("Пустая шприц-ручка.", "An empty injector pen."),
     "iv_catheter": ("Пластиковая канюля с иглой.", "A plastic cannula with a needle."),
@@ -921,39 +929,11 @@ for k, ru, en in [("smells_alcohol", "Запах алкоголя", "Smells of a
     ("withdrawal_signs", "Пот, дрожь, беспокойство", "Sweating, tremor, restlessness"), ("withdrawal", "Абстиненция: %s", "Withdrawal: %s"),
     ("seizure", "Судороги!", "Seizure!")]:
     t("rpmedicine.exam." + k, ru, en)
-# Питание.
-for k, ru, en in [("title", "Питание", "Nutrition"), ("protein", "Белки", "Protein"), ("fat", "Жиры", "Fats"), ("carbs", "Углеводы", "Carbohydrates"),
-    ("vitamins", "Витамины и клетчатка", "Vitamins and fibre"), ("state_low", "мало", "low"), ("state_mid", "так себе", "so-so"),
-    ("state_ok", "норма", "good"), ("state_high", "избыток", "excess"),
-    ("kcal_recent", "Съедено за последние часы: %s ккал", "Eaten over the last hours: %s kcal"),
-    ("tooltip", "%s ккал · Б %s · Ж %s · У %s", "%s kcal · P %s · F %s · C %s")]:
-    t("rpmedicine.nutrition." + k, ru, en)
-t("key.rpmedicine.nutrition", "Питание", "Nutrition")
+# Питание (окно, «приелось», состав) — в RP Culinary; здесь только осмотр и анализ.
 t("rpmedicine.exam.malnourished", "Истощён: худой, слабый", "Malnourished: thin and weak")
 t("rpmedicine.exam.undernourished", "Недоедает: вялый, бледный", "Undernourished: sluggish and pale")
-# «Приелось».
-for k, ru, en, mru, men in [
-    ("meat", "мясо", "meat", "Опять мясо... кусок в горло не лезет.", "Meat again... you can barely swallow it."),
-    ("fish", "рыба", "fish", "Снова рыба. Уже воротит.", "Fish again. It's getting sickening."),
-    ("grain", "хлеб и каши", "bread and grains", "Опять каша да хлеб. Надоело.", "Porridge and bread again. You're sick of it."),
-    ("vegetables", "овощи", "vegetables", "Одни овощи... хочется чего-то другого.", "Only vegetables... you want something else."),
-    ("fruit", "фрукты", "fruit", "Фрукты уже приелись.", "You're tired of fruit."),
-    ("sweet", "сладкое", "sweets", "Приторно. От сладкого уже мутит.", "Too sweet. The sweets are making you queasy."),
-    ("dairy", "молочное и яйца", "dairy and eggs", "Опять молочное. Без аппетита.", "Dairy again. No appetite.")]:
-    t("rpmedicine.food_category." + k, ru, en)
-    t("rpmedicine.monotony." + k, mru, men)
-t("rpmedicine.nutrition.fed_up", "Приелось: %s", "Fed up with: %s")
 t("rpmedicine.exam.poor_appetite", "Плохой аппетит", "Poor appetite")
-# Питание — ощущения и анализ.
-for k, ru, en in [("feel_low_protein", "Слабость в мышцах, ссадины и раны заживают долго.", "Weak muscles; scrapes and wounds heal slowly."),
-    ("feel_low_fat", "Всё время зябко, кожа сухая.", "You feel chilly all the time; dry skin."),
-    ("feel_low_carbs", "Нет сил, быстро выдыхаешься.", "No energy; you get winded fast."),
-    ("feel_low_vitamins", "Бледность, ломкие ногти, легко простужаешься.", "Pale, brittle nails, you catch colds easily."),
-    ("feel_heavy", "Тяжесть в теле, одышка.", "Heavy body, short of breath."),
-    ("feel_balanced", "Чувствуешь себя бодро и сыто.", "You feel well fed and lively."),
-    ("feel_ok", "Ничего особенного.", "Nothing in particular."),
-    ("lab_hint", "Точно — только анализом крови в лаборатории.", "Exact values — only by a lab blood test.")]:
-    t("rpmedicine.nutrition." + k, ru, en)
+# Питание — анализ.
 for k, ru, en in [("albumin", "Альбумин: %s г/л (норма 35–50)", "Albumin: %s g/L (normal 35–50)"),
     ("triglycerides", "Триглицериды: %s ммоль/л (норма 0,5–1,7)", "Triglycerides: %s mmol/L (normal 0.5–1.7)"),
     ("glucose", "Глюкоза: %s ммоль/л (норма 3,9–6,1)", "Glucose: %s mmol/L (normal 3.9–6.1)"),
@@ -1081,6 +1061,10 @@ t("item.rpmedicine.lidocaine.label", "20 мг/мл (2 %)", "20 mg/ml (2%)")
 t("item.rpmedicine.ketamine.label", "50 мг/мл", "50 mg/ml")
 t("item.rpmedicine.norepinephrine.label", "1 мг/мл, в капельницу", "1 mg/ml, for a drip")
 t("item.rpmedicine.propofol.label", "10 мг/мл (1 %), в капельницу", "10 mg/ml (1%), for a drip")
+t("item.rpmedicine.iv_glucose.label", "40 %, в пакет физраствора", "40%, into a saline bag")
+t("item.rpmedicine.iv_amino_acids.label", "10 %, в пакет физраствора", "10%, into a saline bag")
+t("item.rpmedicine.iv_lipids.label", "20 %, в пакет физраствора", "20%, into a saline bag")
+t("item.rpmedicine.iv_vitamins.label", "в пакет физраствора", "into a saline bag")
 t("rpmedicine.refuse.vial_use_syringe", "Флакон набирают шприцем: шприц в руку, флакон во вторую", "Draw a vial with a syringe: syringe in hand, vial in the other")
 t("item.rpmedicine.filled_syringe", "Набранный шприц", "Filled syringe")
 t("item.rpmedicine.filled_syringe.named", "Шприц: %s, %s мл", "Syringe: %s, %s ml")

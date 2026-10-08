@@ -1,0 +1,11 @@
+{
+  "items": [
+    "rpmedicine:iv_glucose"
+  ],
+  "form": "drip",
+  "min_level": 3,
+  "effects": [],
+  "nutrition": {
+    "carbs": 10
+  }
+}

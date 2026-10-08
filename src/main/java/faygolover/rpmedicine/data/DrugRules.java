@@ -44,6 +44,7 @@ public final class DrugRules {
         protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager rm, ProfilerFiller profiler) {
             Map<ResourceLocation, Entry> items = new HashMap<>();
             Map<String, Drug> drugs = new HashMap<>();
+            faygolover.rpmedicine.integration.IvNutrition.beginReload();
             for (Map.Entry<ResourceLocation, JsonElement> e : map.entrySet()) {
                 try {
                     JsonObject o = e.getValue().getAsJsonObject();
@@ -51,6 +52,7 @@ public final class DrugRules {
                     double seconds = GsonHelper.getAsDouble(o, "seconds", defaultSeconds(d.form()));
                     Entry entry = new Entry(d, seconds, GsonHelper.getAsInt(o, "min_level", 0));
                     drugs.put(d.id(), d);
+                    faygolover.rpmedicine.integration.IvNutrition.read(d.id(), o);
                     for (JsonElement it : GsonHelper.getAsJsonArray(o, "items")) {
                         ResourceLocation rl = ResourceLocation.tryParse(it.getAsString());
                         if (rl != null) items.put(rl, entry);
@@ -59,6 +61,7 @@ public final class DrugRules {
                     RpMedicine.LOGGER.error("RP Medicine: ошибка в drugs {}: {}", e.getKey(), ex.getMessage());
                 }
             }
+            faygolover.rpmedicine.integration.IvNutrition.endReload();
             byItem = Map.copyOf(items);
             byId = Map.copyOf(drugs);
             faygolover.rpmedicine.core.DrugLevels.resolver = id -> byId.get(id);

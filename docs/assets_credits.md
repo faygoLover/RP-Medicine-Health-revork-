@@ -128,6 +128,10 @@ SOFTWARE.
 | `textures/item/ketamine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/lidocaine.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/hypnotic_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/propofol.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/emulsion_vial.png` | VKM | MIT |
+| `textures/item/iv_glucose.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/oil_vial.png` (другой оттенок) | VKM | MIT |
+| `textures/item/iv_amino_acids.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/oil_vial.png` (другой оттенок) | VKM | MIT |
+| `textures/item/iv_lipids.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/emulsion_vial.png` (другой оттенок) | VKM | MIT |
+| `textures/item/iv_vitamins.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/oil_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/surgical_gloves.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/gloves.png` (перекрашено) | VKM | MIT |
 | `textures/item/field_surgery_kit.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/surgicalinstrument.png` | JEDIGD | MIT |
 | `textures/item/organ.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_heart.png` | VKM | MIT |

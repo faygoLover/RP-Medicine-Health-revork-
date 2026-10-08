@@ -85,6 +85,11 @@ ICONS = {
     "ketamine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.5),
     "lidocaine": ("hue", BC + "textures/item/hypnotic_vial.png", 0.12),
     "propofol": BC + "textures/item/emulsion_vial.png",
+    # Внутривенное питание: глюкоза — жёлтая, аминокислоты — зеленоватые, жиры — молочные, витамины — оранжевые.
+    "iv_glucose": ("hue", BC + "textures/item/oil_vial.png", 0.05),
+    "iv_amino_acids": ("hue", BC + "textures/item/oil_vial.png", 0.5),
+    "iv_lipids": ("hue", BC + "textures/item/emulsion_vial.png", 0.08),
+    "iv_vitamins": ("hue", BC + "textures/item/oil_vial.png", -0.06),
 
     "lancet": ("drawn", "lancet"),
     # Диагностика

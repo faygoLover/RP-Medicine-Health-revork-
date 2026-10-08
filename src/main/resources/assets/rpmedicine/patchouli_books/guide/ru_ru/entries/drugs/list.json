@@ -63,6 +63,26 @@
       "type": "patchouli:spotlight",
       "item": "rpmedicine:norepinephrine",
       "text": "1 мг/мл, в капельницу: держит давление при шоке. Уровень 6."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_glucose",
+      "text": "В пакет физраствора: калории и сахар. Внутривенное питание — нужен RP Culinary."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_amino_acids",
+      "text": "В пакет физраствора: белок."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_lipids",
+      "text": "В пакет физраствора: жиры, много калорий."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_vitamins",
+      "text": "В пакет физраствора: витамины."
     }
   ]
 }

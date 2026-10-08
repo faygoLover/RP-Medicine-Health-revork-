@@ -86,7 +86,11 @@ public final class PatientTicker {
         if (!quiet) {
             long t0 = System.nanoTime();
             in.random = RANDOM.split();
+            double dripBefore = m.salineDripRemaining + m.bloodDripRemaining;
             StepResult r = Physiology.step(m, in, s);
+            // Влитое капельницей поит (RP Culinary).
+            double infused = dripBefore - (m.salineDripRemaining + m.bloodDripRemaining);
+            if (infused > 0) faygolover.rpmedicine.integration.IvNutrition.water(sp, infused);
             // Кашель курильщика — примерно раз в час в сети.
             if (in.traits.smoker && in.random.nextDouble() < s.smokerCoughsPerHour * in.dt / 3600.0)
                 sp.level().playSound(null, sp.getX(), sp.getY(), sp.getZ(), faygolover.rpmedicine.registry.ModSounds.COUGH.get(),

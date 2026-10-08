@@ -63,6 +63,26 @@
       "type": "patchouli:spotlight",
       "item": "rpmedicine:norepinephrine",
       "text": "1 mg/ml, into a drip: keeps blood pressure in shock. Medicine 6."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_glucose",
+      "text": "Into a saline bag: calories and sugar. IV feeding — needs RP Culinary."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_amino_acids",
+      "text": "Into a saline bag: protein."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_lipids",
+      "text": "Into a saline bag: fat, lots of calories."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "rpmedicine:iv_vitamins",
+      "text": "Into a saline bag: vitamins."
     }
   ]
 }

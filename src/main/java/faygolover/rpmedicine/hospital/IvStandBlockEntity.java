@@ -99,7 +99,7 @@ public class IvStandBlockEntity extends BlockEntity {
         if (blood) return BLOOD;
         String add = additive(bags[i]);
         if (add == null) return SALINE;
-        return add.endsWith("propofol") ? SALINE_MILKY : SALINE_YELLOW;
+        return add.endsWith("propofol") || add.endsWith("iv_lipids") ? SALINE_MILKY : SALINE_YELLOW;
     }
 
     public boolean linked() {
@@ -276,6 +276,8 @@ public class IvStandBlockEntity extends BlockEntity {
                     Drug d = DrugLevels.resolver.apply(add);
                     double doses = additiveDoses(bags[active]) * (before - left) / before;
                     if (d != null && doses > 0) DrugLevels.give(m, d, doses, DrugLevels.Route.DRIP, s);
+                    // Питательная добавка — моду питания (RP Culinary) мимо желудка.
+                    if (doses > 0) faygolover.rpmedicine.integration.IvNutrition.deliver(p, m, add, doses);
                 }
                 boolean wasFull = before > 0.5;
                 setVolume(active, left);
