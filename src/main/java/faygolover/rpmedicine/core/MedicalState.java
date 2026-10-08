@@ -37,6 +37,10 @@ public final class MedicalState {
     // Кровь
     public double weightKg;
     public double heightCm;
+    /** Доля жира, % (телосложение, ИМТ). */
+    public double bodyFat = 20;
+    /** Сила 0–10 (RP Perks через Core; без него — 4): не сохраняется, ставится каждый шаг. */
+    public int strength = 4;
     /** Объём в сосудах, мл, включая физраствор. */
     public double bloodVolume;
     /** Сколько из объёма — физраствор, мл. */
@@ -367,6 +371,8 @@ public final class MedicalState {
         for (int i = 0; i < parts.length; i++) parts[i].copyFrom(o.parts[i]);
         weightKg = o.weightKg;
         heightCm = o.heightCm;
+        bodyFat = o.bodyFat;
+        strength = o.strength;
         bloodVolume = o.bloodVolume;
         saline = o.saline;
         salineDripRemaining = o.salineDripRemaining;

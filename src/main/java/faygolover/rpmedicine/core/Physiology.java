@@ -25,7 +25,7 @@ public final class Physiology {
         tickLimbs(m, in, s, r);
         double bleedPerMin = tickBlood(m, in, s, r);
         double hungerFactor = in.satiety < s.hungerThreshold ? s.hungerHealFactor : 1.0;
-        if (in.online) Healing.advance(m, dt * in.healFactor * hungerFactor, s);
+        if (in.online) Healing.advance(m, dt * in.healFactor * hungerFactor * (Body.underweight(m) ? s.underweightHeal : 1.0), s);
         Infections.tick(m, in, s, r);
         Surgery.tick(m, in, s);
         Limbs.tickNecrosis(m, in, s);
@@ -509,6 +509,7 @@ public final class Physiology {
             if (m.adrenalineSeconds > 0) target += 10;
             if (m.adrenalineInjectionSeconds > 0) target += s.adrenalineInjectionPressure;
             if (m.pain >= 60) target += 8;
+            if (Body.obese(m)) target += s.obesePressure;
             if (m.morphineSeconds > 0 && m.morphineDelay <= 0) target -= 5;
             if (m.pneumo == Pneumo.TENSION) target -= s.tensionPressureDrop * m.tensionProgress;
             target += m.effect(DrugEffect.PRESSURE);

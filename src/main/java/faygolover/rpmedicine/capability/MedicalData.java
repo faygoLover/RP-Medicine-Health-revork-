@@ -38,6 +38,8 @@ public final class MedicalData {
     public GameplayEffects.Mods lastMods = new GameplayEffects.Mods();
     /** Несёт тело (замедление, без бега и стрельбы). */
     public boolean carrying;
+    /** Сила того, кто тащит (множитель от RP Perks; 1 — средняя): меньше замедление при переноске. */
+    public double carryStrength = 1.0;
     /** Идёт лечение с прогресс-баром (замедление). */
     public boolean treating;
 

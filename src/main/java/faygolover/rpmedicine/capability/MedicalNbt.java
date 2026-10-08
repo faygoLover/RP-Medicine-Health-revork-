@@ -23,6 +23,7 @@ public final class MedicalNbt {
         CompoundTag t = new CompoundTag();
         t.putInt("v", VERSION);
         t.putFloat("weight", (float) m.weightKg);
+        t.putFloat("fat", (float) m.bodyFat);
         t.putFloat("height", (float) m.heightCm);
         t.putFloat("blood", (float) m.bloodVolume);
         putIf(t, "saline", m.saline);
@@ -217,6 +218,7 @@ public final class MedicalNbt {
         m.reset(s);
         if (t.isEmpty()) return;
         if (t.contains("weight")) m.weightKg = t.getFloat("weight");
+        if (t.contains("fat")) m.bodyFat = t.getFloat("fat");
         if (t.contains("height")) m.heightCm = t.getFloat("height");
         if (m.weightKg <= 0) m.weightKg = s.defaultWeightKg;
         if (m.heightCm <= 0) m.heightCm = s.defaultHeightCm;

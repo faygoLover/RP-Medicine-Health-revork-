@@ -191,6 +191,10 @@ public final class GameplayEffects {
         if (m.part(BodyPart.CHEST).hasFracture()) cap *= 0.8;
         if (m.pneumo != MedicalState.Pneumo.NONE) cap *= 0.7;
         if (m.postClinicalSeconds > 0) cap *= 0.6;
+        if (Body.obese(m)) {
+            cap *= s.obeseStaminaCap;
+            r.staminaRegen *= s.obeseStaminaRegen;
+        }
         r.staminaCap = Math.max(0.1, Math.min(1.0, cap));
         if (m.postClinicalSeconds > 0) r.staminaRegen *= 0.6;
         Nutrition.gameplay(m, r, s);

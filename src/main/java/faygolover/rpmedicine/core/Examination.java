@@ -241,6 +241,10 @@ public final class Examination {
         // Капельница видна всем; жар на ощупь — с уровня 4 (второй этап).
         if (m.intubated) out.add(new Line("intubated"));
         if (m.onOxygen) out.add(new Line("on_oxygen"));
+        // Телосложение видно всем (полный, худой, мускулистый); цифры ИМТ — с уровня 4.
+        String build = Body.buildWord(m);
+        if (build != null) out.add(new Line(build));
+        if (lvl >= 4 && !self) out.add(new Line("bmi", new int[]{(int) Math.round(Body.bmi(m)), (int) Math.round(m.bodyFat)}));
         if (!self && lvl >= 4 && m.effect(DrugEffect.ANESTHESIA) > 0) out.add(new Line("anesthesia"));
         if (m.bloodDripRemaining > 0) out.add(new Line("drip_blood"));
         if (m.salineDripRemaining > 0) out.add(new Line("drip_saline"));

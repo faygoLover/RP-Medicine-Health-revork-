@@ -62,7 +62,7 @@ JDK 17 обязательно (Forge 1.20.1, ForgeGradle 6, Gradle 8.1.1 чер�
 - Интеграции мягкие; обязателен только RP Core. Сталкер, психика, эпидемии, сложные протезы, NPC — аддоны, не здесь.
 
 ## RP Core (с 08.10.2026)
-RP Medicine 0.2.0 требует только **RP Core** (`rpcore`, соседняя папка `RP Core`, план — `RP Core/docs/00_plan.md`). RP Perks и RP Stamina — необязательные: навыки и черты Medicine берёт через `RpCoreAPI` (`integration/CoreCompat`), HUD — элементы общего HUD Core (`MedicalHud.CoreElement`), редактор — общий (`/rphud`). Без RP Perks уровень «Медицины» у всех максимальный (если ГМ не выставил свой). Jar Core, Perks, Stamina — в `libs/`; в разработке по умолчанию стоят все, проверка без них: `-Pno_perks=true`, `-Pno_stamina=true`.
+RP Medicine 0.2.0 требует только **RP Core** (`rpcore`, соседняя папка `RP Core`, план — `RP Core/docs/00_plan.md`). RP Perks и RP Stamina — необязательные: навыки и черты Medicine берёт через `RpCoreAPI` (`integration/CoreCompat`), HUD — элементы общего HUD Core (`MedicalHud.CoreElement`), редактор — общий (`/rphud`). Без RP Perks уровень «Медицины» у всех максимальный (если ГМ не выставил свой). Jar Core, Perks, Stamina — в `libs/`; в разработке по умолчанию стоят все, проверка без них: `-Pno_perks=true`, `-Pno_stamina=true`. **Важно:** ForgeGradle кэширует jar из `libs/` по версии — после пересборки соседнего мода с той же версией удалить `~/.gradle/caches/forge_gradle/deobf_dependencies/blank/<мод>/<версия>*`. Навыки (оружие, Сила, рост) и телосложение — `RP Core/docs/00_plan.md`, шаг 2.
 
 ## Соседние моды автора
 Лежат в соседних папках на машине автора, на GitHub их нет. Собранные jar — в `libs/`, ключевые исходники — в `docs/reference/`.

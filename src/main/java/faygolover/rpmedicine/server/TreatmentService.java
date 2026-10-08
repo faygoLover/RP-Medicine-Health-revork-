@@ -474,6 +474,7 @@ public final class TreatmentService {
             boolean error = quality >= 0 ? Minigames.failed(quality, s)
                     : RANDOM.nextDouble() < Math.min(s.maxErrorChance, Skill.errorChance(level, minLevel, s) * errorFactor);
             Treatments.Result r = Treatments.apply(m, part, action, error, RANDOM.split(), s, null, quality >= 0 ? quality : 1.0);
+            if (r.applied) MedicineXp.award(actor, target, action, minLevel, level, error);
             faygolover.rpmedicine.stats.StatsService.treatment(actor, target, "hand", action.id, part, r.key, error);
             Medical.changed(target);
             if (action == TreatmentAction.REDUCE && r.key.equals("reduction_fracture"))
@@ -634,6 +635,8 @@ public final class TreatmentService {
                     ? (extra instanceof Treatments.OrganPick op ? op.organ() : faygolover.rpmedicine.core.Surgery.firstOrgan(m, part)) : null;
             double takenDamage = taken != null ? m.organ(taken) : 0;
             Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra, quality >= 0 ? quality : 1.0);
+            // Опыт «Медицины» (рост навыков в RP Perks): удачное и нужное лечение.
+            if (r.applied && !forced) MedicineXp.award(actor, target, spec.action(), spec.minLevel(), level, error);
             if (spec.action() == TreatmentAction.ORGAN_REMOVE) ORGAN_PICKS.remove(actor.getUUID());
             if (r.applied && r.key.equals("organ_removed") && taken != null) {
                 ItemStack organ = faygolover.rpmedicine.item.OrganItem.create(faygolover.rpmedicine.registry.ModItems.ORGAN.get(), taken, takenDamage,
@@ -821,6 +824,9 @@ public final class TreatmentService {
         MedicalSettings s = MedicalSettings.get();
         double q = Math.max(0, Math.min(1, quality));
         if (RANDOM.nextDouble() < Skill.errorChance(Medical.medicineLevel(actor), info.minLevel(), s)) q *= 0.5;
+        // Компрессии: сильному проще продавить грудную клетку, полного пациента — тяжелее.
+        if (!ambu) q = Math.min(1, q * Math.max(0.6, faygolover.rpmedicine.integration.CoreCompat.strengthFactor(actor))
+                * (faygolover.rpmedicine.core.Body.obese(m) ? 0.85 : 1.0));
         if (ambu) m.ambuSeconds = Math.max(m.ambuSeconds, 1.5 + 3.5 * q);
         else {
             m.cprSeconds = Math.max(m.cprSeconds, 0.35 + 0.9 * q);

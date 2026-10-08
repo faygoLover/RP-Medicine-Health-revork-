@@ -109,6 +109,7 @@ public final class MedCommand {
                     m.bloodVolume = m.normalBlood(MedicalSettings.get()) * f;
                 }))
                 .then(scalar("height", 100, 250, (m, v) -> m.heightCm = v))
+                .then(scalar("fat", 2, 60, (m, v) -> m.bodyFat = v))
                 .then(scalar("brain", 0, 100, (m, v) -> m.brain = Math.max(m.down == MedicalState.Down.CLINICAL ? 1 : 0.5, v)))
                 .then(scalar("spo2", 0, 100, (m, v) -> m.spo2 = v))
                 .then(scalar("concussion", 0, 100, (m, v) -> m.concussion = v))

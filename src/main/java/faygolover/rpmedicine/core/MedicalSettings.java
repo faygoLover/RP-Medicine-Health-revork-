@@ -565,6 +565,27 @@ public final class MedicalSettings {
     public double withdrawalUseSlow = 1.3;
     /** Кофеиновая ломка (перк «Зависимость от кофеина» с RP Perks): вялость — медленнее ходьба, слабее удар, хуже восстановление. */
     public double caffeineWithdrawalSpeedPenalty = 0.10;
+    /** Стрельба (Tacz Attribute Add, поверх навыка RP Perks): ведущая рука ранена или сломана. */
+    public double gunMainArmSpread = 1.5;
+    /** Телосложение: ожирение и лишний вес по доле жира, %; истощение — ИМТ ниже. */
+    public double obeseFatPercent = 32;
+    public double overweightFatPercent = 25;
+    public double underweightBmi = 17.5;
+    /** Ожирение: прибавка к давлению, потолок и восстановление выносливости. */
+    public double obesePressure = 8;
+    public double obeseStaminaCap = 0.85;
+    public double obeseStaminaRegen = 0.9;
+    /** Истощение: заживление и иммунитет. */
+    public double underweightHeal = 0.85;
+    public double underweightImmunity = 0.85;
+    public double gunMainArmReload = 1.5;
+    /** Вторая рука ранена: двуручное оружие держать хуже. */
+    public double gunOffArmSpread = 1.2;
+    public double gunOffArmReload = 1.3;
+    /** Заметная боль (от 30) — разброс. */
+    public double gunPainSpread = 1.2;
+    /** Опьянение, тремор ломки — разброс. */
+    public double gunTremorSpread = 1.3;
     public double caffeineWithdrawalAttack = 0.85;
     public double caffeineWithdrawalStaminaRegen = 0.7;
     /** Алкоголь: опьянение за дозу, спад в час; сильное, «вырубило», рвота; судороги при ломке (шанс в час, секунд). */

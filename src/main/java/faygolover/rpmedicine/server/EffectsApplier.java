@@ -26,6 +26,10 @@ public final class EffectsApplier {
     private static final UUID ATTACK_ID = UUID.fromString("6d1f0a52-5b4e-4b8e-9a51-1f6c2e0d7a02");
     private static final UUID STAMINA_MAX_ID = UUID.fromString("6d1f0a52-5b4e-4b8e-9a51-1f6c2e0d7a03");
     private static final UUID STAMINA_REGEN_ID = UUID.fromString("6d1f0a52-5b4e-4b8e-9a51-1f6c2e0d7a04");
+    private static final UUID GUN_SPREAD_ID = UUID.fromString("6d1f0a52-5b4e-4b8e-9a51-1f6c2e0d7a05");
+    private static final UUID GUN_RELOAD_ID = UUID.fromString("6d1f0a52-5b4e-4b8e-9a51-1f6c2e0d7a06");
+    private static final ResourceLocation TAA_SPREAD = new ResourceLocation("taa", "inaccuracy");
+    private static final ResourceLocation TAA_RELOAD = new ResourceLocation("taa", "reload_time");
 
     private static final ResourceLocation STAMINA_MAX = new ResourceLocation("rpstamina", "max_stamina");
     private static final ResourceLocation STAMINA_REGEN = new ResourceLocation("rpstamina", "regen_multiplier");
@@ -33,7 +37,8 @@ public final class EffectsApplier {
     /** Итоговый множитель скорости с учётом переноски и лечения. */
     public static double speedFactor(MedicalData d, GameplayEffects.Mods mods, MedicalSettings s) {
         double f = mods.speed;
-        if (d.carrying) f *= 1 - s.carrySpeedPenalty;
+        // Тащить раненого сильному легче (Сила RP Perks; без него — как обычно).
+        if (d.carrying) f *= 1 - Math.min(0.95, s.carrySpeedPenalty / Math.max(0.5, d.carryStrength));
         if (d.treating) f *= 1 - s.treatingSpeedPenalty;
         return Math.max(0, f);
     }
@@ -41,14 +46,30 @@ public final class EffectsApplier {
     public static void apply(ServerPlayer sp, MedicalData d, MedicalState m, GameplayEffects.Mods mods) {
         MedicalSettings s = MedicalSettings.get();
         d.lastMods = mods;
+        d.carryStrength = faygolover.rpmedicine.integration.CoreCompat.strengthFactor(sp);
+        m.strength = faygolover.rpmedicine.integration.CoreCompat.strength(sp);
         double speed = speedFactor(d, mods, s);
-        int hash = Objects.hash(speed, mods.attackFactor, mods.staminaCap, mods.staminaRegen);
+        // Стрельба поверх оружейного навыка: раны рук, боль, тремор (характеристики Tacz Attribute Add, если стоит).
+        double spread = 1, reload = 1;
+        if (mods.mainArmBad) {
+            spread *= s.gunMainArmSpread;
+            reload *= s.gunMainArmReload;
+        }
+        if (mods.offArmBad) {
+            spread *= s.gunOffArmSpread;
+            reload *= s.gunOffArmReload;
+        }
+        if (m.pain >= 30) spread *= s.gunPainSpread;
+        if (mods.aimSway >= 0.25) spread *= s.gunTremorSpread;
+        int hash = Objects.hash(speed, mods.attackFactor, mods.staminaCap, mods.staminaRegen, spread, reload);
         if (hash != d.lastModsHash) {
             d.lastModsHash = hash;
             setModifier(sp.getAttribute(Attributes.MOVEMENT_SPEED), SPEED_ID, "rpmedicine speed", speed - 1.0);
             setModifier(sp.getAttribute(Attributes.ATTACK_DAMAGE), ATTACK_ID, "rpmedicine attack", mods.attackFactor - 1.0);
             setModifier(attribute(sp, STAMINA_MAX), STAMINA_MAX_ID, "rpmedicine stamina cap", mods.staminaCap - 1.0);
             setModifier(attribute(sp, STAMINA_REGEN), STAMINA_REGEN_ID, "rpmedicine stamina regen", mods.staminaRegen - 1.0);
+            setModifier(attribute(sp, TAA_SPREAD), GUN_SPREAD_ID, "rpmedicine gun spread", spread - 1.0);
+            setModifier(attribute(sp, TAA_RELOAD), GUN_RELOAD_ID, "rpmedicine gun reload", reload - 1.0);
         }
         if ((mods.noSprint || d.carrying || m.isDown()) && sp.isSprinting()) sp.setSprinting(false);
         DownedService.updatePose(sp, m, mods);
@@ -80,6 +101,8 @@ public final class EffectsApplier {
         setModifier(sp.getAttribute(Attributes.ATTACK_DAMAGE), ATTACK_ID, "", 0);
         setModifier(attribute(sp, STAMINA_MAX), STAMINA_MAX_ID, "", 0);
         setModifier(attribute(sp, STAMINA_REGEN), STAMINA_REGEN_ID, "", 0);
+        setModifier(attribute(sp, TAA_SPREAD), GUN_SPREAD_ID, "", 0);
+        setModifier(attribute(sp, TAA_RELOAD), GUN_RELOAD_ID, "", 0);
     }
 
     private static AttributeInstance attribute(ServerPlayer sp, ResourceLocation id) {

@@ -33,6 +33,17 @@ public final class CoreCompat {
         return RpCoreAPI.setSkill(player, RpIds.MEDICINE, level);
     }
 
+    /** Сила 0–10 (RP Perks); без него — средняя (4). */
+    public static int strength(Player player) {
+        OptionalInt lvl = RpCoreAPI.skill(player, RpIds.STRENGTH);
+        return lvl.isPresent() ? lvl.getAsInt() : 4;
+    }
+
+    /** Сила как множитель: 4 — 1.0, каждый уровень ±7,5 % (0 — 0.7, 10 — 1.45). */
+    public static double strengthFactor(Player player) {
+        return 1.0 + (strength(player) - 4) * 0.075;
+    }
+
     public static PatientTraits traits(Player player) {
         boolean left = player.getMainArm() == HumanoidArm.LEFT;
         return new PatientTraits(has(player, RpIds.TOUGH), has(player, RpIds.FRAGILE), has(player, RpIds.BRAVE),

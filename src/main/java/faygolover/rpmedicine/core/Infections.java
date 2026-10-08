@@ -100,6 +100,7 @@ public final class Infections {
     /** Сила иммунитета: база 1, кровопотеря, голод, сепсис, койка. */
     public static double immunityFactor(MedicalState m, StepInput in, MedicalSettings s) {
         double f = in.immunityFactor;
+        if (Body.underweight(m)) f *= s.underweightImmunity;
         if (m.bloodFraction(s) < 1 - s.immunityBloodLossFraction) f *= s.immunityBloodLossFactor;
         if (m.sepsis >= 30) f *= s.immunitySepsisFactor;
         // Голод и жажда ослабляют иммунитет.
