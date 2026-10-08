@@ -469,6 +469,9 @@ public final class ServerConfig {
         bind("withdrawalDelayFactor", "Вещества: множитель времени до ломки.");
         bind("withdrawalPain", "Ломка: постоянная боль.");
         bind("withdrawalUseSlow", "Ломка: во сколько раз медленнее действия руками.");
+        bind("caffeineWithdrawalSpeedPenalty", "Кофеиновая ломка: насколько медленнее ходьба (доля).");
+        bind("caffeineWithdrawalAttack", "Кофеиновая ломка: множитель силы удара.");
+        bind("caffeineWithdrawalStaminaRegen", "Кофеиновая ломка: множитель восстановления выносливости.");
         bind("alcoholIntoxicationPerDose", "Алкоголь: опьянение за порцию (0–100).");
         bind("alcoholDecayPerHour", "Алкоголь: трезвение в час.");
         bind("intoxicationHeavy", "Алкоголь: сильное опьянение — сознание мутнеет.");

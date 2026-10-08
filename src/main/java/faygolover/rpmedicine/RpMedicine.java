@@ -45,6 +45,8 @@ public final class RpMedicine {
             Network.register();
             ModSetup.commonSetup();
             faygolover.rpcore.api.RpCoreAPI.registerModule(MODID, "медицина: травмы, лечение, госпиталь, хирургия");
+            // Тело ведёт RP Medicine: перки RP Perks переводят свои механики на неё (здоровье, кофеин, вывих).
+            faygolover.rpcore.api.RpCoreAPI.registerBody(new faygolover.rpmedicine.integration.CoreBody());
         });
     }
 

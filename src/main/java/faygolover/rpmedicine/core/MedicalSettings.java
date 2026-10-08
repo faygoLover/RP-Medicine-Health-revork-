@@ -563,6 +563,10 @@ public final class MedicalSettings {
     public double withdrawalDelayFactor = 1.0;
     public double withdrawalPain = 20.0;
     public double withdrawalUseSlow = 1.3;
+    /** Кофеиновая ломка (перк «Зависимость от кофеина» с RP Perks): вялость — медленнее ходьба, слабее удар, хуже восстановление. */
+    public double caffeineWithdrawalSpeedPenalty = 0.10;
+    public double caffeineWithdrawalAttack = 0.85;
+    public double caffeineWithdrawalStaminaRegen = 0.7;
     /** Алкоголь: опьянение за дозу, спад в час; сильное, «вырубило», рвота; судороги при ломке (шанс в час, секунд). */
     public double alcoholIntoxicationPerDose = 18.0;
     public double alcoholDecayPerHour = 12.0;

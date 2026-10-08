@@ -134,6 +134,12 @@ public final class GameplayEffects {
             r.useTimeFactor *= s.withdrawalUseSlow;
             r.aimSway = Math.max(r.aimSway, 0.3);
         }
+        // Кофеин — вялость и сонливость (вместо грубого штрафа перка RP Perks, который при Medicine отключён).
+        if (Substances.withdrawal(m, Substance.CAFFEINE, s)) {
+            speed -= s.caffeineWithdrawalSpeedPenalty;
+            r.attackFactor *= s.caffeineWithdrawalAttack;
+            r.staminaRegen *= s.caffeineWithdrawalStaminaRegen;
+        }
         // Гипогликемия: слабость.
         if (m.bloodSugar < s.sugarLow) {
             speed -= s.dazedSpeedPenalty;
