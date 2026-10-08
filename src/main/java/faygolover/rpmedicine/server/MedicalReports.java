@@ -186,7 +186,7 @@ public final class MedicalReports {
             if ((m.organRejection & g.bit()) != 0) x.add("отторжение", g.id, BAD);
         if (all || m.restrained) x.add("фиксация", m.restrained ? "да" : "нет", m.restrained ? MILD : OK);
         if (all || faygolover.rpmedicine.core.Nutrition.anyLow(m, s))
-            x.add("питание", f("Б %.0f Ж %.0f У %.0f В %.0f, %.0f ккал", m.nutrients[0], m.nutrients[1], m.nutrients[2], m.nutrients[3], m.kcalEaten),
+            x.add("питание", m.nutritionKnown ? f("Б %.0f Ж %.0f У %.0f В %.0f", m.nutrients[0], m.nutrients[1], m.nutrients[2], m.nutrients[3]) : "нет RP Culinary",
                     faygolover.rpmedicine.core.Nutrition.anyLow(m, s) ? BAD : faygolover.rpmedicine.core.Nutrition.balanced(m, s) ? OK : MILD);
         if (all || m.intoxication > 0) x.add("опьянение", f("%.0f", m.intoxication), high(m.intoxication, 20, 50, 80));
         if (m.seizureSeconds > 0) x.add("СУДОРОГИ", f("%.0f с", m.seizureSeconds), CRIT);

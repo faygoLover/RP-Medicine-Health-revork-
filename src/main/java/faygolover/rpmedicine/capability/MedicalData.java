@@ -17,6 +17,11 @@ public final class MedicalData {
     // --- накопители между шагами физиологии (не сохраняются) ---
     /** Свой счётчик тиков для шага физиологии (не зависит от tickCount, который трогают другие моды). */
     public int ticks;
+    /** Что в прошлый раз взяли у мода питания (RP Culinary): если Medicine сама поменяла вес, жир или воду
+     *  (команда, медкарта, рвота, высокий сахар) — передать ему разницу. NaN — ещё не брали. */
+    public double nutritionWeight = Double.NaN;
+    public double nutritionFat = Double.NaN;
+    public double nutritionThirst = Double.NaN;
     public double sprintTicks;
     public int jumps;
     public double distance;

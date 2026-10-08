@@ -50,9 +50,6 @@ public final class ItemTooltips {
     public static void onTooltip(ItemTooltipEvent e) {
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(e.getItemStack().getItem());
         if (id == null) return;
-        var food = ClientState.FOODS.get(id);
-        if (food != null) e.getToolTip().add(Component.translatable("rpmedicine.nutrition.tooltip", Math.round(food.kcal()), Math.round(food.protein()),
-                Math.round(food.fat()), Math.round(food.carbs())).withStyle(ChatFormatting.GOLD));
         ItemInfoPacket.Info info = INFO.get(id);
         if (info == null) return;
         List<Component> t = e.getToolTip();

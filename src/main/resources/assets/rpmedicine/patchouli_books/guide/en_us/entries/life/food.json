@@ -6,15 +6,15 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Food gives protein, fat, carbs and vitamins (dishes are counted from their recipes). Key $(l)K$() — how you feel."
+      "text": "Nutrition is handled by $(l)RP Culinary$(): satiety in calories, water, protein, fat, carbs and vitamins, body weight. Press $(l)K$() to see how you feel."
     },
     {
       "type": "patchouli:text",
-      "text": "- Low protein — slow healing, weaker hits.$(br)- Low fat — chilly.$(br)- Low carbs — no energy.$(br)- Low vitamins — sick more often.$(br)- Balanced — better healing and immunity.$(br2)Exact values — only by a blood test."
+      "text": "How nutrition affects the body:$(br)- Low protein — wounds heal slower, weaker punches.$(br)- Low fat — you feel cold.$(br)- Low carbs — no energy, you tire fast.$(br)- Low vitamins — you get sick more often.$(br)- Balanced — better healing and immunity.$(br2)Exact values — only by a blood test."
     },
     {
       "type": "patchouli:text",
-      "text": "$(l)Fed up$(): the same food gets boring — slower eating, worse uptake. Variety helps."
+      "text": "$(l)Hunger$() does not kill: first weakness, then hunger faints. The hungry heal worse. $(l)Dehydration$() lowers blood volume and pressure."
     }
   ]
 }

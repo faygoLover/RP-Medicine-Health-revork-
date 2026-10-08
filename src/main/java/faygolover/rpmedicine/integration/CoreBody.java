@@ -21,7 +21,7 @@ import java.util.Set;
  * голеностоп настоящим вывихом, кофеиновая ломка — физиология веществ.
  */
 public final class CoreBody implements BodyProvider {
-    private static final Set<ResourceLocation> HANDLES = Set.of(RpIds.BODY_HEALTH, RpIds.BODY_CAFFEINE, RpIds.BODY_SPRAIN);
+    private static final Set<ResourceLocation> HANDLES = Set.of(RpIds.BODY_HEALTH, RpIds.BODY_CAFFEINE, RpIds.BODY_SPRAIN, RpIds.BODY_NUTRITION);
 
     @Override
     public boolean handles(ResourceLocation feature) {
@@ -52,5 +52,28 @@ public final class CoreBody implements BodyProvider {
         m.painSpike(35, 30);
         Medical.changed(player);
         return true;
+    }
+
+    /** Голодный обморок или от жажды (RP Culinary): человек падает без сознания и сам очнётся. */
+    @Override
+    public boolean faint(Player player, int seconds) {
+        MedicalState m = Medical.state(player);
+        if (m == null) return false;
+        m.faintSeconds = Math.max(m.faintSeconds, seconds);
+        Medical.changed(player);
+        return true;
+    }
+
+    /** Вес и жир, которые Medicine хранила до мода питания: он берёт их при первом знакомстве с игроком. */
+    @Override
+    public double weightKg(Player player) {
+        MedicalState m = Medical.state(player);
+        return m != null ? m.weightKg : Double.NaN;
+    }
+
+    @Override
+    public double bodyFatPercent(Player player) {
+        MedicalState m = Medical.state(player);
+        return m != null ? m.bodyFat : Double.NaN;
     }
 }

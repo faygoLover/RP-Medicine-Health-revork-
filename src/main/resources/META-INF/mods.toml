@@ -27,7 +27,7 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="rpcore"
     mandatory=true
-    versionRange = "[0.2,)"
+    versionRange = "[0.3,)"
     ordering="AFTER"
     side="BOTH"
 
@@ -36,6 +36,14 @@ description='''${mod_description}'''
     mandatory=false
     versionRange="[1.1,)"
     ordering="AFTER"
+    side="BOTH"
+
+# RP Culinary — питание (сытость, вода, нутриенты, вес); связь только через RP Core.
+[[dependencies.${mod_id}]]
+    modId="rpculinary"
+    mandatory=false
+    versionRange="[0.1,)"
+    ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]

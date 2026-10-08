@@ -34,17 +34,12 @@ public final class ClientSetup {
     public static final KeyMapping FINISH = new KeyMapping("key.rpmedicine.finish", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
 
-    /** Питание: запасы белков, жиров, углеводов, витаминов. */
-    public static final KeyMapping NUTRITION = new KeyMapping("key.rpmedicine.nutrition", KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY);
-
     @SubscribeEvent
     public static void onKeys(RegisterKeyMappingsEvent e) {
         // Самое раннее клиентское событие мода: до первой отрисовки моделей.
         ItemPoses.init();
         e.register(PANEL);
         e.register(FINISH);
-        e.register(NUTRITION);
     }
 
     @SubscribeEvent

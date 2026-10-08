@@ -395,11 +395,6 @@ public final class MedicalSettings {
     public double minigameRefuseErrorFactor = 1.5;
 
     // ---------------- Голод, жажда, среда (второй этап, п. 12) ----------------
-    /** Своя жажда, если LSO не стоит (решение 1.8: внутренние значения без баров). */
-    public boolean ownThirstEnabled = true;
-    /** Жажда убывает на столько процентов за час в сети; на бегу — быстрее во столько раз. */
-    public double thirstLossPerHour = 20.0;
-    public double thirstSprintFactor = 2.0;
     /** Вода ниже этой доли — обезвоживание: объём крови для давления меньше (до доли ниже), иммунитет слабее. */
     public double dehydrationThreshold = 0.3;
     public double dehydrationVolumeLoss = 0.1;
@@ -467,7 +462,7 @@ public final class MedicalSettings {
     /** Отравление: тошнота держится ещё столько секунд после эффекта; рвота раз в столько секунд. */
     public double poisonNauseaSeconds = 10.0;
     public double poisonVomitIntervalSeconds = 20.0;
-    /** Рвота: своей воды минус столько процентов (с LSO — единиц его воды из 20). */
+    /** Рвота: воды минус столько процентов (через RP Culinary; без него, с LSO — единиц воды LSO из 20). */
     public double vomitThirstLoss = 5.0;
     public double vomitLsoThirstLoss = 1.0;
     /** Мгновенный урон: острая боль за единицу урона и сколько секунд. */
@@ -602,18 +597,8 @@ public final class MedicalSettings {
     public double alcoholicTolerance = 60.0;
     public double smokerNicotineTolerance = 30.0;
     public double caffeineAddictTolerance = 30.0;
-    /** Питание: включено; запас за грамм белка, жира, углеводов и за единицу витаминов; трата в час; предел. */
+    /** Питание (запасы ведёт RP Culinary): действуют ли нехватка и избыток нутриентов на тело. */
     public boolean nutritionEnabled = true;
-    public double proteinPerGram = 0.9;
-    public double fatPerGram = 1.2;
-    public double carbsPerGram = 0.45;
-    public double vitaminsPerUnit = 1.0;
-    public double proteinDecayPerHour = 25;
-    public double fatDecayPerHour = 15;
-    public double carbsDecayPerHour = 30;
-    public double vitaminsDecayPerHour = 12;
-    public double sprintNutrientFactor = 2.0;
-    public double nutrientMax = 120;
     /** Нехватка (ниже), избыток (выше), баланс (все в полосе). */
     public double nutrientLow = 20;
     public double nutrientHigh = 100;
@@ -632,15 +617,6 @@ public final class MedicalSettings {
     public double fatHighSpeedPenalty = 0.05;
     public double balancedHealFactor = 1.15;
     public double balancedImmunityFactor = 1.1;
-    /** «Приелось»: включено; с какого числа недавних порций одного вида; тает в час; другой вид освежает на;
-     *  усвоение хуже на шаг за порцию сверх порога, но не ниже; есть дольше во сколько раз. */
-    public boolean monotonyEnabled = true;
-    public double monotonyThreshold = 5;
-    public double monotonyDecayPerHour = 2;
-    public double monotonyVarietyRelief = 0.5;
-    public double monotonyUptakeStep = 0.05;
-    public double monotonyUptakeMin = 0.8;
-    public double monotonyEatSlow = 1.3;
     /** Диабет: сахар за грамм углеводов. */
     public double sugarPerCarbGram = 0.06;
     /** Капельница у стойки и на койке идёт быстрее (в поле — обычная скорость, стоя на месте). */

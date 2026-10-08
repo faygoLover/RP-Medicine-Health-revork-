@@ -40,17 +40,6 @@ public final class SelfSync {
         v.analgesia = Physiology.analgesia(m, s) > 0;
         v.dyspnea = m.spo2 < 90 || m.respRate > 24 || m.pneumo != MedicalState.Pneumo.NONE;
         v.fever = m.bodyTemp >= 37.8;
-        var ns = faygolover.rpmedicine.core.MedicalSettings.get();
-        int feel = 0;
-        if (faygolover.rpmedicine.core.Nutrition.low(m, faygolover.rpmedicine.core.Nutrition.PROTEIN, ns)) feel |= SelfView.FEEL_LOW_PROTEIN;
-        if (faygolover.rpmedicine.core.Nutrition.low(m, faygolover.rpmedicine.core.Nutrition.FAT, ns)) feel |= SelfView.FEEL_LOW_FAT;
-        if (faygolover.rpmedicine.core.Nutrition.low(m, faygolover.rpmedicine.core.Nutrition.CARBS, ns)) feel |= SelfView.FEEL_LOW_CARBS;
-        if (faygolover.rpmedicine.core.Nutrition.low(m, faygolover.rpmedicine.core.Nutrition.VITAMINS, ns)) feel |= SelfView.FEEL_LOW_VITAMINS;
-        if (faygolover.rpmedicine.core.Nutrition.high(m, faygolover.rpmedicine.core.Nutrition.FAT, ns)) feel |= SelfView.FEEL_HEAVY;
-        if (faygolover.rpmedicine.core.Nutrition.balanced(m, ns)) feel |= SelfView.FEEL_BALANCED;
-        v.nutritionFeel = (byte) feel;
-        v.fedUpMask = (byte) faygolover.rpmedicine.core.Nutrition.fedUpMask(m, ns);
-        v.monotonyEatSlowPct = (short) Math.round(ns.monotonyEatSlow * 100);
         v.cold = m.bodyTemp <= 35.5;
         v.nausea = m.nauseaSeconds > 0;
         v.concussion = m.concussion > 20;

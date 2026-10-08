@@ -68,12 +68,6 @@ public final class SelfView {
     public short useTimePct = 100;
     /** Свой уровень медицины (подсказки предметов). */
     public byte medLevel;
-    /** Питание — только ощущения (цифры видны анализом крови): биты {@link #FEEL_LOW_PROTEIN} и т.д. */
-    public byte nutritionFeel;
-    public static final int FEEL_LOW_PROTEIN = 1, FEEL_LOW_FAT = 2, FEEL_LOW_CARBS = 4, FEEL_LOW_VITAMINS = 8, FEEL_HEAVY = 16, FEEL_BALANCED = 32;
-    /** Приевшиеся виды еды (биты) и во сколько раз дольше их есть, %. */
-    public byte fedUpMask;
-    public short monotonyEatSlowPct = 100;
 
     /** Ощущения: ключи {@code rpmedicine.exam.complaint_<k>}. */
     public final List<String> sensations = new ArrayList<>();
@@ -123,9 +117,6 @@ public final class SelfView {
         buf.writeByte(breakSpeedPct);
         buf.writeShort(useTimePct);
         buf.writeByte(medLevel);
-        buf.writeByte(nutritionFeel);
-        buf.writeByte(fedUpMask);
-        buf.writeShort(monotonyEatSlowPct);
         buf.writeVarInt(sensations.size());
         for (String s : sensations) buf.writeUtf(s, 64);
     }
@@ -172,9 +163,6 @@ public final class SelfView {
         v.breakSpeedPct = buf.readByte();
         v.useTimePct = buf.readShort();
         v.medLevel = buf.readByte();
-        v.nutritionFeel = buf.readByte();
-        v.fedUpMask = buf.readByte();
-        v.monotonyEatSlowPct = buf.readShort();
         int s = Math.min(32, buf.readVarInt());
         for (int i = 0; i < s; i++) v.sensations.add(buf.readUtf(64));
         return v;
@@ -198,7 +186,6 @@ public final class SelfView {
                 && breakSpeedPct == v.breakSpeedPct && useTimePct == v.useTimePct && medLevel == v.medLevel
                 && fever == v.fever && cold == v.cold && nausea == v.nausea && concussion == v.concussion
                 && stabilized == v.stabilized && drip == v.drip && splint == v.splint && sedated == v.sedated
-                && nutritionFeel == v.nutritionFeel && fedUpMask == v.fedUpMask
                 && sensations.equals(v.sensations);
     }
 

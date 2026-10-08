@@ -60,6 +60,7 @@ public final class Physiology {
         m.cprRecentSeconds = dec(m.cprRecentSeconds, dt);
         m.healBoostSeconds = dec(m.healBoostSeconds, dt);
         m.concussionKoSeconds = dec(m.concussionKoSeconds, dt);
+        m.faintSeconds = dec(m.faintSeconds, dt);
         m.concussion = Math.max(0, m.concussion - s.concussionDecayPerSecond * (1 + m.effect(DrugEffect.CONCUSSION_RELIEF)) * dt);
         tickDrugTimers(m, dt, in.online, s, in.random);
         m.acutePainSeconds = dec(m.acutePainSeconds, dt);
@@ -190,6 +191,7 @@ public final class Physiology {
         m.painShock = false;
         m.shockAccum = 0;
         m.concussionKoSeconds = 0;
+        m.faintSeconds = 0;
         m.sepsis = Math.min(m.sepsis, 99);
         m.consciousness = 100;
         m.down = MedicalState.Down.NONE;
@@ -710,6 +712,8 @@ public final class Physiology {
         if (m.heart != Heart.NORMAL) c = 0;
         if (m.painShock) c = Math.min(c, 10);
         if (m.concussionKoSeconds > 0) c = Math.min(c, 10);
+        // Голодный обморок или от жажды (RP Culinary): ненадолго, без угрозы — человек сам очнётся.
+        if (m.faintSeconds > 0) c = Math.min(c, 10);
         // Разрушенная голова или грудь — нокдаун (решения, п. 1.13).
         if (m.part(BodyPart.HEAD).isDestroyed(s) || m.part(BodyPart.CHEST).isDestroyed(s))
             c = Math.min(c, s.destroyedVitalConsciousness);

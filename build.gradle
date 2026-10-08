@@ -112,6 +112,8 @@ dependencies {
     compileOnly fg.deobf("maven.modrinth:legendary-survival-overhaul:${lso_version}")
 
     if (!(project.findProperty('no_stamina') ?: 'false').toString().toBoolean()) runtimeOnly fg.deobf("blank:rpstamina:${rpstamina_version}")
+    // RP Culinary (питание) — по желанию: проверить вместе с ним — -Pwith_culinary=true.
+    if ((project.findProperty('with_culinary') ?: 'false').toString().toBoolean()) runtimeOnly fg.deobf("blank:rpculinary:${rpculinary_version}")
 
     if (withOptional) {
         // Для проверки интеграций при runServer/runClient: -Pwith_optional=true

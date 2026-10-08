@@ -85,7 +85,8 @@ public final class ModSetup {
         bus.addListener(faygolover.rpmedicine.server.SubstanceService::onEffectAdded);
         bus.addListener(InteractionHandler::onJump);
         bus.addListener(faygolover.rpmedicine.server.BloodService::onContainerClose);
-        bus.addListener(faygolover.rpmedicine.server.SurvivalService::onUseFinish);
+        bus.addListener(net.minecraftforge.eventbus.api.EventPriority.NORMAL, false, faygolover.rpcore.api.event.FoodEatenEvent.class,
+                faygolover.rpmedicine.integration.CoreNutrition::onEaten);
         bus.addListener(faygolover.rpmedicine.server.VanillaEffects::onUseFinish);
         // Чат
         bus.addListener(EventPriority.HIGH, ChatHandler::onChat);
@@ -222,27 +223,18 @@ public final class ModSetup {
         e.addListener(HospitalBlocks.LOADER);
         e.addListener(faygolover.rpmedicine.data.DrugRules.LOADER);
         e.addListener(faygolover.rpmedicine.data.SubstanceRules.LOADER);
-        e.addListener(faygolover.rpmedicine.data.NutritionRules.LOADER);
-        e.addListener(faygolover.rpmedicine.server.SurvivalService.DRINKS);
     }
 
     /** Клиенты получают списки функций госпиталя при входе и после /reload. */
     private static void onDatapackSync(net.minecraftforge.event.OnDatapackSyncEvent e) {
         var packet = new faygolover.rpmedicine.network.HospitalBlocksPacket(HospitalBlocks.entries(), HospitalBlocks.radii());
         var info = faygolover.rpmedicine.data.ItemRules.infoPacket();
-        // Рецепты могли смениться — состав блюд пересчитать.
-        if (e.getPlayer() == null) faygolover.rpmedicine.server.NutritionTable.invalidate();
-        var server = e.getPlayerList().getServer();
-        var foods = new faygolover.rpmedicine.network.NutritionInfoPacket(faygolover.rpmedicine.server.NutritionTable.snapshot(server),
-                faygolover.rpmedicine.server.NutritionTable.categories(server));
         if (e.getPlayer() != null) {
-            Network.send(e.getPlayer(), foods);
             Network.send(e.getPlayer(), packet);
             Network.send(e.getPlayer(), info);
         } else {
             Network.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);
             Network.CHANNEL.send(PacketDistributor.ALL.noArg(), info);
-            Network.CHANNEL.send(PacketDistributor.ALL.noArg(), foods);
         }
     }
 

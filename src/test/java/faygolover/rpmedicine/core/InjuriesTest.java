@@ -147,7 +147,8 @@ class InjuriesTest {
         Healing.fastForward(m, 5 * 3600, s);
         assertEquals(20, w.severity, 1e-9);
         ps.bullets = 0;
-        Healing.fastForward(m, 3 * 3600, s);
+        // Без мода питания бонуса «питание в норме» нет — заживает чуть дольше трёх часов.
+        Healing.fastForward(m, 4 * 3600, s);
         assertTrue(ps.wounds.isEmpty());
     }
 

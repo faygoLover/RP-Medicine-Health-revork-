@@ -559,7 +559,10 @@ public final class HospitalGameTests {
         h.succeed();
     }
 
-    /** Голод и жажда (второй этап, п. 12): своя жажда убывает, вода её восполняет, food add прокручивает и офлайн. */
+    /**
+     * Голод и жажда: с 0.3.0 их ведёт RP Culinary (через RP Core). Без него — ванильная сытость, воды нет (или LSO);
+     * food add прокручивает и офлайн. С ним — Medicine берёт сытость, воду, нутриенты и вес у него.
+     */
     @GameTest(template = T, timeoutTicks = 100)
     public static void hungerThirstAndFoodCommand(GameTestHelper h) {
         noDeath(false);
@@ -570,39 +573,55 @@ public final class HospitalGameTests {
             lsoThirstAndFood(h, p, m, s);
             return;
         }
-        // Своя жажда убывает со временем в сети.
+        if (faygolover.rpmedicine.integration.CoreNutrition.provider() != null) {
+            culinaryBridge(h, p, m, s);
+            return;
+        }
         StepInput in = new StepInput(3600);
         faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in, 0);
-        h.assertTrue(Math.abs(m.thirst - (100 - s.thirstLossPerHour)) < 0.01, "за час жажда −" + s.thirstLossPerHour + ", было " + m.thirst);
-        h.assertTrue(Math.abs(in.hydration - m.thirst / 100) < 1e-9 && in.satiety == 1.0, "вода и сытость во входных данных");
-        // Бутылка воды восполняет, другое зелье — нет.
-        var water = net.minecraft.world.item.alchemy.PotionUtils.setPotion(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.POTION),
-                net.minecraft.world.item.alchemy.Potions.WATER);
-        var swift = net.minecraft.world.item.alchemy.PotionUtils.setPotion(new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.POTION),
-                net.minecraft.world.item.alchemy.Potions.SWIFTNESS);
-        double before = m.thirst;
-        faygolover.rpmedicine.server.SurvivalService.onUseFinish(new net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish(p, swift, 0, swift));
-        h.assertTrue(m.thirst == before, "зелье скорости — не вода");
-        faygolover.rpmedicine.server.SurvivalService.onUseFinish(new net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish(p, water, 0, water));
-        h.assertTrue(Math.abs(m.thirst - Math.min(100, before + 35)) < 0.01, "вода восполняет жажду, было " + m.thirst);
-        // Команда food add: сытость и жажда за 3 часа.
+        h.assertTrue(in.hydration == 1.0 && in.satiety == 1.0 && m.thirst == 100, "без мода питания и LSO — сыт и напоен");
+        h.assertFalse(m.nutritionKnown, "без мода питания нутриенты неизвестны");
+        // Команда food add: ванильная сытость за 3 часа.
         p.getFoodData().setFoodLevel(20);
-        m.thirst = 100;
         h.assertTrue(MedicalGameTests.command(h, "rpmedicine food add " + p.getGameProfile().getName() + " 3h") == 1, "команда food add");
         h.assertTrue(p.getFoodData().getFoodLevel() == 20 - (int) Math.round(s.foodLossPerHour * 3), "сытость снята, было " + p.getFoodData().getFoodLevel());
-        h.assertTrue(Math.abs(m.thirst - (100 - s.thirstLossPerHour * 3)) < 0.01, "жажда снята, было " + m.thirst);
-        // Голодный и обезвоженный — во входных данных.
         StepInput in2 = new StepInput(0.5);
         faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in2, 0);
-        h.assertTrue(in2.satiety < s.hungerThreshold + 0.5 && in2.hydration < 0.5, "голод и жажда видны физиологии");
+        h.assertTrue(in2.satiety < s.hungerThreshold + 0.5, "голод виден физиологии");
         // Офлайн: снимается при входе.
         p.getFoodData().setFoodLevel(20);
-        m.thirst = 100;
         faygolover.rpmedicine.server.SurvivalService.advanceOffline(m, 2);
         faygolover.rpmedicine.server.SurvivalService.onLogin(p);
-        h.assertTrue(p.getFoodData().getFoodLevel() == 20 - (int) Math.round(s.foodLossPerHour * 2) && m.pendingFoodLoss == 0,
+        h.assertTrue(p.getFoodData().getFoodLevel() == 20 - (int) Math.round(s.foodLossPerHour * 2) && m.pendingFoodHours == 0,
                 "офлайн-прокрутка снята при входе, сытость " + p.getFoodData().getFoodLevel());
-        h.assertTrue(Math.abs(m.thirst - (100 - s.thirstLossPerHour * 2)) < 0.01, "и жажда, было " + m.thirst);
+        remove(h, p);
+        h.succeed();
+    }
+
+    /** С RP Culinary: вода, нутриенты, вес — от него; вес, выставленный в Medicine, уходит к нему; рвота пустит желудок. */
+    private static void culinaryBridge(GameTestHelper h, ServerPlayer p, MedicalState m, MedicalSettings s) {
+        var n = faygolover.rpmedicine.integration.CoreNutrition.provider();
+        StepInput in = new StepInput(0.5);
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), in, 0);
+        h.assertTrue(m.nutritionKnown, "нутриенты известны");
+        h.assertTrue(Math.abs(in.satiety - Math.min(1, n.satiety(p))) < 1e-9 && Math.abs(in.hydration - n.hydration(p)) < 1e-9,
+                "сытость и вода — от Кулинарии");
+        h.assertTrue(Math.abs(m.weightKg - n.weightKg(p)) < 1e-6, "вес — от Кулинарии");
+        // ГМ выставил вес в Medicine — Кулинария узнаёт на следующем шаге.
+        h.assertTrue(MedicalGameTests.command(h, "rpmedicine set " + p.getGameProfile().getName() + " weight 92") == 1, "set weight");
+        faygolover.rpmedicine.server.SurvivalService.prepareStep(p, data(p), new StepInput(0.5), 0);
+        h.assertTrue(Math.abs(n.weightKg(p) - 92) < 1e-6 && Math.abs(m.weightKg - 92) < 1e-6, "вес 92 и там, и там: " + n.weightKg(p));
+        // food add — прокрутка Кулинарии.
+        double sat = n.satiety(p);
+        h.assertTrue(MedicalGameTests.command(h, "rpmedicine food add " + p.getGameProfile().getName() + " 2h") == 1, "команда food add");
+        h.assertTrue(n.satiety(p) < sat, "food add — голоднее: " + n.satiety(p));
+        // Рвота: вода уходит через Кулинарию.
+        double w = n.hydration(p);
+        faygolover.rpmedicine.integration.CoreNutrition.vomit(p, s.vomitThirstLoss);
+        h.assertTrue(Math.abs(n.hydration(p) - (w - s.vomitThirstLoss / 100)) < 1e-6, "рвота: минус вода, было " + n.hydration(p));
+        // Голодный обморок через мод тела.
+        h.assertTrue(faygolover.rpcore.api.RpCoreAPI.body().faint(p, 12) && m.faintSeconds == 12, "обморок по вызову");
+        m.faintSeconds = 0;
         remove(h, p);
         h.succeed();
     }
@@ -646,10 +665,7 @@ public final class HospitalGameTests {
         p.hurt(p.damageSources().magic(), 1.0f);
         h.assertTrue(wounds(m) == 0 && m.nauseaSeconds > 0, "яд: без ран, тошнота");
         h.assertTrue(faygolover.rpmedicine.core.Examination.complaints(m, s).contains("nausea"), "жалоба «тошнит»");
-        double thirst = m.thirst;
         faygolover.rpmedicine.server.VanillaEffects.prepareStep(p, m, s.poisonVomitIntervalSeconds);
-        if (!faygolover.rpmedicine.integration.Integrations.lso())
-            h.assertTrue(Math.abs(m.thirst - (thirst - s.vomitThirstLoss)) < 1e-6, "рвота: минус вода, было " + m.thirst);
         p.removeEffect(net.minecraft.world.effect.MobEffects.POISON);
         // Мгновенный урон: только острая боль (сбрасываем ванильную неуязвимость после тика яда).
         p.invulnerableTime = 0;
@@ -717,32 +733,6 @@ public final class HospitalGameTests {
         faygolover.rpmedicine.capability.MedicalNbt.read(copy, faygolover.rpmedicine.capability.MedicalNbt.write(m), s);
         var cw = copy.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.get(0);
         h.assertTrue(cw.sutured && Math.abs(cw.sutureQuality - 0.6) < 1e-6, "швы и их качество сохранены");
-        h.succeed();
-    }
-
-    /** Питание: блюдо считается по рецепту из базовых ингредиентов датапака; жарка состав не меняет; еда без всего — оценка. */
-    @GameTest(template = T, timeoutTicks = 100)
-    public static void nutritionFromRecipes(GameTestHelper h) {
-        var server = h.getLevel().getServer();
-        var wheat = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.WHEAT);
-        var bread = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.BREAD);
-        h.assertTrue(wheat != null && bread != null, "пшеница из датапака, хлеб из рецепта");
-        h.assertTrue(Math.abs(bread.carbs() - 3 * wheat.carbs()) < 0.01, "хлеб — три пшеницы: " + bread + " / " + wheat);
-        var beef = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.BEEF);
-        var steak = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.COOKED_BEEF);
-        h.assertTrue(steak != null && Math.abs(steak.protein() - beef.protein()) < 0.01, "жареная говядина = сырая по составу");
-        var stew = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.MUSHROOM_STEW);
-        h.assertTrue(stew != null && stew.kcal() > 0, "грибной суп — грибы, миска не считается");
-        var notch = faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.ENCHANTED_GOLDEN_APPLE);
-        h.assertTrue(notch != null && notch.kcal() > 0, "без рецепта — оценка по сытости");
-        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.get(server, net.minecraft.world.item.Items.STONE) == null, "камень — не еда");
-        // Виды для «приелось»: блюдо — вид основного по калориям ингредиента.
-        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.category(server, net.minecraft.world.item.Items.BREAD)
-                == faygolover.rpmedicine.core.Nutrition.category("grain"), "хлеб — зерно");
-        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.category(server, net.minecraft.world.item.Items.COOKED_BEEF)
-                == faygolover.rpmedicine.core.Nutrition.category("meat"), "стейк — мясо");
-        h.assertTrue(faygolover.rpmedicine.server.NutritionTable.category(server, net.minecraft.world.item.Items.MUSHROOM_STEW)
-                == faygolover.rpmedicine.core.Nutrition.category("vegetables"), "грибной суп — овощи");
         h.succeed();
     }
 }

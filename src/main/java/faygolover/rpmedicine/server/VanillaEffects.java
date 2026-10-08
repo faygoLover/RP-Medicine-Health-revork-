@@ -79,8 +79,9 @@ public final class VanillaEffects {
 
     /** Рвота: минус вода, будит спящего, звук и брызги. */
     static void vomit(ServerPlayer sp, MedicalState m, MedicalSettings s) {
-        if (Integrations.lso()) LsoCompat.loseThirst(sp, s.vomitLsoThirstLoss);
-        else if (s.ownThirstEnabled) m.thirst = Math.max(0, m.thirst - s.vomitThirstLoss);
+        // Желудок пустеет, вода уходит (RP Culinary); без него — только вода LSO.
+        if (!faygolover.rpmedicine.integration.CoreNutrition.vomit(sp, s.vomitThirstLoss) && Integrations.lso())
+            LsoCompat.loseThirst(sp, s.vomitLsoThirstLoss);
         if (sp.isSleeping()) sp.stopSleepInBed(true, true);
         var look = sp.getLookAngle();
         // Брызги зелёно-жёлтого цвета и лужа, которая пару минут лежит на земле.
@@ -106,20 +107,13 @@ public final class VanillaEffects {
         ItemStack used = e.getItem();
         MedicalState m = Medical.state(sp);
         if (m == null) return;
+        // Диабет: сахар поднимают углеводы съеденного — с RP Culinary по его событию (CoreNutrition.onEaten),
+        // без него — по ванильной сытости.
         var food = used.getFoodProperties(sp);
-        var comp = food != null || faygolover.rpmedicine.data.NutritionRules.base(used.getItem()) != null
-                ? faygolover.rpmedicine.server.NutritionTable.get(sp.server, used.getItem()) : null;
-        if (comp != null) {
-            int cat = faygolover.rpmedicine.server.NutritionTable.category(sp.server, used.getItem());
-            if (faygolover.rpmedicine.core.Nutrition.eat(m, comp, cat, MedicalSettings.get()))
-                sp.displayClientMessage(Component.translatable("rpmedicine.monotony." + faygolover.rpmedicine.core.Nutrition.CATEGORIES[cat])
-                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+        if (food != null && faygolover.rpmedicine.integration.CoreNutrition.provider() == null && Medical.traits(sp).diabetic) {
+            faygolover.rpmedicine.core.Metabolism.eat(m, food.getNutrition(), MedicalSettings.get());
+            Medical.changed(sp);
         }
-        if (food != null && Medical.traits(sp).diabetic) {
-            if (comp != null) faygolover.rpmedicine.core.Metabolism.eatCarbs(m, comp.carbs(), MedicalSettings.get());
-            else faygolover.rpmedicine.core.Metabolism.eat(m, food.getNutrition(), MedicalSettings.get());
-        }
-        if (comp != null || food != null) Medical.changed(sp);
         if (!used.is(Items.GOLDEN_APPLE) && !used.is(Items.ENCHANTED_GOLDEN_APPLE)) return;
         MedicalSettings s = MedicalSettings.get();
         boolean ench = used.is(Items.ENCHANTED_GOLDEN_APPLE);

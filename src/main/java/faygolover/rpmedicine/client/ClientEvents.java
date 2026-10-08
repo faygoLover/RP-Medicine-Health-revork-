@@ -63,7 +63,6 @@ public final class ClientEvents {
         SelfView v = ClientState.self;
 
         while (ClientSetup.PANEL.consumeClick()) openPanel(mc, v);
-        while (ClientSetup.NUTRITION.consumeClick()) mc.setScreen(new faygolover.rpmedicine.client.screen.NutritionScreen());
         handleFinishKey(mc, v);
         if (tick % 5 == 0) updateHover(mc, v);
 

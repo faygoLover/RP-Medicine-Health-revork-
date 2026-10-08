@@ -138,11 +138,10 @@ public final class MedicalState {
     public int catheterPart = -1;
     /** Реакция на несовместимую кровь: осталось секунд. */
     public double transfusionReactionSeconds;
-    /** Своя жажда без LSO: вода 0–100. */
+    /** Вода 0–100: копия из мода питания (RP Culinary) или LSO; без них — 100. */
     public double thirst = 100;
-    /** Команда food add для офлайн-игроков: сколько сытости и воды снять при входе. */
-    public double pendingFoodLoss;
-    public double pendingThirstLoss;
+    /** Команда food add для офлайн-игроков: сколько часов голода и жажды прокрутить при входе. */
+    public double pendingFoodHours;
     /** Повреждение органов 0–100 (третий этап, п. 2), по {@link Organ#ordinal()}. */
     public final double[] organs = new double[Organ.COUNT];
     /** Изъятые органы: биты {@link Organ#bit()}. */
@@ -158,11 +157,15 @@ public final class MedicalState {
     /** Опьянение 0–100; судороги (ломка алкоголя), секунд. */
     public double intoxication;
     public double seizureSeconds;
-    /** Питание: запасы белков, жиров, углеводов, витаминов 0–120; калории, съеденные за последние часы. */
+    /**
+     * Питание: запасы белков, жиров, углеводов, витаминов 0–120 — копия из мода питания (RP Culinary) перед каждым
+     * шагом. {@link #nutritionKnown} — копия есть (без мода питания нехватки и баланса нет); плохой аппетит — оттуда же.
+     */
     public final double[] nutrients = {60, 60, 60, 60};
-    public double kcalEaten;
-    /** «Приелось»: недавние порции по видам еды (тают со временем). */
-    public final double[] monotony = new double[Nutrition.CATEGORIES.length];
+    public boolean nutritionKnown;
+    public boolean poorAppetite;
+    /** Обморок по вызову (голодный, от жажды — RP Culinary через RP Core): ещё секунд без сознания. */
+    public double faintSeconds;
     /** Тошнота от отравления и до следующей рвоты, секунд (не сохраняется: короткое). */
     public double nauseaSeconds;
     public double vomitTimer;
@@ -287,8 +290,7 @@ public final class MedicalState {
         intoxication = 0;
         seizureSeconds = 0;
         java.util.Arrays.fill(nutrients, 60);
-        kcalEaten = 0;
-        java.util.Arrays.fill(monotony, 0);
+        faintSeconds = 0;
         doses.clear();
         effects.clear();
         drugLevels.clear();
@@ -446,11 +448,11 @@ public final class MedicalState {
         intoxication = o.intoxication;
         seizureSeconds = o.seizureSeconds;
         System.arraycopy(o.nutrients, 0, nutrients, 0, nutrients.length);
-        kcalEaten = o.kcalEaten;
-        System.arraycopy(o.monotony, 0, monotony, 0, monotony.length);
+        nutritionKnown = o.nutritionKnown;
+        poorAppetite = o.poorAppetite;
+        faintSeconds = o.faintSeconds;
         thirst = o.thirst;
-        pendingFoodLoss = o.pendingFoodLoss;
-        pendingThirstLoss = o.pendingThirstLoss;
+        pendingFoodHours = o.pendingFoodHours;
         doses.clear();
         for (var e : o.doses.entrySet()) doses.put(e.getKey(), new java.util.ArrayList<>(e.getValue()));
         effects.clear();

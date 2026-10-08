@@ -80,8 +80,7 @@ public final class MedicalNbt {
         if (m.catheterPart >= 0) t.putByte("cath", (byte) m.catheterPart);
         putIf(t, "reaction", m.transfusionReactionSeconds);
         putIf(t, "opioid", m.opioidSeconds);
-        if (m.thirst < 100) t.putFloat("thirst", (float) m.thirst);
-        putIf(t, "pFood", m.pendingFoodLoss);
+        putIf(t, "pFoodH", m.pendingFoodHours);
         // Органы (третий этап): только если что-то повреждено или изъято.
         boolean anyOrgan = m.organsMissing != 0 || m.organRejection != 0 || Math.abs(m.bloodSugar - faygolover.rpmedicine.core.Metabolism.NORMAL_SUGAR) > 0.01;
         for (double v : m.organs) anyOrgan |= v > 0;
@@ -92,14 +91,6 @@ public final class MedicalNbt {
         }
         if (m.organsMissing != 0) t.putByte("orgMiss", (byte) m.organsMissing);
         if (m.organRejection != 0) t.putByte("orgRej", (byte) m.organRejection);
-        {
-            net.minecraft.nbt.CompoundTag nu = new net.minecraft.nbt.CompoundTag();
-            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++) nu.putFloat(faygolover.rpmedicine.core.Nutrition.IDS[i], (float) m.nutrients[i]);
-            putIf(nu, "kcal", m.kcalEaten);
-            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.CATEGORIES.length; i++)
-                putIf(nu, "mono_" + faygolover.rpmedicine.core.Nutrition.CATEGORIES[i], m.monotony[i]);
-            t.put("nutr", nu);
-        }
         boolean anySub = m.dependence != 0 || m.intoxication > 0;
         for (double v : m.tolerance) if (v > 0) anySub = true;
         if (anySub) {
@@ -114,7 +105,6 @@ public final class MedicalNbt {
             t.put("subst", sub);
         }
         if (Math.abs(m.bloodSugar - faygolover.rpmedicine.core.Metabolism.NORMAL_SUGAR) > 0.01) t.putFloat("sugar", (float) m.bloodSugar);
-        putIf(t, "pThirst", m.pendingThirstLoss);
         if (!m.doses.isEmpty()) {
             CompoundTag doses = new CompoundTag();
             for (var e : m.doses.entrySet()) {
@@ -274,21 +264,13 @@ public final class MedicalNbt {
         m.catheterPart = t.contains("cath") ? t.getByte("cath") : -1;
         m.transfusionReactionSeconds = t.getFloat("reaction");
         m.opioidSeconds = t.getFloat("opioid");
-        m.thirst = t.contains("thirst") ? t.getFloat("thirst") : 100;
-        m.pendingFoodLoss = t.getFloat("pFood");
+        // Вода и нутриенты с 0.3.0 живут в RP Culinary — здесь только копия, не сохраняется.
+        m.pendingFoodHours = t.getFloat("pFoodH");
         java.util.Arrays.fill(m.organs, 0);
         ListTag ol = t.getList("organs", Tag.TAG_FLOAT);
         for (int i = 0; i < Math.min(ol.size(), faygolover.rpmedicine.core.Organ.COUNT); i++) m.organs[i] = ol.getFloat(i);
         m.organsMissing = t.getByte("orgMiss") & 0xFF;
         m.organRejection = t.getByte("orgRej") & 0xFF;
-        if (t.contains("nutr")) {
-            var nu = t.getCompound("nutr");
-            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.COUNT; i++)
-                if (nu.contains(faygolover.rpmedicine.core.Nutrition.IDS[i])) m.nutrients[i] = nu.getFloat(faygolover.rpmedicine.core.Nutrition.IDS[i]);
-            m.kcalEaten = nu.getFloat("kcal");
-            for (int i = 0; i < faygolover.rpmedicine.core.Nutrition.CATEGORIES.length; i++)
-                m.monotony[i] = nu.getFloat("mono_" + faygolover.rpmedicine.core.Nutrition.CATEGORIES[i]);
-        }
         if (t.contains("subst")) {
             var sub = t.getCompound("subst");
             for (var x : faygolover.rpmedicine.core.Substance.VALUES) {
@@ -300,7 +282,6 @@ public final class MedicalNbt {
             m.seizureSeconds = sub.getFloat("seiz");
         }
         if (t.contains("sugar")) m.bloodSugar = t.getFloat("sugar");
-        m.pendingThirstLoss = t.getFloat("pThirst");
         CompoundTag doses = t.getCompound("doses");
         for (String k : doses.getAllKeys()) {
             ListTag l = doses.getList(k, Tag.TAG_FLOAT);
