@@ -138,6 +138,8 @@ class InjuriesTest {
     @Test
     void bulletInsideBlocksHealing() {
         MedicalSettings s = settings();
+        // Заражение случайно и останавливает заживление — здесь проверяется только пуля.
+        s.infectionChance.replaceAll((k, v) -> 0.0);
         MedicalState m = new MedicalState(s);
         BodyPartState ps = m.part(BodyPart.LEFT_LEG);
         Wound w = new Wound(WoundType.GUNSHOT, 20);

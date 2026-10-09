@@ -506,7 +506,7 @@ def our_display(name):
     return copy.deepcopy(m.get("base", m).get("display", FIT_DISPLAY))
 
 
-def geo_like(item, src, tex_fn=None, scale=(1, 1, 1), size=None, display=None, note=""):
+def geo_like(item, src, tex_fn=None, scale=(1, 1, 1), size=None, display=None, note="", icon=True):
     """Копия нашей 3D-модели src (геометрия, анимация, текстура с перекраской) под другим предметом."""
     e = index.get(f"rpmedicine:{src}") or json.load(open(os.path.join(GEO_DIR, "items.json"), encoding="utf-8"))[f"rpmedicine:{src}"]
     geo = our_geo(src)
@@ -518,7 +518,7 @@ def geo_like(item, src, tex_fn=None, scale=(1, 1, 1), size=None, display=None, n
     anim = our_anim(src)
     fit = e.get("fit", False)
     disp = display or our_display(src)
-    geo_item(item, geo, tex, size=size if size is not None else e.get("size", 0.8), anim=anim, use=e.get("use"), fit=fit, display=disp)
+    geo_item(item, geo, tex, size=size if size is not None else e.get("size", 0.8), anim=anim, use=e.get("use"), fit=fit, display=disp, icon=icon)
     if not fit and e.get("hide"):
         index[f"rpmedicine:{item}"]["hide"] = e["hide"]
     credits.append((f"rpgeo/{item}.geo.json", "rpmedicine", f"rpgeo/{src}.geo.json", note or "копия модели"))
@@ -655,7 +655,8 @@ def part_a():
 
     # И29. Использованный пакет — модель пустого пакета крови.
     geo_like("used_iv_bag", "empty_blood_bag", tex_fn=lambda im: recolor(im, lambda r, g, b, a:
-             (min(255, r + 6), g, max(0, b - 10), a) if a < 255 else None), note="чуть мутнее")
+             (min(255, r + 6), g, max(0, b - 10), a) if a < 255 else None), note="чуть мутнее",
+             icon=False)   # прозрачный пакет в рендере — почти одна рамка; иконка — прежняя плоская
 
     # И17. Шина — иконка по модели.
     icon_from("splint", preview.geo_quads(os.path.join(GEO_DIR, "splint.geo.json"), os.path.join(ASSETS, "textures", "geo", "splint.png")))
