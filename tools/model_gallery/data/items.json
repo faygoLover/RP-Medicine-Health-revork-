@@ -167,7 +167,8 @@
    }
   },
   "icon": "data/tex/28dc74ad5eb6.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "iv_amino_acids",
@@ -252,7 +253,8 @@
    }
   },
   "icon": "data/tex/3443aea07151.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "amoxicillin",
@@ -322,7 +324,8 @@
    }
   },
   "icon": "data/tex/6b1aebf191e8.png",
-  "quads": 24
+  "quads": 24,
+  "group": "b5b96dc248"
  },
  {
   "id": "lr_amoxycillin",
@@ -652,7 +655,8 @@
    }
   },
   "icon": "data/tex/2103d68a5ab9.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "lr_goldenstar",
@@ -980,7 +984,8 @@
    }
   },
   "icon": "data/tex/73a138827490.png",
-  "quads": 12
+  "quads": 12,
+  "group": "9c7c599000"
  },
  {
   "id": "iv_catheter",
@@ -1160,7 +1165,8 @@
    }
   },
   "icon": "data/tex/3b3c86fbd837.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "airway",
@@ -1603,7 +1609,8 @@
    }
   },
   "icon": "data/tex/2fb064e5fab1.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "glucometer",
@@ -1921,7 +1928,8 @@
    }
   },
   "icon": "data/tex/3ba6f14ccbe6.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "chest_drain",
@@ -2196,7 +2204,8 @@
    }
   },
   "icon": "data/tex/01c10f03a5f7.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "hemostat",
@@ -2351,7 +2360,8 @@
    }
   },
   "icon": "data/tex/682dd92ad560.png",
-  "quads": 24
+  "quads": 24,
+  "group": "b5b96dc248"
  },
  {
   "id": "lr_ibuprofen",
@@ -2511,7 +2521,8 @@
    }
   },
   "icon": "data/tex/023e9908323f.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "insulin",
@@ -2586,7 +2597,8 @@
    }
   },
   "icon": "data/tex/e1b2fb233b18.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "endotracheal_tube",
@@ -2756,7 +2768,8 @@
    }
   },
   "icon": "data/tex/12556d4aedc0.png",
-  "quads": 60
+  "quads": 60,
+  "group": "feb9b5f5a1"
  },
  {
   "id": "used_pen",
@@ -2831,7 +2844,8 @@
    }
   },
   "icon": "data/tex/87a4bb368d28.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "used_iv_bag",
@@ -2916,7 +2930,8 @@
    }
   },
   "icon": "data/tex/817d801a8d4d.png",
-  "quads": 108
+  "quads": 108,
+  "group": "61393f730c"
  },
  {
   "id": "dirty_syringe",
@@ -2991,7 +3006,8 @@
    }
   },
   "icon": "data/tex/200de6467db6.png",
-  "quads": 36
+  "quads": 36,
+  "group": "8589ddb645"
  },
  {
   "id": "ketamine",
@@ -3076,7 +3092,8 @@
    }
   },
   "icon": "data/tex/a6d41dc61838.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "ketorolac",
@@ -3151,7 +3168,8 @@
    }
   },
   "icon": "data/tex/ad6a0c30201d.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "severed_limb",
@@ -3732,7 +3750,8 @@
    }
   },
   "icon": "data/tex/64bf41d76669.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "antibiotic_ointment",
@@ -3817,7 +3836,8 @@
    }
   },
   "icon": "data/tex/6a2f5edaca78.png",
-  "quads": 12
+  "quads": 12,
+  "group": "9c7c599000"
  },
  {
   "id": "scissors",
@@ -4495,7 +4515,8 @@
    }
   },
   "icon": "data/tex/963932b42339.png",
-  "quads": 42
+  "quads": 42,
+  "group": "16b3606c08"
  },
  {
   "id": "naloxone",
@@ -4570,7 +4591,8 @@
    }
   },
   "icon": "data/tex/6bc950de43c0.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "ammonia",
@@ -4740,7 +4762,8 @@
    }
   },
   "icon": "data/tex/66665ccf2de2.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "painkillers",
@@ -5078,7 +5101,8 @@
    }
   },
   "icon": "data/tex/234b57b31e6d.png",
-  "quads": 108
+  "quads": 108,
+  "group": "61393f730c"
  },
  {
   "id": "paracetamol",
@@ -5148,7 +5172,8 @@
    }
   },
   "icon": "data/tex/f737a61cf07f.png",
-  "quads": 24
+  "quads": 24,
+  "group": "b5b96dc248"
  },
  {
   "id": "portable_scanner",
@@ -5318,7 +5343,8 @@
    }
   },
   "icon": "data/tex/cacb336aadc7.png",
-  "quads": 60
+  "quads": 60,
+  "group": "feb9b5f5a1"
  },
  {
   "id": "propofol",
@@ -5403,7 +5429,8 @@
    }
   },
   "icon": "data/tex/469acd0224b8.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "prosthetic_foot",
@@ -5646,7 +5673,8 @@
    }
   },
   "icon": "data/tex/f88615159253.png",
-  "quads": 60
+  "quads": 60,
+  "group": "feb9b5f5a1"
  },
  {
   "id": "empty_blood_bag",
@@ -5731,7 +5759,8 @@
    }
   },
   "icon": "data/tex/7c9823927684.png",
-  "quads": 108
+  "quads": 108,
+  "group": "61393f730c"
  },
  {
   "id": "retractor",
@@ -6115,7 +6144,8 @@
    }
   },
   "icon": "data/tex/5166023f5223.png",
-  "quads": 24
+  "quads": 24,
+  "group": "b5b96dc248"
  },
  {
   "id": "thermometer",
@@ -6375,7 +6405,8 @@
    }
   },
   "icon": "data/tex/6ce89b843596.png",
-  "quads": 24
+  "quads": 24,
+  "group": "b5b96dc248"
  },
  {
   "id": "txa",
@@ -6450,7 +6481,8 @@
    }
   },
   "icon": "data/tex/c6a854e26a2c.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "tourniquet",
@@ -6630,7 +6662,8 @@
    }
   },
   "icon": "data/tex/770f9abbbbd0.png",
-  "quads": 108
+  "quads": 108,
+  "group": "61393f730c"
  },
  {
   "id": "surgical_drill",
@@ -7259,7 +7292,8 @@
    }
   },
   "icon": "data/tex/d3934628873c.png",
-  "quads": 24
+  "quads": 24,
+  "group": "8ebcdebde7"
  },
  {
   "id": "chlorhexidine_hands",
@@ -7329,7 +7363,8 @@
    }
   },
   "icon": "data/tex/d3934628873c.png",
-  "quads": 24
+  "quads": 24,
+  "group": "8ebcdebde7"
  },
  {
   "id": "chlorhexidine_skin",
@@ -7399,7 +7434,8 @@
    }
   },
   "icon": "data/tex/d3934628873c.png",
-  "quads": 24
+  "quads": 24,
+  "group": "8ebcdebde7"
  },
  {
   "id": "ceftriaxone",
@@ -7484,7 +7520,8 @@
    }
   },
   "icon": "data/tex/2c83822811da.png",
-  "quads": 24
+  "quads": 24,
+  "group": "5565a4cd0f"
  },
  {
   "id": "cyclosporine",
@@ -7559,7 +7596,8 @@
    }
   },
   "icon": "data/tex/2510af0dbd94.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  },
  {
   "id": "splint",
@@ -7699,7 +7737,8 @@
    }
   },
   "icon": "data/tex/cda3b03a58d2.png",
-  "quads": 36
+  "quads": 36,
+  "group": "8589ddb645"
  },
  {
   "id": "blood_draw_syringe",
@@ -7774,7 +7813,8 @@
    }
   },
   "icon": "data/tex/cda3b03a58d2.png",
-  "quads": 42
+  "quads": 42,
+  "group": "16b3606c08"
  },
  {
   "id": "morphine",
@@ -7849,6 +7889,7 @@
    }
   },
   "icon": "data/tex/3c69d44bc561.png",
-  "quads": 42
+  "quads": 42,
+  "group": "3054c41eff"
  }
 ]

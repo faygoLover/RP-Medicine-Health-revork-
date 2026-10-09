@@ -46,3 +46,10 @@ canvas { display: block; width: 100%; border-radius: 4px; }
 #actions { display: flex; gap: 8px; align-items: center; }
 .hint { color: var(--dim); font-size: 12px; }
 @media (max-width: 1300px) { #views { grid-template-columns: 256px 1fr; } }
+#variants { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding: 6px 14px; border-bottom: 1px solid var(--line); }
+#variants[hidden] { display: none; }
+#variants .hint { width: 100%; }
+#variants button { display: flex; align-items: center; gap: 4px; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 12px; }
+#variants button.on { border-color: var(--acc); color: var(--acc); }
+#variants img { width: 20px; height: 20px; image-rendering: pixelated; }
+#list .grp { color: #7fb3ff; font-size: 11px; }

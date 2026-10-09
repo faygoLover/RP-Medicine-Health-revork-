@@ -11,18 +11,30 @@ const DEF = {
   ground: { rotation: [0, 0, 0], translation: [0, 2, 0], scale: [0.5, 0.5, 0.5] },
 };
 
-let items = [], review = { items: {} }, cur = null, ctx = 'gui', filter = 'all';
+// entries — строки списка: предмет или группа (одна модель, разные текстуры). cur — показанный вариант, entry — его строка.
+let items = [], entries = [], review = { items: {} }, cur = null, entry = null, ctx = 'gui', filter = 'all';
 const texCache = new Map(), modelCache = new Map();
 const $ = s => document.querySelector(s);
 
 // ------------------------------------------------------------------ данные
 async function load() {
   items = await (await fetch('data/items.json', { cache: 'no-store' })).json();
+  const groups = await fetch('data/groups.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : []).catch(() => []);
   review = await (await fetch('/api/review', { cache: 'no-store' })).json();
   review.items ??= {};
+  const byId = new Map(items.map(i => [i.id, i]));
+  const inGroup = new Set();
+  for (const g of groups) {
+    const members = g.members.map(id => byId.get(id)).filter(Boolean);
+    members.forEach(m => inGroup.add(m.id));
+    entries.push({ key: 'g:' + g.key, name: g.name, members });
+  }
+  for (const it of items) if (!inGroup.has(it.id)) entries.push({ key: it.id, name: it.name, members: [it] });
+  entries.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
   renderList();
   const last = localStorage.getItem('rpm_gallery_item');
-  select(items.find(i => i.id === last) || items[0]);
+  const e = entries.find(x => x.members.some(m => m.id === last)) || entries[0];
+  select(e, e.members.find(m => m.id === last));
 }
 
 let saveTimer = null;
@@ -38,6 +50,14 @@ function save() {
 
 function rec(id) { return review.items[id] ??= {}; }
 
+/** Правка для всей строки: в группе — каждому предмету одинаково. */
+function forAll(fn) {
+  for (const m of entry.members) {
+    fn(rec(m.id), m);
+    if (!Object.keys(review.items[m.id]).length) delete review.items[m.id];
+  }
+}
+
 /** Текущий display: правка из отзыва, иначе исходный из модели, иначе ванильный по умолчанию. */
 function disp(item, c) {
   const r = review.items[item.id];
@@ -50,6 +70,7 @@ function disp(item, c) {
 }
 
 function changed(item) { return !!review.items[item.id]?.display && Object.keys(review.items[item.id].display).length > 0; }
+function entryChanged(e) { return e.members.some(changed); }
 
 // ------------------------------------------------------------------ список
 function renderList() {
@@ -57,24 +78,26 @@ function renderList() {
   const ul = $('#list');
   ul.innerHTML = '';
   let nLike = 0, nDis = 0;
-  for (const it of items) {
-    const r = review.items[it.id] || {};
+  for (const e of entries) {
+    const r = review.items[e.members[0].id] || {};
     if (r.mark === 'like') nLike++;
     if (r.mark === 'dislike') nDis++;
-    if (q && !it.name.toLowerCase().includes(q) && !it.id.includes(q)) continue;
+    const hay = [e.name, ...e.members.flatMap(m => [m.name, m.id])].join(' ').toLowerCase();
+    if (q && !hay.includes(q)) continue;
     if (filter === 'like' && r.mark !== 'like') continue;
     if (filter === 'dislike' && r.mark !== 'dislike') continue;
     if (filter === 'none' && r.mark) continue;
-    if (filter === 'changed' && !changed(it)) continue;
+    if (filter === 'changed' && !entryChanged(e)) continue;
     const li = document.createElement('li');
-    li.dataset.id = it.id;
-    li.innerHTML = `<img src="${it.icon || ''}" alt=""><span>${it.name}${changed(it) ? ' <span class="ch">вид</span>' : ''}${r.comment ? ' 💬' : ''}</span>
+    li.dataset.key = e.key;
+    const n = e.members.length;
+    li.innerHTML = `<img src="${e.members[0].icon || ''}" alt=""><span>${e.name}${n > 1 ? ` <span class="grp">×${n}</span>` : ''}${entryChanged(e) ? ' <span class="ch">вид</span>' : ''}${r.comment ? ' 💬' : ''}</span>
       <span class="st">${r.mark === 'like' ? '👍' : r.mark === 'dislike' ? '👎' : ''}</span>`;
-    if (cur && cur.id === it.id) li.classList.add('sel');
-    li.onclick = () => select(it);
+    if (entry && entry.key === e.key) li.classList.add('sel');
+    li.onclick = () => select(e);
     ul.appendChild(li);
   }
-  $('#stats').textContent = `${items.length} предметов · 👍 ${nLike} · 👎 ${nDis}`;
+  $('#stats').textContent = `${entries.length} строк (${items.length} предметов) · 👍 ${nLike} · 👎 ${nDis}`;
 }
 
 $('#search').oninput = renderList;
@@ -327,40 +350,57 @@ function loop() {
 loop();
 
 // ------------------------------------------------------------------ выбор и правка
-async function select(item) {
-  if (!item) return;
+async function select(e, variant) {
+  if (!e) return;
+  entry = e;
+  const item = variant || e.members[0];
   cur = item;
   localStorage.setItem('rpm_gallery_item', item.id);
-  $('#name').textContent = item.name;
-  $('#kind').textContent = `${item.id} · ${{ geo: '3D (client/geo)', json: '3D (JSON)', flat: 'плоская' }[item.kind] || item.kind}`;
+  $('#name').textContent = e.name;
+  const grp = e.members.length > 1;
+  $('#kind').textContent = `${grp ? item.name + ' · ' : ''}${item.id} · ${{ geo: '3D (client/geo)', json: '3D (JSON)', flat: 'плоская' }[item.kind] || item.kind}`;
+  // Варианты группы: та же модель, другая текстура.
+  const vb = $('#variants');
+  vb.innerHTML = '';
+  vb.hidden = !grp;
+  if (grp) {
+    const hint = document.createElement('span');
+    hint.className = 'hint';
+    hint.textContent = `Группа: одна модель, ${e.members.length} текстур. Вид, отметка и комментарий — сразу для всех.`;
+    vb.appendChild(hint);
+    for (const m of e.members) {
+      const b = document.createElement('button');
+      b.innerHTML = `<img src="${m.icon || ''}" alt="">${m.name}`;
+      b.classList.toggle('on', m === item);
+      b.onclick = () => select(e, m);
+      vb.appendChild(b);
+    }
+  }
   const r = review.items[item.id] || {};
   document.querySelectorAll('#mark button').forEach(b => b.classList.toggle('on', (r.mark || '') === b.dataset.m && !!b.dataset.m));
   $('#comment').value = r.comment || '';
-  document.querySelectorAll('#list li').forEach(li => li.classList.toggle('sel', li.dataset.id === item.id));
+  document.querySelectorAll('#list li').forEach(li => li.classList.toggle('sel', li.dataset.key === e.key));
   const kind = $('#kind').textContent;
   $('#kind').textContent = kind + ' · загрузка…';
   try {
     await show(item);
     if (cur === item) $('#kind').textContent = kind;
-  } catch (e) {
-    console.error(e);
-    $('#kind').textContent += ' · ошибка: ' + e;
+  } catch (err) {
+    console.error(err);
+    $('#kind').textContent += ' · ошибка: ' + err;
   }
   buildSliders();
 }
 
 document.querySelectorAll('#mark button').forEach(b => b.onclick = () => {
-  const r = rec(cur.id);
-  r.mark = b.dataset.m || undefined;
-  if (!r.mark) delete r.mark;
+  forAll(r => { if (b.dataset.m) r.mark = b.dataset.m; else delete r.mark; });
   document.querySelectorAll('#mark button').forEach(x => x.classList.toggle('on', x === b && !!b.dataset.m));
   save();
   renderList();
 });
 $('#comment').oninput = () => {
-  const r = rec(cur.id);
-  r.comment = $('#comment').value;
-  if (!r.comment) delete r.comment;
+  const c = $('#comment').value;
+  forAll(r => { if (c) r.comment = c; else delete r.comment; });
   save();
 };
 
@@ -377,12 +417,10 @@ const AXES = [
 ];
 
 function setValue(kind, axis, v) {
-  const r = rec(cur.id);
-  r.display ??= {};
   const d = disp(cur, ctx);
   if (kind === 'scale' && axis === 3) d.scale = [v, v, v];
   else d[kind][axis] = v;
-  r.display[ctx] = d;
+  forAll(r => { r.display ??= {}; r.display[ctx] = structuredClone(d); });
   refreshDisplay();
   save();
 }
@@ -411,20 +449,20 @@ function buildSliders() {
 }
 
 $('#reset').onclick = () => {
-  const r = review.items[cur.id];
-  if (r?.display) {
-    delete r.display[ctx];
-    if (!Object.keys(r.display).length) delete r.display;
-  }
+  forAll(r => {
+    if (r.display) {
+      delete r.display[ctx];
+      if (!Object.keys(r.display).length) delete r.display;
+    }
+  });
   refreshDisplay();
   buildSliders();
   save();
   renderList();
 };
 $('#copyfp').onclick = () => {
-  const r = rec(cur.id);
-  r.display ??= {};
-  r.display[ctx] = disp(cur, 'firstperson_righthand');
+  const d = disp(cur, 'firstperson_righthand');
+  forAll(r => { r.display ??= {}; r.display[ctx] = structuredClone(d); });
   refreshDisplay();
   buildSliders();
   save();

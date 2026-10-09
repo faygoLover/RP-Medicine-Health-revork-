@@ -28,6 +28,13 @@ GENERATED = {
 HANDHELD = dict(GENERATED, thirdperson_righthand={"rotation": [0, -90, 55], "translation": [0, 4, 0.5], "scale": [0.85, 0.85, 0.85]},
                 firstperson_righthand={"rotation": [0, -90, 25], "translation": [1.13, 3.2, 1.13], "scale": [0.68, 0.68, 0.68]})
 CONTEXTS = ("gui", "firstperson_righthand", "thirdperson_righthand", "ground", "fixed")
+# Группы: одна и та же 3D-модель, разные текстуры — в галерее одна строка, вид настраивается разом для всех.
+# Название группы — по предмету, который в неё входит; иначе — общее начало названий.
+GROUP_NAMES = {
+    "adrenaline": "Шприц-ручки", "lidocaine": "Флаконы", "paracetamol": "Банки таблеток", "saline": "Пакеты капельницы",
+    "test_tube": "Пробирки", "antiseptic": "Хлоргексидин", "lr_vaseline": "Мази", "syringe": "Шприцы (пустой и использованный)",
+    "filled_syringe": "Шприцы (набранный и для забора крови)",
+}
 
 tex_ids = {}
 
@@ -108,9 +115,33 @@ def resolve(item):
     return json_model_quads(mm), dict(mm.get("display", {})), "json", mm.get("gui_light", "side")
 
 
+def geometry_key(quads):
+    """Подпись геометрии: точки и развёртка без текстуры. Плоские карточки (2 квада) не группируются."""
+    if len(quads) <= 2:
+        return None
+    flat = [[round(v, 2) for pt in q["p"] for v in pt] + [round(v, 3) for uv in q["uv"] for v in uv] for q in quads]
+    return hashlib.md5(json.dumps(flat).encode()).hexdigest()[:10]
+
+
+def group_name(members):
+    for m in members:
+        if m["id"] in GROUP_NAMES:
+            return GROUP_NAMES[m["id"]]
+    words = [m["name"].split() for m in members]
+    common = []
+    for ws in zip(*words):
+        if len(set(ws)) > 1:
+            break
+        common.append(ws[0])
+    return " ".join(common) if common else members[0]["name"] + " и др."
+
+
 def main():
-    if os.path.exists(OUT):
-        shutil.rmtree(OUT)
+    # Чистим содержимое, а не саму папку: она может быть открыта (рабочая папка, сервер галереи).
+    os.makedirs(OUT, exist_ok=True)
+    for name in os.listdir(OUT):
+        path = os.path.join(OUT, name)
+        shutil.rmtree(path) if os.path.isdir(path) else os.remove(path)
     os.makedirs(os.path.join(OUT, "tex"))
     os.makedirs(os.path.join(OUT, "models"))
     items = []
@@ -133,11 +164,27 @@ def main():
             rec["gui_flat"] = tex_url(preview.texture_path(display["_gui_flat"]))
         with open(os.path.join(OUT, "models", f"{item}.json"), "w", encoding="utf-8") as f:
             json.dump(quads, f, separators=(",", ":"))
+        rec["_geo"] = geometry_key(quads)
         items.append(rec)
     items.sort(key=lambda r: r["name"])
+    by_geo = {}
+    for r in items:
+        g = r.pop("_geo")
+        if g:
+            by_geo.setdefault(g, []).append(r)
+    groups = []
+    for g, members in by_geo.items():
+        if len(members) < 2:
+            continue
+        name = group_name(members)
+        for r in members:
+            r["group"] = g
+        groups.append({"key": g, "name": name, "members": [r["id"] for r in members]})
+    with open(os.path.join(OUT, "groups.json"), "w", encoding="utf-8") as f:
+        json.dump(groups, f, ensure_ascii=False, indent=1)
     with open(os.path.join(OUT, "items.json"), "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=1)
-    print("gallery:", len(items), "предметов,", len(tex_ids), "текстур")
+    print("gallery:", len(items), "предметов,", len(groups), "групп,", len(tex_ids), "текстур")
 
 
 if __name__ == "__main__":

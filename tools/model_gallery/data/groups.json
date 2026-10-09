@@ -1,0 +1,97 @@
+[
+ {
+  "key": "3054c41eff",
+  "name": "Шприц-ручки",
+  "members": [
+   "adrenaline",
+   "atropine",
+   "diazepam",
+   "decompression_needle",
+   "insulin",
+   "used_pen",
+   "ketorolac",
+   "naloxone",
+   "txa",
+   "cyclosporine",
+   "morphine"
+  ]
+ },
+ {
+  "key": "5565a4cd0f",
+  "name": "Флаконы",
+  "members": [
+   "iv_amino_acids",
+   "iv_vitamins",
+   "iv_glucose",
+   "iv_lipids",
+   "ketamine",
+   "lidocaine",
+   "norepinephrine",
+   "propofol",
+   "ceftriaxone"
+  ]
+ },
+ {
+  "key": "b5b96dc248",
+  "name": "Банки таблеток",
+  "members": [
+   "amoxicillin",
+   "ibuprofen",
+   "paracetamol",
+   "glucose_tablets",
+   "tramadol"
+  ]
+ },
+ {
+  "key": "9c7c599000",
+  "name": "Мази",
+  "members": [
+   "lr_vaseline",
+   "antibiotic_ointment"
+  ]
+ },
+ {
+  "key": "feb9b5f5a1",
+  "name": "Пробирки",
+  "members": [
+   "dirty_test_tube",
+   "blood_sample",
+   "test_tube"
+  ]
+ },
+ {
+  "key": "61393f730c",
+  "name": "Пакеты капельницы",
+  "members": [
+   "used_iv_bag",
+   "blood_bag",
+   "empty_blood_bag",
+   "saline"
+  ]
+ },
+ {
+  "key": "8589ddb645",
+  "name": "Шприцы (пустой и использованный)",
+  "members": [
+   "dirty_syringe",
+   "syringe"
+  ]
+ },
+ {
+  "key": "16b3606c08",
+  "name": "Шприцы (набранный и для забора крови)",
+  "members": [
+   "filled_syringe",
+   "blood_draw_syringe"
+  ]
+ },
+ {
+  "key": "8ebcdebde7",
+  "name": "Хлоргексидин",
+  "members": [
+   "antiseptic",
+   "chlorhexidine_hands",
+   "chlorhexidine_skin"
+  ]
+ }
+]
