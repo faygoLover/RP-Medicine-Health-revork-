@@ -34,6 +34,11 @@ def split(rl, default_ns="minecraft"):
     return rl.split(":", 1) if ":" in rl else (default_ns, rl)
 
 
+def texture_path(rl):
+    ns, path = split(rl)
+    return _find(ns, f"textures/{path}.png")
+
+
 def texture(rl):
     ns, path = split(rl)
     im = Image.open(_find(ns, f"textures/{path}.png")).convert("RGBA")
@@ -110,7 +115,7 @@ def rot_point(p, origin, axis, angle):
     return (x + origin[0], y + origin[1], z + origin[2])
 
 
-def json_quads(model):
+def json_quads(model, tex_loader=None):
     """Квады: (4 точки, 4 uv 0..1, текстура)."""
     quads = []
     texs = model.get("textures", {})
@@ -123,7 +128,7 @@ def json_quads(model):
             if not key:
                 continue
             if key not in cache:
-                cache[key] = texture(key)
+                cache[key] = (tex_loader or texture)(key)
             uv = fd.get("uv") or default_uv(f, t, face)
             u0, v0, u1, v1 = [c / 16.0 for c in uv]
             uvs = [(u0, v0), (u1, v0), (u1, v1), (u0, v1)]
@@ -151,12 +156,12 @@ def _mat(rx, ry, rz):
 HANDS = {"lefthand", "righthand", "lefthand_pos", "righthand_pos"}
 
 
-def geo_quads(path, tex_path, hide=()):
+def geo_quads(path, tex_path, hide=(), tex_loader=None):
     d = json.load(open(path, encoding="utf-8"))
     g = d["minecraft:geometry"][0]
     tw = g["description"].get("texture_width", 64)
     th = g["description"].get("texture_height", 64)
-    tex = np.asarray(Image.open(tex_path).convert("RGBA")).astype(np.float32) / 255.0
+    tex = tex_loader(tex_path) if tex_loader else np.asarray(Image.open(tex_path).convert("RGBA")).astype(np.float32) / 255.0
     bones = {b["name"]: b for b in g.get("bones", [])}
 
     def chain(name):

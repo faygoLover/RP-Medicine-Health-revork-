@@ -243,13 +243,13 @@ public final class HospitalGameTests {
         w.infection = 50;
         m.part(faygolover.rpmedicine.core.BodyPart.LEFT_ARM).wounds.add(w);
         medic.getInventory().selected = 0;
-        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.AMOXICILLIN.get(), 3));
+        medic.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.AMOXICILLIN.get()));
         h.assertTrue(faygolover.rpmedicine.server.TreatmentService.startWithItem(medic, patient, 0, null), "дать таблетку");
         h.runAfterDelay(120, () -> {
             // Таблетка всасывается 1–2 минуты (решения, п. 1.16).
             faygolover.rpmedicine.core.Healing.fastForward(m, 150, MedicalSettings.get());
             h.assertTrue(m.hasEffect(faygolover.rpmedicine.core.DrugEffect.ANTIBIOTIC), "антибиотик действует");
-            h.assertTrue(medic.getInventory().getItem(0).getCount() == 2, "одна таблетка потрачена");
+            h.assertTrue(medic.getInventory().getItem(0).getDamageValue() == 1, "одна таблетка из банки потрачена");
             faygolover.rpmedicine.core.Healing.fastForward(m, 7 * 3600, MedicalSettings.get());
             h.assertTrue(!w.isInfected() || w.infection < 30, "под антибиотиком инфекция спадает (было 50), " + w.infection);
             remove(h, medic, patient);
@@ -762,7 +762,10 @@ public final class HospitalGameTests {
                 p, net.minecraft.world.InteractionHand.MAIN_HAND, pos, hit));
         var be = (faygolover.rpmedicine.hospital.HospitalStorageBlockEntity) h.getLevel().getBlockEntity(pos);
         h.assertTrue(be != null && be.needsWork(), "есть работа");
-        h.runAfterDelay(faygolover.rpmedicine.hospital.HospitalStorageBlockEntity.STERILIZE_TICKS + 20, () -> {
+        int was = faygolover.rpmedicine.core.MedicalSettings.get().sterilizeSeconds;
+        faygolover.rpmedicine.core.MedicalSettings.get().sterilizeSeconds = 10;     // в тесте — 10 секунд
+        h.runAfterDelay(10 * 20 + 20, () -> {
+            faygolover.rpmedicine.core.MedicalSettings.get().sterilizeSeconds = was;
             h.assertTrue(!be.needsWork(), "цикл прошёл");
             h.assertTrue(be.getItem(0).is(faygolover.rpmedicine.registry.ModItems.SYRINGE.get()) && be.getItem(0).getCount() == 3, "шприцы чистые");
             h.assertTrue(faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(be.getItem(1)), "скальпель стерилен");

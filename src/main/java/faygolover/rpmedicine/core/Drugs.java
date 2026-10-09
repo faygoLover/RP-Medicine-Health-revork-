@@ -58,7 +58,9 @@ public final class Drugs {
                     why = m.heartRate < 60 || m.heart != MedicalState.Heart.NORMAL ? null : "no_bradycardia";
                 }
                 case SEDATION -> why = m.seizureSeconds > 0 || Substances.anyWithdrawal(m, s) ? null : "no_agitation";
-                case RESP_DEPRESSION, LIVER_TOXICITY, IMMUNOSUPPRESSION -> {
+                // Иммуносупрессор — только при пересаженном органе (замечание 10.10, Ф40).
+                case IMMUNOSUPPRESSION -> why = m.organRejection != 0 ? null : "no_transplant";
+                case RESP_DEPRESSION, LIVER_TOXICITY -> {
                     continue;
                 }
                 default -> {

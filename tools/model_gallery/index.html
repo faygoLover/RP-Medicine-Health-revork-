@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Модели RP Medicine</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<aside id="side">
+  <header>
+    <h1>Модели RP Medicine</h1>
+    <input id="search" type="search" placeholder="Поиск по названию">
+    <div id="filters">
+      <button data-f="all" class="on">Все</button>
+      <button data-f="none">Без отметки</button>
+      <button data-f="like">👍</button>
+      <button data-f="dislike">👎</button>
+      <button data-f="changed">Изменён вид</button>
+    </div>
+    <div id="stats"></div>
+  </header>
+  <ul id="list"></ul>
+</aside>
+
+<main>
+  <div id="title"><h2 id="name">—</h2><span id="kind"></span><span id="saved"></span></div>
+  <div id="views">
+    <figure><figcaption>В слоте</figcaption><canvas id="v-gui"></canvas>
+      <div class="sub"><canvas id="v-gui1"></canvas><span>в натуральную величину (×2)</span></div></figure>
+    <figure><figcaption>1-е лицо</figcaption><canvas id="v-fp"></canvas></figure>
+    <figure><figcaption>3-е лицо <small>(крутить мышью)</small></figcaption><canvas id="v-tp"></canvas></figure>
+    <figure><figcaption>Модель <small>(крутить мышью)</small></figcaption><canvas id="v-free"></canvas></figure>
+  </div>
+
+  <section id="editor">
+    <div id="mark">
+      <button data-m="like" title="Нравится">👍 Нравится</button>
+      <button data-m="dislike" title="Не нравится">👎 Не нравится</button>
+      <button data-m="" title="Снять отметку">Снять</button>
+      <textarea id="comment" placeholder="Комментарий: что поправить"></textarea>
+    </div>
+    <div id="ctxtabs">
+      <button data-c="gui" class="on">В слоте</button>
+      <button data-c="firstperson_righthand">1-е лицо</button>
+      <button data-c="thirdperson_righthand">3-е лицо</button>
+      <button data-c="ground">На земле</button>
+    </div>
+    <div id="sliders"></div>
+    <div id="actions">
+      <button id="reset">Вернуть исходный вид</button>
+      <button id="copyfp">Скопировать из 1-го лица</button>
+      <span class="hint">Левая рука считается зеркально сама. Всё сохраняется автоматически.</span>
+    </div>
+  </section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

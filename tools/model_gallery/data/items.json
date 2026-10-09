@@ -1,0 +1,7910 @@
+[
+ {
+  "id": "defibrillator",
+  "name": "Автоматический дефибриллятор",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/bbcdcb131101.png",
+  "quads": 696
+ },
+ {
+  "id": "adrenaline",
+  "name": "Адреналин",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/28dc74ad5eb6.png",
+  "quads": 42
+ },
+ {
+  "id": "iv_amino_acids",
+  "name": "Аминокислоты",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/3443aea07151.png",
+  "quads": 24
+ },
+ {
+  "id": "amoxicillin",
+  "name": "Амоксициллин",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -5.267,
+     0
+    ],
+    "scale": [
+     0.7371,
+     0.7371,
+     0.7371
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/6b1aebf191e8.png",
+  "quads": 24
+ },
+ {
+  "id": "lr_amoxycillin",
+  "name": "Амоксициллин (LR)",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.02,
+     0.017,
+     0
+    ],
+    "scale": [
+     1.0734,
+     1.0734,
+     1.0734
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/ec7fc34cb926.png",
+  "quads": 270
+ },
+ {
+  "id": "first_aid_kit",
+  "name": "Аптечка",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.172,
+     0.208,
+     0
+    ],
+    "scale": [
+     1.1828,
+     1.1828,
+     1.1828
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     5,
+     -40,
+     0
+    ],
+    "translation": [
+     1.5,
+     3,
+     -1
+    ],
+    "scale": [
+     0.42,
+     0.42,
+     0.42
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/156e6165ee43.png",
+  "quads": 84
+ },
+ {
+  "id": "lr_ai2",
+  "name": "Аптечка АИ-2",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.043,
+     -0.02,
+     0
+    ],
+    "scale": [
+     0.8623,
+     0.8623,
+     0.8623
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/9b8122d25dec.png",
+  "quads": 205
+ },
+ {
+  "id": "atropine",
+  "name": "Атропин",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/2103d68a5ab9.png",
+  "quads": 42
+ },
+ {
+  "id": "lr_goldenstar",
+  "name": "Бальзам «Золотая звезда»",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     0.0,
+     0
+    ],
+    "scale": [
+     1.1328,
+     1.1328,
+     1.1328
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/80b325e5dfc9.png",
+  "quads": 120
+ },
+ {
+  "id": "bandage",
+  "name": "Бинт",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     27,
+     -124,
+     0
+    ],
+    "translation": [
+     -0.75,
+     4.25,
+     0
+    ],
+    "scale": [
+     1.2,
+     1.2,
+     1.2
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -163,
+     25
+    ],
+    "translation": [
+     1.88,
+     3.95,
+     -0.87
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     27,
+     0
+    ],
+    "translation": [
+     -1.75,
+     3.25,
+     2
+    ],
+    "scale": [
+     0.63984,
+     0.63984,
+     0.63984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2.5,
+     0
+    ],
+    "scale": [
+     0.7,
+     0.57,
+     0.7
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     90,
+     0
+    ],
+    "translation": [
+     0,
+     4.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/ed4b9932a00f.png",
+  "quads": 18
+ },
+ {
+  "id": "lab_report",
+  "name": "Бланк анализа крови",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/7baa14e08739.png",
+  "quads": 2
+ },
+ {
+  "id": "lr_vaseline",
+  "name": "Вазелин",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -0.0,
+     0
+    ],
+    "scale": [
+     0.7784,
+     0.7784,
+     0.7784
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/73a138827490.png",
+  "quads": 12
+ },
+ {
+  "id": "iv_catheter",
+  "name": "Венозный катетер",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     55
+    ],
+    "translation": [
+     0,
+     4,
+     0.5
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/61afdda85e28.png",
+  "quads": 36
+ },
+ {
+  "id": "iv_vitamins",
+  "name": "Витамины для капельницы",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/3b3c86fbd837.png",
+  "quads": 24
+ },
+ {
+  "id": "airway",
+  "name": "Воздуховод",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.14,
+     1.14,
+     1.14
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.816,
+     0.816,
+     0.816
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.66,
+     0.66,
+     0.66
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.96,
+     0.96,
+     0.96
+    ]
+   }
+  },
+  "icon": "data/tex/ee8211399a9a.png",
+  "quads": 61
+ },
+ {
+  "id": "gm_scanner",
+  "name": "ГМ-сканер",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/f8718e136b04.png",
+  "quads": 2
+ },
+ {
+  "id": "hemoanalyzer",
+  "name": "Гемоанализатор",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/1dd871b82e2b.png",
+  "quads": 330
+ },
+ {
+  "id": "hemostatic_gauze",
+  "name": "Гемостатическая марля",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/7c7075f41c22.png",
+  "quads": 480
+ },
+ {
+  "id": "iv_glucose",
+  "name": "Глюкоза 40 %",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/2fb064e5fab1.png",
+  "quads": 24
+ },
+ {
+  "id": "glucometer",
+  "name": "Глюкометр",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.14,
+     1.14,
+     1.14
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.816,
+     0.816,
+     0.816
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.66,
+     0.66,
+     0.66
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.96,
+     0.96,
+     0.96
+    ]
+   }
+  },
+  "icon": "data/tex/d012a62c0224.png",
+  "quads": 48
+ },
+ {
+  "id": "pressure_dressing",
+  "name": "Давящая повязка (ИПП)",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     27,
+     -124,
+     0
+    ],
+    "translation": [
+     -0.75,
+     4.25,
+     0
+    ],
+    "scale": [
+     1.2,
+     1.2,
+     1.2
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -163,
+     25
+    ],
+    "translation": [
+     1.88,
+     3.95,
+     -0.87
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     27,
+     0
+    ],
+    "translation": [
+     -1.75,
+     3.25,
+     2
+    ],
+    "scale": [
+     0.63984,
+     0.63984,
+     0.63984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2.5,
+     0
+    ],
+    "scale": [
+     0.7,
+     0.57,
+     0.7
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     90,
+     0
+    ],
+    "translation": [
+     0,
+     4.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/3e2983034252.png",
+  "quads": 18
+ },
+ {
+  "id": "peg_leg",
+  "name": "Деревянная нога",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/0adb9c628586.png",
+  "quads": 2
+ },
+ {
+  "id": "diazepam",
+  "name": "Диазепам",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/3ba6f14ccbe6.png",
+  "quads": 42
+ },
+ {
+  "id": "chest_drain",
+  "name": "Дренаж груди",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.14,
+     1.14,
+     1.14
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.816,
+     0.816,
+     0.816
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.66,
+     0.66,
+     0.66
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.96,
+     0.96,
+     0.96
+    ]
+   }
+  },
+  "icon": "data/tex/da7a982f2bf5.png",
+  "quads": 60
+ },
+ {
+  "id": "esmarch",
+  "name": "Жгут Эсмарха",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/8e0a06ca0a79.png",
+  "quads": 738
+ },
+ {
+  "id": "iv_lipids",
+  "name": "Жировая эмульсия",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/01c10f03a5f7.png",
+  "quads": 24
+ },
+ {
+  "id": "hemostat",
+  "name": "Зажим",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.265,
+     0.491,
+     0
+    ],
+    "scale": [
+     0.9584,
+     0.9584,
+     0.9584
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     90,
+     -35
+    ],
+    "translation": [
+     0,
+     2.5,
+     0.5
+    ],
+    "scale": [
+     0.7,
+     0.7,
+     0.7
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/5cec09bd1023.png",
+  "quads": 168
+ },
+ {
+  "id": "ibuprofen",
+  "name": "Ибупрофен",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -5.267,
+     0
+    ],
+    "scale": [
+     0.7371,
+     0.7371,
+     0.7371
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/682dd92ad560.png",
+  "quads": 24
+ },
+ {
+  "id": "lr_ibuprofen",
+  "name": "Ибупрофен (LR)",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.002,
+     0.226,
+     0
+    ],
+    "scale": [
+     1.0628,
+     1.0628,
+     1.0628
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/032a91de3c1e.png",
+  "quads": 312
+ },
+ {
+  "id": "decompression_needle",
+  "name": "Игла для декомпрессии",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/023e9908323f.png",
+  "quads": 42
+ },
+ {
+  "id": "insulin",
+  "name": "Инсулин",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/e1b2fb233b18.png",
+  "quads": 42
+ },
+ {
+  "id": "endotracheal_tube",
+  "name": "Интубационная трубка",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.14,
+     1.14,
+     1.14
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.816,
+     0.816,
+     0.816
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.66,
+     0.66,
+     0.66
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.96,
+     0.96,
+     0.96
+    ]
+   }
+  },
+  "icon": "data/tex/5281348cfbb9.png",
+  "quads": 54
+ },
+ {
+  "id": "dirty_test_tube",
+  "name": "Использованная пробирка",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -6.017,
+     0
+    ],
+    "scale": [
+     0.5757,
+     0.5757,
+     0.5757
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -6.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -4,
+     0.25
+    ],
+    "scale": [
+     0.25,
+     0.25,
+     0.25
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -5.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  "icon": "data/tex/12556d4aedc0.png",
+  "quads": 60
+ },
+ {
+  "id": "used_pen",
+  "name": "Использованная шприц-ручка",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/87a4bb368d28.png",
+  "quads": 42
+ },
+ {
+  "id": "used_iv_bag",
+  "name": "Использованный пакет",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     0.615,
+     0
+    ],
+    "scale": [
+     1.3204,
+     1.3204,
+     1.3204
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     70,
+     10
+    ],
+    "translation": [
+     1,
+     2,
+     -1
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     90
+    ],
+    "translation": [
+     0,
+     0,
+     1
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/817d801a8d4d.png",
+  "quads": 108
+ },
+ {
+  "id": "dirty_syringe",
+  "name": "Использованный шприц",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.527,
+     -9.026,
+     0
+    ],
+    "scale": [
+     0.7451,
+     0.7451,
+     0.7451
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/200de6467db6.png",
+  "quads": 36
+ },
+ {
+  "id": "ketamine",
+  "name": "Кетамин",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/a6d41dc61838.png",
+  "quads": 24
+ },
+ {
+  "id": "ketorolac",
+  "name": "Кеторолак",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/ad6a0c30201d.png",
+  "quads": 42
+ },
+ {
+  "id": "severed_limb",
+  "name": "Конечность",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/6806c0941762.png",
+  "quads": 2
+ },
+ {
+  "id": "organ_container",
+  "name": "Контейнер для органа",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     45,
+     0
+    ],
+    "translation": [
+     0,
+     1.75,
+     0
+    ],
+    "scale": [
+     0.625,
+     0.625,
+     0.625
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -45,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     75,
+     -45,
+     0
+    ],
+    "translation": [
+     0,
+     2.5,
+     0
+    ],
+    "scale": [
+     0.375,
+     0.375,
+     0.375
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     3,
+     0
+    ],
+    "scale": [
+     0.25,
+     0.25,
+     0.25
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     1.75,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  "icon": "data/tex/beb53ced248e.png",
+  "quads": 10
+ },
+ {
+  "id": "chlorhexidine_concentrate",
+  "name": "Концентрат хлоргексидина 20 %",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -5.501,
+     0
+    ],
+    "scale": [
+     0.6661,
+     0.6661,
+     0.6661
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/8f5d434b2d6a.png",
+  "quads": 24
+ },
+ {
+  "id": "prosthetic_hook",
+  "name": "Крюк",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/189269299343.png",
+  "quads": 2
+ },
+ {
+  "id": "lancet",
+  "name": "Ланцет",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.235,
+     1.235,
+     1.235
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.884,
+     0.884,
+     0.884
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.715,
+     0.715,
+     0.715
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.65,
+     0.65,
+     0.65
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.04,
+     1.04,
+     1.04
+    ]
+   }
+  },
+  "icon": "data/tex/4feb4a2143e9.png",
+  "quads": 48
+ },
+ {
+  "id": "laryngoscope",
+  "name": "Ларингоскоп",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     55
+    ],
+    "translation": [
+     0,
+     4,
+     0.5
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/45b89a95ce2e.png",
+  "quads": 156
+ },
+ {
+  "id": "lidocaine",
+  "name": "Лидокаин",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/64bf41d76669.png",
+  "quads": 24
+ },
+ {
+  "id": "antibiotic_ointment",
+  "name": "Мазь с антибиотиком",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -0.0,
+     0
+    ],
+    "scale": [
+     0.7784,
+     0.7784,
+     0.7784
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/6a2f5edaca78.png",
+  "quads": 12
+ },
+ {
+  "id": "scissors",
+  "name": "Медицинские ножницы",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.139,
+     0.41,
+     0
+    ],
+    "scale": [
+     0.9421,
+     0.9421,
+     0.9421
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     90,
+     -35
+    ],
+    "translation": [
+     0,
+     2.5,
+     0.5
+    ],
+    "scale": [
+     0.7,
+     0.7,
+     0.7
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/dbe9463451b2.png",
+  "quads": 138
+ },
+ {
+  "id": "medical_pouch",
+  "name": "Медицинский подсумок",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.045,
+     1.045,
+     1.045
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.748,
+     0.748,
+     0.748
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.605,
+     0.605,
+     0.605
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.88,
+     0.88,
+     0.88
+    ]
+   }
+  },
+  "icon": "data/tex/e609151e3b93.png",
+  "quads": 54
+ },
+ {
+  "id": "medcard",
+  "name": "Медкарта",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/7545bbd8cf4a.png",
+  "quads": 2
+ },
+ {
+  "id": "ambu_bag",
+  "name": "Мешок Амбу",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     -90,
+     90,
+     0
+    ],
+    "translation": [
+     -1,
+     1,
+     -2
+    ],
+    "scale": [
+     0.7,
+     0.7,
+     0.7
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/458ad32bb2db.png",
+  "quads": 2
+ },
+ {
+  "id": "osteosynthesis_kit",
+  "name": "Набор для остеосинтеза",
+  "kind": "json",
+  "light": "front",
+  "display": {
+   "gui": {
+    "rotation": [
+     -162.03,
+     -24.89,
+     -178.02
+    ],
+    "translation": [
+     0.25,
+     4.75,
+     0
+    ],
+    "scale": [
+     1.15821,
+     1.15821,
+     1.15821
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     138,
+     0
+    ],
+    "translation": [
+     0,
+     4.5,
+     0
+    ],
+    "scale": [
+     0.59336,
+     0.59336,
+     0.59336
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     75,
+     45,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     3.25
+    ],
+    "scale": [
+     0.375,
+     0.375,
+     0.375
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     3.25,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     3.25,
+     0
+    ],
+    "scale": [
+     0.79883,
+     0.79883,
+     0.79883
+    ]
+   }
+  },
+  "icon": "data/tex/f1705d663717.png",
+  "quads": 50
+ },
+ {
+  "id": "suture_kit",
+  "name": "Набор для швов",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.034,
+     0.0,
+     0
+    ],
+    "scale": [
+     0.9555,
+     0.9555,
+     0.9555
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/711df30dbc5f.png",
+  "quads": 205
+ },
+ {
+  "id": "stabilization_kit",
+  "name": "Набор стабилизации",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -0.0,
+     0
+    ],
+    "scale": [
+     0.5189,
+     0.5189,
+     0.5189
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/9407c91691e4.png",
+  "quads": 12
+ },
+ {
+  "id": "filled_syringe",
+  "name": "Набранный шприц",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.527,
+     -9.026,
+     0
+    ],
+    "scale": [
+     0.7451,
+     0.7451,
+     0.7451
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/963932b42339.png",
+  "quads": 42
+ },
+ {
+  "id": "naloxone",
+  "name": "Налоксон",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/6bc950de43c0.png",
+  "quads": 42
+ },
+ {
+  "id": "ammonia",
+  "name": "Нашатырь",
+  "kind": "json",
+  "light": "front",
+  "display": {
+   "gui": {
+    "rotation": [
+     -171.31,
+     28.48,
+     -168.29
+    ],
+    "translation": [
+     0.5,
+     2.5,
+     0
+    ],
+    "scale": [
+     1.07695,
+     1.07695,
+     1.07695
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     -155.67,
+     87.24,
+     146.71
+    ],
+    "translation": [
+     -0.75,
+     4,
+     2.25
+    ],
+    "scale": [
+     0.44883,
+     0.44883,
+     0.44883
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     90,
+     0
+    ],
+    "translation": [
+     -1.25,
+     2.25,
+     2.25
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     4,
+     0
+    ],
+    "scale": [
+     0.85938,
+     0.85938,
+     0.85938
+    ]
+   }
+  },
+  "icon": "data/tex/e2460d68f3b0.png",
+  "quads": 12
+ },
+ {
+  "id": "norepinephrine",
+  "name": "Норадреналин",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/66665ccf2de2.png",
+  "quads": 24
+ },
+ {
+  "id": "painkillers",
+  "name": "Обезболивающее",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/bc2d8b2eab7c.png",
+  "quads": 102
+ },
+ {
+  "id": "occlusive_dressing",
+  "name": "Окклюзионная повязка",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.6333,
+     0.6333,
+     0.6333
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.4533,
+     0.4533,
+     0.4533
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.3667,
+     0.3667,
+     0.3667
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.3333,
+     0.3333,
+     0.3333
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.6667,
+     0.6667,
+     0.6667
+    ]
+   }
+  },
+  "icon": "data/tex/da36d87795fc.png",
+  "quads": 156
+ },
+ {
+  "id": "organ",
+  "name": "Орган в контейнере",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/0b7f9260230c.png",
+  "quads": 2
+ },
+ {
+  "id": "blood_bag",
+  "name": "Пакет крови",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     0.615,
+     0
+    ],
+    "scale": [
+     1.3204,
+     1.3204,
+     1.3204
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     70,
+     10
+    ],
+    "translation": [
+     1,
+     2,
+     -1
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     90
+    ],
+    "translation": [
+     0,
+     0,
+     1
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/234b57b31e6d.png",
+  "quads": 108
+ },
+ {
+  "id": "paracetamol",
+  "name": "Парацетамол",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -5.267,
+     0
+    ],
+    "scale": [
+     0.7371,
+     0.7371,
+     0.7371
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/f737a61cf07f.png",
+  "quads": 24
+ },
+ {
+  "id": "field_surgery_kit",
+  "name": "Полевой хирургический набор",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     1.726,
+     -4.398,
+     0
+    ],
+    "scale": [
+     1.2207,
+     1.2207,
+     1.2207
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     36.75,
+     0
+    ],
+    "translation": [
+     -1,
+     -1,
+     -0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     90,
+     0,
+     0
+    ],
+    "translation": [
+     0.25,
+     -1,
+     -4.25
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0.75,
+     -3.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/4e9b2f20cb0c.png",
+  "quads": 156
+ },
+ {
+  "id": "portable_scanner",
+  "name": "Портативный сканер",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/d04239190658.png",
+  "quads": 288
+ },
+ {
+  "id": "blood_sample",
+  "name": "Пробирка крови",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -6.017,
+     0
+    ],
+    "scale": [
+     0.5757,
+     0.5757,
+     0.5757
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -6.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -4,
+     0.25
+    ],
+    "scale": [
+     0.25,
+     0.25,
+     0.25
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -5.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  "icon": "data/tex/cacb336aadc7.png",
+  "quads": 60
+ },
+ {
+  "id": "propofol",
+  "name": "Пропофол",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     163.78,
+     14.88,
+     -166.47
+    ],
+    "translation": [
+     0.25,
+     3.25,
+     0
+    ],
+    "scale": [
+     1.30978,
+     1.30978,
+     1.30978
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     96,
+     5
+    ],
+    "translation": [
+     0.75,
+     4,
+     1.25
+    ],
+    "scale": [
+     0.59531,
+     0.59531,
+     0.59531
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     56,
+     64,
+     0
+    ],
+    "translation": [
+     -2,
+     1,
+     3
+    ],
+    "scale": [
+     0.73984,
+     0.73984,
+     0.73984
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     5.25,
+     0
+    ],
+    "scale": [
+     1.02734,
+     1.02734,
+     1.02734
+    ]
+   }
+  },
+  "icon": "data/tex/469acd0224b8.png",
+  "quads": 24
+ },
+ {
+  "id": "prosthetic_foot",
+  "name": "Протез стопы",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/7088ae7f3e4e.png",
+  "quads": 2
+ },
+ {
+  "id": "pulse_oximeter",
+  "name": "Пульсоксиметр",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.235,
+     1.235,
+     1.235
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.884,
+     0.884,
+     0.884
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.715,
+     0.715,
+     0.715
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.65,
+     0.65,
+     0.65
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.04,
+     1.04,
+     1.04
+    ]
+   }
+  },
+  "icon": "data/tex/4dce42045d70.png",
+  "quads": 48
+ },
+ {
+  "id": "test_tube",
+  "name": "Пустая пробирка",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -6.017,
+     0
+    ],
+    "scale": [
+     0.5757,
+     0.5757,
+     0.5757
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -6.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -4,
+     0.25
+    ],
+    "scale": [
+     0.25,
+     0.25,
+     0.25
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -5.5,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  "icon": "data/tex/f88615159253.png",
+  "quads": 60
+ },
+ {
+  "id": "empty_blood_bag",
+  "name": "Пустой пакет для крови",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     0.615,
+     0
+    ],
+    "scale": [
+     1.3204,
+     1.3204,
+     1.3204
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     70,
+     10
+    ],
+    "translation": [
+     1,
+     2,
+     -1
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     90
+    ],
+    "translation": [
+     0,
+     0,
+     1
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/7c9823927684.png",
+  "quads": 108
+ },
+ {
+  "id": "retractor",
+  "name": "Ретрактор",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.126,
+     -0.2,
+     0
+    ],
+    "scale": [
+     0.931,
+     0.931,
+     0.931
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     90,
+     -35
+    ],
+    "translation": [
+     0,
+     2.5,
+     0.5
+    ],
+    "scale": [
+     0.7,
+     0.7,
+     0.7
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/f8d1fdba82d1.png",
+  "quads": 78
+ },
+ {
+  "id": "scalpel",
+  "name": "Скальпель",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.022,
+     0.199,
+     0
+    ],
+    "scale": [
+     0.9141,
+     0.9141,
+     0.9141
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     90,
+     -35
+    ],
+    "translation": [
+     0,
+     2.5,
+     0.5
+    ],
+    "scale": [
+     0.7,
+     0.7,
+     0.7
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/3de5ce90b0f3.png",
+  "quads": 30
+ },
+ {
+  "id": "vascular_suture",
+  "name": "Сосудистый шов",
+  "kind": "json",
+  "light": "front",
+  "display": {
+   "gui": {
+    "rotation": [
+     28,
+     137,
+     11
+    ],
+    "translation": [
+     0.5,
+     5,
+     0
+    ],
+    "scale": [
+     1.36719,
+     1.36719,
+     1.36719
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     13,
+     -62,
+     13
+    ],
+    "translation": [
+     0,
+     5,
+     1
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     75,
+     -50,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     3.75
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     3.25,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     3.25,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/3d88fd9eae4b.png",
+  "quads": 24
+ },
+ {
+  "id": "stethoscope",
+  "name": "Стетоскоп",
+  "kind": "json",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     -10,
+     110,
+     0
+    ],
+    "translation": [
+     1,
+     3.5,
+     -1
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     180
+    ],
+    "translation": [
+     0,
+     1,
+     1.5
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "fixed": {
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   }
+  },
+  "icon": "data/tex/4950f8e65d4a.png",
+  "quads": 30,
+  "gui_flat": "data/tex/4950f8e65d4a.png"
+ },
+ {
+  "id": "glucose_tablets",
+  "name": "Таблетки глюкозы",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -5.267,
+     0
+    ],
+    "scale": [
+     0.7371,
+     0.7371,
+     0.7371
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/5166023f5223.png",
+  "quads": 24
+ },
+ {
+  "id": "thermometer",
+  "name": "Термометр",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     55
+    ],
+    "translation": [
+     0,
+     4,
+     0.5
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/2eddeaaef7c2.png",
+  "quads": 30
+ },
+ {
+  "id": "tonometer",
+  "name": "Тонометр",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     25,
+     -35,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1.045,
+     1.045,
+     1.045
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.748,
+     0.748,
+     0.748
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.605,
+     0.605,
+     0.605
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.88,
+     0.88,
+     0.88
+    ]
+   }
+  },
+  "icon": "data/tex/c24bf9ceac33.png",
+  "quads": 90
+ },
+ {
+  "id": "tramadol",
+  "name": "Трамадол",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     -5.267,
+     0
+    ],
+    "scale": [
+     0.7371,
+     0.7371,
+     0.7371
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/3ab0edbb7dd8.png",
+  "quads": 24
+ },
+ {
+  "id": "txa",
+  "name": "Транексамовая кислота",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/c6a854e26a2c.png",
+  "quads": 42
+ },
+ {
+  "id": "tourniquet",
+  "name": "Турникет",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     12,
+     -24,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.95,
+     0.95,
+     0.95
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/e7587fc64167.png",
+  "quads": 1092
+ },
+ {
+  "id": "saline",
+  "name": "Физраствор 500 мл",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     0.615,
+     0
+    ],
+    "scale": [
+     1.3204,
+     1.3204,
+     1.3204
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     70,
+     10
+    ],
+    "translation": [
+     1,
+     2,
+     -1
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     90
+    ],
+    "translation": [
+     0,
+     0,
+     1
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/770f9abbbbd0.png",
+  "quads": 108
+ },
+ {
+  "id": "surgical_drill",
+  "name": "Хирургическая дрель",
+  "kind": "json",
+  "light": "front",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     47,
+     0
+    ],
+    "translation": [
+     0.25,
+     1.75,
+     0
+    ],
+    "scale": [
+     0.625,
+     0.625,
+     0.625
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     2.75,
+     1
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.4
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0.75,
+     0,
+     1
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     1.75,
+     0
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0.75,
+     0,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  "icon": "data/tex/422ca90e01ce.png",
+  "quads": 114
+ },
+ {
+  "id": "surgical_mask",
+  "name": "Хирургическая маска",
+  "kind": "json",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/bfa949168bdb.png",
+  "quads": 2
+ },
+ {
+  "id": "bone_saw",
+  "name": "Хирургическая пила",
+  "kind": "json",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     90,
+     -45,
+     -90
+    ],
+    "translation": [
+     2.5,
+     -5.5,
+     0
+    ],
+    "scale": [
+     1.1,
+     1.1,
+     1.1
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     13,
+     10,
+     -6
+    ],
+    "translation": [
+     1,
+     7,
+     0
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     45,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     4.5,
+     1.75
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -0.75,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  "icon": "data/tex/0e3307c591fc.png",
+  "quads": 30
+ },
+ {
+  "id": "surgical_gloves",
+  "name": "Хирургические перчатки",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/7d2c595ea772.png",
+  "quads": 2
+ },
+ {
+  "id": "lr_cms",
+  "name": "Хирургический набор CMS",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.0,
+     0.008,
+     0
+    ],
+    "scale": [
+     1.1497,
+     1.1497,
+     1.1497
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/509b7fd59e22.png",
+  "quads": 798
+ },
+ {
+  "id": "lr_surv12",
+  "name": "Хирургический набор Surv12",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.115,
+     0.281,
+     0
+    ],
+    "scale": [
+     1.3732,
+     1.3732,
+     1.3732
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -25,
+     0
+    ],
+    "translation": [
+     1,
+     2,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     1.5,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/9b90aef3367a.png",
+  "quads": 926
+ },
+ {
+  "id": "surgical_tweezers",
+  "name": "Хирургический пинцет",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.126,
+     0.147,
+     0
+    ],
+    "scale": [
+     1.0553,
+     1.0553,
+     1.0553
+    ]
+   },
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     90,
+     -35
+    ],
+    "translation": [
+     0,
+     2.5,
+     0.5
+    ],
+    "scale": [
+     0.7,
+     0.7,
+     0.7
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   }
+  },
+  "icon": "data/tex/7b0a12db9388.png",
+  "quads": 66
+ },
+ {
+  "id": "antiseptic",
+  "name": "Хлоргексидин 0,05 %",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     -5.515,
+     0
+    ],
+    "scale": [
+     0.766,
+     0.766,
+     0.766
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/1d2ea78f6d86.png",
+  "quads": 24
+ },
+ {
+  "id": "chlorhexidine_hands",
+  "name": "Хлоргексидин 0,2 %",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     -5.515,
+     0
+    ],
+    "scale": [
+     0.766,
+     0.766,
+     0.766
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/e39ef9d77978.png",
+  "quads": 24
+ },
+ {
+  "id": "chlorhexidine_skin",
+  "name": "Хлоргексидин 0,5 %",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.0,
+     -5.515,
+     0
+    ],
+    "scale": [
+     0.766,
+     0.766,
+     0.766
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     -0.5,
+     -3,
+     0.75
+    ],
+    "scale": [
+     0.3,
+     0.3,
+     0.3
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -7.75,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/5108683082ba.png",
+  "quads": 24
+ },
+ {
+  "id": "ceftriaxone",
+  "name": "Цефтриаксон",
+  "kind": "flat",
+  "light": "front",
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -90,
+     25
+    ],
+    "translation": [
+     1.13,
+     3.2,
+     1.13
+    ],
+    "scale": [
+     0.68,
+     0.68,
+     0.68
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/d55ccd22cecc.png",
+  "quads": 2
+ },
+ {
+  "id": "cyclosporine",
+  "name": "Циклоспорин",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/2510af0dbd94.png",
+  "quads": 42
+ },
+ {
+  "id": "splint",
+  "name": "Шина",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     -0.718,
+     -5.737,
+     0
+    ],
+    "scale": [
+     2.0306,
+     2.0306,
+     2.0306
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -2.75,
+     0
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -2.75,
+     0.5
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "translation": [
+     0,
+     -2.25,
+     0
+    ]
+   }
+  },
+  "icon": "data/tex/6b082d7971c7.png",
+  "quads": 72
+ },
+ {
+  "id": "syringe",
+  "name": "Шприц",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.527,
+     -9.026,
+     0
+    ],
+    "scale": [
+     0.7451,
+     0.7451,
+     0.7451
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/cda3b03a58d2.png",
+  "quads": 36
+ },
+ {
+  "id": "blood_draw_syringe",
+  "name": "Шприц для забора крови",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.527,
+     -9.026,
+     0
+    ],
+    "scale": [
+     0.7451,
+     0.7451,
+     0.7451
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/cda3b03a58d2.png",
+  "quads": 42
+ },
+ {
+  "id": "morphine",
+  "name": "Шприц-тюбик морфина",
+  "kind": "geo",
+  "light": "side",
+  "display": {
+   "gui": {
+    "rotation": [
+     30,
+     225,
+     0
+    ],
+    "translation": [
+     0.751,
+     -12.268,
+     0
+    ],
+    "scale": [
+     1.062,
+     1.062,
+     1.062
+    ]
+   },
+   "firstperson_righthand": {
+    "translation": [
+     0,
+     -8,
+     0
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   },
+   "thirdperson_righthand": {
+    "translation": [
+     0,
+     -7,
+     0.25
+    ],
+    "scale": [
+     0.4,
+     0.4,
+     0.4
+    ]
+   },
+   "ground": {
+    "translation": [
+     0,
+     -3,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     -90,
+     0
+    ],
+    "translation": [
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "icon": "data/tex/3c69d44bc561.png",
+  "quads": 42
+ }
+]

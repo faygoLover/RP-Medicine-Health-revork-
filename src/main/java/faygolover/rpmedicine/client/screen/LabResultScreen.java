@@ -50,7 +50,8 @@ public class LabResultScreen extends Screen {
         g.fill(l, t, l + W, t + h, PAPER);
         g.renderOutline(l, t, W, h, 0xFF9A9080);
         // Шапка
-        g.drawCenteredString(font, Component.translatable("rpmedicine.labform.lab").withStyle(s -> s.withItalic(true)), width / 2, t + 6, 0xFF8A8270);
+        Component lab = Component.translatable("rpmedicine.labform.lab").withStyle(s -> s.withItalic(true));
+        g.drawString(font, lab, width / 2 - font.width(lab) / 2, t + 6, 0xFF8A8270, false);   // без тени (замечание 10.10, Ф43)
         g.drawString(font, title, l + (W - font.width(title)) / 2, t + 17, INK, false);
         g.fill(l + 10, t + 29, l + W - 10, t + 30, INK);
         g.drawString(font, Component.translatable("rpmedicine.labform.patient", r.patient().isEmpty() ? "—" : r.patient()), l + 12, t + 35, INK, false);

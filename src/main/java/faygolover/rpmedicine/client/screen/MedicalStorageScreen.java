@@ -52,7 +52,9 @@ public class MedicalStorageScreen extends AbstractContainerScreen<MedicalStorage
         for (int i = 0; i < rows * 9; i++) if (menu.getSlot(i).hasItem()) empty = false;
         String key = work ? "rpmedicine.sterilizer.close_lid" : empty ? "rpmedicine.sterilizer.empty" : "rpmedicine.sterilizer.done";
         int y = 18 + rows * 18 + 3;
-        g.drawString(font, Component.translatable(key, d.get(2) / 20), 8, y, work ? 0xB06010 : 0x2E7D32, false);
+        int sec = d.get(2) / 20;
+        String time = sec >= 60 ? (sec / 60) + " мин" : sec + " с";
+        g.drawString(font, Component.translatable(key, time), 8, y, work ? 0xB06010 : 0x2E7D32, false);
     }
 
     @Override

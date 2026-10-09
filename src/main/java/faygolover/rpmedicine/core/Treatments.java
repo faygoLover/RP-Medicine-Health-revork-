@@ -180,8 +180,8 @@ public final class Treatments {
                 return null;
             }
             case TXA -> {
-                if (m.txaSeconds > 0) return "already_active";
-                return m.totalExternalBleed(s) + m.totalInternalBleed() > 0.5 ? null : "no_bleeding";
+                // Без проверки «нужно ли» (замечание 10.10, Ф40): транексамовую колют профилактически.
+                return null;
             }
             case STABILIZE -> {
                 if (m.down != Down.KNOCKDOWN) return "not_knocked_down";
@@ -339,7 +339,8 @@ public final class Treatments {
             "nothing_to_dress", "no_heavy_bleeding", "tourniquet_not_needed", "no_fracture", "no_chest_wound", "no_tension",
             "already_active", "no_pain", "no_bleeding", "no_internal", "volume_ok", "saline_limit", "no_shockable",
             "no_dislocation", "no_foreign_body", "nothing_to_suture", "ammonia_threat", "occlusive_already", "splint_already",
-            "no_opioids", "no_fever", "sugar_normal", "no_bradycardia", "no_agitation");
+            "no_opioids", "no_fever", "sugar_normal", "no_bradycardia", "no_agitation", "no_transplant",
+            "no_open_wound", "no_infection_here", "not_needed");
 
     /** Процедура в сознании на столе с фиксацией: без обезболивания — сильная острая боль. */
     static void awakeProcedurePain(MedicalState m, MedicalSettings s) {
@@ -371,7 +372,7 @@ public final class Treatments {
                 }
                 return Result.failed("forced_defib");
             }
-            case TOURNIQUET, ESMARCH, SPLINT, OCCLUSIVE, PAINKILLER, MORPHINE, TXA, SALINE, AMMONIA, CATHETER -> {
+            case TOURNIQUET, ESMARCH, SPLINT, OCCLUSIVE, PAINKILLER, MORPHINE, TXA, SALINE, AMMONIA, CATHETER, ADRENALINE, DRUG, DRUG_TOPICAL -> {
                 // Эффект как обычно: жгут без нужды пережимает здоровую ногу, лишняя доза — передозировка.
                 if (a == TreatmentAction.PAINKILLER && m.painkillerSeconds > 0) m.nauseaSeconds = Math.max(m.nauseaSeconds, 120);
                 if ((a == TreatmentAction.TOURNIQUET || a == TreatmentAction.ESMARCH) && ps.hasTourniquet())
@@ -586,6 +587,8 @@ public final class Treatments {
                 return Result.okKeep("glucometer", Math.round(m.bloodSugar * 10) / 10.0);
             }
             case TONOMETER -> {
+                // Провал мини-игры — не расслышали тоны, результата нет (замечание 10.10, Ф41).
+                if (error) return Result.reading("unclear");
                 if (m.heart != Heart.NORMAL || m.pressure < 20) return Result.okKeep("tonometer_none");
                 double sys = Math.round(m.pressure);
                 double dia = Math.round(m.pressure * 0.65);

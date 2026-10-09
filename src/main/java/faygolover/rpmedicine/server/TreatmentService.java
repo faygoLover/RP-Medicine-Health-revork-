@@ -159,7 +159,9 @@ public final class TreatmentService {
             why = null;
         } else if (p == null) {
             p = Treatments.bestPart(m, action, s, extra);
-            why = p == null ? Treatments.check(m, defaultPart(action), action, s, extra) : null;
+            // Проверка «нужно ли» всегда до мини-игры: для препаратов на всё тело bestPart отдаёт грудь без проверки
+            // (замечание 10.10, Ф40 — раньше проверка срабатывала только после мини-игры).
+            why = Treatments.check(m, p == null ? defaultPart(action) : p, action, s, extra);
             if (p == null && why == null) why = "not_needed";
             if (p == null) p = defaultPart(action);
         } else {
@@ -243,14 +245,18 @@ public final class TreatmentService {
             final ItemStack copy = stack.copy();
             TreatmentTimedAction probe = new TreatmentTimedAction(actor, target, part0, spec, slot, copy, 1, level, fromHand);
             final Double dose0 = dose;
+            final boolean forced0 = forced;
             MinigameService.start(actor, target, mg, level, spec.minLevel(), copy.getDescriptionId(), scene, q -> {
                 // Забор крови: игла в вене — дальше кровь набирается сама, стоять на месте (замечание 38).
                 int after = action == TreatmentAction.BLOOD_COLLECT ? (int) Math.round(seconds * 20) : 1;
                 // После мини-игры — всегда короткое введение под анимацию предмета в руке (одинаково у всех).
                 after = Math.max(after, (int) Math.round(faygolover.rpmedicine.data.UseTimes.min(copy) * 20));
-                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, after, level, fromHand).withQuality(q).withDose(dose0);
+                // Продавленное «не нужно» переживает мини-игру (замечание 10.10, Ф40: иначе повторная проверка отказывала).
+                if (q >= 0) return new TreatmentTimedAction(actor, target, part0, spec, slot, copy, after, level, fromHand).withQuality(q).withDose(dose0)
+                        .withForced(forced0);
                 return new TreatmentTimedAction(actor, target, part0, spec, slot, copy,
-                        (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor).withDose(dose0);
+                        (int) Math.round(seconds * 20 * s.minigameRefuseTimeFactor), level, fromHand).withErrorFactor(s.minigameRefuseErrorFactor).withDose(dose0)
+                        .withForced(forced0);
             }, probe::checkItem);
             return true;
         }

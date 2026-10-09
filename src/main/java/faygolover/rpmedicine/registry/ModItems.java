@@ -84,12 +84,12 @@ public final class ModItems {
     public static final RegistryObject<Item> EMPTY_BLOOD_BAG = medical("empty_blood_bag", 16);
     public static final RegistryObject<Item> BLOOD_BAG = tool("blood_bag", () -> new faygolover.rpmedicine.item.BloodBagItem(new Item.Properties().stacksTo(1)));
     // Препараты (датапак drugs)
-    public static final RegistryObject<Item> PARACETAMOL = medical("paracetamol", 16);
-    public static final RegistryObject<Item> IBUPROFEN = medical("ibuprofen", 16);
+    public static final RegistryObject<Item> PARACETAMOL = pills("paracetamol");
+    public static final RegistryObject<Item> IBUPROFEN = pills("ibuprofen");
     public static final RegistryObject<Item> KETOROLAC = pen("ketorolac");
-    public static final RegistryObject<Item> TRAMADOL = medical("tramadol", 16);
+    public static final RegistryObject<Item> TRAMADOL = pills("tramadol");
     public static final RegistryObject<Item> NALOXONE = pen("naloxone");
-    public static final RegistryObject<Item> AMOXICILLIN = medical("amoxicillin", 16);
+    public static final RegistryObject<Item> AMOXICILLIN = pills("amoxicillin");
     public static final RegistryObject<Item> CEFTRIAXONE = vial("ceftriaxone");
     public static final RegistryObject<Item> DIAZEPAM = pen("diazepam");
     public static final RegistryObject<Item> NOREPINEPHRINE = vial("norepinephrine");
@@ -180,7 +180,7 @@ public final class ModItems {
     public static final RegistryObject<Item> CYCLOSPORINE = pen("cyclosporine");
     // Диабет (п. 8)
     public static final RegistryObject<Item> INSULIN = pen("insulin");
-    public static final RegistryObject<Item> GLUCOSE_TABLETS = medical("glucose_tablets", 16);
+    public static final RegistryObject<Item> GLUCOSE_TABLETS = pills("glucose_tablets");
     public static final RegistryObject<Item> GLUCOMETER = tool("glucometer", () -> new faygolover.rpmedicine.item.MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> SEVERED_LIMB = tool("severed_limb", () -> new faygolover.rpmedicine.item.SeveredLimbItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LARYNGOSCOPE = tool("laryngoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
@@ -254,6 +254,11 @@ public final class ModItems {
     private static RegistryObject<Item> vial(String name) {
         // 10 мл = 10 доз, в десятых долях.
         return tool(name, () -> new MedicalItem(new Item.Properties().durability(VIAL_TENTHS)));
+    }
+
+    /** Банка таблеток: 16 штук, тратится по одной (замечание 10.10, Ф17). */
+    private static RegistryObject<Item> pills(String name) {
+        return tool(name, () -> new MedicalItem(new Item.Properties().durability(16)));
     }
 
     private static RegistryObject<Item> medical(String name, int stack) {

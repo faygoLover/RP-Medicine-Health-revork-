@@ -517,6 +517,8 @@ public final class MedicalSettings {
     public int gloveUses = 40;
     public double dirtyGlovesFactor = 1.3;
     public int maskWearMinutes = 60;
+    /** Стерилизатор: длительность цикла, секунды (замечание 10.10, Ф42). */
+    public int sterilizeSeconds = 600;
     /** Некроз (третий этап, п. 5): с какого процента необратим, рост с причиной и без, выздоровление на антибиотике, %/ч. */
     public double necrosisIrreversible = 15;
     public double necrosisGrowthPerHour = 30;

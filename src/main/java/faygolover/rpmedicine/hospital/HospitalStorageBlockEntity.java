@@ -25,7 +25,10 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
     private int viewers;
     /** Стерилизатор: тиков текущего цикла (0 — не идёт) и сколько ещё «горячий» после цикла (пар при открытии). */
     private int cycle, hot;
-    public static final int STERILIZE_TICKS = 200;
+    /** Длительность цикла в тиках (настройка sterilizeSeconds). */
+    public static int sterilizeTicks() {
+        return faygolover.rpmedicine.core.MedicalSettings.get().sterilizeSeconds * 20;
+    }
     /** Для окна: [0] — тиков цикла, [1] — есть что стерилизовать (1), [2] — длина цикла. */
     public final net.minecraft.world.inventory.ContainerData sterilizerData = new net.minecraft.world.inventory.ContainerData() {
         @Override
@@ -33,7 +36,7 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
             return switch (i) {
                 case 0 -> cycle;
                 case 1 -> needsWork() ? 1 : 0;
-                default -> STERILIZE_TICKS;
+                default -> sterilizeTicks();
             };
         }
 
@@ -169,7 +172,7 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
         if (cycle % 40 == 0 && level instanceof net.minecraft.server.level.ServerLevel sl)
             sl.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0,
                     worldPosition.getZ() + 0.5, 1, 0.15, 0.05, 0.15, 0.005);
-        if (cycle < STERILIZE_TICKS) return;
+        if (cycle < sterilizeTicks()) return;
         for (int i = 0; i < items.size(); i++) {
             ItemStack st = items.get(i);
             if (st.is(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get()))

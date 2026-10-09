@@ -401,4 +401,24 @@ public final class MedicalGameTests {
             h.succeed();
         });
     }
+
+    /** Настаивание (замечание 10.10, Ф40): «не нужно» — предупреждение, повтор — таблетка всё равно принята и действует. */
+    @GameTest(template = T, timeoutTicks = 300)
+    public static void forcedPillStillWorks(GameTestHelper h) {
+        noErrors();
+        ServerPlayer p = player(h, 2.5, 2.5);
+        faygolover.rpmedicine.server.Medical.data(p).skillOverride = 10;
+        p.getInventory().selected = 0;
+        p.getInventory().setItem(0, new net.minecraft.world.item.ItemStack(net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(new net.minecraft.resources.ResourceLocation("rpmedicine", "paracetamol"))));
+        MedicalState m = state(p);
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(p, p, 0, null);
+        h.assertTrue(m.drugLevels.isEmpty() && faygolover.rpmedicine.server.ActionManager.current(p) == null, "сначала только предупреждение");
+        faygolover.rpmedicine.server.TreatmentService.startWithItem(p, p, 0, null);
+        h.assertTrue(faygolover.rpmedicine.server.ActionManager.current(p) != null, "повтор — применение пошло");
+        h.runAfterDelay(200, () -> {
+            h.assertTrue(!m.drugLevels.isEmpty(), "парацетамол в крови: " + m.drugLevels.keySet());
+            remove(h, p);
+            h.succeed();
+        });
+    }
 }
