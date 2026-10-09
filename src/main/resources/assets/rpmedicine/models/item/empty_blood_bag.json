@@ -1,6 +1,6 @@
 {
   "loader": "forge:separate_transforms",
-  "gui_light": "front",
+  "gui_light": "side",
   "base": {
     "parent": "builtin/entity",
     "display": {
@@ -107,18 +107,28 @@
           1,
           1
         ]
+      },
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          0.0,
+          0.615,
+          0
+        ],
+        "scale": [
+          1.3204,
+          1.3204,
+          1.3204
+        ]
       }
     },
     "textures": {
       "particle": "rpmedicine:item/empty_blood_bag"
     }
   },
-  "perspectives": {
-    "gui": {
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "rpmedicine:item/empty_blood_bag"
-      }
-    }
-  }
+  "perspectives": {}
 }

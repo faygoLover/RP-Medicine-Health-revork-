@@ -1,6 +1,6 @@
 {
   "loader": "forge:separate_transforms",
-  "gui_light": "front",
+  "gui_light": "side",
   "base": {
     "parent": "builtin/entity",
     "display": {
@@ -60,18 +60,28 @@
           -2.25,
           0
         ]
+      },
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          -0.718,
+          -5.737,
+          0
+        ],
+        "scale": [
+          2.0306,
+          2.0306,
+          2.0306
+        ]
       }
     },
     "textures": {
       "particle": "rpmedicine:item/splint"
     }
   },
-  "perspectives": {
-    "gui": {
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "rpmedicine:item/splint"
-      }
-    }
-  }
+  "perspectives": {}
 }

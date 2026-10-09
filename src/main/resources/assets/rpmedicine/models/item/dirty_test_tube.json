@@ -1,6 +1,6 @@
 {
   "loader": "forge:separate_transforms",
-  "gui_light": "front",
+  "gui_light": "side",
   "base": {
     "parent": "builtin/entity",
     "display": {
@@ -75,18 +75,28 @@
           0.5,
           0.5
         ]
+      },
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          -0.0,
+          -6.017,
+          0
+        ],
+        "scale": [
+          0.5757,
+          0.5757,
+          0.5757
+        ]
       }
     },
     "textures": {
       "particle": "rpmedicine:item/dirty_test_tube"
     }
   },
-  "perspectives": {
-    "gui": {
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "rpmedicine:item/dirty_test_tube"
-      }
-    }
-  }
+  "perspectives": {}
 }

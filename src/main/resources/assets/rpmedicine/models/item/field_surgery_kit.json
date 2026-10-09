@@ -1,6 +1,6 @@
 {
   "loader": "forge:separate_transforms",
-  "gui_light": "front",
+  "gui_light": "side",
   "base": {
     "parent": "builtin/entity",
     "display": {
@@ -85,18 +85,28 @@
           -3.75,
           0
         ]
+      },
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          1.726,
+          -4.398,
+          0
+        ],
+        "scale": [
+          1.2207,
+          1.2207,
+          1.2207
+        ]
       }
     },
     "textures": {
       "particle": "rpmedicine:item/field_surgery_kit"
     }
   },
-  "perspectives": {
-    "gui": {
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "rpmedicine:item/field_surgery_kit"
-      }
-    }
-  }
+  "perspectives": {}
 }

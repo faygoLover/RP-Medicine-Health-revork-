@@ -40,4 +40,10 @@ public class BloodSampleItem extends Item implements Perishable.Item {
         }
         tooltip.add(Component.translatable("item.rpmedicine.blood_sample.desc").withStyle(ChatFormatting.DARK_GRAY));
     }
+
+    /** 3D-модель пробирки (client/geo) — в руке и в инвентаре. */
+    @Override
+    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+        consumer.accept(faygolover.rpmedicine.client.ItemPoses.EXTENSIONS);
+    }
 }

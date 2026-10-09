@@ -1035,6 +1035,82 @@ def part_d():
     credit("textures/models/surgical_gloves_worn.png", "selfexpression", "textures/models/armor/balaclava__layer_1.png", "голубые")
 
 
+# ------------------------------------------------------------------ 3D в инвентаре
+GUI_ROT = (30, 225, 0)   # как у блоков
+
+
+def _rot_xyz(rx, ry, rz):
+    """Поворот display Minecraft: кватернион rotationXYZ (сначала Z, потом Y, потом X к точке)."""
+    import numpy as np
+    rx, ry, rz = map(math.radians, (rx, ry, rz))
+    cx, sx, cy, sy, cz, sz = math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz)
+    X = np.array([[1, 0, 0], [0, cx, -sx], [0, sx, cx]])
+    Y = np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]])
+    Z = np.array([[cz, -sz, 0], [sz, cz, 0], [0, 0, 1]])
+    return X @ Y @ Z
+
+
+def gui_display(points, rot=GUI_ROT, fill=14.5):
+    """display.gui, чтобы модель (точки в пикселях блока 0–16) после поворота вписалась в слот 16×16 по центру."""
+    import numpy as np
+    P = np.array(points, dtype=float) - 8.0
+    R = _rot_xyz(*rot)
+    Q = P @ R.T
+    lo, hi = Q.min(0), Q.max(0)
+    ext = max(hi[0] - lo[0], hi[1] - lo[1], 1e-3)
+    sc = fill / ext
+    c = (lo + hi) / 2 * sc
+    return {"rotation": list(rot), "translation": [round(-c[0], 3), round(-c[1], 3), 0], "scale": [round(sc, 4)] * 3}
+
+
+def geo_points(item, entry):
+    """Углы кубов модели client/geo в пикселях блока — так, как её ставит GeoItemRenderer."""
+    q = preview.geo_quads(os.path.join(ASSETS, entry["geo"].split(":", 1)[1]), os.path.join(ASSETS, entry["texture"].split(":", 1)[1]),
+                          hide=tuple(entry.get("hide", ())))
+    pts = [p for quad in q for p in quad[0]]
+    if not pts:
+        return []
+    if entry.get("fit"):
+        import numpy as np
+        P = np.array(pts)
+        lo, hi = P.min(0), P.max(0)
+        k = entry.get("size", 0.75) * 16 / max(hi - lo)
+        mid = (lo + hi) / 2
+        return [tuple((np.array(p) - mid) * k + 8) for p in pts]
+    # Не вписанная: GeoItemRenderer ставит начало модели в (0,5; 0,51; 0,5) блока — по высоте это 8,16 px.
+    return [(p[0], p[1] + 8.16, p[2]) for p in pts]
+
+
+def gui_3d():
+    """Все 3D-предметы client/geo: в инвентаре — сама модель (без плоской иконки), освещение как у блоков."""
+    n = 0
+    for key, entry in index.items():
+        item = key.split(":", 1)[1]
+        path = model_path(item)
+        if not os.path.exists(path):
+            continue
+        m = json.load(open(path, encoding="utf-8"))
+        base = m.get("base", {})
+        if base.get("parent") != "builtin/entity":
+            continue
+        pts = geo_points(item, entry)
+        if not pts:
+            continue
+        base.setdefault("display", {})["gui"] = gui_display(pts)
+        m["base"] = base
+        m["gui_light"] = "side"
+        m["perspectives"] = {}          # загрузчик требует поле; плоской иконки больше нет
+        write(path, m)
+        n += 1
+    # Испорченный пакет крови — тот же 3D-вид (порча — в подсказке).
+    sp = model_path("blood_bag_spoiled")
+    if os.path.exists(sp) and os.path.exists(model_path("blood_bag")):
+        m = json.load(open(model_path("blood_bag"), encoding="utf-8"))
+        m.pop("overrides", None)
+        write(sp, m)
+    print("item_models: 3D в инвентаре —", n)
+
+
 # ================================================================== запуск
 def write_credits():
     rows, seen = [], set()
@@ -1067,6 +1143,7 @@ def main(sheet=None):
     times.update(json.load(open(tp, encoding="utf-8"))["times"])
     for part in PARTS:
         part()
+    gui_3d()
     write(os.path.join(GEO_DIR, "items.json"), index)
     write(tp, {"times": times})
     write_credits()

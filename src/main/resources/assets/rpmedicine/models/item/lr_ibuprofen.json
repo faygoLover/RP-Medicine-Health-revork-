@@ -1,6 +1,6 @@
 {
   "loader": "forge:separate_transforms",
-  "gui_light": "front",
+  "gui_light": "side",
   "base": {
     "parent": "builtin/entity",
     "display": {
@@ -107,18 +107,28 @@
           1,
           1
         ]
+      },
+      "gui": {
+        "rotation": [
+          30,
+          225,
+          0
+        ],
+        "translation": [
+          0.002,
+          0.226,
+          0
+        ],
+        "scale": [
+          1.0628,
+          1.0628,
+          1.0628
+        ]
       }
     },
     "textures": {
       "particle": "rpmedicine:item/lr_ibuprofen"
     }
   },
-  "perspectives": {
-    "gui": {
-      "parent": "minecraft:item/generated",
-      "textures": {
-        "layer0": "rpmedicine:item/lr_ibuprofen"
-      }
-    }
-  }
+  "perspectives": {}
 }
