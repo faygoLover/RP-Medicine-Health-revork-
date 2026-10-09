@@ -512,6 +512,11 @@ public final class MedicalSettings {
     public double surgeryNonSterileFactor = 1.5;
     public double surgeryNoMaskFactor = 1.3;
     public double surgeryNoGlovesFactor = 1.3;
+    /** Износ (замечание 09.10, И38): перчатки грязнеют после стольких шагов операции (или сразу на другом пациенте),
+     *  грязные переносят заразу сильнее, чем их отсутствие; маска отсыревает за столько минут на лице. */
+    public int gloveUses = 40;
+    public double dirtyGlovesFactor = 1.3;
+    public int maskWearMinutes = 60;
     /** Некроз (третий этап, п. 5): с какого процента необратим, рост с причиной и без, выздоровление на антибиотике, %/ч. */
     public double necrosisIrreversible = 15;
     public double necrosisGrowthPerHour = 30;

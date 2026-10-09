@@ -60,6 +60,7 @@ public final class ClientEvents {
         LocalPlayer p = mc.player;
         if (p == null || mc.level == null) return;
         tick++;
+        SkinPhoto.tick();
         SelfView v = ClientState.self;
 
         while (ClientSetup.PANEL.consumeClick()) openPanel(mc, v);

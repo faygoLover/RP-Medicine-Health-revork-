@@ -138,7 +138,7 @@ public final class OperatingGameTests {
         h.runAfterDelay(250, () -> {
             var ps = m.part(BodyPart.ABDOMEN);
             h.assertTrue(ps.surgery == faygolover.rpmedicine.core.BodyPartState.SurgeryStage.OPEN, "живот вскрыт, было " + ps.surgery);
-            h.assertTrue(Math.abs(ps.surgeryContamination - s.surgeryTableInfection) < 1e-6, "загрязнение операции по месту");
+            h.assertTrue(Math.abs(ps.surgeryContamination - s.surgeryTableInfection) < 1e-6, "загрязнение операции по месту: " + ps.surgeryContamination);
             h.assertTrue(!faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(medic.getInventory().getItem(0)), "скальпель нестерилен");
             // Сохранение хода операции.
             MedicalState copy = new MedicalState(s);
@@ -222,5 +222,27 @@ public final class OperatingGameTests {
                 h.succeed();
             });
         });
+    }
+
+    /** Износ перчаток (замечание 09.10, И38): после шага у одного пациента на другом они грязные и хуже, чем без них. */
+    @GameTest(template = T, timeoutTicks = 100)
+    public static void glovesGetDirtyBetweenPatients(GameTestHelper h) {
+        MedicalSettings s = MedicalSettings.get();
+        ServerPlayer a = player(h, 3.5, 2.5);
+        ServerPlayer b = player(h, 1.5, 2.5);
+        ServerPlayer medic = player(h, 3.5, 3.5);
+        var gloves = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SURGICAL_GLOVES.get());
+        medic.getInventory().setItem(8, gloves);
+        var scalpel = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SCALPEL.get());
+        double clean = faygolover.rpmedicine.server.SurgeryService.context(medic, a, scalpel).infectionFactor();
+        faygolover.rpmedicine.server.SurgeryService.stepDone(medic, a);
+        h.assertTrue(!faygolover.rpmedicine.item.Wear.dirty(medic.getInventory().getItem(8)), "после шага у того же пациента — чистые");
+        double other = faygolover.rpmedicine.server.SurgeryService.context(medic, b, scalpel).infectionFactor();
+        h.assertTrue(Math.abs(other - clean * s.surgeryNoGlovesFactor * s.dirtyGlovesFactor) < 1e-6, "на другом пациенте — грязные: " + clean + " -> " + other);
+        faygolover.rpmedicine.server.SurgeryService.stepDone(medic, b);
+        h.assertTrue(faygolover.rpmedicine.item.Wear.dirty(medic.getInventory().getItem(8)) && !faygolover.rpmedicine.server.SurgeryService.hasGloves(medic),
+                "перчатки помечены грязными");
+        remove(h, a, b, medic);
+        h.succeed();
     }
 }

@@ -65,6 +65,7 @@ public final class PatientTicker {
         int t = ++d.ticks + sp.getId();
         // История состояния для ГМа: снимок раз в 10 секунд (второй этап, п. 11.1).
         if (t % faygolover.rpmedicine.stats.History.PERIOD_TICKS == 0) faygolover.rpmedicine.stats.History.record(sp.getUUID(), m);
+        if (t % 600 == 0) SurgeryService.tickMask(sp);
         if (t % step != 0) return;
 
         // На койке здоровый тоже «спит»: множители койки нужны только тому, кто лечится.

@@ -95,6 +95,13 @@ public final class ModItems {
     public static final RegistryObject<Item> NOREPINEPHRINE = vial("norepinephrine");
     public static final RegistryObject<Item> ATROPINE = pen("atropine");
     public static final RegistryObject<Item> ANTISEPTIC = tool("antiseptic", () -> new MedicalItem(new Item.Properties().durability(20)));
+    /** Хлоргексидин 0,2 % (руки), 0,5 % (кожа), концентрат 20 % (замечание 09.10, И9); 0,05 % — ANTISEPTIC. */
+    public static final RegistryObject<Item> CHLORHEXIDINE_HANDS = tool("chlorhexidine_hands", () -> new faygolover.rpmedicine.item.ChlorhexidineItem(
+            new Item.Properties().durability(20), faygolover.rpmedicine.item.ChlorhexidineItem.Kind.HANDS));
+    public static final RegistryObject<Item> CHLORHEXIDINE_SKIN = tool("chlorhexidine_skin", () -> new faygolover.rpmedicine.item.ChlorhexidineItem(
+            new Item.Properties().durability(20), faygolover.rpmedicine.item.ChlorhexidineItem.Kind.SKIN));
+    public static final RegistryObject<Item> CHLORHEXIDINE_CONCENTRATE = tool("chlorhexidine_concentrate", () -> new faygolover.rpmedicine.item.ChlorhexidineItem(
+            new Item.Properties().stacksTo(16), faygolover.rpmedicine.item.ChlorhexidineItem.Kind.CONCENTRATE));
     public static final RegistryObject<Item> ANTIBIOTIC_OINTMENT = tool("antibiotic_ointment", () -> new MedicalItem(new Item.Properties().durability(10)));
     // Диагностика
     public static final RegistryObject<Item> STETHOSCOPE = tool("stethoscope", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
@@ -116,7 +123,7 @@ public final class ModItems {
             () -> new faygolover.rpmedicine.item.FilledSyringeItem(new Item.Properties().stacksTo(1)));
 
     /** Шприц-ручки и флаконы (решение 06.10): ручка колет сама, флакон — через многоразовый шприц. */
-    public static final java.util.Set<String> PEN_IDS = java.util.Set.of("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "insulin");
+    public static final java.util.Set<String> PEN_IDS = java.util.Set.of("adrenaline", "morphine", "txa", "ketorolac", "naloxone", "diazepam", "atropine", "insulin", "cyclosporine");
     public static final java.util.Set<String> VIAL_IDS = java.util.Set.of("ceftriaxone", "propofol", "norepinephrine", "lidocaine", "ketamine",
             "iv_glucose", "iv_amino_acids", "iv_lipids", "iv_vitamins");
 
@@ -169,7 +176,8 @@ public final class ModItems {
     // Органы вне тела (п. 7)
     public static final RegistryObject<Item> ORGAN_CONTAINER = medical("organ_container", 4);
     public static final RegistryObject<Item> ORGAN = tool("organ", () -> new faygolover.rpmedicine.item.OrganItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> CYCLOSPORINE = medical("cyclosporine", 16);
+    /** Циклоспорин — укол шприц-ручкой (замечание 09.10, И25; был в таблетках). */
+    public static final RegistryObject<Item> CYCLOSPORINE = pen("cyclosporine");
     // Диабет (п. 8)
     public static final RegistryObject<Item> INSULIN = pen("insulin");
     public static final RegistryObject<Item> GLUCOSE_TABLETS = medical("glucose_tablets", 16);
@@ -219,6 +227,7 @@ public final class ModItems {
     private static final String[] TAB_ORDER = {
             "first_aid_kit", "medical_pouch", "stabilization_kit", "field_surgery_kit",
             "bandage", "pressure_dressing", "hemostatic_gauze", "tourniquet", "esmarch", "occlusive_dressing", "antiseptic",
+            "chlorhexidine_hands", "chlorhexidine_skin", "chlorhexidine_concentrate",
             "antibiotic_ointment", "suture_kit", "scissors", "splint",
             "decompression_needle", "airway", "ambu_bag", "laryngoscope", "endotracheal_tube", "defibrillator", "ammonia",
             "painkillers", "paracetamol", "ibuprofen", "tramadol", "amoxicillin", "cyclosporine", "glucose_tablets",

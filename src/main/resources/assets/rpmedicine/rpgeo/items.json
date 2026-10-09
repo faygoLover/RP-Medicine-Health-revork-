@@ -1,10 +1,4 @@
 {
-  "rpmedicine:bandage": {
-    "geo": "rpmedicine:rpgeo/bandage.geo.json",
-    "texture": "rpmedicine:textures/geo/bandage.png",
-    "animations": "rpmedicine:rpgeo/bandage.anim.json",
-    "use": "dress"
-  },
   "rpmedicine:splint": {
     "geo": "rpmedicine:rpgeo/splint.geo.json",
     "texture": "rpmedicine:textures/geo/splint.png",
@@ -311,5 +305,169 @@
     "animations": "rpmedicine:rpgeo/lab_table.anim.json",
     "fit": true,
     "size": 0.95
+  },
+  "rpmedicine:stabilization_kit": {
+    "geo": "rpmedicine:rpgeo/stabilization_kit.geo.json",
+    "texture": "rpmedicine:textures/geo/stabilization_kit.png",
+    "animations": "rpmedicine:rpgeo/stabilization_kit.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 1.2000000000000002,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:antibiotic_ointment": {
+    "geo": "rpmedicine:rpgeo/antibiotic_ointment.geo.json",
+    "texture": "rpmedicine:textures/geo/antibiotic_ointment.png",
+    "animations": "rpmedicine:rpgeo/antibiotic_ointment.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:suture_kit": {
+    "geo": "rpmedicine:rpgeo/suture_kit.geo.json",
+    "texture": "rpmedicine:textures/geo/suture_kit.png",
+    "animations": "rpmedicine:rpgeo/suture_kit.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.8,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:antiseptic": {
+    "geo": "rpmedicine:rpgeo/antiseptic.geo.json",
+    "texture": "rpmedicine:textures/geo/antiseptic.png",
+    "animations": "rpmedicine:rpgeo/antiseptic.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:chlorhexidine_hands": {
+    "geo": "rpmedicine:rpgeo/chlorhexidine_hands.geo.json",
+    "texture": "rpmedicine:textures/geo/chlorhexidine_hands.png",
+    "animations": "rpmedicine:rpgeo/chlorhexidine_hands.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:chlorhexidine_skin": {
+    "geo": "rpmedicine:rpgeo/chlorhexidine_skin.geo.json",
+    "texture": "rpmedicine:textures/geo/chlorhexidine_skin.png",
+    "animations": "rpmedicine:rpgeo/chlorhexidine_skin.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:chlorhexidine_concentrate": {
+    "geo": "rpmedicine:rpgeo/chlorhexidine_concentrate.geo.json",
+    "texture": "rpmedicine:textures/geo/chlorhexidine_concentrate.png",
+    "animations": "rpmedicine:rpgeo/chlorhexidine_concentrate.anim.json",
+    "use": "take"
+  },
+  "rpmedicine:decompression_needle": {
+    "geo": "rpmedicine:rpgeo/decompression_needle.geo.json",
+    "texture": "rpmedicine:textures/geo/decompression_needle.png",
+    "animations": "rpmedicine:rpgeo/decompression_needle.anim.json",
+    "use": "inject"
+  },
+  "rpmedicine:cyclosporine": {
+    "geo": "rpmedicine:rpgeo/cyclosporine.geo.json",
+    "texture": "rpmedicine:textures/geo/cyclosporine.png",
+    "animations": "rpmedicine:rpgeo/cyclosporine.anim.json",
+    "use": "inject"
+  },
+  "rpmedicine:used_iv_bag": {
+    "geo": "rpmedicine:rpgeo/used_iv_bag.geo.json",
+    "texture": "rpmedicine:textures/geo/used_iv_bag.png",
+    "animations": "rpmedicine:rpgeo/used_iv_bag.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.95,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:scissors": {
+    "geo": "rpmedicine:rpgeo/scissors.geo.json",
+    "texture": "rpmedicine:textures/geo/scissors.png",
+    "fit": true,
+    "size": 0.9,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:hemostat": {
+    "geo": "rpmedicine:rpgeo/hemostat.geo.json",
+    "texture": "rpmedicine:textures/geo/hemostat.png",
+    "fit": true,
+    "size": 0.9,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:surgical_tweezers": {
+    "geo": "rpmedicine:rpgeo/surgical_tweezers.geo.json",
+    "texture": "rpmedicine:textures/geo/surgical_tweezers.png",
+    "fit": true,
+    "size": 0.75,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:scalpel": {
+    "geo": "rpmedicine:rpgeo/scalpel.geo.json",
+    "texture": "rpmedicine:textures/geo/scalpel.png",
+    "fit": true,
+    "size": 0.85,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:retractor": {
+    "geo": "rpmedicine:rpgeo/retractor.geo.json",
+    "texture": "rpmedicine:textures/geo/retractor.png",
+    "fit": true,
+    "size": 0.9,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
+  },
+  "rpmedicine:test_tube": {
+    "geo": "rpmedicine:rpgeo/test_tube.geo.json",
+    "texture": "rpmedicine:textures/geo/test_tube.png"
+  },
+  "rpmedicine:blood_sample": {
+    "geo": "rpmedicine:rpgeo/blood_sample.geo.json",
+    "texture": "rpmedicine:textures/geo/blood_sample.png"
+  },
+  "rpmedicine:dirty_test_tube": {
+    "geo": "rpmedicine:rpgeo/dirty_test_tube.geo.json",
+    "texture": "rpmedicine:textures/geo/dirty_test_tube.png"
   }
 }

@@ -200,7 +200,7 @@ DRUGS = {
                 "overdose": {"effects": [eff("insulin", 4, 0, 2 * H)]}},
     "glucose_tablets": {"form": "pill", "min_level": 0, "special": "glucose", "effects": []},
     # Третий этап: иммуносупрессор против отторжения (п. 7.1) — курс раз в 12 часов.
-    "cyclosporine": {"form": "pill", "min_level": 4, "effects": [eff("immunosuppression", 1, 300, 12 * H)],
+    "cyclosporine": {"form": "injection", "min_level": 4, "effects": [eff("immunosuppression", 1, 300, 12 * H)],
                      "dose": {"limit": 1, "window_hours": 12},
                      "overdose": {"effects": [eff("liver_toxicity", 15, 600, 2 * H)]}},
     "amoxicillin": {"form": "pill", "min_level": 4, "effects": [eff("antibiotic", 10, 600, 8 * H)],
@@ -319,7 +319,7 @@ for name, obj in SUBSTANCES.items():
 def mc(*ids): return [f"minecraft:{i}" for i in ids]
 def ns(n, *ids): return [f"{n}:{i}" for i in ids]
 
-medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:blood_sample", "rpmedicine:filled_syringe", "rpmedicine:dirty_syringe", "rpmedicine:used_pen", "rpmedicine:dirty_test_tube", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb", "rpmedicine:organ_container", "rpmedicine:organ"]
+medical = [f"rpmedicine:{i[0]}" for i in ITEMS] + [f"rpmedicine:{d}" for d in DRUGS] + ["rpmedicine:blood_sample", "rpmedicine:filled_syringe", "rpmedicine:dirty_syringe", "rpmedicine:used_pen", "rpmedicine:dirty_test_tube", "rpmedicine:test_tube", "rpmedicine:syringe", "rpmedicine:osteosynthesis_kit", "rpmedicine:surgical_mask", "rpmedicine:surgical_gloves", "rpmedicine:laryngoscope", "rpmedicine:severed_limb", "rpmedicine:organ_container", "rpmedicine:organ", "rpmedicine:chlorhexidine_hands", "rpmedicine:chlorhexidine_skin", "rpmedicine:chlorhexidine_concentrate"]
 write(f"{DATA}/rpmedicine/tags/items/medical_items.json",
       {"replace": False, "values": medical + [{"id": k, "required": False} for k in sorted(ALIASES)]})
 write(f"{DATA}/rpmedicine/tags/items/finishing_weapons.json",
@@ -562,6 +562,9 @@ import iv_stand_art  # noqa: E402
 iv_stand_art.main()
 import hospital_art  # noqa: E402
 hospital_art.main()
+# Модели и иконки по замечаниям 09.10 (И1–И44) — поверх того, что сделал item_art.
+import item_models  # noqa: E402
+item_models.main()
 
 write(os.path.join(ROOT, "pack.mcmeta"), {"pack": {"description": "RP Medicine resources", "pack_format": 15}})
 print("готово:", len(rules), "правил урона,", len(ITEMS), "предметов,", len(DRUGS), "препаратов,", len(ALIASES), "аналогов")

@@ -637,6 +637,7 @@ public final class TreatmentService {
                     ? (extra instanceof Treatments.OrganPick op ? op.organ() : faygolover.rpmedicine.core.Surgery.firstOrgan(m, part)) : null;
             double takenDamage = taken != null ? m.organ(taken) : 0;
             Treatments.Result r = Treatments.apply(m, part, spec.action(), error, RANDOM.split(), s, extra, quality >= 0 ? quality : 1.0);
+            if (faygolover.rpmedicine.core.Surgery.isSurgical(spec.action())) SurgeryService.stepDone(actor, target);
             // Опыт «Медицины» (рост навыков в RP Perks): удачное и нужное лечение.
             if (r.applied && !forced) MedicineXp.award(actor, target, spec.action(), spec.minLevel(), level, error);
             if (spec.action() == TreatmentAction.ORGAN_REMOVE) ORGAN_PICKS.remove(actor.getUUID());

@@ -13,7 +13,7 @@ items = {
  "tourniquet": ("Турникет", "Tourniquet", "Полностью перекрывает кровь в руке или ноге. Через 15 минут вредит конечности.", "Stops blood flow in an arm or leg. Harms the limb after 15 minutes."),
  "esmarch": ("Жгут Эсмарха", "Esmarch tourniquet", "То же, что турникет, но может порваться. Одноразовый.", "Like a tourniquet but may tear. Single use."),
  "splint": ("Шина", "Splint", "Фиксирует перелом: меньше боль, заживает, движение не усугубляет.", "Fixes a fracture: less pain, heals, movement does not worsen it."),
- "occlusive_dressing": ("Окклюзионная наклейка", "Occlusive dressing", "Останавливает развитие пневмоторакса.", "Stops a pneumothorax from progressing."),
+ "occlusive_dressing": ("Окклюзионная повязка", "Occlusive dressing", "Останавливает развитие пневмоторакса.", "Stops a pneumothorax from progressing."),
  "decompression_needle": ("Игла для декомпрессии", "Decompression needle", "Снимает напряжённый пневмоторакс. Медицина 3+.", "Relieves a tension pneumothorax. Medicine 3+."),
  "painkillers": ("Обезболивающее", "Painkillers", "Слабое обезболивание на 10 минут, действует через минуту.", "Mild pain relief for 10 minutes, kicks in after a minute."),
  "morphine": ("Шприц-тюбик морфина", "Morphine autoinjector", "Сильное обезболивание на 15 минут; угнетает дыхание, второй подряд опасен.", "Strong pain relief for 15 minutes; depresses breathing, a second dose is dangerous."),
@@ -252,7 +252,7 @@ items2.update({
  "iv_lipids": ("Жировая эмульсия", "Lipid emulsion", "В пакет физраствора на стойке: жиры и много калорий за 20 минут капельницы. Нужен RP Culinary. Медицина 3+.", "Into a saline bag on the stand: fat and lots of calories over a 20-minute drip. Needs RP Culinary. Medicine 3+."),
  "iv_vitamins": ("Витамины для капельницы", "IV vitamins", "В пакет физраствора на стойке: витамины за 20 минут капельницы. Нужен RP Culinary. Медицина 3+.", "Into a saline bag on the stand: vitamins over a 20-minute drip. Needs RP Culinary. Medicine 3+."),
  "atropine": ("Атропин", "Atropine", "Укол: учащает редкий пульс. Медицина 5+.", "Injection: speeds up a slow heart rate. Medicine 5+."),
- "antiseptic": ("Антисептик", "Antiseptic", "Спрей на рану: шанс заражения ниже на 70 %.", "Spray on a wound: 70% lower chance of infection."),
+ "antiseptic": ("Хлоргексидин 0,05 %", "Chlorhexidine 0.05%", "Промыть рану: шанс заражения ниже на 70 %.", "Wash a wound: 70% lower chance of infection."),
  "antibiotic_ointment": ("Мазь с антибиотиком", "Antibiotic ointment", "Лечит заражение неглубокой раны и ожога. Медицина 2+.", "Treats infection of a shallow wound or a burn. Medicine 2+."),
 })
 items2.update({
@@ -267,7 +267,7 @@ items2.update({
 items2.update({
  "surgical_tweezers": ("Хирургический пинцет", "Surgical tweezers", "Извлечь пулю или осколок. Без обезболивания — болевой шок. После работы нестерилен — в стерилизатор. Медицина 4+.", "Removes a bullet or fragment. Without pain relief — pain shock. Not sterile after use — use a sterilizer. Medicine 4+."),
  "suture_kit": ("Набор для швов", "Suture kit", "Зашить рану: кровотечение останавливается, заживает вдвое быстрее. Сначала извлеките пули. Медицина 3+.", "Sutures a wound: bleeding stops, heals twice as fast. Remove bullets first. Medicine 3+."),
- "scissors": ("Ножницы", "Scissors", "Снять швы.", "Remove sutures."),
+ "scissors": ("Медицинские ножницы", "Medical scissors", "Снять швы.", "Remove sutures."),
 })
 items2.update({
  "medcard": ("Медкарта", "Medical record", "Пустая: ПКМ по игроку — завести его карту, ПКМ в воздух — свою. Привязанная: ПКМ — открыть.", "Blank: right click a player to bind it to them, right click the air for your own. Bound: right click to open."),
@@ -873,7 +873,7 @@ for k, ru, en, dru, den in [
     t(f"item.rpmedicine.{k}", ru, en)
     t(f"item.rpmedicine.{k}.desc", dru, den)
 for k, ru, en in [("organ_container", "Охлаждающий контейнер.", "A cooling container."), ("organ", "Донорский орган.", "A donor organ."),
-    ("cyclosporine", "Таблетки циклоспорина.", "Cyclosporine tablets.")]:
+    ("cyclosporine", "Шприц-ручка с циклоспорином, на 4 дозы.", "An injector pen with cyclosporine, 4 doses.")]:
     t(f"item.rpmedicine.{k}.what", ru, en)
 t("item.rpmedicine.organ.of", "Орган: %s", "Organ: %s")
 t("rpmedicine.tooltip.organ_donor", "Донор: %s, группа %s", "Donor: %s, blood type %s")
@@ -1151,6 +1151,40 @@ t("book.rpmedicine.guide.name", "Справочник медика", "Medic's Ha
 t("book.rpmedicine.guide.landing", "Справочник по медицине RP Medicine: раны, препараты, кровь, диагностика, госпиталь и хирургия.$(br2)Значения, выделенные $(#b5531f)цветом$(), сервер может поменять в настройках — здесь указаны стандартные.", "A handbook of RP Medicine: wounds, drugs, blood, diagnostics, hospital and surgery.$(br2)Values in $(#b5531f)colour$() can be changed by the server config — the defaults are shown here.")
 t("rpmedicine.book.welcome", "В инвентаре — «Справочник медика»: там всё о ранах, лечении и препаратах. Клавиша H — осмотр себя или пациента.", "You have the Medic's Handbook in your inventory: everything about wounds, treatment and drugs. Press H to examine yourself or a patient.")
 # --- конец пачки 06.10 ---
+
+# Замечания 09.10 (И8–И12): описания предметов и растворы хлоргексидина.
+WHAT_0910 = {
+    "antiseptic": ("Флакон хлоргексидина 0,05 % для промывки ран.", "A bottle of 0.05% chlorhexidine for washing wounds."),
+    "antibiotic_ointment": ("Мазь на основе офлоксацина.", "An ofloxacin-based ointment."),
+    "suture_kit": ("Шовный материал и инструменты для швов.", "Suture material and instruments for stitching."),
+    "scissors": ("Ножницы типа Спенсер.", "Spencer-type scissors."),
+    "chlorhexidine_hands": ("Флакон хлоргексидина 0,2 % для мытья рук.", "A bottle of 0.2% chlorhexidine for washing hands."),
+    "chlorhexidine_skin": ("Флакон хлоргексидина 0,5 % для обработки кожи.", "A bottle of 0.5% chlorhexidine for skin prep."),
+    "chlorhexidine_concentrate": ("Концентрат хлоргексидина 20 %.", "20% chlorhexidine concentrate."),
+}
+for _k, (_ru, _en) in WHAT_0910.items():
+    T[f"item.rpmedicine.{_k}.what"] = (_ru, _en)
+for _k, _ru, _en, _dru, _den in [
+    ("chlorhexidine_hands", "Хлоргексидин 0,2 %", "Chlorhexidine 0.2%", "ПКМ — промыть руки перед осмотром и манипуляциями.",
+     "Right-click to wash your hands before an exam or a procedure."),
+    ("chlorhexidine_skin", "Хлоргексидин 0,5 %", "Chlorhexidine 0.5%", "Обеззаразить кожу перед уколом или операцией: ПКМ — себе, ПКМ по человеку — ему.",
+     "Disinfect the skin before an injection or surgery: right-click for yourself, right-click a person for them."),
+    ("chlorhexidine_concentrate", "Концентрат хлоргексидина 20 %", "Chlorhexidine concentrate 20%",
+     "Развести водой в верстаке: 1 бутылка воды — 0,5 % для кожи, 2 — 0,2 % для рук, 3 — 0,05 % для ран.",
+     "Dilute with water in a crafting grid: 1 water bottle — 0.5% for skin, 2 — 0.2% for hands, 3 — 0.05% for wounds."),
+]:
+    T[f"item.rpmedicine.{_k}"] = (_ru, _en)
+    T[f"item.rpmedicine.{_k}.desc"] = (_dru, _den)
+T["rpmedicine.msg.chlorhexidine_hands"] = ("Вы промыли руки хлоргексидином", "You washed your hands with chlorhexidine")
+T["rpmedicine.msg.chlorhexidine_skin_self"] = ("Кожа обеззаражена", "Skin disinfected")
+T["rpmedicine.msg.chlorhexidine_skin"] = ("Кожа обеззаражена: %s", "Skin disinfected: %s")
+T["rpmedicine.msg.chlorhexidine_dilute"] = ("Концентрат: развести водой в верстаке (1–3 бутылки)", "Concentrate: dilute with water in a crafting grid (1–3 bottles)")
+
+# Износ перчаток и маски (замечание 09.10, И38).
+T["rpmedicine.tooltip.gloves_dirty"] = ("Использованные — снимите и выбросьте", "Used — take them off and throw away")
+T["rpmedicine.tooltip.mask_dirty"] = ("Отсырела — замените", "Damp — replace it")
+T["rpmedicine.msg.gloves_dirty"] = ("Перчатки грязные — смените их", "Your gloves are dirty — change them")
+T["rpmedicine.msg.mask_dirty"] = ("Маска отсырела — замените её", "Your mask is damp — replace it")
 
 base = os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/rpmedicine/lang")
 for idx, name in ((0, "ru_ru"), (1, "en_us")):

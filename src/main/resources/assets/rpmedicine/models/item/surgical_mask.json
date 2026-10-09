@@ -11,5 +11,13 @@
     "head": {
       "parent": "rpmedicine:item/surgical_mask_worn"
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "rpmedicine:dirty": 1
+      },
+      "model": "rpmedicine:item/surgical_mask_dirty"
+    }
+  ]
 }

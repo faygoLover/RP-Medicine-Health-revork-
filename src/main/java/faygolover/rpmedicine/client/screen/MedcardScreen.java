@@ -563,7 +563,18 @@ public class MedcardScreen extends Screen {
     private static final Map<UUID, net.minecraft.resources.ResourceLocation> PHOTO_SKINS = new HashMap<>();
 
     private net.minecraft.resources.ResourceLocation photoSkin() {
-        return PHOTO_SKINS.computeIfAbsent(card.uuid, u -> {
+        // Ключ — с учётом снимка: пришёл позже — нарисуется он, а не скин по умолчанию.
+        java.util.UUID key = new java.util.UUID(card.uuid.getMostSignificantBits(), card.uuid.getLeastSignificantBits() ^ card.photoPng.hashCode());
+        return PHOTO_SKINS.computeIfAbsent(key, u -> {
+            if (!card.photoPng.isEmpty()) {
+                try {
+                    byte[] png = java.util.Base64.getDecoder().decode(card.photoPng);
+                    var img = com.mojang.blaze3d.platform.NativeImage.read(new java.io.ByteArrayInputStream(png));
+                    return minecraft.getTextureManager().register("rpmedicine_photo", new net.minecraft.client.renderer.texture.DynamicTexture(img));
+                } catch (Exception ignored) {
+                    // Снимок не читается — дальше по профилю.
+                }
+            }
             if (!card.photo.isEmpty()) {
                 try {
                     String json = new String(java.util.Base64.getDecoder().decode(card.photo), java.nio.charset.StandardCharsets.UTF_8);
@@ -575,7 +586,7 @@ public class MedcardScreen extends Screen {
                     // Нет снимка — скин по умолчанию.
                 }
             }
-            return net.minecraft.client.resources.DefaultPlayerSkin.getDefaultSkin(u);
+            return net.minecraft.client.resources.DefaultPlayerSkin.getDefaultSkin(card.uuid);
         });
     }
 

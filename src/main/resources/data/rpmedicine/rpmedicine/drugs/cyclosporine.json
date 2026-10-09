@@ -2,7 +2,7 @@
   "items": [
     "rpmedicine:cyclosporine"
   ],
-  "form": "pill",
+  "form": "injection",
   "min_level": 4,
   "effects": [
     {

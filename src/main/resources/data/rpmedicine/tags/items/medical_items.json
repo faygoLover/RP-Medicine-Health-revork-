@@ -87,6 +87,9 @@
     "rpmedicine:severed_limb",
     "rpmedicine:organ_container",
     "rpmedicine:organ",
+    "rpmedicine:chlorhexidine_hands",
+    "rpmedicine:chlorhexidine_skin",
+    "rpmedicine:chlorhexidine_concentrate",
     {
       "id": "rpmedicine:lr_amoxycillin",
       "required": false

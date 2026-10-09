@@ -94,6 +94,13 @@ public final class ClientSetup {
                         if (lvl != null && faygolover.rpmedicine.item.OrganItem.spoiled(st, lvl.getGameTime())) return 0.9f;
                         return (o.ordinal() + 1) / 10f;
                     });
+            // Грязные перчатки и отсыревшая маска — своя иконка (замечание 09.10, И38).
+            for (var it : java.util.List.of(faygolover.rpmedicine.registry.ModItems.SURGICAL_GLOVES.get(),
+                    faygolover.rpmedicine.registry.ModItems.SURGICAL_MASK.get()))
+                net.minecraft.client.renderer.item.ItemProperties.register(it, new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "dirty"),
+                        (st, level, entity, seed) -> faygolover.rpmedicine.item.Wear.dirty(st) ? 1f : 0f);
+            // Перчатки на руках (Curios, слот «руки»).
+            if (faygolover.rpmedicine.integration.Integrations.curios()) faygolover.rpmedicine.integration.CuriosClient.register();
             // Испорченная кровь — своя иконка.
             net.minecraft.client.renderer.item.ItemProperties.register(faygolover.rpmedicine.registry.ModItems.BLOOD_BAG.get(),
                     new net.minecraft.resources.ResourceLocation(RpMedicine.MODID, "spoiled"), (st, level, entity, seed) -> {

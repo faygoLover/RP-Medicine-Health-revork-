@@ -2,5 +2,13 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "rpmedicine:item/surgical_gloves"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "rpmedicine:dirty": 1
+      },
+      "model": "rpmedicine:item/surgical_gloves_dirty"
+    }
+  ]
 }

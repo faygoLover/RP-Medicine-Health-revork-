@@ -287,3 +287,71 @@ SOFTWARE.
 | `models/block/thermostat_*.json`, `textures/block/thermostat.png` | Health & Disease 1.4.2: `tube*` | JEDIGD | MIT |
 | `textures/gui/thermostat.png` | Health & Disease 1.4.2: `textures/screens/tube.png` (окно TubeScreen) | JEDIGD | MIT |
 <!-- hospital:end -->
+
+<!-- item_models:begin -->
+## Модели предметов по замечаниям 09.10 (`scripts/item_models.py`)
+
+| Файл в моде (`assets/rpmedicine/…`) | Откуда | Автор | Лицензия |
+|---|---|---|---|
+| `textures/item/first_aid_kit.png` | LesRaisins Tactical Equipments 0.4.3: `textures/consumable/slot/carfak.png` (уменьшено) | LesRaisins Studio | GPL-3.0 |
+| `textures/item/m/bandage_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/bandage.png` | ogaba, titammods | All Rights Reserved |
+| `models/item/bandage.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/bandage.json` | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/pressure_dressing_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/bandage.png` (белое -> зелёное) | ogaba, titammods | All Rights Reserved |
+| `models/item/pressure_dressing.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/bandage.json` (белое -> зелёное) | ogaba, titammods | All Rights Reserved |
+| `rpgeo/stabilization_kit.geo.json` | своя модель `rpgeo/lr_vaseline.geo.json` (синее -> красное, крупнее) | — | — |
+| `rpgeo/antibiotic_ointment.geo.json` | своя модель `rpgeo/lr_vaseline.geo.json` (синее -> жёлтое) | — | — |
+| `rpgeo/suture_kit.geo.json` | своя модель `rpgeo/lr_ai2.geo.json` (жёлтое -> серое, шире) | — | — |
+| `rpgeo/antiseptic.geo.json` | своя модель `rpgeo/amoxicillin.geo.json` (полоса бледно-голубая, площе) | — | — |
+| `rpgeo/chlorhexidine_hands.geo.json` | своя модель `rpgeo/amoxicillin.geo.json` (полоса своего цвета) | — | — |
+| `rpgeo/chlorhexidine_skin.geo.json` | своя модель `rpgeo/amoxicillin.geo.json` (полоса своего цвета) | — | — |
+| `rpgeo/chlorhexidine_concentrate.geo.json` | своя модель `rpgeo/amoxicillin.geo.json` (полоса своего цвета) | — | — |
+| `rpgeo/glucose_tablets.geo.json` | своя модель `rpgeo/amoxicillin.geo.json` (полоса жёлтая) | — | — |
+| `rpgeo/decompression_needle.geo.json` | своя модель `rpgeo/naloxone.geo.json` (ярко-оранжевая) | — | — |
+| `rpgeo/cyclosporine.geo.json` | своя модель `rpgeo/naloxone.geo.json` (тёмно-зелёная) | — | — |
+| `rpgeo/used_iv_bag.geo.json` | своя модель `rpgeo/empty_blood_bag.geo.json` (чуть мутнее) | — | — |
+| `textures/item/m/ammonia_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/peanut_butter.png` (этикетка закрашена) | ogaba, titammods | All Rights Reserved |
+| `models/item/ammonia.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/peanut_butter.json` (этикетка закрашена) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/vascular_suture_0.png` | Survivor's Arsenal 1.1.7: `textures/item/polyester_thread.png` | ogabasferr | All Rights Reserved |
+| `models/item/vascular_suture.json` | Survivor's Arsenal 1.1.7: `models/item/polyester_thread.json` | ogabasferr | All Rights Reserved |
+| `textures/item/m/surgical_drill_0.png` | Survival Instinct 1.0.2: `textures/block/nailgun.png` | tohir | AFL-3.0 |
+| `textures/item/m/surgical_drill_1.png` | Survival Instinct 1.0.2: `textures/item/nails_box.png` | tohir | AFL-3.0 |
+| `models/item/surgical_drill.json` | Survival Instinct 1.0.2: `models/item/nailgun.json` | tohir | AFL-3.0 |
+| `textures/item/m/bone_saw_0.png` | Marbled's Melees 1.0.0: `textures/item/bone_saw.png` | MarbledNull | All Rights Reserved |
+| `models/item/bone_saw.json` | Marbled's Melees 1.0.0: `models/item/bone_saw.json` | MarbledNull | All Rights Reserved |
+| `textures/item/m/organ_container_0.png` | MrCrayfish's Refurbished Furniture 1.0.20: `textures/block/light_blue_particle.png` | MrCrayfish | MIT |
+| `textures/item/m/organ_container_1.png` | MrCrayfish's Refurbished Furniture 1.0.20: `textures/block/light_blue_cooler.png` | MrCrayfish | MIT |
+| `models/item/organ_container.json` | MrCrayfish's Refurbished Furniture 1.0.20: `models/item/light_blue_cooler.json` | MrCrayfish | MIT |
+| `textures/item/m/osteosynthesis_kit_0.png` | SA Lib 1.0.1: `textures/item/box_of_screws.png` (голубая, с наклейкой) | ogaba, titammods | All Rights Reserved |
+| `models/item/osteosynthesis_kit.json` | SA Lib 1.0.1: `models/item/box_of_screws.json` (голубая, с наклейкой) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/lidocaine_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/lidocaine.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/ketamine_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/ketamine.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/propofol_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/propofol.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/norepinephrine_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/norepinephrine.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/iv_glucose_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/iv_glucose.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/iv_amino_acids_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/iv_amino_acids.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/iv_lipids_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/iv_lipids.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/iv_vitamins_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/iv_vitamins.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `rpgeo/scissors.geo.json` | LesRaisins Tactical Equipments 0.4.3: `geo_models/consumable/surv12_geo.json` (инструмент из набора) | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/hemostat.geo.json` | LesRaisins Tactical Equipments 0.4.3: `geo_models/consumable/surv12_geo.json` (инструмент из набора) | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/surgical_tweezers.geo.json` | LesRaisins Tactical Equipments 0.4.3: `geo_models/consumable/surv12_geo.json` (инструмент из набора) | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/scalpel.geo.json` | LesRaisins Tactical Equipments 0.4.3: `geo_models/consumable/surv12_geo.json` (инструмент из набора) | LesRaisins Studio | GPL-3.0 |
+| `rpgeo/retractor.geo.json` | LesRaisins Tactical Equipments 0.4.3: `geo_models/consumable/surv12_geo.json` (инструмент из набора) | LesRaisins Studio | GPL-3.0 |
+| `textures/item/m/hemoanalyzer.png` | Mekanism 10.4.16: `textures/item/portable_qio_dashboard.png` (экран перекрашен, объём) | Aidancbrady и др. | MIT |
+| `textures/item/m/portable_scanner.png` | Mekanism 10.4.16: `textures/item/seismic_reader.png` (кардиограмма на экране, объём) | Aidancbrady и др. | MIT |
+| `rpgeo/test_tube.geo.json` | Health & Disease 1.4.2: `geo/oral.geo.json` | JEDIGD | MIT |
+| `textures/geo/test_tube.png` | Health & Disease 1.4.2: `textures/item/oral.png` (крышка и содержимое перекрашены) | JEDIGD | MIT |
+| `rpgeo/blood_sample.geo.json` | Health & Disease 1.4.2: `geo/oral.geo.json` | JEDIGD | MIT |
+| `textures/geo/blood_sample.png` | Health & Disease 1.4.2: `textures/item/oral.png` (крышка и содержимое перекрашены) | JEDIGD | MIT |
+| `rpgeo/dirty_test_tube.geo.json` | Health & Disease 1.4.2: `geo/oral.geo.json` | JEDIGD | MIT |
+| `textures/geo/dirty_test_tube.png` | Health & Disease 1.4.2: `textures/item/oral.png` (крышка и содержимое перекрашены) | JEDIGD | MIT |
+| `textures/item/surgical_gloves.png` | Self Expression 2.22a: `textures/item/pierchatki_vora.png` (голубые) | Redynine | All Rights Reserved |
+| `textures/models/surgical_gloves_worn.png` | Self Expression 2.22a: `textures/models/armor/balaclava__layer_1.png` (голубые) | Redynine | All Rights Reserved |
+<!-- item_models:end -->

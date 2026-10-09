@@ -1,6 +1,92 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "rpmedicine:item/dirty_test_tube"
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "base": {
+    "parent": "builtin/entity",
+    "display": {
+      "thirdperson_righthand": {
+        "translation": [
+          0,
+          -4,
+          0.25
+        ],
+        "scale": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "thirdperson_lefthand": {
+        "translation": [
+          0,
+          -3.75,
+          0
+        ],
+        "scale": [
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "firstperson_righthand": {
+        "translation": [
+          0,
+          -6.5,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "firstperson_lefthand": {
+        "translation": [
+          0,
+          -5.25,
+          0.5
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "ground": {
+        "translation": [
+          0,
+          -3,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "fixed": {
+        "translation": [
+          0,
+          -5.5,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      }
+    },
+    "textures": {
+      "particle": "rpmedicine:item/dirty_test_tube"
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "rpmedicine:item/dirty_test_tube"
+      }
+    }
   }
 }

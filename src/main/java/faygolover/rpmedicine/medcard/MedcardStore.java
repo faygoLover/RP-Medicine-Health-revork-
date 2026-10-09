@@ -52,15 +52,44 @@ public final class MedcardStore {
         return c;
     }
 
-    /** Снимок для карты — один раз, пока персонаж в сети (скин на момент заведения карты). */
+    /**
+     * Снимок для карты — один раз, пока персонаж в сети (скин на момент заведения карты). Профиль сервера — запасной
+     * вариант; главный — картинка скина с клиента: сервер просит её, пока её нет (за запуск — один раз на игрока).
+     */
     public static void takePhoto(MinecraftServer server, Medcard c) {
-        if (c.photoTaken) return;
         var sp = server.getPlayerList().getPlayer(c.uuid);
         if (sp == null) return;
-        var tex = sp.getGameProfile().getProperties().get("textures");
-        c.photo = tex.isEmpty() ? "" : tex.iterator().next().getValue();
-        c.photoTaken = true;
-        save(server, c);
+        if (!c.photoTaken) {
+            var tex = sp.getGameProfile().getProperties().get("textures");
+            c.photo = tex.isEmpty() ? "" : tex.iterator().next().getValue();
+            c.photoTaken = true;
+            save(server, c);
+        }
+        if (c.photoPng.isEmpty() && PHOTO_ASKED.add(c.uuid))
+            faygolover.rpmedicine.network.Network.send(sp, new faygolover.rpmedicine.network.MedcardPhotoPacket.Request());
+    }
+
+    /** Кого уже просили о снимке за этот запуск сервера. */
+    private static final java.util.Set<UUID> PHOTO_ASKED = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** Снимок скина пришёл: только если его ещё нет (карта не переснимается) и это настоящая картинка скина. */
+    public static synchronized void onPhoto(net.minecraft.server.level.ServerPlayer sp, byte[] png) {
+        Medcard c = get(sp.server, sp.getUUID());
+        if (!c.photoPng.isEmpty() || png.length == 0 || png.length > faygolover.rpmedicine.network.MedcardPhotoPacket.MAX_BYTES) return;
+        try {
+            var img = javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(png));
+            if (img == null || img.getWidth() < 64 || img.getWidth() > 512 || img.getHeight() < 32 || img.getHeight() > 512) return;
+        } catch (Exception e) {
+            return;
+        }
+        c.photoPng = java.util.Base64.getEncoder().encodeToString(png);
+        save(sp.server, c);
+        RpMedicine.LOGGER.info("RP Medicine: фото для медкарты {} снято ({} байт)", sp.getGameProfile().getName(), png.length);
+    }
+
+    /** Выход игрока: в следующий вход снова можно попросить снимок, если его так и нет. */
+    public static void forgetPhotoRequest(UUID uuid) {
+        PHOTO_ASKED.remove(uuid);
     }
 
     @Nullable

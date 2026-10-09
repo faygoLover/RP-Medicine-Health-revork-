@@ -23,6 +23,12 @@ public final class CuriosCompat {
         return CuriosApi.getCuriosInventory(e).resolve().map(ICuriosItemHandler::getEquippedCurios).orElse(null);
     }
 
+    /** Надетый в Curios предмет (первый найденный) или пусто. */
+    public static ItemStack find(LivingEntity e, net.minecraft.world.item.Item item) {
+        return CuriosApi.getCuriosInventory(e).resolve().flatMap(h -> h.findFirstCurio(item))
+                .map(top.theillusivec4.curios.api.SlotResult::stack).orElse(ItemStack.EMPTY);
+    }
+
     /** Переносит предметы Curios игрока в заглушку и очищает слоты игрока. */
     public static void moveToStub(LivingEntity player, BodyStubEntity stub) {
         ICuriosItemHandler h = CuriosApi.getCuriosInventory(player).resolve().orElse(null);

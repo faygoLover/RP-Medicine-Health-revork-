@@ -24,6 +24,10 @@ public class MedicalItem extends Item {
         String what = getDescriptionId() + ".what";
         tooltip.add(Component.translatable(net.minecraft.locale.Language.getInstance().has(what) ? what : getDescriptionId() + ".desc")
                 .withStyle(net.minecraft.ChatFormatting.GRAY));
+        // Износ перчаток и маски (замечание 09.10, И38).
+        if (Wear.dirty(stack))
+            tooltip.add(Component.translatable(stack.is(faygolover.rpmedicine.registry.ModItems.SURGICAL_MASK.get())
+                    ? "rpmedicine.tooltip.mask_dirty" : "rpmedicine.tooltip.gloves_dirty").withStyle(net.minecraft.ChatFormatting.RED));
         // Начатый пакет капельницы: остаток и добавленный препарат.
         net.minecraft.nbt.CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains(faygolover.rpmedicine.hospital.IvStandBlockEntity.ML))

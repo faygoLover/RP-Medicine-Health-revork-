@@ -1,6 +1,297 @@
 {
-  "parent": "minecraft:item/generated",
+  "texture_size": [
+    32,
+    32
+  ],
   "textures": {
-    "layer0": "rpmedicine:item/ammonia"
-  }
+    "0": "rpmedicine:item/m/ammonia_0",
+    "particle": "rpmedicine:item/m/ammonia_0"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        10,
+        11
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          7,
+          0,
+          7
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            3,
+            5
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            3,
+            0,
+            6,
+            5
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            5,
+            3,
+            10
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            3,
+            5,
+            6,
+            10
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            9,
+            3,
+            6,
+            0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            9,
+            3,
+            6,
+            6
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "from": [
+        5.3,
+        10,
+        5.3
+      ],
+      "to": [
+        10.7,
+        12,
+        10.7
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          7,
+          10,
+          7
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            8.5,
+            6,
+            11,
+            7
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            8.5,
+            7,
+            11,
+            8
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.5,
+            8,
+            11,
+            9
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            9,
+            0,
+            11.5,
+            1
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            8.5,
+            8.5,
+            6,
+            6
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            8.5,
+            8.5,
+            6,
+            11
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        -1.25,
+        2.25,
+        2.25
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        -1.25,
+        2.25,
+        2.25
+      ],
+      "scale": [
+        0.55,
+        0.55,
+        0.55
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -155.67,
+        87.24,
+        146.71
+      ],
+      "translation": [
+        -0.75,
+        4,
+        2.25
+      ],
+      "scale": [
+        0.44883,
+        0.44883,
+        0.44883
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -155.67,
+        87.24,
+        146.71
+      ],
+      "translation": [
+        -0.75,
+        4,
+        2.25
+      ],
+      "scale": [
+        0.44883,
+        0.44883,
+        0.44883
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "gui": {
+      "rotation": [
+        -171.31,
+        28.48,
+        -168.29
+      ],
+      "translation": [
+        0.5,
+        2.5,
+        0
+      ],
+      "scale": [
+        1.07695,
+        1.07695,
+        1.07695
+      ]
+    },
+    "head": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        13,
+        0.25
+      ]
+    },
+    "fixed": {
+      "translation": [
+        0,
+        4,
+        0
+      ],
+      "scale": [
+        0.85938,
+        0.85938,
+        0.85938
+      ]
+    },
+    "on_shelf": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ]
+    }
+  },
+  "gui_light": "front"
 }

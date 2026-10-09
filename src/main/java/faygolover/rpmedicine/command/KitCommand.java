@@ -33,7 +33,8 @@ public final class KitCommand {
     static {
         KITS.put("field", new Kit("полевой медик", List.of("book",
                 "first_aid_kit:2", "medical_pouch", "bandage:16", "pressure_dressing:8", "hemostatic_gauze:8", "tourniquet:4",
-                "esmarch:2", "occlusive_dressing:4", "antiseptic:4", "antibiotic_ointment:2", "splint:4", "scissors",
+                "esmarch:2", "occlusive_dressing:4", "antiseptic:4", "chlorhexidine_hands:2", "chlorhexidine_skin:2", "chlorhexidine_concentrate",
+                "antibiotic_ointment:2", "splint:4", "scissors",
                 "decompression_needle:2", "airway:2", "ammonia:2", "painkillers:8", "morphine", "adrenaline", "txa", "syringe:8")));
         KITS.put("resus", new Kit("реанимация и капельницы", List.of(
                 "ambu_bag", "laryngoscope", "endotracheal_tube:4", "defibrillator", "adrenaline", "atropine", "naloxone",

@@ -145,6 +145,7 @@ public final class ModSetup {
         ExamService.onLogout(sp);
         faygolover.rpmedicine.stats.History.save(sp.server, sp.getUUID());
         faygolover.rpmedicine.integration.voice.VoiceState.remove(sp.getUUID());
+        faygolover.rpmedicine.medcard.MedcardStore.forgetPhotoRequest(sp.getUUID());
     }
 
     /** Смерть: после возрождения здоровье чистое; что сохранить — по конфигу (п. 5.6 ТЗ). */

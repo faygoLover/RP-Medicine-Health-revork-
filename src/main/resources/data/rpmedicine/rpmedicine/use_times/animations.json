@@ -1,6 +1,5 @@
 {
   "times": {
-    "rpmedicine:bandage": 1.75,
     "rpmedicine:splint": 0.71,
     "rpmedicine:field_surgery_kit": 4.92,
     "rpmedicine:ibuprofen": 1.5,
@@ -30,6 +29,16 @@
     "rpmedicine:lr_goldenstar": 5.58,
     "rpmedicine:lr_vaseline": 2.82,
     "rpmedicine:lr_ibuprofen": 2.45,
-    "rpmedicine:lr_amoxycillin": 7.22
+    "rpmedicine:lr_amoxycillin": 7.22,
+    "rpmedicine:stabilization_kit": 2.82,
+    "rpmedicine:antibiotic_ointment": 2.82,
+    "rpmedicine:suture_kit": 4.62,
+    "rpmedicine:antiseptic": 1.5,
+    "rpmedicine:chlorhexidine_hands": 1.5,
+    "rpmedicine:chlorhexidine_skin": 1.5,
+    "rpmedicine:chlorhexidine_concentrate": 1.5,
+    "rpmedicine:decompression_needle": 1.0,
+    "rpmedicine:cyclosporine": 1.0,
+    "rpmedicine:used_iv_bag": 4.63
   }
 }

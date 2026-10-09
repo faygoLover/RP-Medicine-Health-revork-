@@ -71,6 +71,8 @@ public final class Medcard {
      */
     public String photo = "";
     public boolean photoTaken;
+    /** Снимок скина с клиента (PNG в base64, замечание 09.10, М2): делается один раз; есть — важнее {@link #photo}. */
+    public String photoPng = "";
 
     public int nextId = 1;
     public List<Entry> entries = new ArrayList<>();
@@ -122,6 +124,7 @@ public final class Medcard {
         if (disability == null) disability = "";
         if (comment == null) comment = "";
         if (photo == null) photo = "";
+        if (photoPng == null) photoPng = "";
         if (entries == null) entries = new ArrayList<>();
         for (Entry e : entries) {
             if (e.circumstances == null) e.circumstances = "";

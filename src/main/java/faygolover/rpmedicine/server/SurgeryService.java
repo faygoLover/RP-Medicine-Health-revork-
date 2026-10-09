@@ -42,7 +42,13 @@ public final class SurgeryService {
         boolean sterile = !(tool.getItem() instanceof SurgicalInstrumentItem) || SurgicalInstrumentItem.isSterile(tool);
         if (!sterile) infection *= s.surgeryNonSterileFactor;
         if (!hasMask(surgeon)) infection *= s.surgeryNoMaskFactor;
-        if (!hasGloves(surgeon)) infection *= s.surgeryNoGlovesFactor;
+        ItemStack gloves = gloves(surgeon);
+        if (gloves.isEmpty()) {
+            infection *= s.surgeryNoGlovesFactor;
+        } else if (faygolover.rpmedicine.item.Wear.dirtyFor(gloves, patient.getUUID())) {
+            // Грязные перчатки (другой пациент, долгая операция) — хуже, чем без них (замечание 09.10, И38).
+            infection *= s.surgeryNoGlovesFactor * s.dirtyGlovesFactor;
+        }
         return new Surgery.Context(sterile, success, infection);
     }
 
@@ -66,13 +72,45 @@ public final class SurgeryService {
         return e instanceof BodyStubEntity stub ? stub.bedPos() : null;
     }
 
-    /** Маска надета (слот головы). */
+    /** Маска надета (слот головы) и не отсырела. */
     public static boolean hasMask(ServerPlayer p) {
-        return p.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.SURGICAL_MASK.get());
+        ItemStack head = p.getItemBySlot(EquipmentSlot.HEAD);
+        return head.is(ModItems.SURGICAL_MASK.get()) && !faygolover.rpmedicine.item.Wear.dirty(head);
     }
 
-    /** Перчатки — в инвентаре хирурга (слота для перчаток в ванили нет). */
+    /** Перчатки на хирурге: слот Curios «руки», без Curios — в инвентаре. Пусто — перчаток нет. */
+    public static ItemStack gloves(ServerPlayer p) {
+        if (faygolover.rpmedicine.integration.Integrations.curios()) {
+            ItemStack c = faygolover.rpmedicine.integration.CuriosCompat.find(p, ModItems.SURGICAL_GLOVES.get());
+            if (!c.isEmpty()) return c;
+        }
+        for (ItemStack st : p.getInventory().items) if (st.is(ModItems.SURGICAL_GLOVES.get())) return st;
+        ItemStack off = p.getOffhandItem();
+        return off.is(ModItems.SURGICAL_GLOVES.get()) ? off : ItemStack.EMPTY;
+    }
+
+    /** Чистые перчатки на хирурге. */
     public static boolean hasGloves(ServerPlayer p) {
-        return p.getInventory().contains(new ItemStack(ModItems.SURGICAL_GLOVES.get()));
+        ItemStack g = gloves(p);
+        return !g.isEmpty() && !faygolover.rpmedicine.item.Wear.dirty(g);
+    }
+
+    /** Шаг операции выполнен: перчатки изнашиваются (контекст считается каждый тик и предмет не меняет). */
+    public static void stepDone(ServerPlayer surgeon, LivingEntity patient) {
+        ItemStack g = gloves(surgeon);
+        if (g.isEmpty()) return;
+        boolean was = faygolover.rpmedicine.item.Wear.dirty(g);
+        if (faygolover.rpmedicine.item.Wear.useGloves(g, patient.getUUID(), MedicalSettings.get().gloveUses) || was)
+            surgeon.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.gloves_dirty")
+                    .withStyle(net.minecraft.ChatFormatting.GOLD), true);
+    }
+
+    /** Раз в 30 секунд: маска на лице отсыревает. */
+    public static void tickMask(ServerPlayer p) {
+        ItemStack head = p.getItemBySlot(EquipmentSlot.HEAD);
+        if (head.is(ModItems.SURGICAL_MASK.get())
+                && faygolover.rpmedicine.item.Wear.wearMask(head, 30, faygolover.rpmedicine.core.MedicalSettings.get().maskWearMinutes * 60))
+            p.displayClientMessage(net.minecraft.network.chat.Component.translatable("rpmedicine.msg.mask_dirty")
+                    .withStyle(net.minecraft.ChatFormatting.GOLD), true);
     }
 }
