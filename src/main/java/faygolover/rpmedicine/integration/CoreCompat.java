@@ -51,6 +51,22 @@ public final class CoreCompat {
                 has(player, RpIds.ALCOHOLIC), has(player, RpIds.TEETOTALER), has(player, RpIds.CAFFEINE_ADDICT));
     }
 
+    /** Множитель заживления от черт: быстрое и медленное заживление. */
+    public static double healingFactor(Player player, faygolover.rpmedicine.core.MedicalSettings s) {
+        double f = 1.0;
+        if (has(player, RpIds.FAST_HEALING)) f *= s.fastHealingFactor;
+        if (has(player, RpIds.SLOW_HEALING)) f *= s.slowHealingFactor;
+        return f;
+    }
+
+    /** Множитель иммунитета от черт. */
+    public static double immunityFactor(Player player, faygolover.rpmedicine.core.MedicalSettings s) {
+        double f = 1.0;
+        if (has(player, RpIds.STRONG_IMMUNITY)) f *= s.strongImmunityFactor;
+        if (has(player, RpIds.WEAK_IMMUNITY)) f *= s.weakImmunityFactor;
+        return f;
+    }
+
     private static boolean has(Player p, net.minecraft.resources.ResourceLocation trait) {
         return RpCoreAPI.hasTrait(p, trait);
     }

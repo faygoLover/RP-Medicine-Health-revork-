@@ -70,11 +70,11 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
             pose.translate(0.5, 0.51, 0.5);
             pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         }
-        // Шприц-ручка: окошко заполнено по оставшимся дозам (0, 1, 2, 3, 4 использовано — округление вверх).
+        // Шприц-ручка: окошко заполнено ровно по оставшимся дозам (замечание 09.10, М6: раньше — ступенями по целой дозе,
+        // и после 0,1 дозы уровень прыгал на четверть).
         fill = -1;
         if (faygolover.rpmedicine.registry.ModItems.isPen(stack)) {
-            double used = 4 - faygolover.rpmedicine.registry.ModItems.remainingDoses(stack);
-            fill = (float) (4 - Math.min(4, Math.ceil(used - 1e-6))) / 4f;
+            fill = (float) Math.max(0, Math.min(1, faygolover.rpmedicine.registry.ModItems.remainingDoses(stack) / 4.0));
         } else if (stack.is(faygolover.rpmedicine.registry.ModItems.USED_PEN.get())) {
             fill = 0;
         }
@@ -112,16 +112,18 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
     private static float fill = -1;
     /** Высота жидкости в окошке ручки при полной, единицы модели. */
     private static final float PEN_LIQUID = 6.8f;
+    private static final float PEN_GAP = 0.04f;
 
     private static void renderBone(GeoModel.Bone b, GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose,
                                    VertexConsumer vc, int light, int overlay) {
         if (e.hide().contains(b.name) && !(armHook != null && b.name.contains("hand"))) return;
         if (fill >= 0 && b.name.equals("liquid") && fill <= 0.001f) return;
         pose.pushPose();
-        if (fill >= 0 && b.name.equals("stopper")) pose.translate(0, PEN_LIQUID * fill, 0);
+        // Поршень стоит на жидкости с зазором: совпадающие грани мерцали (замечание 09.10, М6).
+        if (fill >= 0 && b.name.equals("stopper")) pose.translate(0, PEN_LIQUID * fill + PEN_GAP, 0);
         if (fill >= 0 && b.name.equals("liquid")) {
             pose.translate(b.px, b.py, b.pz);
-            pose.scale(1, fill, 1);
+            pose.scale(1, Math.max(0.001f, fill - PEN_GAP / PEN_LIQUID), 1);
             pose.translate(-b.px, -b.py, -b.pz);
         }
         float[] pos = clip == null ? null : clip.sample(b.name, 1, t);

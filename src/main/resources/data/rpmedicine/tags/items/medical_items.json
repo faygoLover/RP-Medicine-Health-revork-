@@ -88,50 +88,6 @@
     "rpmedicine:organ_container",
     "rpmedicine:organ",
     {
-      "id": "medicamod:adrenalin",
-      "required": false
-    },
-    {
-      "id": "medicamod:apirin",
-      "required": false
-    },
-    {
-      "id": "medicamod:azithromycin",
-      "required": false
-    },
-    {
-      "id": "medicamod:codeine",
-      "required": false
-    },
-    {
-      "id": "medicamod:diazepam",
-      "required": false
-    },
-    {
-      "id": "medicamod:ibuprofen",
-      "required": false
-    },
-    {
-      "id": "medicamod:ketonal",
-      "required": false
-    },
-    {
-      "id": "medicamod:metamizol",
-      "required": false
-    },
-    {
-      "id": "medicamod:morphine",
-      "required": false
-    },
-    {
-      "id": "medicamod:paracetamol",
-      "required": false
-    },
-    {
-      "id": "medicamod:penicillin",
-      "required": false
-    },
-    {
       "id": "rpmedicine:lr_amoxycillin",
       "required": false
     },

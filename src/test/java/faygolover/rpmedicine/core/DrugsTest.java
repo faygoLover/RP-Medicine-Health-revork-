@@ -75,7 +75,19 @@ class DrugsTest {
         MedicalState m = new MedicalState(s);
         m.down = MedicalState.Down.FAINT;
         assertEquals("must_be_conscious", Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, PARACETAMOL));
+        m.seizureSeconds = 10; // есть показание — иначе «не нужно» (замечание 09.10, М5)
         assertNull(Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, DIAZEPAM), "укол — можно");
+    }
+
+    @Test
+    void drugNeedCheckedBeforeDose() {
+        MedicalSettings s = settings();
+        MedicalState m = new MedicalState(s);
+        assertEquals("no_agitation", Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, DIAZEPAM), "здоровому успокоительное не нужно");
+        assertEquals("no_pain", Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, PARACETAMOL), "без боли и жара не нужно");
+        assertTrue(Treatments.FORCEABLE.contains("no_agitation") && Treatments.FORCEABLE.contains("no_opioids"), "можно продавить повтором");
+        m.rawPain = 20;
+        assertNull(Treatments.check(m, BodyPart.CHEST, TreatmentAction.DRUG, s, PARACETAMOL), "есть боль — нужно");
     }
 
     @Test

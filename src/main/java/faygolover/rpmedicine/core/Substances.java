@@ -53,7 +53,14 @@ public final class Substances {
                 double k = (1 - 0.6 * tol) * (traits.teetotaler ? 2.0 : 1.0);
                 m.intoxication = Math.min(100, m.intoxication + s.alcoholIntoxicationPerDose * amount * k);
             }
-            case NICOTINE -> m.addEffect(DrugEffect.ANALGESIA, s.nicotineAnalgesia * amount, 0, 600 * (1 - 0.5 * tol));
+            case NICOTINE -> {
+                m.addEffect(DrugEffect.ANALGESIA, s.nicotineAnalgesia * amount, 0, 600 * (1 - 0.5 * tol));
+                // Курение (Tobacconist и др., замечание 09.10, М7): пульс чуть чаще, дым раздражает лёгкие —
+                // повреждение небольшое и проходит само (у курильщика не ниже его порога).
+                m.addEffect(DrugEffect.HEART_RATE, s.nicotineHeartRate * amount, 30, 600 * (1 - 0.5 * tol));
+                if (m.hasOrgan(Organ.LUNGS))
+                    m.organs[Organ.LUNGS.ordinal()] = Math.min(100, m.organs[Organ.LUNGS.ordinal()] + s.smokeLungDamage * amount);
+            }
             case CAFFEINE -> m.addEffect(DrugEffect.HEART_RATE, 6 * amount, 60, 1800 * (1 - 0.5 * tol));
             case STIMULANT -> {
                 m.addEffect(DrugEffect.HEART_RATE, 15 * amount, 30, 1200 * (1 - 0.5 * tol));

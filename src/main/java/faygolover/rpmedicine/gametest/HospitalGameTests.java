@@ -743,4 +743,30 @@ public final class HospitalGameTests {
         h.assertTrue(cw.sutured && Math.abs(cw.sutureQuality - 0.6) < 1e-6, "швы и их качество сохранены");
         h.succeed();
     }
+
+    /** Стерилизатор с инвентарём (замечание 09.10, М3): ПКМ предметом кладёт внутрь, при закрытой крышке цикл всё очищает. */
+    @GameTest(template = T, timeoutTicks = 400)
+    public static void sterilizerInventoryCycle(GameTestHelper h) {
+        BlockPos pos = h.absolutePos(new BlockPos(1, 1, 1));
+        h.getLevel().setBlockAndUpdate(pos, faygolover.rpmedicine.registry.ModBlocks.STERILIZER.get().defaultBlockState());
+        ServerPlayer p = player(h, 2.5, 2.5);
+        var scalpel = new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.SCALPEL.get());
+        faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(scalpel, false);
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new net.minecraft.world.item.ItemStack(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get(), 3));
+        var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos), net.minecraft.core.Direction.UP, pos, false);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock(
+                p, net.minecraft.world.InteractionHand.MAIN_HAND, pos, hit));
+        h.assertTrue(p.getMainHandItem().isEmpty(), "шприцы ушли в стерилизатор");
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, scalpel);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock(
+                p, net.minecraft.world.InteractionHand.MAIN_HAND, pos, hit));
+        var be = (faygolover.rpmedicine.hospital.HospitalStorageBlockEntity) h.getLevel().getBlockEntity(pos);
+        h.assertTrue(be != null && be.needsWork(), "есть работа");
+        h.runAfterDelay(faygolover.rpmedicine.hospital.HospitalStorageBlockEntity.STERILIZE_TICKS + 20, () -> {
+            h.assertTrue(!be.needsWork(), "цикл прошёл");
+            h.assertTrue(be.getItem(0).is(faygolover.rpmedicine.registry.ModItems.SYRINGE.get()) && be.getItem(0).getCount() == 3, "шприцы чистые");
+            h.assertTrue(faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(be.getItem(1)), "скальпель стерилен");
+            h.succeed();
+        });
+    }
 }

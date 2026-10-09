@@ -17,17 +17,27 @@ import net.minecraft.world.item.ItemStack;
  */
 public class MedicalStorageMenu extends AbstractContainerMenu {
     /** Что можно положить. */
-    public static final byte MEDICAL = 0, BLOOD_SAMPLES = 1;
+    public static final byte MEDICAL = 0, BLOOD_SAMPLES = 1, STERILIZE = 2;
+    /** Стерилизатор: под ячейками строка состояния — окно выше на столько. */
+    public static final int STERILIZER_EXTRA = 12;
 
     private final Container container;
     private final int rows;
     private final byte filter;
+    /** Стерилизатор: цикл, есть ли работа, длина цикла (см. HospitalStorageBlockEntity.sterilizerData). */
+    private final net.minecraft.world.inventory.ContainerData data;
 
     public MedicalStorageMenu(int id, Inventory inv, Container container, int rows, byte filter) {
+        this(id, inv, container, rows, filter, new net.minecraft.world.inventory.SimpleContainerData(3));
+    }
+
+    public MedicalStorageMenu(int id, Inventory inv, Container container, int rows, byte filter, net.minecraft.world.inventory.ContainerData data) {
         super(ModMenus.MEDICAL_STORAGE.get(), id);
         this.container = container;
         this.rows = rows;
         this.filter = filter;
+        this.data = data;
+        if (filter == STERILIZE) addDataSlots(data);
         container.startOpen(inv.player);
         int top;
         if (isThermostat(filter)) {
@@ -37,7 +47,7 @@ public class MedicalStorageMenu extends AbstractContainerMenu {
         } else {
             for (int r = 0; r < rows; r++)
                 for (int c = 0; c < 9; c++) addSlot(storageSlot(container, c + r * 9, 8 + c * 18, 18 + r * 18));
-            top = 18 + rows * 18 + 13;
+            top = 18 + rows * 18 + 13 + (filter == STERILIZE ? STERILIZER_EXTRA : 0);
         }
         for (int r = 0; r < 3; r++)
             for (int c = 0; c < 9; c++) addSlot(new Slot(inv, c + r * 9 + 9, 8 + c * 18, top + r * 18));
@@ -73,7 +83,12 @@ public class MedicalStorageMenu extends AbstractContainerMenu {
     public static boolean allowed(ItemStack st, byte filter) {
         if (st.isEmpty()) return true;
         if (filter == BLOOD_SAMPLES) return st.is(ModItems.BLOOD_SAMPLE.get());
+        if (filter == STERILIZE) return faygolover.rpmedicine.hospital.HospitalStorageBlockEntity.sterilizable(st);
         return st.is(MedicalContainerMenu.MEDICAL_ITEMS);
+    }
+
+    public net.minecraft.world.inventory.ContainerData data() {
+        return data;
     }
 
     public int rows() {

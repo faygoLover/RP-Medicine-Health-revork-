@@ -44,7 +44,11 @@ public final class SubstanceService {
 
     public static void onEffectAdded(MobEffectEvent.Added e) {
         if (!(e.getEntity() instanceof ServerPlayer sp)) return;
-        dose(sp, SubstanceRules.forEffect(ForgeRegistries.MOB_EFFECTS.getKey(e.getEffectInstance().getEffect())));
+        SubstanceRules.Entry rule = SubstanceRules.forEffect(ForgeRegistries.MOB_EFFECTS.getKey(e.getEffectInstance().getEffect()));
+        // Уровень эффекта (у Tobacconist — крепость и качество табака) — доза больше: +50 % за уровень.
+        int amp = Math.max(0, e.getEffectInstance().getAmplifier());
+        if (rule != null && amp > 0) rule = new SubstanceRules.Entry(rule.substance(), rule.amount() * (1 + 0.5 * amp), rule.cooldownSeconds());
+        dose(sp, rule);
     }
 
     private static void dose(ServerPlayer sp, SubstanceRules.Entry e) {

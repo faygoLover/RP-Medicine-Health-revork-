@@ -273,13 +273,6 @@ ALIASES = {
     "tactical_aid:adrenalineinjector": "rpmedicine:adrenaline", "tactical_aid:adrenalineinjector_ii": "rpmedicine:adrenaline",
     "tactical_aid:adrenalineinjector_iii": "rpmedicine:adrenaline",
     "tactical_aid:painlessinjector": "rpmedicine:morphine", "tactical_aid:relief_injector": "rpmedicine:painkillers",
-    # Medicamod (только как список препаратов; второй этап — к своим аналогам)
-    "medicamod:morphine": "rpmedicine:morphine", "medicamod:adrenalin": "rpmedicine:adrenaline",
-    "medicamod:ibuprofen": "rpmedicine:ibuprofen", "medicamod:ketonal": "rpmedicine:ibuprofen",
-    "medicamod:metamizol": "rpmedicine:paracetamol", "medicamod:paracetamol": "rpmedicine:paracetamol",
-    "medicamod:apirin": "rpmedicine:ibuprofen", "medicamod:codeine": "rpmedicine:tramadol",
-    "medicamod:diazepam": "rpmedicine:diazepam", "medicamod:penicillin": "rpmedicine:amoxicillin",
-    "medicamod:azithromycin": "rpmedicine:amoxicillin",
     # Tactical Medicine (удаляется; на время перехода)
     "tacmed:bandage": "rpmedicine:pressure_dressing", "tacmed:hemostatic": "rpmedicine:hemostatic_gauze",
     "tacmed:tourniquet": "rpmedicine:tourniquet", "tacmed:esmarch_tourniquet": "rpmedicine:esmarch",

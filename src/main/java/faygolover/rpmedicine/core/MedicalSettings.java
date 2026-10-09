@@ -230,6 +230,12 @@ public final class MedicalSettings {
     public double fragilePainThresholdPenalty = 10.0;
     public double braveShockBonus = 10.0;
     public double cowardShockPenalty = 10.0;
+    /** «Живучий»: раны и переломы заживают быстрее; «Хрупкий» — медленнее. */
+    public double fastHealingFactor = 1.3;
+    public double slowHealingFactor = 0.75;
+    /** «Турист»: иммунитет сильнее; «Домашний» — слабее. */
+    public double strongImmunityFactor = 1.3;
+    public double weakImmunityFactor = 0.75;
 
     // ---------------- Последствия в игре ----------------
     public double limbIntegrityThreshold = 50.0;
@@ -595,6 +601,9 @@ public final class MedicalSettings {
     public double seizureSeconds = 20.0;
     /** Никотин: лёгкое обезболивание за дозу. */
     public double nicotineAnalgesia = 5.0;
+    /** Никотин: прибавка к пульсу за дозу; дым: повреждение лёгких за дозу (проходит само). */
+    public double nicotineHeartRate = 6.0;
+    public double smokeLungDamage = 0.4;
     /** Перки: стартовая толерантность (и зависимость) алкоголика, курильщика, кофеинозависимого. */
     public double alcoholicTolerance = 60.0;
     public double smokerNicotineTolerance = 30.0;

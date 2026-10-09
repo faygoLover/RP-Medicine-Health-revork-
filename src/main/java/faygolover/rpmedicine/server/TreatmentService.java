@@ -225,8 +225,10 @@ public final class TreatmentService {
         Minigames.Type surgical = p != null ? Minigames.surgeryType(action, m, m.part(p)) : null;
         // Набранный шприц при стоящем катетере — в порт, без мини-игры вены.
         boolean port = filled && m.catheterPart >= 0;
-        Minigames.Type mg = forced || port ? null : surgical != null ? (s.minigamesEnabled && !MinigameService.prefersBar(actor) ? surgical : null) : MinigameService.minigameFor(actor, target, m,
+        Minigames.Type mg = port ? null : surgical != null ? (s.minigamesEnabled && !MinigameService.prefersBar(actor) ? surgical : null) : MinigameService.minigameFor(actor, target, m,
                 Minigames.typeFor(action, extra instanceof faygolover.rpmedicine.core.Drug d ? d : null));
+        // Продавленное «не нужно» — без мини-игры, кроме укола: шприц-ручку колют всегда одинаково (замечание 09.10, М4).
+        if (forced && mg != Minigames.Type.INJECTION) mg = null;
         Minigames.Scene scene = surgical != null ? Minigames.Scene.of(m, p, target.getUUID().getLeastSignificantBits() ^ p.ordinal() * 0x9E3779B97F4A7C15L)
                 : Minigames.Scene.NONE;
         if (extra instanceof Treatments.OrganPick op) scene = scene.withOrgan(op.organ());

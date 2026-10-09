@@ -32,7 +32,7 @@ public class HospitalGeoBlock extends HorizontalDirectionalBlock implements Enti
     public enum Kind {
         CABINET("medicine_cabinet", 27, MedicalStorageMenu.MEDICAL, Block.box(3, 1.5, 3, 13, 15.5, 13)),
         CRATE("medicine_crate", 27, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0.5, 16, 16, 16)),
-        STERILIZER("sterilizer", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),
+        STERILIZER("sterilizer", 9, MedicalStorageMenu.STERILIZE, Block.box(0, 0, 0, 16, 16, 16)),
         LAB_TABLE("lab_table", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),
         THERMOSTAT("thermostat", MedicalStorageMenu.THERMOSTAT_SLOTS, MedicalStorageMenu.BLOOD_SAMPLES, Block.box(2, 0, 4, 14, 8, 12));
 
@@ -99,6 +99,24 @@ public class HospitalGeoBlock extends HorizontalDirectionalBlock implements Enti
             buf.writeByte(kind.filter);
         });
         return InteractionResult.CONSUME;
+    }
+
+    /** Стерилизатор работает сам, пока крышка закрыта (замечание 09.10, М3). */
+    @Nullable
+    @Override
+    public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level, BlockState st,
+            net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
+        if (level.isClientSide || kind != Kind.STERILIZER || type != faygolover.rpmedicine.registry.ModBlocks.HOSPITAL_STORAGE_BE.get()) return null;
+        return (l, p, s, be) -> ((HospitalStorageBlockEntity) be).sterilizerTick();
+    }
+
+    /** Пар и шипение у стерилизатора: {@code strong} — после цикла (горячий). */
+    public static void steam(Level level, BlockPos pos, boolean strong) {
+        if (!(level instanceof net.minecraft.server.level.ServerLevel sl)) return;
+        sl.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5,
+                strong ? 10 : 4, 0.2, 0.1, 0.2, strong ? 0.02 : 0.008);
+        level.playSound(null, pos, net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH, net.minecraft.sounds.SoundSource.BLOCKS,
+                strong ? 0.4f : 0.2f, 1.6f);
     }
 
     @Override

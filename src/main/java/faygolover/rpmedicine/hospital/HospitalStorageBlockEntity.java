@@ -23,6 +23,28 @@ import org.jetbrains.annotations.Nullable;
 public class HospitalStorageBlockEntity extends BlockEntity implements Container, net.minecraft.world.MenuProvider {
     private NonNullList<ItemStack> items;
     private int viewers;
+    /** Стерилизатор: тиков текущего цикла (0 — не идёт) и сколько ещё «горячий» после цикла (пар при открытии). */
+    private int cycle, hot;
+    public static final int STERILIZE_TICKS = 200;
+    /** Для окна: [0] — тиков цикла, [1] — есть что стерилизовать (1), [2] — длина цикла. */
+    public final net.minecraft.world.inventory.ContainerData sterilizerData = new net.minecraft.world.inventory.ContainerData() {
+        @Override
+        public int get(int i) {
+            return switch (i) {
+                case 0 -> cycle;
+                case 1 -> needsWork() ? 1 : 0;
+                default -> STERILIZE_TICKS;
+            };
+        }
+
+        @Override
+        public void set(int i, int v) {}
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+    };
     /** Клиент: когда открыли/закрыли (мс) — для анимации. */
     public long clientOpenedAt = -1, clientClosedAt = -1;
 
@@ -97,6 +119,11 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
     public void startOpen(Player p) {
         if (p.isSpectator() || level == null) return;
         if (viewers++ == 0) {
+            if (kind() == HospitalGeoBlock.Kind.STERILIZER && !level.isClientSide) {
+                // Открыли крышку — выходит пар; идущий цикл прерывается.
+                HospitalGeoBlock.steam(level, worldPosition, hot > 0 || cycle > 0);
+                cycle = 0;
+            }
             level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 1);
             if (getBlockState().getBlock() instanceof HospitalGeoBlock b) HospitalGeoBlock.lidSound(level, worldPosition, b.kind, true);
         }
@@ -110,6 +137,70 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
             level.blockEvent(worldPosition, getBlockState().getBlock(), 1, 0);
             if (getBlockState().getBlock() instanceof HospitalGeoBlock b) HospitalGeoBlock.lidSound(level, worldPosition, b.kind, false);
         }
+    }
+
+    /** Стерилизатор: есть грязный шприц, пробирка или нестерильный инструмент. */
+    public boolean needsWork() {
+        for (ItemStack st : items) if (needsSterilizing(st)) return true;
+        return false;
+    }
+
+    public static boolean needsSterilizing(ItemStack st) {
+        if (st.is(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get()) || st.is(faygolover.rpmedicine.registry.ModItems.DIRTY_TEST_TUBE.get()))
+            return true;
+        return st.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem && !faygolover.rpmedicine.item.SurgicalInstrumentItem.isSterile(st);
+    }
+
+    /** Что можно положить в стерилизатор: шприцы и пробирки (грязные и чистые), хирургические инструменты. */
+    public static boolean sterilizable(ItemStack st) {
+        return needsSterilizing(st) || st.is(faygolover.rpmedicine.registry.ModItems.SYRINGE.get())
+                || st.is(faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get())
+                || st.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem;
+    }
+
+    /** Сервер, каждый тик: крышка закрыта и есть работа — идёт цикл; в конце всё чистое и стерильное. */
+    public void sterilizerTick() {
+        if (hot > 0) hot--;
+        if (viewers > 0 || !needsWork()) {
+            if (viewers == 0) cycle = 0;
+            return;
+        }
+        cycle++;
+        if (cycle % 40 == 0 && level instanceof net.minecraft.server.level.ServerLevel sl)
+            sl.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0,
+                    worldPosition.getZ() + 0.5, 1, 0.15, 0.05, 0.15, 0.005);
+        if (cycle < STERILIZE_TICKS) return;
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack st = items.get(i);
+            if (st.is(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get()))
+                items.set(i, new ItemStack(faygolover.rpmedicine.registry.ModItems.SYRINGE.get(), st.getCount()));
+            else if (st.is(faygolover.rpmedicine.registry.ModItems.DIRTY_TEST_TUBE.get()))
+                items.set(i, new ItemStack(faygolover.rpmedicine.registry.ModItems.TEST_TUBE.get(), st.getCount()));
+            else if (st.getItem() instanceof faygolover.rpmedicine.item.SurgicalInstrumentItem)
+                faygolover.rpmedicine.item.SurgicalInstrumentItem.setSterile(st, true);
+        }
+        cycle = 0;
+        hot = 20 * 60;
+        changed();
+        HospitalGeoBlock.steam(level, worldPosition, true);
+    }
+
+    /** Положить стопку в стерилизатор (ПКМ предметом по нему); вернуть, что не влезло. */
+    public ItemStack insert(ItemStack st) {
+        st = st.copy();
+        for (int i = 0; i < items.size() && !st.isEmpty(); i++) {
+            ItemStack cur = items.get(i);
+            if (cur.isEmpty()) {
+                items.set(i, st);
+                st = ItemStack.EMPTY;
+            } else if (ItemStack.isSameItemSameTags(cur, st) && cur.getCount() < cur.getMaxStackSize()) {
+                int n = Math.min(st.getCount(), cur.getMaxStackSize() - cur.getCount());
+                cur.grow(n);
+                st.shrink(n);
+            }
+        }
+        changed();
+        return st;
     }
 
     /** Анимация открытия на клиенте. */
@@ -127,6 +218,7 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
     protected void saveAdditional(CompoundTag t) {
         super.saveAdditional(t);
         ContainerHelper.saveAllItems(t, items);
+        if (cycle > 0) t.putInt("Cycle", cycle);
     }
 
     @Override
@@ -134,6 +226,7 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
         super.load(t);
         items = NonNullList.withSize(kind().slots, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(t, items);
+        cycle = t.getInt("Cycle");
     }
 
     @Override
@@ -144,6 +237,6 @@ public class HospitalStorageBlockEntity extends BlockEntity implements Container
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv, Player p) {
-        return new MedicalStorageMenu(id, inv, this, kind().slots / 9, kind().filter);
+        return new MedicalStorageMenu(id, inv, this, kind().slots / 9, kind().filter, sterilizerData);
     }
 }

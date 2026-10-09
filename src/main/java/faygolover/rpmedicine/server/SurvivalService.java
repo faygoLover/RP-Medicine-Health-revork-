@@ -34,6 +34,9 @@ public final class SurvivalService {
         }
         // Сон в кровати поддерживает иммунитет (второй этап, п. 5.2).
         if (sp.isSleeping()) in.immunityFactor *= s.immunitySleepFactor;
+        // Перки RP Perks через черты Core: «Живучий»/«Хрупкий» — заживление, «Турист»/«Домашний» — иммунитет.
+        in.healFactor *= faygolover.rpmedicine.integration.CoreCompat.healingFactor(sp, s);
+        in.immunityFactor *= faygolover.rpmedicine.integration.CoreCompat.immunityFactor(sp, s);
         boolean survival = !sp.isCreative() && !sp.isSpectator();
         if (Integrations.lso()) {
             in.ambientTempShift = LsoCompat.temperatureOffset(sp) * s.lsoTempScale;

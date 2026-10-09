@@ -251,6 +251,10 @@ public final class ServerConfig {
         bind("fragilePainThresholdPenalty", "«Хрупкий», «Задохлик», «Слабак»: ниже болевой порог на.");
         bind("braveShockBonus", "«Храбрый», «Волевой»: выше порог болевого шока на.");
         bind("cowardShockPenalty", "«Трусливый»: ниже порог болевого шока на.");
+        bind("fastHealingFactor", "«Живучий»: заживление ран и переломов быстрее во столько раз.");
+        bind("slowHealingFactor", "«Хрупкий»: множитель заживления ран и переломов.");
+        bind("strongImmunityFactor", "«Турист»: множитель иммунитета.");
+        bind("weakImmunityFactor", "«Домашний»: множитель иммунитета.");
         B.pop();
 
         B.comment("Последствия в игре (п. 2.4).").push("gameplay");
@@ -492,6 +496,8 @@ public final class ServerConfig {
         bind("alcoholSeizureChancePerHour", "Ломка алкоголя: шанс судорог в час.");
         bind("seizureSeconds", "Ломка алкоголя: длительность судорог, с.");
         bind("nicotineAnalgesia", "Никотин: лёгкое обезболивание за дозу.");
+        bind("nicotineHeartRate", "Никотин: прибавка к пульсу за дозу, уд/мин.");
+        bind("smokeLungDamage", "Курение: повреждение лёгких за дозу, % (проходит само).");
         bind("alcoholicTolerance", "Перк «Закалённый алкоголик»: стартовая толерантность к алкоголю.");
         bind("smokerNicotineTolerance", "Перк «Курильщик»: стартовая толерантность к никотину.");
         bind("caffeineAddictTolerance", "Перк «Зависимость от кофеина»: стартовая толерантность к кофеину.");

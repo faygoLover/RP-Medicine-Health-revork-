@@ -168,6 +168,15 @@ public final class InteractionHandler {
             event.setCancellationResult(InteractionResult.CONSUME);
             return;
         }
+        // Свой стерилизатор (с инвентарём) — всегда, без карты функций датапака: предмет внутрь, цикл идёт сам.
+        if (faygolover.rpmedicine.hospital.HospitalStorageBlockEntity.sterilizable(p.getMainHandItem())
+                && event.getLevel().getBlockEntity(event.getPos()) instanceof faygolover.rpmedicine.hospital.HospitalStorageBlockEntity sbe
+                && sbe.kind() == faygolover.rpmedicine.hospital.HospitalGeoBlock.Kind.STERILIZER) {
+            if (!event.getLevel().isClientSide) putInSterilizer(p, event.getLevel(), event.getPos());
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.CONSUME);
+            return;
+        }
         // Стерилизатор: грязные шприцы и пробирки (вся стопка) снова чистые.
         if ((p.getMainHandItem().is(faygolover.rpmedicine.registry.ModItems.DIRTY_SYRINGE.get())
                 || p.getMainHandItem().is(faygolover.rpmedicine.registry.ModItems.DIRTY_TEST_TUBE.get()))
@@ -328,5 +337,21 @@ public final class InteractionHandler {
             MedicalData d = Medical.data(sp);
             if (d != null) d.jumps++;
         }
+    }
+
+    /**
+     * Свой стерилизатор (блок с инвентарём, замечание 09.10, М3): предмет из руки кладётся внутрь, цикл начнётся сам.
+     * Чужие блоки, назначенные стерилизатором в датапаке, стерилизуют сразу (ветки ниже).
+     */
+    private static boolean putInSterilizer(net.minecraft.world.entity.player.Player p, net.minecraft.world.level.Level level,
+                                           net.minecraft.core.BlockPos pos) {
+        if (!(level.getBlockEntity(pos) instanceof faygolover.rpmedicine.hospital.HospitalStorageBlockEntity be)
+                || be.kind() != faygolover.rpmedicine.hospital.HospitalGeoBlock.Kind.STERILIZER) return false;
+        ItemStack left = be.insert(p.getMainHandItem());
+        boolean moved = left.getCount() != p.getMainHandItem().getCount();
+        p.setItemInHand(InteractionHand.MAIN_HAND, left);
+        p.displayClientMessage(net.minecraft.network.chat.Component.translatable(moved ? "rpmedicine.sterilizer.put" : "rpmedicine.sterilizer.full"), true);
+        if (moved) faygolover.rpmedicine.hospital.HospitalGeoBlock.lidSound(level, pos, faygolover.rpmedicine.hospital.HospitalGeoBlock.Kind.STERILIZER, false);
+        return true;
     }
 }

@@ -338,7 +338,8 @@ public final class Treatments {
     public static final java.util.Set<String> FORCEABLE = java.util.Set.of(
             "nothing_to_dress", "no_heavy_bleeding", "tourniquet_not_needed", "no_fracture", "no_chest_wound", "no_tension",
             "already_active", "no_pain", "no_bleeding", "no_internal", "volume_ok", "saline_limit", "no_shockable",
-            "no_dislocation", "no_foreign_body", "nothing_to_suture", "ammonia_threat", "occlusive_already", "splint_already");
+            "no_dislocation", "no_foreign_body", "nothing_to_suture", "ammonia_threat", "occlusive_already", "splint_already",
+            "no_opioids", "no_fever", "sugar_normal", "no_bradycardia", "no_agitation");
 
     /** Процедура в сознании на столе с фиксацией: без обезболивания — сильная острая боль. */
     static void awakeProcedurePain(MedicalState m, MedicalSettings s) {

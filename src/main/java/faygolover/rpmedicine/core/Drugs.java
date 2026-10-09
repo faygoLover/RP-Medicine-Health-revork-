@@ -17,6 +17,10 @@ public final class Drugs {
     public static String check(MedicalState m, BodyPart part, Drug d, MedicalSettings s) {
         if (d.form() == Drug.Form.PILL && m.down != Down.NONE) return "must_be_conscious";
         if (d.special() == Drug.Special.OPIOID_ANTIDOTE && !opioidsActive(m)) return "no_opioids";
+        if (d.form() != Drug.Form.TOPICAL && d.special() == Drug.Special.NONE) {
+            String why = indication(m, d, s);
+            if (why != null) return why;
+        }
         if (d.form() == Drug.Form.TOPICAL) {
             BodyPartState ps = m.part(part);
             switch (d.special()) {
@@ -34,6 +38,37 @@ public final class Drugs {
             }
         }
         return null;
+    }
+
+    /**
+     * Нужен ли препарат по его эффектам (замечание 09.10, М5): null — нужен (хоть один эффект к месту или эффект
+     * без простого показания, например антибиотик); иначе причина «не нужно» от первого неуместного эффекта.
+     * Побочные эффекты (угнетение дыхания, печень, иммунитет, урежение пульса) не считаются.
+     */
+    static String indication(MedicalState m, Drug d, MedicalSettings s) {
+        String reason = null;
+        for (Drug.Dose dose : d.effects()) {
+            String why;
+            switch (dose.effect()) {
+                case ANALGESIA -> why = m.rawPain >= 5 ? null : "no_pain";
+                case ANTIPYRETIC -> why = m.bodyTemp >= s.normalBodyTemp + 0.9 ? null : "no_fever";
+                case INSULIN -> why = m.bloodSugar >= 8 ? null : "sugar_normal";
+                case HEART_RATE -> {
+                    if (dose.strength() <= 0) continue;
+                    why = m.heartRate < 60 || m.heart != MedicalState.Heart.NORMAL ? null : "no_bradycardia";
+                }
+                case SEDATION -> why = m.seizureSeconds > 0 || Substances.anyWithdrawal(m, s) ? null : "no_agitation";
+                case RESP_DEPRESSION, LIVER_TOXICITY, IMMUNOSUPPRESSION -> {
+                    continue;
+                }
+                default -> {
+                    return null;
+                }
+            }
+            if (why == null) return null;
+            if (reason == null) reason = why;
+        }
+        return reason;
     }
 
     /** Поверхностная рана: ожог или неглубокая (мазь лечит только такие). */
