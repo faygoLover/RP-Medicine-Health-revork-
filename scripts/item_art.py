@@ -107,7 +107,6 @@ ICONS = {
     "osteosynthesis_kit": ("drawn", "osteosynthesis_kit"),
     "chest_drain": ("drawn", "chest_drain"),
     "bone_saw": ("drawn", "bone_saw"),
-    "field_surgery_kit": HD + "textures/item/surgicalinstrument.png",
     # Протезы, органы, конечности
     "prosthetic_foot": ("drawn", "prosthetic_foot"),
     "peg_leg": ("drawn", "peg_leg"),
@@ -192,8 +191,6 @@ GEO = {
                     use="dress", display=HD + "models/displaysettings/bengdai.item.json"),
     "splint": dict(geo=HD + "geo/bonefix.geo.json", tex=("hue", HD + "textures/item/bonefix.png", 0.55),
                    anim=HD + "animations/bonefix.animation.json", use="bonefix", display=HD + "models/displaysettings/bonefix.item.json"),
-    "field_surgery_kit": dict(geo=HD + "geo/surg.geo.json", tex=HD + "textures/item/surg.png", anim=HD + "animations/surg.animation.json",
-                              use="surg", display=HD + "models/displaysettings/surg.item.json"),
     # Флаконы с таблетками
     "ibuprofen": dict(HD_BOTTLE, tex=HD + "textures/item/bottle7.png"),
     "tramadol": dict(HD_BOTTLE, tex=HD + "textures/item/bottle2.png"),

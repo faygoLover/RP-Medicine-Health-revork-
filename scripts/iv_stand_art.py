@@ -82,6 +82,23 @@ def main():
 
     base = [e for e in neg["elements"]] + [up(e) for e in pos["elements"] if e.get("name") != "iv_bag"]
     bags = [up(e) for e in pos["elements"] if e.get("name") == "iv_bag"]
+    # Замечание 10.10, Ф23: у пакета 1 картинка вдвое выше — со свисающим шлангом. Полные пакеты — без шланга
+    # (верхняя половина картинки), пустые — со шлангом; четвёртый пакет — на южном конце перекладины.
+    tall = next(e for e in bags if e["to"][1] - e["from"][1] > 15)
+    tu = tall["faces"].get("east", tall["faces"].get("west"))["uv"]
+    half_uv = [tu[0], tu[1], tu[2], tu[1] + (tu[3] - tu[1]) / 2]
+    south = json.loads(json.dumps(bags[0]))
+    south["from"][2] = south["to"][2] = 12
+    south["rotation"]["origin"][2] = 13
+    bags.append(south)
+
+    def variant(e, hose):
+        e = json.loads(json.dumps(e))
+        top = e["to"][1]
+        e["from"][1] = top - (20 if hose else 10)
+        for f in e["faces"].values():
+            f["uv"] = list(tu) if hose else list(half_uv)
+        return e
     textures = {"1": "rpmedicine:block/iv_stand", "particle": "rpmedicine:block/iv_stand"}
     write(os.path.join(ASSETS, "models", "block", "iv_stand.json"),
           {"credit": "Industrial Hellscape (YellowUboat, MIT), без пакетов", "render_type": "minecraft:cutout",
@@ -93,7 +110,7 @@ def main():
             write(os.path.join(ASSETS, "models", "block", f"iv_bag_{i}_{k}.json"),
                   {"texture_size": pos.get("texture_size", [32, 32]),
                    "textures": {"1": f"rpmedicine:block/iv_bag_{k}", "particle": f"rpmedicine:block/iv_bag_{k}"},
-                   "elements": [e]})
+                   "elements": [variant(e, k.startswith("empty"))]})
     variants = {}
     for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
         variants[f"facing={f},upper=false"] = {"model": "rpmedicine:block/iv_stand", **({"y": y} if y else {})}

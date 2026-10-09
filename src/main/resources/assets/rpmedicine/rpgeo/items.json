@@ -5,12 +5,6 @@
     "animations": "rpmedicine:rpgeo/splint.anim.json",
     "use": "bonefix"
   },
-  "rpmedicine:field_surgery_kit": {
-    "geo": "rpmedicine:rpgeo/field_surgery_kit.geo.json",
-    "texture": "rpmedicine:textures/geo/field_surgery_kit.png",
-    "animations": "rpmedicine:rpgeo/field_surgery_kit.anim.json",
-    "use": "surg"
-  },
   "rpmedicine:ibuprofen": {
     "geo": "rpmedicine:rpgeo/ibuprofen.geo.json",
     "texture": "rpmedicine:textures/geo/ibuprofen.png",
@@ -142,7 +136,6 @@
     "geo": "rpmedicine:rpgeo/blood_bag.geo.json",
     "texture": "rpmedicine:textures/geo/blood_bag.png",
     "animations": "rpmedicine:rpgeo/blood_bag.anim.json",
-    "use": "use",
     "fit": true,
     "size": 0.95,
     "hide": [
@@ -156,7 +149,6 @@
     "geo": "rpmedicine:rpgeo/saline.geo.json",
     "texture": "rpmedicine:textures/geo/saline.png",
     "animations": "rpmedicine:rpgeo/saline.anim.json",
-    "use": "use",
     "fit": true,
     "size": 0.95,
     "hide": [
@@ -170,7 +162,6 @@
     "geo": "rpmedicine:rpgeo/empty_blood_bag.geo.json",
     "texture": "rpmedicine:textures/geo/empty_blood_bag.png",
     "animations": "rpmedicine:rpgeo/empty_blood_bag.anim.json",
-    "use": "use",
     "fit": true,
     "size": 0.95,
     "hide": [
@@ -192,6 +183,11 @@
       "righthand",
       "lefthand_pos",
       "righthand_pos"
+    ],
+    "hide_static": [
+      "injector2",
+      "injector_cap2",
+      "injector_cap3"
     ]
   },
   "rpmedicine:lr_cms": {
@@ -306,20 +302,6 @@
     "fit": true,
     "size": 0.95
   },
-  "rpmedicine:stabilization_kit": {
-    "geo": "rpmedicine:rpgeo/stabilization_kit.geo.json",
-    "texture": "rpmedicine:textures/geo/stabilization_kit.png",
-    "animations": "rpmedicine:rpgeo/stabilization_kit.anim.json",
-    "use": "use",
-    "fit": true,
-    "size": 1.2000000000000002,
-    "hide": [
-      "lefthand",
-      "righthand",
-      "lefthand_pos",
-      "righthand_pos"
-    ]
-  },
   "rpmedicine:antibiotic_ointment": {
     "geo": "rpmedicine:rpgeo/antibiotic_ointment.geo.json",
     "texture": "rpmedicine:textures/geo/antibiotic_ointment.png",
@@ -345,7 +327,12 @@
       "lefthand",
       "righthand",
       "lefthand_pos",
-      "righthand_pos"
+      "righthand_pos",
+      "injector",
+      "injector_cap",
+      "injector2",
+      "injector_cap2",
+      "injector_cap3"
     ]
   },
   "rpmedicine:antiseptic": {
@@ -388,7 +375,6 @@
     "geo": "rpmedicine:rpgeo/used_iv_bag.geo.json",
     "texture": "rpmedicine:textures/geo/used_iv_bag.png",
     "animations": "rpmedicine:rpgeo/used_iv_bag.anim.json",
-    "use": "use",
     "fit": true,
     "size": 0.95,
     "hide": [
@@ -415,18 +401,6 @@
     "texture": "rpmedicine:textures/geo/hemostat.png",
     "fit": true,
     "size": 0.9,
-    "hide": [
-      "lefthand",
-      "righthand",
-      "lefthand_pos",
-      "righthand_pos"
-    ]
-  },
-  "rpmedicine:surgical_tweezers": {
-    "geo": "rpmedicine:rpgeo/surgical_tweezers.geo.json",
-    "texture": "rpmedicine:textures/geo/surgical_tweezers.png",
-    "fit": true,
-    "size": 0.75,
     "hide": [
       "lefthand",
       "righthand",
@@ -469,5 +443,19 @@
   "rpmedicine:dirty_test_tube": {
     "geo": "rpmedicine:rpgeo/dirty_test_tube.geo.json",
     "texture": "rpmedicine:textures/geo/dirty_test_tube.png"
+  },
+  "rpmedicine:painkillers": {
+    "geo": "rpmedicine:rpgeo/painkillers.geo.json",
+    "texture": "rpmedicine:textures/geo/painkillers.png",
+    "animations": "rpmedicine:rpgeo/painkillers.anim.json",
+    "use": "use",
+    "fit": true,
+    "size": 0.4,
+    "hide": [
+      "lefthand",
+      "righthand",
+      "lefthand_pos",
+      "righthand_pos"
+    ]
   }
 }

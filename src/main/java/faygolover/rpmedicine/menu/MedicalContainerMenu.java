@@ -71,11 +71,11 @@ public class MedicalContainerMenu extends AbstractContainerMenu {
             for (int i = 0; i < size; i++) addSlot(new SlotItemHandler(handler, i, lay.xs[i % lay.xs.length], lay.ys[i / lay.xs.length]));
             top = lay.invTop;
         } else {
-            int cols = Math.min(9, size);
-            int rows = (size + 8) / 9;
+            int cols = columns(size);
+            int rows = (size + cols - 1) / cols;
             int left = 8 + (9 - cols) * 9;
             for (int i = 0; i < size; i++) {
-                addSlot(new SlotItemHandler(handler, i, left + (i % 9) * 18, 18 + (i / 9) * 18));
+                addSlot(new SlotItemHandler(handler, i, left + (i % cols) * 18, 18 + (i / cols) * 18));
             }
             top = 18 + rows * 18 + 14;
         }
@@ -96,7 +96,6 @@ public class MedicalContainerMenu extends AbstractContainerMenu {
     /** Раскладка ячеек под нарисованный фон: столбцы, строки, где начинается инвентарь, высота окна. */
     public record Layout(int[] xs, int[] ys, int invTop, int height, int imageHeight, int texHeight, String texture) {
         public static Layout of(int size) {
-            if (size == 8) return new Layout(new int[]{32, 64, 96, 128}, new int[]{50, 79}, 140, 223, 132, 770, "medical_pouch");
             // Аптечка — без рисунка (замечание 06.10): обычная сетка.
             return null;
         }
@@ -107,7 +106,13 @@ public class MedicalContainerMenu extends AbstractContainerMenu {
     }
 
     public int containerRows() {
-        return (handler.getSlots() + 8) / 9;
+        int cols = columns(handler.getSlots());
+        return (handler.getSlots() + cols - 1) / cols;
+    }
+
+    /** Столбцов в сетке: аптечка 12 — 4×3, подсумок 6 — 3×2 (замечание 10.10, Ф1–Ф2). */
+    public static int columns(int size) {
+        return size == 12 ? 4 : size == 6 ? 3 : Math.min(9, size);
     }
 
     @Override

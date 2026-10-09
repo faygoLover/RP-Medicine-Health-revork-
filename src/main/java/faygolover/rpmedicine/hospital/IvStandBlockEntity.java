@@ -38,13 +38,13 @@ import java.util.UUID;
  * препарат по мере того, как капает (решения, п. 1.16). Отошёл дальше шланга — катетер вырван, рана на руке.
  */
 public class IvStandBlockEntity extends BlockEntity {
-    public static final int HOOKS = 3;
+    public static final int HOOKS = 4;   // четыре конца перекладины (замечание 10.10, Ф23)
     /** Вид пакета на крючке (и для отрисовки). */
     public static final byte NONE = 0, SALINE = 1, BLOOD = 2, EMPTY_SALINE = 3, EMPTY_BLOOD = 4, SALINE_YELLOW = 5, SALINE_MILKY = 6;
     /** NBT пакета: объём (если начат) и добавленный препарат. */
     public static final String ML = "Ml", ADD = "Add", ADD_DOSES = "AddDoses";
 
-    private final ItemStack[] bags = {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
+    private final ItemStack[] bags = {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
     private final double[] volume = new double[HOOKS];
     @Nullable
     private UUID patient;
@@ -56,7 +56,7 @@ public class IvStandBlockEntity extends BlockEntity {
     public final byte[] clientKinds = new byte[HOOKS];
     public final float[] clientVolume = new float[HOOKS];
     public final float[] clientMax = new float[HOOKS];
-    public final String[] clientAdd = {"", "", ""};
+    public final String[] clientAdd = {"", "", "", ""};
     public final float[] clientAddDoses = new float[HOOKS];
     public int clientArm = -1;
     public int clientActive = -1;

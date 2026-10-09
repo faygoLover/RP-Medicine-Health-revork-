@@ -7,6 +7,7 @@
 import colorsys
 import copy
 import json
+import random
 import math
 import os
 import sys
@@ -1028,15 +1029,551 @@ def part_d():
     # Слот Curios «руки» у игрока и перчатки в нём.
     write(os.path.join(ROOT, "data", "rpmedicine", "curios", "entities", "rpmedicine.json"), {"entities": ["player"], "slots": ["hands"]})
     write(os.path.join(ROOT, "data", "curios", "tags", "items", "hands.json"), {"replace": False, "values": ["rpmedicine:surgical_gloves"]})
-    # Текстура перчаток на руках (Curios, слот «руки»): рукава брони Self Expression (layer 1), голубые.
-    arm = Image.open(src_file("selfexpression", "textures/models/armor/balaclava__layer_1.png")).convert("RGBA")
-    arm = recolor(arm, lambda r, g, b, a: rgb(0.57, 0.38 + hls(r, g, b)[1] * 1.6, 0.62) + (a,))
+    # Текстура перчаток на руках (Curios, слот «руки», замечание Ф31): своя кисть 4×5×4 (широкая рука) и 3×5×4 (тонкая),
+    # развёртка как у куба Minecraft. Голубой латекс, валик манжеты сверху, кончики пальцев темнее.
+    rnd = random.Random("gloves_worn")
+    arm = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    for v0, w in ((0, 4), (16, 3)):
+        d, h = 4, 5
+        for y in range(d + h):
+            for x in range(2 * (d + w)):
+                if y < d and not (d <= x < d + 2 * w):
+                    continue
+                k = 1 + (rnd.random() * 2 - 1) * 0.05
+                if y == d:
+                    k *= 1.18      # валик манжеты
+                elif y == d + 1:
+                    k *= 0.86
+                elif y == d + h - 1:
+                    k *= 0.9       # кончики пальцев
+                if y < d and x >= d + w:
+                    k *= 0.9       # низ (ладонь к земле)
+                arm.putpixel((x, v0 + y), (round(min(255, 132 * k)), round(min(255, 184 * k)), round(min(255, 214 * k)), 255))
     save(arm, "textures/models/surgical_gloves_worn.png")
-    credit("textures/models/surgical_gloves_worn.png", "selfexpression", "textures/models/armor/balaclava__layer_1.png", "голубые")
+
+
+# ================================================================== замечания 10.10: свои модели по сетке Minecraft
+import pixel_kit as pk  # noqa: E402
+
+M = pk.Material
+STEEL = M((196, 202, 210), 0.05, 0.72, 1.1)
+CHROME = M((214, 218, 226), 0.04, 0.68, 1.12)
+WHITE = M((232, 234, 238), 0.03, 0.8, 1.05)
+BLACK = M((40, 40, 44), 0.06, 0.8, 1.15)
+CLEAR = M((206, 222, 232), 0.03, 0.85, 1.05, alpha=190)
+FONT = {  # 3×5 цифры для экранов
+    "0": ["###", "#.#", "#.#", "#.#", "###"], "1": [".#.", "##.", ".#.", ".#.", "###"], "2": ["###", "..#", "###", "#..", "###"],
+    "3": ["###", "..#", "###", "..#", "###"], "4": ["#.#", "#.#", "###", "..#", "..#"], "5": ["###", "#..", "###", "..#", "###"],
+    "6": ["###", "#..", "###", "#.#", "###"], "7": ["###", "..#", ".#.", ".#.", ".#."], "8": ["###", "#.#", "###", "#.#", "###"],
+    "9": ["###", "#.#", "###", "..#", "###"], ".": ["...", "...", "...", "...", ".#."],
+}
+
+
+def digits(text):
+    rows = ["", "", "", "", ""]
+    for i, ch in enumerate(text):
+        g = FONT[ch]
+        for r in range(5):
+            rows[r] += ("." if i else "") + g[r]
+    return rows
+
+
+def px_item(kit, display, icon_view=(-150, 25), particle=None):
+    img, els = kit.build()
+    save(img, f"textures/item/m/{kit.name}.png")
+    tex = f"rpmedicine:item/m/{kit.name}"
+    write(model_path(kit.name), {"textures": {"t": tex, "particle": particle or tex}, "elements": els, "display": copy.deepcopy(display)})
+    drop_geo(kit.name)
+    built.append(f"rpmedicine:item/{kit.name}")
+    icon_from_json(kit.name, yaw=icon_view[0], pitch=icon_view[1])
+
+
+def disp(base, scale=1.0, **over):
+    d = copy.deepcopy(base)
+    for k, v in over.items():
+        d[k] = v
+    if scale != 1.0:
+        for v in d.values():
+            v["scale"] = [round(c * scale, 4) for c in v.get("scale", [1, 1, 1])]
+    return d
+
+
+GUI_3D = {"rotation": [30, 225, 0], "translation": [0, 0, 0], "scale": [0.8, 0.8, 0.8]}
+SMALL3 = dict(HELD, gui=GUI_3D, fixed={"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [0.8, 0.8, 0.8]})
+
+
+def cross_patch(w=8, h=8):
+    rows = []
+    for y in range(h):
+        r = ""
+        for x in range(w):
+            mid_x, mid_y = abs(x - (w - 1) / 2) < 1.1, abs(y - (h - 1) / 2) < 1.1
+            inner = 1 <= x < w - 1 and 1 <= y < h - 1
+            r += "r" if inner and (mid_x or mid_y) else ("w" if inner else "k")
+        rows.append(r)
+    return pk.pattern(rows, {"r": (200, 36, 36), "w": (238, 238, 238), "k": (60, 52, 40)})
+
+
+def part_e():
+    # ---------------- И2/Ф2. Подсумок IFAK: койот, клапан с молнией, красная ручка-отрыв, нашивка, стропы MOLLE сзади.
+    k = pk.Px("medical_pouch", density=2)
+    coy = M((128, 110, 78), 0.07, 0.75, 1.06, speck=((112, 96, 66), 0.12))
+    k.box([3, 2.5, 5.5], [13, 10.5, 10.5], coy)
+    k.box([2.5, 10.5, 5], [13.5, 12, 11], M((110, 94, 66), 0.06, 0.72, 1.08),
+          decals={"up": pk.pattern(["." * 22, "z" * 22, "." * 22], {"z": (44, 40, 34)})})
+    k.box([4, 3.5, 10.5], [12, 9.5, 11.5], coy, decals={"south": cross_patch(16, 12)})
+    k.box([7, 12, 7.5], [9, 13.5, 8.5], M((196, 40, 40), 0.06, 0.75, 1.1))          # красная ручка
+    for y in (4, 7):
+        k.box([2.5, y, 4.5], [13.5, y + 1, 5.5], M((94, 86, 60), 0.05, 0.75))       # стропы MOLLE
+    k.box([13, 6, 7], [13.5, 8.5, 9], BLACK)                                         # пряжка
+    k.box([2.5, 6, 7], [3, 8.5, 9], BLACK)
+    # Поворот в инвентаре — как у аптечки (Ф2).
+    px_item(k, disp(SMALL3, 1.0, gui={"rotation": [30, 225, 0], "translation": [0, 0.5, 0], "scale": [0.95, 0.95, 0.95]}))
+
+    # ---------------- Ф16. Дефибриллятор: коробчатый, экран только спереди, ручка сверху, сумка с электродами сбоку.
+    k = pk.Px("defibrillator", density=1)
+    yel = M((236, 190, 36), 0.05, 0.72, 1.06)
+    aed_front = pk.both(
+        pk.pattern(["kkkkkkkkkk", "kgggggggk.", "kg.g.ggg.k", "kgg.#.gggk", "kggggg#ggk", "kkkkkkkkkk"],
+                   {"k": (30, 32, 36), "g": (24, 60, 40), "#": (90, 230, 120), ".": (24, 60, 40)}),
+    )
+
+    def aed_south(img, x0, y0, w, h):
+        # Экран сверху, большая кнопка разряда и знак сердца внизу.
+        pk.screen((24, 56, 36), (90, 230, 120), ["...#...", "..#.#..", "##...##"])(img, x0 + 2, y0 + 1, w - 4, 5)
+        pk.pattern([".ooo.", "ooooo", "oo#oo", "ooooo", ".ooo."], {"o": (226, 92, 36), "#": (250, 240, 220)})(img, x0 + 1, y0 + 6, w // 2, 6)
+        pk.pattern(["r.r", "rrr", ".r."], {"r": (200, 30, 30)})(img, x0 + w // 2, y0 + 6, w // 2, 6)
+    k.box([2, 1, 5], [14, 12, 11], yel, decals={"south": aed_south})
+    k.box([2, 0, 5], [14, 1, 11], M((60, 60, 64), 0.05, 0.8))                       # тёмное дно
+    k.box([5, 12, 7.5], [6, 13.5, 8.5], BLACK)                                        # ручка
+    k.box([10, 12, 7.5], [11, 13.5, 8.5], BLACK)
+    k.box([5, 13.5, 7.5], [11, 14.5, 8.5], BLACK)
+    k.box([14, 2, 6], [15.5, 10, 10], M((54, 56, 62), 0.06, 0.75),                    # сумка электродов, прилегает к корпусу
+          decals={"east": pk.pattern(["wwww", "w..w", "w..w", "wwww"], {"w": (230, 230, 230)})})
+    k.box([12.5, 9, 10.5], [14.5, 10, 11.5], BLACK)                                   # кабель к сумке
+    px_item(k, disp(HELD, 1.0, gui=GUI_3D, fixed={"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [0.9, 0.9, 0.9]}))
+
+    # ---------------- Ф13. Мешок Амбу: прозрачный голубой мешок, клапан, маска с чёрной манжетой, резервуар.
+    k = pk.Px("ambu_bag", density=1)
+    bag = M((130, 176, 220), 0.04, 0.82, 1.06, alpha=215)
+    k.box([2, 5, 5], [10, 11, 11], bag, decals={"south": pk.stripes((110, 156, 204), 2, horizontal=False)})
+    k.box([1, 6, 6], [2, 10, 10], bag)
+    k.box([10, 6, 6], [11, 10, 10], bag)
+    k.box([11, 7, 7], [13, 9, 9], M((70, 120, 200), 0.05, 0.75))                      # клапан
+    k.box([13, 4.5, 4.5], [14, 11.5, 11.5], BLACK)                                    # манжета маски
+    k.box([14, 5.5, 5.5], [15.5, 10.5, 10.5], CLEAR)                                  # купол маски
+    k.box([0, 7, 7], [1, 9, 9], M((70, 160, 90), 0.05, 0.75))                         # вход резервуара
+    px_item(k, disp(HELD, 0.9, gui=GUI_3D))
+
+    # ---------------- Ф14. Ларингоскоп: рифлёная хромированная рукоять, клинок Макинтош вперёд, лампочка у кончика.
+    k = pk.Px("laryngoscope", density=2)
+    k.box([2, 2, 7], [4.5, 10, 9.5], CHROME, decals={f: pk.stripes((150, 156, 166), 2) for f in ("north", "south", "east", "west")})
+    k.box([2, 10, 7], [4.5, 10.5, 9.5], STEEL)
+    k.box([4.5, 9.5, 7.5], [13, 10.5, 9], STEEL)                                      # клинок
+    k.box([4.5, 10.5, 7.75], [10, 11, 8.75], STEEL)                                   # ребро клинка
+    k.box([13, 9, 7.5], [14.5, 10, 9], STEEL, rot=((13, 9.5, 8.25), "z", -22.5))       # загнутый кончик
+    k.box([11.5, 9, 8], [12.5, 9.5, 8.5], M((250, 240, 170), 0.02, 1.0))             # лампочка
+    px_item(k, TOOL)
+
+    # ---------------- Ф29/Ф15. Термометр электронный — короткий: белый корпус, ЖК-окошко с «36.6», синяя кнопка, щуп.
+    k = pk.Px("thermometer", density=2)
+
+    def thermo_face(img, x0, y0, w, h):
+        pk.screen((150, 172, 140), (30, 40, 30), digits("36"))(img, x0, y0 + 1, w, 7)
+        pk.pattern(["bb", "bb"], {"b": (60, 120, 210)})(img, x0, y0 + 9, w, 3)
+    k.box([6.5, 5, 7.25], [10, 12, 8.75], WHITE, decals={"south": thermo_face})
+    k.box([6.5, 12, 7.25], [10, 13, 8.75], M((60, 120, 210), 0.05, 0.75))
+    k.box([7.75, 2, 7.75], [8.75, 5, 8.25], STEEL)
+    px_item(k, disp(TOOL, 0.8))
+
+    # ---------------- Ф15. Глюкометр: корпус, экран «5.4», кнопки, тест-полоска с каплей крови.
+    k = pk.Px("glucometer", density=2)
+
+    def gluco_face(img, x0, y0, w, h):
+        pk.screen((150, 172, 140), (30, 40, 30), digits("5.4"))(img, x0 + 1, y0 + 2, w - 2, 9)
+        pk.pattern(["bb..gg", "bb..gg"], {"b": (60, 120, 210), "g": (150, 154, 160)})(img, x0, y0 + 13, w, 4)
+    k.box([5, 2, 7], [11, 12, 9], M((226, 230, 236), 0.03, 0.78), decals={"south": gluco_face})
+    k.box([7, 12, 7.75], [9, 12.5, 8.25], BLACK)                                      # щель
+    k.box([7.5, 12.5, 7.85], [8.5, 15, 8.15], WHITE, decals={"south": pk.pattern(["r", "r"], {"r": (190, 30, 40)})})
+    px_item(k, disp(SMALL3, 1.1))
+
+    # ---------------- Ф38. Ланцет: маленький, фиолетовый корпус с белыми рёбрами, розовый колпачок, игла.
+    k = pk.Px("lancet", density=2)
+    k.box([7.5, 4, 7.5], [8.5, 8, 8.5], M((150, 100, 200), 0.05, 0.75), decals={f: pk.stripes((236, 236, 240), 3) for f in ("north", "south", "east", "west")})
+    k.box([7.25, 8, 7.25], [8.75, 10, 8.75], M((236, 130, 170), 0.05, 0.75))
+    k.box([7.75, 10, 7.75], [8.25, 10.5, 8.25], M((236, 130, 170), 0.05, 0.75))
+    k.box([7.9, 3, 7.9], [8.1, 4, 8.1], STEEL, edge=False)
+    px_item(k, disp(SMALL3, 0.8))
+
+    # ---------------- Ф26. Пульсоксиметр: прищепка (синий верх, серый низ, резиновая щель), экран сверху — в 3 раза меньше.
+    k = pk.Px("pulse_oximeter", density=1)
+
+    def oxi_top(img, x0, y0, w, h):
+        pk.screen((20, 22, 26), (240, 70, 60), digits("98"))(img, x0 + 1, y0 + 1, w - 2, h - 2)
+    k.box([4, 3, 5], [12, 6, 11], M((70, 74, 82), 0.05, 0.75))
+    k.box([4, 7, 5], [12, 10, 11], M((60, 110, 180), 0.05, 0.75), decals={"up": oxi_top})
+    k.box([4.5, 6, 5.5], [11.5, 7, 10.5], M((36, 36, 40), 0.05, 0.85))               # резиновая щель под палец
+    px_item(k, disp(SMALL3, 0.33))
+
+    # ---------------- Ф27. Тонометр: циферблат со стрелкой, хромированный обод, свёрнутая манжета, груша.
+    k = pk.Px("tonometer", density=2)
+
+    def dial(img, x0, y0, w, h):
+        cx, cy, r = x0 + (w - 1) / 2, y0 + (h - 1) / 2, min(w, h) / 2 - 0.5
+        for y in range(h):
+            for x in range(w):
+                d = math.hypot(x0 + x - cx, y0 + y - cy)
+                if d > r:
+                    img.putpixel((x0 + x, y0 + y), (0, 0, 0, 0))
+                elif d > r - 1.2:
+                    img.putpixel((x0 + x, y0 + y), (190, 196, 206, 255))
+                else:
+                    img.putpixel((x0 + x, y0 + y), (244, 244, 238, 255))
+        for a in range(0, 300, 30):   # деления
+            t = math.radians(a - 240)
+            img.putpixel((int(round(cx + math.cos(t) * (r - 2))), int(round(cy + math.sin(t) * (r - 2)))), (30, 30, 30, 255))
+        for i in range(int(r - 2)):    # стрелка
+            t = math.radians(-60)
+            img.putpixel((int(round(cx + math.cos(t) * i)), int(round(cy + math.sin(t) * i))), (200, 30, 30, 255))
+    k.box([4, 6, 8.5], [11, 13, 9.5], CHROME, decals={"south": dial})
+    k.box([5, 7, 7.5], [10, 12, 8.5], CHROME)
+    k.box([3, 1, 6], [13, 5.5, 10], M((40, 52, 92), 0.06, 0.75),
+          decals={"south": pk.pattern(["ww" * 8, "." * 16, "vvvvvvvvvvvvvvvv"], {"w": (230, 230, 230), "v": (90, 104, 150)})})
+    k.box([11.5, 5.5, 7.25], [14, 9, 9.25], BLACK, decals={f: pk.stripes((24, 24, 28), 2) for f in ("north", "south", "east", "west")})
+    k.box([12.25, 9, 7.75], [13.25, 10, 8.75], CHROME)
+    px_item(k, disp(SMALL3, 1.0))
+
+    # ---------------- Ф15. Плевральный дренаж: клапан Гимлиха (голубой корпус, белая лепестковая мембрана, стрелка), коннекторы, трубка.
+    k = pk.Px("chest_drain", density=2)
+    k.box([6, 4, 7], [10, 10, 9], M((110, 170, 230), 0.04, 0.8, alpha=215),
+          decals={"south": pk.pattern(["..ww..", "..ww..", ".wwww.", "..ww..", "..ww..", "..ww..", "..ww..", "..ww..", "..ww..", ".a..a.", "..aa.."],
+                                      {"w": (240, 240, 240), "a": (30, 60, 140)})})
+    k.box([7, 10, 7.5], [9, 11.5, 8.5], WHITE)
+    k.box([7, 2.5, 7.5], [9, 4, 8.5], WHITE)
+    k.box([7.5, 11.5, 7.75], [8.5, 14, 8.25], CLEAR)
+    k.box([8.5, 13, 7.75], [12, 14, 8.25], CLEAR)
+    k.box([11, 9, 7.75], [12, 13, 8.25], CLEAR)
+    px_item(k, disp(SMALL3, 1.1))
+
+    # ---------------- Ф15. Воздуховод Гведела: жёлтая изогнутая трубка, белый прикусной блок, фланец.
+    k = pk.Px("airway", density=2)
+    yel = M((236, 196, 64), 0.05, 0.75, 1.06)
+    k.box([4.5, 12.5, 6.5], [11.5, 13.5, 9.5], WHITE)                                  # фланец
+    k.box([6.5, 9.5, 7], [9.5, 12.5, 9], WHITE, decals={"up": pk.fill((40, 40, 40))})  # прикусной блок с просветом
+    k.box([6.5, 6, 7], [9.5, 9.5, 9], yel)
+    k.box([7.5, 4, 7], [10.5, 6.5, 9], yel, rot=((9, 5, 8), "z", 22.5))
+    k.box([9, 2.5, 7], [12, 5, 9], yel, rot=((10.5, 3.5, 8), "z", 45))
+    k.box([11, 2.5, 7], [13.5, 4.5, 9], yel)
+    px_item(k, disp(SMALL3, 1.1))
+
+    # ---------------- И21. Эндотрахеальная трубка: прозрачная с синей рентгеноконтрастной линией, манжета, коннектор, баллончик.
+    k = pk.Px("endotracheal_tube", density=2)
+    tube = M((214, 226, 234), 0.03, 0.85, 1.05, alpha=200)
+    line = pk.stripes((60, 110, 200), 99, horizontal=False)
+
+    def blue_line(img, x0, y0, w, h):
+        for y in range(h):
+            img.putpixel((x0 + w // 2, y0 + y), (60, 110, 200, 255))
+    k.box([7.5, 2, 7.5], [8.5, 9, 8.5], tube, decals={"south": blue_line})
+    k.box([8, 9, 7.5], [9, 12, 8.5], tube, rot=((8.5, 10.5, 8), "z", -22.5), decals={"south": blue_line})
+    k.box([9.5, 11.5, 7.5], [10.5, 14, 8.5], tube, rot=((10, 12.75, 8), "z", -45), decals={"south": blue_line})
+    k.box([7, 2.5, 7], [9, 5, 9], M((120, 180, 230), 0.04, 0.85, alpha=190))         # манжета
+    k.box([10.5, 13, 7.25], [13, 14.5, 8.75], WHITE)                                   # коннектор 15 мм
+    k.box([12.5, 13, 7.25], [13.5, 14.5, 8.75], M((70, 130, 210), 0.05, 0.75))
+    k.box([6, 5, 8.25], [6.5, 9, 8.75], tube)                                          # линия к баллончику
+    k.box([5.5, 9, 8], [7, 10.5, 9], M((120, 180, 230), 0.04, 0.85, alpha=200))
+    px_item(k, disp(SMALL3, 1.1))
+
+    # ---------------- Ф24. Венозный катетер: белая заглушка, прозрачная камера, зелёные крылья и порт, канюля, игла; по диагонали.
+    k = pk.Px("iv_catheter", density=2)
+    R = ((8, 8, 8), "z", 45)
+    k.box([2, 7.5, 7.5], [3.5, 8.5, 8.5], WHITE, rot=R)
+    k.box([3.5, 7.25, 7.25], [6, 8.75, 8.75], CLEAR, rot=R)
+    k.box([5.5, 6, 7.75], [7.5, 10, 8.25], M((70, 170, 80), 0.05, 0.75), rot=R)
+    k.box([6, 8.75, 7.5], [7, 9.75, 8.5], M((60, 150, 70), 0.05, 0.75), rot=R)
+    k.box([7.5, 7.75, 7.75], [11.5, 8.25, 8.25], CLEAR, rot=R)
+    k.box([11.5, 7.85, 7.85], [13.5, 8.15, 8.15], STEEL, rot=R, edge=False)
+    px_item(k, disp(TOOL, 0.6))
+
+    # ---------------- Ф33. Пинцет: две стальные бранши с насечкой, соединены сзади, кончики сходятся.
+    k = pk.Px("surgical_tweezers", density=2)
+    grip = pk.stripes((150, 156, 166), 2)
+    k.box([6.5, 4, 7.75], [7.5, 12.5, 8.25], STEEL, decals={"south": grip, "north": grip})
+    k.box([8.5, 4, 7.75], [9.5, 12.5, 8.25], STEEL, decals={"south": grip, "north": grip})
+    k.box([6.5, 12.5, 7.75], [9.5, 14, 8.25], STEEL)
+    k.box([7, 2, 7.75], [7.75, 4, 8.25], STEEL)
+    k.box([8.25, 2, 7.75], [9, 4, 8.25], STEEL)
+    px_item(k, TOOL)
+
+    # ---------------- Ф15. Кислородный баллон (блок): зелёный восьмигранный баллон, белая полоса O₂, хромированный вентиль.
+    k = pk.Px("oxygen_tank", density=1)
+    green = M((46, 128, 74), 0.05, 0.75, 1.05)
+
+    def band(img, x0, y0, w, h):
+        for y in range(2, 4):
+            for x in range(w):
+                img.putpixel((x0 + x, y0 + y), (236, 240, 236, 255))
+    k.box([5, 0, 5], [11, 1, 11], BLACK)
+    k.box([5.5, 1, 4.5], [10.5, 13, 11.5], green, decals={f: band for f in ("north", "south", "east", "west")})
+    k.box([4.5, 1, 5.5], [11.5, 13, 10.5], green, decals={f: band for f in ("north", "south", "east", "west")})
+    k.box([6.5, 13, 6.5], [9.5, 14.5, 9.5], green)
+    k.box([7, 14.5, 7], [9, 16, 9], CHROME)
+    k.box([9, 15, 7.5], [11, 15.5, 8.5], CHROME)
+    img, els = k.build()
+    save(img, "textures/block/oxygen_tank.png")
+    write(os.path.join(ASSETS, "models", "block", "oxygen_tank.json"),
+          {"textures": {"t": "rpmedicine:block/oxygen_tank", "particle": "rpmedicine:block/oxygen_tank"}, "elements": els})
+
+
+def strip_outline(icon):
+    """Убрать чёрный контур иконки (тёмные пиксели на краю силуэта): у объёмной модели он торчит рамкой (Ф6, Ф7)."""
+    im = icon.copy()
+    px = im.load()
+    w, h = im.size
+    src = icon.load()
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = src[x, y]
+            if a < 128 or (r * 30 + g * 59 + b * 11) / 100 > 70:
+                continue
+            if any(not (0 <= x + dx < w and 0 <= y + dy < h) or src[x + dx, y + dy][3] < 128
+                   for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                px[x, y] = (0, 0, 0, 0)
+    return im
+
+
+def back_plain(item, color):
+    """Спина объёмной иконки — однотонная (экран только спереди, Ф30): северные грани -> пиксель цвета color."""
+    path = model_path(item)
+    m = json.load(open(path, encoding="utf-8"))
+    tpath = os.path.join(ASSETS, "textures", "item", "m", f"{item}.png")
+    im = Image.open(tpath).convert("RGBA")
+    w, h = im.size
+    big = Image.new("RGBA", (w * 2, h * 2), (0, 0, 0, 0))
+    big.paste(im, (0, 0))
+    for y in range(h, h + 2):
+        for x in range(w, w + 2):
+            big.putpixel((x, y), tuple(color) + (255,))
+    big.save(tpath)
+    for el in m["elements"]:
+        for f, fd in el["faces"].items():
+            fd["uv"] = [round(c / 2, 4) for c in fd["uv"]]
+            if f == "north":
+                fd["uv"] = [8.1, 8.1, 8.4, 8.4]
+    write(path, m)
+
+
+def geo_box_to_faces(geo):
+    """Box UV -> UV по граням с исходными размерами (перед растяжением модели: иначе развёртка съезжает, Ф9)."""
+    for b in geo["minecraft:geometry"][0].get("bones", []):
+        for c in b.get("cubes", []):
+            uv = c.get("uv")
+            if not isinstance(uv, list):
+                continue
+            u, v = uv
+            w, h, d = c["size"]
+            f = {"east": (u, v + d, d, h), "north": (u + d, v + d, w, h), "west": (u + d + w, v + d, d, h),
+                 "south": (u + 2 * d + w, v + d, w, h), "up": (u + d, v, w, d), "down": (u + d + w, v + d, w, -d)}
+            if c.get("mirror"):
+                f["east"], f["west"] = f["west"], f["east"]
+                f = {k: (x + ww, y, -ww, hh) for k, (x, y, ww, hh) in f.items()}
+            c["uv"] = {k: {"uv": [x, y], "uv_size": [ww, hh]} for k, (x, y, ww, hh) in f.items()}
+            c.pop("mirror", None)
+    return geo
+
+
+def cut_clip(anim, src, keep_until, then=None):
+    """Новая анимация «use»: кадры src до keep_until, затем клип then (сдвинутый)."""
+    a = anim["animations"]
+    out = {"animation_length": keep_until, "bones": {}}
+    for bone, ch in a[src].get("bones", {}).items():
+        for chan, kf in ch.items():
+            if not isinstance(kf, dict):
+                continue
+            keep = {k: v for k, v in kf.items() if float(k) <= keep_until + 1e-6}
+            if keep:
+                out["bones"].setdefault(bone, {})[chan] = keep
+    if then and then in a:
+        t0 = keep_until
+        ln = float(a[then].get("animation_length", 0.3))
+        for bone, ch in a[then].get("bones", {}).items():
+            for chan, kf in ch.items():
+                if not isinstance(kf, dict):
+                    continue
+                dst = out["bones"].setdefault(bone, {}).setdefault(chan, {})
+                for k, v in kf.items():
+                    dst[f"{t0 + float(k):.4f}"] = v
+        out["animation_length"] = t0 + ln
+    anim = copy.deepcopy(anim)
+    anim["animations"]["use"] = out
+    return anim
+
+
+def part_f():
+    # Ф6–Ф8. Объём по иконкам без чёрного контура; эсмарх ровнее; гемостатик меньше.
+    hg = strip_outline(icon("hemostatic_gauze"))
+    extrude("hemostatic_gauze", hg, depth_fn=edge_depth(hg, [2, 3, 3]), display=EXTR, scale=0.8)
+    tq = strip_outline(icon("tourniquet"))
+    extrude("tourniquet", tq, depth_fn=edge_depth(tq, [2, 3, 3]), display=EXTR)
+    es = strip_outline(icon("esmarch"))
+    extrude("esmarch", es, depth_fn=edge_depth(es, [3, 4, 4]), display=EXTR)
+    oc = strip_outline(icon("occlusive_dressing"))
+    extrude("occlusive_dressing", oc, depth=1.5, display=EXTR, scale=1 / 1.5)
+    # Ф30. Гемоанализатор и сканер — экран только спереди.
+    q = Image.open(src_file("mekanism", "textures/item/portable_qio_dashboard.png")).convert("RGBA")
+    q = strip_outline(recolor(q, to_hue(hue_range(0.35, 0.5, 0.3), 0.98, sat=0.65, light=0.9)))
+    extrude("hemoanalyzer", q, depth_fn=edge_depth(q, [2, 3, 4]), display=EXTR)
+    back_plain("hemoanalyzer", (70, 72, 78))
+    sr = Image.open(src_file("mekanism", "textures/item/seismic_reader.png")).convert("RGBA")
+    for x, y in [(5, 9), (6, 9), (7, 9), (7, 8), (8, 6), (8, 7), (9, 10), (9, 11), (10, 9), (11, 9)]:
+        sr.putpixel((x, y), (90, 230, 120, 255))
+    sr = strip_outline(sr)
+    extrude("portable_scanner", sr, depth_fn=edge_depth(sr, [2, 3, 4]), display=EXTR)
+    back_plain("portable_scanner", (88, 90, 96))
+    for it in ("hemostatic_gauze", "tourniquet", "esmarch", "occlusive_dressing", "hemoanalyzer", "portable_scanner"):
+        icon_from_json(it, yaw=-160, pitch=15)
+
+    # Ф3. Набор стабилизации — аптечка sa_combat, без анимаций. Ф5. Давящая повязка — самодельный бинт Survival Instinct.
+    json_copy("stabilization_kit", "sa_combat:item/first_aid_kit")
+    json_copy("pressure_dressing", "survival_instinct:item/homemade_bandage")
+    icon_from_json("stabilization_kit")
+    icon_from_json("pressure_dressing")
+
+    # Ф18. Обезболивающее — блистер амоксициллина LR, вдвое меньше.
+    geo_like("painkillers", "lr_amoxycillin", size=0.4, note="блистер LR, меньше")
+
+    # Ф19–Ф20. Цефтриаксон — флакон, как лидокаин (бирюзовая этикетка); все флаконы вдвое меньше.
+    juice_vial("ceftriaxone", (232, 238, 228, 210), (40, 150, 150))
+    for it in ("lidocaine", "ketamine", "propofol", "norepinephrine", "iv_glucose", "iv_amino_acids", "iv_lipids", "iv_vitamins", "ceftriaxone"):
+        m = json.load(open(model_path(it), encoding="utf-8"))
+        for ctx_, v in m.get("display", {}).items():
+            if ctx_ != "gui":
+                v["scale"] = [round(c * 0.5, 4) for c in v.get("scale", [1, 1, 1])]
+        write(model_path(it), m)
+
+    # Ф17. Трамадол — полоса выше: строки 14–15 боков банки меняются местами со строками 10–11 (текстура H&D 64 px).
+    t = our_geo_tex("tramadol")
+    if t.getpixel((0, 14))[3] and hls(*t.getpixel((0, 14))[:3])[2] > 0.3:          # ещё не поднята
+        out = t.copy()
+        for x in range(32):
+            for a_, b_ in ((10, 14), (11, 15)):
+                out.putpixel((x, a_), t.getpixel((x, b_)))
+                out.putpixel((x, b_), t.getpixel((x, a_)))
+        save(out, "textures/geo/tramadol.png")
+        icon_from("tramadol", preview.geo_quads(os.path.join(GEO_DIR, "tramadol.geo.json"), os.path.join(ASSETS, "textures", "geo", "tramadol.png")))
+
+    # Ф9. Хлоргексидин: развёртка по граням до сжатия (текстуры не съезжают). Пересобрать флаконы.
+    for item, (hue, sat, light), s_ in (("antiseptic", (0.55, 0.45, 0.78), 1.0), ("chlorhexidine_hands", (0.33, 0.45, 0.8), 1.0),
+                                       ("chlorhexidine_skin", (0.93, 0.55, 0.78), 1.0), ("chlorhexidine_concentrate", (0.62, 0.7, 0.42), 1.15)):
+        geo = geo_box_to_faces(our_geo("amoxicillin"))
+        geo_scale(geo, s_, s_, s_ * 0.7)
+        t = recolor(our_geo_tex("amoxicillin"), lambda r, g, b, a, hue=hue, sat=sat, light=light:
+                    (rgb(hue, light, sat) + (a,)) if hue_range(0.45, 0.62, 0.25)(r, g, b) else None)
+        e = json.load(open(os.path.join(GEO_DIR, "items.json"), encoding="utf-8")).get("rpmedicine:amoxicillin", {})
+        geo_item(item, geo, t, fit=False, anim=our_anim("amoxicillin"), use=e.get("use"), display=our_display("amoxicillin"))
+    # Ф11/Ф37. Набор для швов и AI-2: шприц из правой руки не торчит; у набора — только «открыть и убрать».
+    geo = geo_box_to_faces(our_geo("lr_ai2"))
+    geo_scale(geo, 1.5, 1, 1)
+    gray = lambda im: recolor(im, palette_map(hue_range(0.05, 0.2, 0.2), (58, 60, 64), (196, 200, 206)))
+    geo_item("suture_kit", geo, gray(our_geo_tex("lr_ai2")), size=0.8, anim=cut_clip(our_anim("lr_ai2"), "use", 1.25, "put_away"), use="use")
+    index["rpmedicine:suture_kit"]["hide"] = ["lefthand", "righthand", "lefthand_pos", "righthand_pos",
+                                              "injector", "injector_cap", "injector2", "injector_cap2", "injector_cap3"]
+    index["rpmedicine:lr_ai2"]["hide_static"] = ["injector2", "injector_cap2", "injector_cap3"]
+
+    # Ф21. Использованный шприц — кровь на кончике иглы со всех сторон.
+    dirty = our_geo_tex("dirty_syringe")
+    g = our_geo("dirty_syringe")
+    tw = g["minecraft:geometry"][0]["description"].get("texture_width", 64)
+    k_ = dirty.size[0] / tw
+    for b in g["minecraft:geometry"][0]["bones"]:
+        for c in b.get("cubes", []):
+            o, s_ = c["origin"], c["size"]
+            if s_[1] >= 1.5 and s_[0] <= 0.6 and s_[2] <= 0.6:        # игла: тонкий куб
+                uv = c["uv"]
+                if isinstance(uv, list):
+                    u, v = uv
+                    x0, y0, x1, y1 = u, v, u + 2 * (s_[0] + s_[2]), v + s_[2] + s_[1]
+                    for yy in range(int((y1 - min(1.5, s_[1])) * k_), int(y1 * k_)):
+                        for xx in range(int(x0 * k_), int(x1 * k_) + 1):
+                            if 0 <= xx < dirty.size[0] and 0 <= yy < dirty.size[1] and dirty.getpixel((xx, yy))[3]:
+                                dirty.putpixel((xx, yy), (150, 24, 32, 255) if (xx + yy) % 2 else (120, 14, 22, 255))
+    save(dirty, "textures/geo/dirty_syringe.png")
+
+    # Ф25. Пакеты с кровью и без — без анимации «питья».
+    for it in ("blood_bag", "saline", "empty_blood_bag", "used_iv_bag"):
+        if f"rpmedicine:{it}" in index:
+            index[f"rpmedicine:{it}"].pop("use", None)
+            times.pop(f"rpmedicine:{it}", None)
+
+    # Ф34. Остеосинтез — без мелких деталей вокруг коробки.
+    m = json.load(open(model_path("osteosynthesis_kit"), encoding="utf-8"))
+    big = max(m["elements"], key=lambda e: (e["to"][0] - e["from"][0]) * (e["to"][2] - e["from"][2]))
+    bx0, bz0, bx1, bz1 = big["from"][0], big["from"][2], big["to"][0], big["to"][2]
+    m["elements"] = [e for e in m["elements"] if e["from"][0] >= bx0 - 0.6 and e["to"][0] <= bx1 + 0.6
+                     and e["from"][2] >= bz0 - 0.6 and e["to"][2] <= bz1 + 0.6]
+    write(model_path("osteosynthesis_kit"), m)
+    icon_from_json("osteosynthesis_kit")
+
+    # Ф35. Пила — в слоте не вверх ногами. Ф36. Контейнер для органа — крупнее, ровно в руках.
+    m = json.load(open(model_path("bone_saw"), encoding="utf-8"))
+    g_ = m["display"].setdefault("gui", {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [1, 1, 1]})
+    g_["rotation"] = [g_.get("rotation", [0, 0, 0])[0], g_.get("rotation", [0, 0, 0])[1], (g_.get("rotation", [0, 0, 0])[2] + 180) % 360]
+    write(model_path("bone_saw"), m)
+    m = json.load(open(model_path("organ_container"), encoding="utf-8"))
+    m["display"]["thirdperson_righthand"] = {"rotation": [0, 0, 0], "translation": [0, 0, 3], "scale": [0.55, 0.55, 0.55]}
+    m["display"]["thirdperson_lefthand"] = m["display"]["thirdperson_righthand"]
+    m["display"]["firstperson_righthand"] = {"rotation": [0, 0, 0], "translation": [0, -2, 0], "scale": [0.7, 0.7, 0.7]}
+    m["display"]["firstperson_lefthand"] = m["display"]["firstperson_righthand"]
+    m["display"]["fixed"] = {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [0.9, 0.9, 0.9]}
+    write(model_path("organ_container"), m)
+
+    # Ф10. Мазь и вазелин от 3-го лица — как от 1-го (меньше).
+    for it in ("antibiotic_ointment", "lr_vaseline", "stabilization_kit"):
+        m = json.load(open(model_path(it), encoding="utf-8"))
+        b = m.get("base", m)
+        for side in ("thirdperson_righthand", "thirdperson_lefthand"):
+            if side in b.get("display", {}):
+                b["display"][side]["scale"] = [0.32, 0.32, 0.32]
+        write(model_path(it), m)
+
+    # Ф12/Ф32. Инструменты держат за ручку, остриём от себя; ножницы от 3-го лица меньше.
+    for it in ("scissors", "scalpel", "hemostat", "retractor"):
+        m = json.load(open(model_path(it), encoding="utf-8"))
+        d = m["base"]["display"]
+        for side, sgn in (("right", 1), ("left", -1)):
+            fp = d[f"firstperson_{side}hand"]
+            fp["rotation"] = [0, sgn * -90, sgn * -155]
+            tp = d[f"thirdperson_{side}hand"]
+            tp["rotation"] = [0, sgn * 90, sgn * 145]
+            if it == "scissors":
+                tp["scale"] = [0.55, 0.55, 0.55]
+        write(model_path(it), m)
+
+
+def juice_vial(item, liq, lab):
+    """Флакон по бутылке sa_combat: однотонная этикетка lab, жидкость liq (как у лидокаина и прочих)."""
+    def fn(im):
+        def f(x, y, r, g, b, a):
+            if 2 <= y <= 8 and x <= 13 and not hue_range(0.45, 0.7, 0.2)(r, g, b):
+                k = 0.8 if y in (2, 8) else 1.0 + (0.04 if (x + y) % 7 == 0 else 0)
+                return tuple(min(255, round(c * k)) for c in lab) + (255,)
+            return None
+        im = recolor(im, f)
+        for yy in (20, 21):
+            for xx in (20, 21):
+                im.putpixel((xx, yy), liq)
+        return im
+    m = json_copy(item, "sa_combat:item/pineapple_juice_bottle", tex_fn=fn, note="однотонная этикетка, своя жидкость")
+    for face in m["elements"][1]["faces"].values():
+        face["uv"] = [10, 10, 10.5, 10.5]
+    write(model_path(item), m)
+    icon_from_json(item)
 
 
 # ------------------------------------------------------------------ 3D в инвентаре
 GUI_ROT = (30, 225, 0)   # как у блоков
+# Модели LR, у которых «лицо» с другой стороны (Ф37: CMS и вазелин в слоте были повёрнуты спиной).
+GUI_ROT_ITEM = {"lr_cms": (30, 45, 0), "lr_vaseline": (30, 45, 0), "antibiotic_ointment": (30, 45, 0)}
 
 
 def _rot_xyz(rx, ry, rz):
@@ -1066,7 +1603,7 @@ def gui_display(points, rot=GUI_ROT, fill=14.5):
 def geo_points(item, entry):
     """Углы кубов модели client/geo в пикселях блока — так, как её ставит GeoItemRenderer."""
     q = preview.geo_quads(os.path.join(ASSETS, entry["geo"].split(":", 1)[1]), os.path.join(ASSETS, entry["texture"].split(":", 1)[1]),
-                          hide=tuple(entry.get("hide", ())))
+                          hide=tuple(entry.get("hide", ())) + tuple(entry.get("hide_static", ())))
     pts = [p for quad in q for p in quad[0]]
     if not pts:
         return []
@@ -1096,7 +1633,7 @@ def gui_3d():
         pts = geo_points(item, entry)
         if not pts:
             continue
-        base.setdefault("display", {})["gui"] = gui_display(pts)
+        base.setdefault("display", {})["gui"] = gui_display(pts, rot=GUI_ROT_ITEM.get(item, GUI_ROT))
         m["base"] = base
         m["gui_light"] = "side"
         m["perspectives"] = {}          # загрузчик требует поле; плоской иконки больше нет
@@ -1109,6 +1646,36 @@ def gui_3d():
         m.pop("overrides", None)
         write(sp, m)
     print("item_models: 3D в инвентаре —", n)
+
+
+# ------------------------------------------------------------------ правки из галереи
+REVIEW = os.path.join(HERE, "..", "docs", "model_review.json")
+
+
+def apply_review():
+    """Вид, выставленный в галерее (tools/model_gallery -> docs/model_review.json), — поверх сгенерированного.
+    Левая рука не пишется: игра берёт правую и сама отражает её."""
+    if not os.path.exists(REVIEW):
+        return
+    data = json.load(open(REVIEW, encoding="utf-8")).get("items", {})
+    n = 0
+    for item, r in data.items():
+        disp_over = r.get("display")
+        path = model_path(item)
+        if not disp_over or not os.path.exists(path):
+            continue
+        m = json.load(open(path, encoding="utf-8"))
+        target = m["base"] if m.get("loader") == "forge:separate_transforms" and "base" in m else m
+        if "display" not in target and "parent" in target and not target["parent"].startswith("builtin"):
+            target["display"] = {}
+        d = target.setdefault("display", {})
+        for ctx_, v in disp_over.items():
+            d[ctx_] = {"rotation": v["rotation"], "translation": v["translation"], "scale": v["scale"]}
+            if ctx_.endswith("_righthand"):
+                d.pop(ctx_.replace("right", "left"), None)
+        write(path, m)
+        n += 1
+    print("item_models: правки вида из галереи —", n)
 
 
 # ================================================================== запуск
@@ -1144,6 +1711,7 @@ def main(sheet=None):
     for part in PARTS:
         part()
     gui_3d()
+    apply_review()
     write(os.path.join(GEO_DIR, "items.json"), index)
     write(tp, {"times": times})
     write_credits()
@@ -1152,7 +1720,7 @@ def main(sheet=None):
         preview.sheet(sheet, built, size=150)
 
 
-PARTS = [part_a, part_b, part_c, part_d]
+PARTS = [part_a, part_b, part_c, part_d, part_e, part_f]
 
 if __name__ == "__main__":
     main(sys.argv[2] if len(sys.argv) > 2 and sys.argv[1] == "--sheet" else None)

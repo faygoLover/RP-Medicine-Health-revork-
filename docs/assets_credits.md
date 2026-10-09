@@ -133,7 +133,6 @@ SOFTWARE.
 | `textures/item/iv_lipids.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/emulsion_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/iv_vitamins.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/oil_vial.png` (другой оттенок) | VKM | MIT |
 | `textures/item/surgical_gloves.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/gloves.png` (перекрашено) | VKM | MIT |
-| `textures/item/field_surgery_kit.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/surgicalinstrument.png` | JEDIGD | MIT |
 | `textures/item/organ.png` | Body Control 1.0.0-alpha: `assets/bodycontrol/textures/item/donor_heart.png` | VKM | MIT |
 | `textures/item/lr_ai2.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/ai2.png` | LesRaisins Studio | GPL-3.0 |
 | `textures/item/lr_cms.png` | LesRaisins Tactical Equipments 0.4.3: `assets/lrtactical/textures/consumable/slot/cms.png` | LesRaisins Studio | GPL-3.0 |
@@ -168,9 +167,6 @@ SOFTWARE.
 | `rpgeo/splint.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/bonefix.geo.json` | JEDIGD | MIT |
 | `textures/geo/splint.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/bonefix.png` (другой оттенок) | JEDIGD | MIT |
 | `rpgeo/splint.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/bonefix.animation.json` | JEDIGD | MIT |
-| `rpgeo/field_surgery_kit.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/surg.geo.json` | JEDIGD | MIT |
-| `textures/geo/field_surgery_kit.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/surg.png` | JEDIGD | MIT |
-| `rpgeo/field_surgery_kit.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/surg.animation.json` | JEDIGD | MIT |
 | `rpgeo/ibuprofen.geo.json` | Health & Disease 1.4.2: `assets/health_and_disease/geo/bottle.geo.json` | JEDIGD | MIT |
 | `textures/geo/ibuprofen.png` | Health & Disease 1.4.2: `assets/health_and_disease/textures/item/bottle7.png` | JEDIGD | MIT |
 | `rpgeo/ibuprofen.anim.json` | Health & Disease 1.4.2: `assets/health_and_disease/animations/bottle.animation.json` | JEDIGD | MIT |
@@ -353,5 +349,12 @@ SOFTWARE.
 | `rpgeo/dirty_test_tube.geo.json` | Health & Disease 1.4.2: `geo/oral.geo.json` | JEDIGD | MIT |
 | `textures/geo/dirty_test_tube.png` | Health & Disease 1.4.2: `textures/item/oral.png` (крышка и содержимое перекрашены) | JEDIGD | MIT |
 | `textures/item/surgical_gloves.png` | Self Expression 2.22a: `textures/item/pierchatki_vora.png` (голубые) | Redynine | All Rights Reserved |
-| `textures/models/surgical_gloves_worn.png` | Self Expression 2.22a: `textures/models/armor/balaclava__layer_1.png` (голубые) | Redynine | All Rights Reserved |
+| `textures/item/m/stabilization_kit_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/first_aid_kit.png` | ogaba, titammods | All Rights Reserved |
+| `models/item/stabilization_kit.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/first_aid_kit.json` | ogaba, titammods | All Rights Reserved |
+| `textures/item/m/pressure_dressing_0.png` | Survival Instinct 1.0.2: `textures/block/homemade_bandage.png` | tohir | AFL-3.0 |
+| `textures/item/m/pressure_dressing_1.png` | Survival Instinct 1.0.2: `textures/item/bandage.png` | tohir | AFL-3.0 |
+| `models/item/pressure_dressing.json` | Survival Instinct 1.0.2: `models/item/homemade_bandage.json` | tohir | AFL-3.0 |
+| `rpgeo/painkillers.geo.json` | своя модель `rpgeo/lr_amoxycillin.geo.json` (блистер LR, меньше) | — | — |
+| `textures/item/m/ceftriaxone_0.png` | Survivor's Arsenal: Essentials 1.0.0: `textures/item/pineapple_juice_bottle.png` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
+| `models/item/ceftriaxone.json` | Survivor's Arsenal: Essentials 1.0.0: `models/item/pineapple_juice_bottle.json` (однотонная этикетка, своя жидкость) | ogaba, titammods | All Rights Reserved |
 <!-- item_models:end -->

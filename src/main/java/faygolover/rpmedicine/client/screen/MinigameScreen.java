@@ -218,16 +218,42 @@ public class MinigameScreen extends Screen {
     }
 
     private void torso(GuiGraphics g, int x, int y, boolean back) {
-        g.fill(x + 10, y - 22, x + 70, y + 92, 0xFFC09070);
-        g.fill(x + 26, y - 40, x + 54, y - 22, 0xFFC09070);
-        g.renderOutline(x + 10, y - 22, 60, 114, 0xFF7A5040);
-        if (!back) g.fill(x + 39, y - 20, x + 41, y + 50, 0x40000000);
-        else g.fill(x + 39, y - 20, x + 41, y + 90, 0x50000000);
+        int skin = 0xFFC99A7A, shade = 0xFFB5876A, dark = 0xFF8A5E48;
+        // Шея и плечи, торс сужается к поясу.
+        g.fill(x + 31, y - 40, x + 49, y - 24, skin);
+        g.fill(x + 8, y - 24, x + 72, y - 14, skin);
+        g.fill(x + 10, y - 14, x + 70, y + 50, skin);
+        g.fill(x + 13, y + 50, x + 67, y + 92, skin);
+        g.fill(x + 31, y - 40, x + 33, y - 24, shade);
+        g.fill(x + 47, y - 40, x + 49, y - 24, shade);
+        g.fill(x + 10, y - 14, x + 12, y + 50, shade);
+        g.fill(x + 68, y - 14, x + 70, y + 50, shade);
+        if (!back) {
+            // Ключицы, соски, рёберная дуга, пупок.
+            g.fill(x + 16, y - 20, x + 36, y - 19, dark);
+            g.fill(x + 44, y - 20, x + 64, y - 19, dark);
+            g.fill(x + 24, y + 22, x + 27, y + 25, 0xFFA0644E);
+            g.fill(x + 53, y + 22, x + 56, y + 25, 0xFFA0644E);
+            line(g, x + 18, y + 46, x + 40, y + 34, shade);
+            line(g, x + 62, y + 46, x + 40, y + 34, shade);
+            g.fill(x + 39, y + 68, x + 41, y + 71, dark);
+        } else {
+            // Позвоночник и лопатки.
+            g.fill(x + 39, y - 22, x + 41, y + 92, shade);
+            for (int v = y - 18; v < y + 90; v += 8) g.fill(x + 38, v, x + 42, v + 2, dark);
+            line(g, x + 18, y - 10, x + 30, y + 22, shade);
+            line(g, x + 30, y + 22, x + 34, y - 8, shade);
+            line(g, x + 62, y - 10, x + 50, y + 22, shade);
+            line(g, x + 50, y + 22, x + 46, y - 8, shade);
+        }
+        // Пояс брюк.
+        g.fill(x + 13, y + 88, x + 67, y + 92, 0xFF3A4A66);
     }
 
     // ------------------------------------------------------------------ тонометр
 
     private double cuff;
+    private long lastPump;
     private int sysMark = -1, diaMark = -1;
     private double beatTimer;
 
@@ -242,20 +268,48 @@ public class MinigameScreen extends Screen {
             beatTimer = 0;
             if (tones && phase == 1) sound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1.4f);
         }
-        // Шкала манометра.
-        int cx = l + W / 2, cy = t + 104, r = 52;
-        circle(g, cx, cy, r + 2, 0xFF404040);
-        circle(g, cx, cy, r, 0xFFE8E4D8);
-        for (int v = 0; v <= 260; v += 20) {
+        // Манометр: корпус, шкала 0–260 с делениями и цифрами, стрелка. Справа — груша и шланг.
+        int cx = l + W / 2 - 30, cy = t + 100, r = 50;
+        disc(g, cx, cy, r + 4, 0xFF5A5E66);
+        disc(g, cx, cy, r + 2, 0xFF2A2C30);
+        disc(g, cx, cy, r, 0xFFEDE9DC);
+        // Зона тонов не подсвечивается — её надо услышать.
+        for (int v = 0; v <= 260; v += 10) {
             double a = Math.toRadians(-225 + v / 260.0 * 270);
-            g.fill((int) (cx + Math.cos(a) * (r - 6)), (int) (cy + Math.sin(a) * (r - 6)), (int) (cx + Math.cos(a) * (r - 6)) + 2,
-                    (int) (cy + Math.sin(a) * (r - 6)) + 2, 0xFF202020);
+            double r0 = v % 20 == 0 ? r - 8 : r - 5;
+            line(g, cx + Math.cos(a) * r0, cy + Math.sin(a) * r0, cx + Math.cos(a) * (r - 2), cy + Math.sin(a) * (r - 2), 0xFF303030);
+            if (v % 40 == 0) {
+                String n = String.valueOf(v);
+                int nx = (int) (cx + Math.cos(a) * (r - 16)), ny = (int) (cy + Math.sin(a) * (r - 16));
+                g.pose().pushPose();
+                g.pose().translate(nx, ny - 2, 0);
+                g.pose().scale(0.6f, 0.6f, 1);
+                g.drawString(font, n, -font.width(n) / 2, 0, 0xFF303030, false);
+                g.pose().popPose();
+            }
         }
         double a = Math.toRadians(-225 + Mth.clamp(cuff, 0, 260) / 260.0 * 270);
-        line(g, cx, cy, cx + Math.cos(a) * (r - 10), cy + Math.sin(a) * (r - 10), 0xFFB02020);
-        g.drawCenteredString(font, String.valueOf((int) cuff), cx, cy + 18, 0xFF202020);
+        for (int w = -1; w <= 1; w++)
+            line(g, cx + w * Math.sin(a), cy - w * Math.cos(a), cx + Math.cos(a) * (r - 9), cy + Math.sin(a) * (r - 9), 0xFFB02020);
+        disc(g, cx, cy, 3, 0xFF202020);
+        g.pose().pushPose();
+        g.pose().translate(cx, cy + 20, 0);
+        g.pose().scale(0.75f, 0.75f, 1);
+        String mm = Component.translatable("rpmedicine.minigame.mmhg").getString();
+        g.drawString(font, mm, -font.width(mm) / 2, 0, 0xFF707070, false);
+        g.pose().popPose();
+        // Шланг и груша (сжимается, пока качаем или держим ЛКМ).
+        int bx = l + W / 2 + 70, by = t + 112;
+        line(g, cx + r + 2, cy + 10, bx - 18, by - 22, 0xFF202020);
+        line(g, cx + r + 2, cy + 11, bx - 18, by - 21, 0xFF202020);
+        g.fill(bx - 20, by - 26, bx - 12, by - 18, 0xFF8A8A8A);
+        int squeeze = System.currentTimeMillis() - lastPump < 150 ? 3 : 0;
+        disc(g, bx, by, 16 - squeeze, 0xFF1E1E22);
+        disc(g, bx - 4, by - 5, 4, 0xFF3A3A42);
+        // Отметки и показание цифрами.
+        g.drawCenteredString(font, String.valueOf((int) cuff), cx, cy - 22, 0xFFFFFFFF);
         String marks = (sysMark >= 0 ? String.valueOf(sysMark) : "—") + " / " + (diaMark >= 0 ? String.valueOf(diaMark) : "—");
-        g.drawCenteredString(font, marks, cx, t + H - 40, 0xFFFFFFFF);
+        g.drawCenteredString(font, marks, bx, t + H - 40, 0xFFFFFFFF);
         if (phase == 1 && cuff <= 0.5 && !sent) finishCuff(sys, dia);
     }
 
@@ -347,7 +401,9 @@ public class MinigameScreen extends Screen {
         double ty = toolY + Math.cos(time * 13) * tremor;
 
         g.fill(l, t, l + W, t + H, 0xF0161210);
-        drawSkin(g, l, t);
+        // Стетоскоп и тонометр — не на коже: торс и прибор рисуются сами, фон — простынь кушетки.
+        if (task.type() == Minigames.Type.AUSCULTATION || task.type() == Minigames.Type.BP_CUFF) drawSheet(g, l, t);
+        else drawSkin(g, l, t);
         g.renderOutline(l, t, W, H, flash > 0 ? 0xFFFF4040 : 0xFF6A5040);
         // Заголовок.
         g.drawCenteredString(font, title.copy().withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), width / 2, t + 5, 0xFFFFFF);
@@ -396,6 +452,13 @@ public class MinigameScreen extends Screen {
     }
 
     /** Фон: кожа с волосками и порами. */
+    private void drawSheet(GuiGraphics g, int l, int t) {
+        g.fill(l + 4, t + 38, l + W - 4, t + H - 34, 0xFF33414A);
+        // Редкая клетка простыни.
+        for (int x = l + 4; x < l + W - 4; x += 12) g.fill(x, t + 38, x + 1, t + H - 34, 0xFF2E3A42);
+        for (int y = t + 38; y < t + H - 34; y += 12) g.fill(l + 4, y, l + W - 4, y + 1, 0xFF2E3A42);
+    }
+
     private void drawSkin(GuiGraphics g, int l, int t) {
         g.fill(l + 4, t + 38, l + W - 4, t + H - 34, 0xFFC99A7A);
         Random r = new Random(task.seed() ^ 77);
@@ -865,6 +928,14 @@ public class MinigameScreen extends Screen {
         g.drawString(font, Component.translatable(key), x, y - 10, 0xCCCCCC, false);
     }
 
+    /** Закрашенный круг (по строкам). */
+    private void disc(GuiGraphics g, double cx, double cy, double r, int color) {
+        for (int dy = (int) -r; dy <= (int) r; dy++) {
+            int hw = (int) Math.sqrt(Math.max(0, r * r - dy * dy));
+            g.fill((int) cx - hw, (int) cy + dy, (int) cx + hw + 1, (int) cy + dy + 1, color);
+        }
+    }
+
     private void circle(GuiGraphics g, double cx, double cy, double r, int color) {
         int n = Math.max(12, (int) (r * 4));
         for (int i = 0; i < n; i++) {
@@ -942,6 +1013,7 @@ public class MinigameScreen extends Screen {
         if (task.type() == Minigames.Type.BP_CUFF && !sent) {
             if (delta > 0 && phase == 0) {
                 cuff = Math.min(260, cuff + 12);
+                lastPump = System.currentTimeMillis();
                 sound(net.minecraft.sounds.SoundEvents.WOOL_PLACE, 1.6f);
                 if (cuff >= Math.max(140, task.scene().bullets() + 20)) phase = 1;
             }

@@ -170,9 +170,9 @@ const fp = { r: makeRenderer($('#v-fp')), cam: new THREE.PerspectiveCamera(70, 1
 
 // 3-е лицо: игрок по HumanoidModel, предмет в правой руке (ItemInHandLayer).
 const tp = { r: makeRenderer($('#v-tp')), cam: new THREE.PerspectiveCamera(45, 16 / 10, 0.05, 100) };
-tp.cam.position.set(1.6, 1.7, 2.4);
+tp.cam.position.set(-1.9, 1.5, 2.6);
 tp.ctl = new OrbitControls(tp.cam, $('#v-tp'));
-tp.ctl.target.set(0, 1.0, 0);
+tp.ctl.target.set(-0.2, 0.95, 0);
 tp.ctl.update();
 
 const free = { r: makeRenderer($('#v-free')), cam: new THREE.PerspectiveCamera(40, 16 / 10, 0.01, 100) };
@@ -318,7 +318,8 @@ function loop() {
   fit(gui.r1, 36, 36); gui.r1.render(scenes.gs, gui.cam);
   for (const [v, s, el] of [[fp, scenes.fs, '#v-fp'], [tp, scenes.ts, '#v-tp'], [free, scenes.xs, '#v-free']]) {
     const c = $(el);
-    const w = c.clientWidth || 400, h = Math.round(w / 1.6);
+    const w = c.clientWidth || 400, h = c.clientHeight || Math.round(w / 1.6);
+    if (v.cam.aspect !== w / h) { v.cam.aspect = w / h; v.cam.updateProjectionMatrix(); }
     fit(v.r, w, h);
     v.r.render(s, v.cam);
   }
@@ -336,8 +337,11 @@ async function select(item) {
   document.querySelectorAll('#mark button').forEach(b => b.classList.toggle('on', (r.mark || '') === b.dataset.m && !!b.dataset.m));
   $('#comment').value = r.comment || '';
   document.querySelectorAll('#list li').forEach(li => li.classList.toggle('sel', li.dataset.id === item.id));
+  const kind = $('#kind').textContent;
+  $('#kind').textContent = kind + ' · загрузка…';
   try {
     await show(item);
+    if (cur === item) $('#kind').textContent = kind;
   } catch (e) {
     console.error(e);
     $('#kind').textContent += ' · ошибка: ' + e;

@@ -30,11 +30,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HospitalGeoBlock extends HorizontalDirectionalBlock implements EntityBlock {
     public enum Kind {
-        CABINET("medicine_cabinet", 27, MedicalStorageMenu.MEDICAL, Block.box(3, 1.5, 3, 13, 15.5, 13)),
+        // Хитбокс — один куб по закрытому шкафчику (замечание 10.10, Ф22): модель стоит у задней стенки блока.
+        CABINET("medicine_cabinet", 27, MedicalStorageMenu.MEDICAL, Block.box(3, 1.5, 9.9, 13, 15.5, 16)),
         CRATE("medicine_crate", 27, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0.5, 16, 16, 16)),
         STERILIZER("sterilizer", 9, MedicalStorageMenu.STERILIZE, Block.box(0, 0, 0, 16, 16, 16)),
         LAB_TABLE("lab_table", 0, MedicalStorageMenu.MEDICAL, Block.box(0, 0, 0, 16, 16, 16)),
-        THERMOSTAT("thermostat", MedicalStorageMenu.THERMOSTAT_SLOTS, MedicalStorageMenu.BLOOD_SAMPLES, Block.box(2, 0, 4, 14, 8, 12));
+        THERMOSTAT("thermostat", MedicalStorageMenu.THERMOSTAT_SLOTS, MedicalStorageMenu.BLOOD_SAMPLES, Block.box(3, 0, 3, 13, 9, 13));   // по модели термостата (Ф22)
 
         public final String id;
         public final int slots;

@@ -19,10 +19,13 @@ import java.util.List;
 /** Подсумок и аптечка: контейнер только для медицинских предметов (п. 6.2 ТЗ). */
 public class MedicalContainerItem extends Item {
     public final int slots;
+    /** Открывается с анимацией (аптечка LR: расстегнуть, сунуть руку). */
+    private final boolean animated;
 
-    public MedicalContainerItem(Properties props, int slots) {
+    public MedicalContainerItem(Properties props, int slots, boolean animated) {
         super(props);
         this.slots = slots;
+        this.animated = animated;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class MedicalContainerItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide && player instanceof ServerPlayer sp) {
             // Аптечка: сначала анимация — расстегнуть молнию (LR Tactical), потом открыть (замечание 06.10).
-            if (slots >= 20 && hand == InteractionHand.MAIN_HAND) {
+            if (animated && hand == InteractionHand.MAIN_HAND) {
                 if (!(faygolover.rpmedicine.server.ActionManager.current(sp) instanceof OpenKit))
                     faygolover.rpmedicine.server.ActionManager.start(new OpenKit(sp, stack.copy(), this));
             } else {
@@ -57,7 +60,8 @@ public class MedicalContainerItem extends Item {
         private final MedicalContainerItem item;
 
         OpenKit(ServerPlayer sp, ItemStack original, MedicalContainerItem item) {
-            super(sp, 38);
+            // Окно — когда рука по анимации уже внутри аптечки (замечание 10.10, Ф1: было 38 тиков).
+            super(sp, 24);
             this.original = original;
             this.item = item;
         }

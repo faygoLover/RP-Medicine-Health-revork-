@@ -44,7 +44,7 @@ public final class KitCommand {
                 "stethoscope", "thermometer", "pulse_oximeter", "tonometer", "glucometer", "hemoanalyzer", "portable_scanner",
                 "test_tube:8", "lancet:8", "medcard:2")));
         KITS.put("surgeon", new Kit("хирург", List.of(
-                "field_surgery_kit", "stabilization_kit", "surgical_mask", "surgical_gloves:4", "scalpel", "hemostat", "retractor",
+                "lr_surv12", "stabilization_kit", "surgical_mask", "surgical_gloves:4", "scalpel", "hemostat", "retractor",
                 "surgical_tweezers", "vascular_suture:4", "suture_kit:4", "surgical_drill", "osteosynthesis_kit:2", "chest_drain:2",
                 "bone_saw", "lidocaine", "ketamine", "propofol", "ketorolac", "ceftriaxone", "antiseptic:4", "syringe:16",
                 "laryngoscope", "endotracheal_tube:2")));

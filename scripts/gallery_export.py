@@ -67,7 +67,7 @@ def json_model_quads(m):
 def geo_model_quads(item, entry):
     g = os.path.join(ASSETS, entry["geo"].split(":", 1)[1])
     t = os.path.join(ASSETS, entry["texture"].split(":", 1)[1])
-    q = preview.geo_quads(g, t, hide=tuple(entry.get("hide", ())), tex_loader=lambda path: tex_url(path))
+    q = preview.geo_quads(g, t, hide=tuple(entry.get("hide", ())) + tuple(entry.get("hide_static", ())), tex_loader=lambda path: tex_url(path))
     pts = [p for quad in q for p in quad[0]]
     if entry.get("fit") and pts:
         lo = [min(p[i] for p in pts) for i in range(3)]

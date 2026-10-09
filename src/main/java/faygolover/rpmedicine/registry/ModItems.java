@@ -38,7 +38,6 @@ public final class ModItems {
     public static final RegistryObject<Item> ADRENALINE = pen("adrenaline");
     public static final RegistryObject<Item> TXA = pen("txa");
     public static final RegistryObject<Item> STABILIZATION_KIT = medical("stabilization_kit", 4);
-    public static final RegistryObject<Item> FIELD_SURGERY_KIT = medical("field_surgery_kit", 1);
     public static final RegistryObject<Item> SALINE = medical("saline", 4);
     /** Венозный катетер: через него капает со стойки (замечание 35). */
     public static final RegistryObject<Item> IV_CATHETER = medical("iv_catheter", 16);
@@ -78,8 +77,8 @@ public final class ModItems {
     public static final RegistryObject<Item> DEFIBRILLATOR = tool("defibrillator", () -> new MedicalItem(new Item.Properties().durability(10)));
     public static final RegistryObject<Item> PULSE_OXIMETER = tool("pulse_oximeter", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> TONOMETER = tool("tonometer", () -> new MedicalItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> MEDICAL_POUCH = tool("medical_pouch", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 8));
-    public static final RegistryObject<Item> FIRST_AID_KIT = tool("first_aid_kit", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 20));
+    public static final RegistryObject<Item> MEDICAL_POUCH = tool("medical_pouch", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 6, false));
+    public static final RegistryObject<Item> FIRST_AID_KIT = tool("first_aid_kit", () -> new MedicalContainerItem(new Item.Properties().stacksTo(1), 12, true));
     // Второй этап
     public static final RegistryObject<Item> EMPTY_BLOOD_BAG = medical("empty_blood_bag", 16);
     public static final RegistryObject<Item> BLOOD_BAG = tool("blood_bag", () -> new faygolover.rpmedicine.item.BloodBagItem(new Item.Properties().stacksTo(1)));
@@ -225,7 +224,7 @@ public final class ModItems {
 
     /** Порядок во вкладке: наборы, раны, дыхание, таблетки, уколы, капельницы и кровь, диагностика, хирургия, протезы и органы, документы. */
     private static final String[] TAB_ORDER = {
-            "first_aid_kit", "medical_pouch", "stabilization_kit", "field_surgery_kit",
+            "first_aid_kit", "medical_pouch", "stabilization_kit",
             "bandage", "pressure_dressing", "hemostatic_gauze", "tourniquet", "esmarch", "occlusive_dressing", "antiseptic",
             "chlorhexidine_hands", "chlorhexidine_skin", "chlorhexidine_concentrate",
             "antibiotic_ointment", "suture_kit", "scissors", "splint",

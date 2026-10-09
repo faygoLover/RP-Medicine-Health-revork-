@@ -22,12 +22,14 @@ main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y
 #title h2 { margin: 0; font-size: 18px; }
 #kind, #saved { color: var(--dim); font-size: 12px; }
 #saved { margin-left: auto; }
-#views { display: grid; grid-template-columns: 256px 1fr 1fr 1fr; gap: 10px; padding: 10px 14px; }
+#views { display: grid; grid-template-columns: 256px 1fr 1fr; gap: 10px; padding: 10px 14px; }
+#views figure:nth-child(3) { grid-row: span 2; }
 figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
 figcaption { color: var(--dim); font-size: 12px; margin-bottom: 4px; }
 canvas { display: block; width: 100%; border-radius: 4px; }
 #v-gui { width: 240px; height: 240px; image-rendering: pixelated; }
-#v-fp, #v-tp, #v-free { aspect-ratio: 16 / 10; }
+#v-fp, #v-free { aspect-ratio: 16 / 10; }
+#v-tp { aspect-ratio: 4 / 5; }
 .sub { display: flex; align-items: center; gap: 8px; margin-top: 6px; color: var(--dim); font-size: 12px; }
 #v-gui1 { width: 36px; height: 36px; image-rendering: pixelated; }
 #editor { padding: 6px 14px 20px; display: grid; grid-template-columns: 1fr; gap: 8px; }

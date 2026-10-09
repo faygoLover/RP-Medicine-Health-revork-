@@ -19,7 +19,7 @@ public final class ItemPoses {
     private ItemPoses() {}
 
     private static final Set<String> TWO_HANDED = Set.of("defibrillator", "first_aid_kit", "organ_container", "ambu_bag",
-            "field_surgery_kit", "stabilization_kit");
+            "stabilization_kit");
 
     private static HumanoidModel.ArmPose twoHands;
 

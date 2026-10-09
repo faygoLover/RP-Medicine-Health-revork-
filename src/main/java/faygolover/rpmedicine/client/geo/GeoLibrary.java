@@ -29,7 +29,7 @@ public final class GeoLibrary extends SimplePreparableReloadListener<Map<Resourc
      * координаты «от лица»); иначе как в GeckoLib: начало координат в центре низа блока.
      */
     public record Entry(GeoModel model, @Nullable GeoAnim anims, ResourceLocation texture, @Nullable String use,
-                        @Nullable String idle, boolean fit, float size, List<String> hide, float[] bounds) {
+                        @Nullable String idle, boolean fit, float size, List<String> hide, float[] bounds, List<String> hideStatic) {
         @Nullable
         public GeoAnim.Clip clip(@Nullable String name) {
             return name == null || anims == null ? null : anims.clips.get(name);
@@ -72,10 +72,15 @@ public final class GeoLibrary extends SimplePreparableReloadListener<Map<Resourc
                         anim = anims.computeIfAbsent(a, x -> GeoAnim.parse(read(rm, x)));
                     }
                     List<String> hide = o.has("hide") ? o.getAsJsonArray("hide").asList().stream().map(JsonElement::getAsString).toList() : List.of();
+                    // Кости, нужные только в анимации от 1-го лица (шприц в правой руке у AI-2): в слоте, на земле
+                    // и от 3-го лица скрыты, и в границах вписывания их нет.
+                    List<String> hideStatic = o.has("hide_static") ? o.getAsJsonArray("hide_static").asList().stream().map(JsonElement::getAsString).toList() : List.of();
+                    List<String> hideAll = new java.util.ArrayList<>(hide);
+                    hideAll.addAll(hideStatic);
                     out.put(new ResourceLocation(e.getKey()), new Entry(model, anim, new ResourceLocation(o.get("texture").getAsString()),
                             o.has("use") ? o.get("use").getAsString() : null, o.has("idle") ? o.get("idle").getAsString() : null,
                             o.has("fit") && o.get("fit").getAsBoolean(), o.has("size") ? o.get("size").getAsFloat() : 0.75f, hide,
-                            model.restBounds(hide)));
+                            model.restBounds(hideAll), hideStatic));
                 } catch (Exception ex) {
                     RpMedicine.LOGGER.error("RP Medicine: 3D-модель {} не загружена: {}", e.getKey(), ex.toString());
                 }

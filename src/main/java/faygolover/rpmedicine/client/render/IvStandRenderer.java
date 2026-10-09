@@ -34,7 +34,7 @@ import java.util.List;
 public class IvStandRenderer implements BlockEntityRenderer<IvStandBlockEntity> {
     private static final String[] KINDS = {null, "saline", "blood", "empty_saline", "empty_blood", "saline_yellow", "saline_milky"};
     /** Низ каждого пакета в координатах модели (для стойки лицом на север), откуда идёт шланг. */
-    private static final Vec3[] HOOK = {new Vec3(8, 19, 4), new Vec3(12, 9.5, 8), new Vec3(3.75, 19, 8.25)};
+    private static final Vec3[] HOOK = {new Vec3(8, 19, 4), new Vec3(12, 19, 8), new Vec3(3.75, 19, 8.25), new Vec3(8, 19, 12)};
 
     public IvStandRenderer(BlockEntityRendererProvider.Context ctx) {}
 

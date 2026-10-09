@@ -19,7 +19,6 @@ items = {
  "morphine": ("Шприц-тюбик морфина", "Morphine autoinjector", "Сильное обезболивание на 15 минут; угнетает дыхание, второй подряд опасен.", "Strong pain relief for 15 minutes; depresses breathing, a second dose is dangerous."),
  "adrenaline": ("Адреналин", "Adrenaline", "Вместе с СЛР запускает сердце, поднимает давление. Здоровому вредит.", "With CPR restarts the heart, raises blood pressure. Harmful when healthy."),
  "txa": ("Транексамовая кислота", "Tranexamic acid", "Замедляет внутреннее и наружное кровотечение на 10 минут.", "Slows internal and external bleeding for 10 minutes."),
- "field_surgery_kit": ("Полевой хирургический набор", "Field surgery kit", "Останавливает внутреннее кровотечение. Временный предмет первого этапа.", "Stops internal bleeding. Temporary stage 1 item."),
  "saline": ("Физраствор 500 мл", "Saline 500 ml", "Возвращает объём крови. Пациент должен лежать или стоять на месте.", "Restores blood volume. The patient must lie or stand still."),
  "ammonia": ("Нашатырь", "Smelling salts", "Будит из обморока.", "Wakes from fainting."),
  "airway": ("Воздуховод", "Airway", "Держит дыхание у лежачего без сознания.", "Keeps an unconscious patient breathing."),
@@ -1145,6 +1144,7 @@ t("rpmedicine.minigame.hint_auscultation", "Зажмите ЛКМ и прило�
 t("rpmedicine.minigame.hint_bp_cuff", "Колёсико вверх — накачать манжету. Потом стравливается (ЛКМ — быстрее). Пробел или ПКМ — когда тоны появились, и ещё раз — когда пропали.", "Wheel up — pump the cuff. Then it deflates (LMB — faster). Space or RMB — when the sounds start, and again when they stop.")
 t("rpmedicine.minigame.front", "Спереди", "Front")
 t("rpmedicine.minigame.back", "Сзади", "Back")
+t("rpmedicine.minigame.mmhg", "мм рт. ст.", "mmHg")
 t("rpmedicine.minigame.slipped", "Сорвалось — слушать заново", "Slipped — listen again")
 t("rpmedicine.minigame.tighten", "Стяните края: держите ЛКМ, отпустите, когда сошлись", "Pull the edges together: hold LMB, release when they meet")
 t("rpmedicine.minigame.tissue_torn", "Перетянули — ткань порвалась", "Pulled too hard — the tissue tore")

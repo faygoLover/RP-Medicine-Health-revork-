@@ -56,6 +56,7 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
             clip = e.clip(e.idle());
             if (clip != null && clip.length > 0) t = (System.currentTimeMillis() % 100000L) / 1000f % clip.length;
         }
+        extraHide = firstPerson ? java.util.List.of() : e.hideStatic();
         pose.pushPose();
         GeoModel m = e.model();
         if (e.fit()) {
@@ -86,6 +87,7 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
     /** Нарисовать модель целиком (блоки госпиталя): начало координат — центр низа блока. */
     public static void renderModel(GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose, VertexConsumer vc, int light, int overlay) {
         fill = -1;
+        extraHide = java.util.List.of();
         for (GeoModel.Bone bone : e.model().roots) renderBone(bone, e, clip, t, pose, vc, light, overlay);
     }
 
@@ -108,6 +110,9 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
         }
     }
 
+    /** Кости, скрытые в этом виде (hide_static — всё, кроме 1-го лица). */
+    private static java.util.List<String> extraHide = java.util.List.of();
+
     /** Заполнение ручки 0–1 для текущего предмета (-1 — не ручка). */
     private static float fill = -1;
     /** Высота жидкости в окошке ручки при полной, единицы модели. */
@@ -117,6 +122,7 @@ public final class GeoItemRenderer extends BlockEntityWithoutLevelRenderer {
     private static void renderBone(GeoModel.Bone b, GeoLibrary.Entry e, @Nullable GeoAnim.Clip clip, float t, PoseStack pose,
                                    VertexConsumer vc, int light, int overlay) {
         if (e.hide().contains(b.name) && !(armHook != null && b.name.contains("hand"))) return;
+        if (extraHide.contains(b.name)) return;
         if (fill >= 0 && b.name.equals("liquid") && fill <= 0.001f) return;
         pose.pushPose();
         // Поршень стоит на жидкости с зазором: совпадающие грани мерцали (замечание 09.10, М6).

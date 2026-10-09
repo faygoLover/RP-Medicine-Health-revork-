@@ -60,7 +60,9 @@ public final class SurgeryService {
             if (HospitalBlocks.is(st, HospitalFunction.OPERATING_TABLE) || HospitalBlocks.is(st, HospitalFunction.RESTRAINT_TABLE)) return Place.TABLE;
             return Place.BED;
         }
-        return surgeon.getInventory().contains(new ItemStack(ModItems.FIELD_SURGERY_KIT.get())) ? Place.FIELD : Place.FLOOR;
+        // Полевой набор — Surv 12 или CMS у хирурга (свой полевой набор убран, замечание 10.10, Ф4).
+        var inv = surgeon.getInventory();
+        return inv.contains(new ItemStack(ModItems.LR_SURV12.get())) || inv.contains(new ItemStack(ModItems.LR_CMS.get())) ? Place.FIELD : Place.FLOOR;
     }
 
     @Nullable
