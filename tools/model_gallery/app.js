@@ -37,22 +37,63 @@ async function load() {
   select(e, e.members.find(m => m.id === last));
 }
 
+// Сохраняем только изменённые предметы (заплаткой): галерею могут править несколько человек сразу.
 let saveTimer = null;
+const dirty = new Set();
 function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
+    const patch = {};
+    for (const id of dirty) patch[id] = review.items[id] || null;
+    dirty.clear();
     $('#saved').textContent = 'сохраняю…';
-    const r = await fetch('/api/review', { method: 'POST', body: JSON.stringify(review) });
-    const j = await r.json();
-    $('#saved').textContent = r.ok ? 'сохранено ' + j.saved_at : 'ошибка сохранения';
+    try {
+      const r = await fetch('/api/review', { method: 'POST', body: JSON.stringify({ patch }) });
+      const j = await r.json();
+      $('#saved').textContent = r.ok ? 'сохранено ' + j.saved_at : 'ошибка сохранения';
+      if (r.ok) merge(j.items);
+    } catch (e) {
+      for (const id of Object.keys(patch)) dirty.add(id);
+      $('#saved').textContent = 'нет связи — повторю';
+      setTimeout(save, 3000);
+    }
   }, 400);
 }
+
+/** Чужие правки с сервера — кроме того, что сами ещё не отправили. */
+function merge(server) {
+  let changedCur = false;
+  const ids = new Set([...Object.keys(server), ...Object.keys(review.items)]);
+  for (const id of ids) {
+    if (dirty.has(id)) continue;
+    const a = JSON.stringify(review.items[id] || null), b = JSON.stringify(server[id] || null);
+    if (a === b) continue;
+    if (server[id]) review.items[id] = server[id]; else delete review.items[id];
+    if (entry && entry.members.some(m => m.id === id)) changedCur = true;
+  }
+  renderList();
+  if (changedCur && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+    refreshDisplay();
+    buildSliders();
+    const r = review.items[cur.id] || {};
+    document.querySelectorAll('#mark button').forEach(b => b.classList.toggle('on', (r.mark || '') === b.dataset.m && !!b.dataset.m));
+    $('#comment').value = r.comment || '';
+  }
+}
+setInterval(async () => {
+  if (dirty.size) return;
+  try {
+    const r = await fetch('/api/review', { cache: 'no-store' });
+    if (r.ok) merge((await r.json()).items || {});
+  } catch (e) { /* нет связи — попробуем позже */ }
+}, 15000);
 
 function rec(id) { return review.items[id] ??= {}; }
 
 /** Правка для всей строки: в группе — каждому предмету одинаково. */
 function forAll(fn) {
   for (const m of entry.members) {
+    dirty.add(m.id);
     fn(rec(m.id), m);
     if (!Object.keys(review.items[m.id]).length) delete review.items[m.id];
   }
